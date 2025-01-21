@@ -1,0 +1,40 @@
+[
+  {
+    "_id": {
+      "$oid": "6763d86481ee12b5ba22f353"
+    },
+    "user_one_id": "123456",
+    "user_two_id": "789012",
+    "interactions": [
+      {
+        "userId": "123456",
+        "message": "Este es un mensaje de ejemplo",
+        "timestamp": "2024-12-18T14:35:00Z"
+      },
+      {
+        "userId": "123456",
+        "message": "Otro mensaje de prueba",
+        "timestamp": "2024-12-18T15:00:00Z"
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "6763d87c81ee12b5ba22f354"
+    },
+    "user_one_id": "123456",
+    "user_two_id": "789012",
+    "interactions": [
+      {
+        "userId": "123456",
+        "message": "Este es un mensaje de ejemplo",
+        "timestamp": "2024-12-18T14:35:00Z"
+      },
+      {
+        "userId": "123456",
+        "message": "Otro mensaje de prueba",
+        "timestamp": "2024-12-18T15:00:00Z"
+      }
+    ]
+  }
+]

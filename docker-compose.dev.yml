@@ -1,0 +1,160 @@
+services:
+  tr2g2-front:
+    image: node:23-bookworm-slim
+    command: sh -c "cp .env.DEV .env && npm install && npm run dev"
+    volumes:
+      - ./front/appMentoria:/usr/src/app
+    working_dir: /usr/src/app
+    ports:
+      - 5173:5173
+    links:
+      - tr2g2-back
+
+  tr2g2-back:
+    build:
+      dockerfile: ./back/node/dev.Dockerfile
+      context: .
+    command: sh -c "cp .env.DEV .env && npm install && npm run dev"
+    volumes:
+      - ./back/node:/usr/src/app
+    working_dir: /usr/src/app
+    ports:
+      - 3000:3000
+    links:
+      - tr2g2-mysql
+      - tr2g2-mongodb
+      - chat
+      - community
+      - employmentexchange
+      - statistics
+
+  chat:
+    build:
+      context: ./back/node/services/chat
+      dockerfile: ../../dev.Dockerfile
+    command: sh -c "cp .env.DEV .env && npm install && node index.js"
+    volumes:
+      - ./back/node/services/chat:/usr/src/app
+    working_dir: /usr/src/app
+    ports:
+      - 3001:3001
+    depends_on:
+      - tr2g2-mongodb
+    #  - tr2g2-back
+
+  community:
+    build:
+      context: ./back/node/services/community
+      dockerfile: ../../dev.Dockerfile
+    command: sh -c "cp .env.DEV .env && npm install && npm run dev"
+    volumes:
+      - ./back/node/services/community:/usr/src/app
+    working_dir: /usr/src/app
+    ports:
+      - 3002:3002
+
+  employmentexchange:
+    build:
+      context: ./back/node/services/employmentexchange
+      dockerfile: ../../dev.Dockerfile
+    command: sh -c "cp .env.DEV .env && npm install && npm run dev"
+    volumes:
+      - ./back/node/services/employmentexchange:/usr/src/app
+    working_dir: /usr/src/app
+    ports:
+      - 3003:3003
+
+  ia-image:
+    build:
+      context: ./back/node/services/iaimage
+      dockerfile: ../../dev.Dockerfile
+    command: sh -c "cp .env.DEV .env && npm install && npm run dev"
+    volumes:
+      - ./back/node/services/iaimage:/usr/src/app
+    working_dir: /usr/src/app
+    ports:
+      - 3004:3004
+
+  ia-text:
+    build: 
+      context: ./back/node/services/iatext
+      dockerfile: ../../dev.Dockerfile
+    command: sh -c "cp .env.DEV .env && npm install && npm run dev"
+    volumes:
+      - ./back/node/services/iatext:/usr/src/app
+    working_dir: /usr/src/app
+    ports:
+      - 3005:3005
+
+  notifications:
+    build:
+      context: ./back/node/services/notifications
+      dockerfile: ../../dev.Dockerfile
+    command: sh -c "cp .env.DEV .env && npm install && npm run dev"
+    volumes:
+      - ./back/node/services/notifications:/usr/src/app
+    working_dir: /usr/src/app
+    ports:
+      - 3006:3006
+
+  statistics:
+    build: 
+      context: ./back/node/services/statistics
+      dockerfile: ../../dev.Dockerfile
+    command: sh -c "cp .env.DEV .env && npm install && npm run dev"
+    volumes:
+      - ./back/node/services/statistics:/usr/src/app
+    working_dir: /usr/src/app
+    ports:
+      - 3007:3007
+
+  tr2g2-mongodb:
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    volumes:
+      - mongo-db:/data/db
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@tr2g2-mongodb:27017/
+      ME_CONFIG_BASICAUTH: false
+    depends_on:
+      - tr2g2-mongodb
+
+  tr2g2-mysql:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: mentories
+    volumes:
+      - mysql-db:/var/lib/mysql:rw
+      - ./back/data/create_db.sql:/docker-entrypoint-initdb.d/create.sql
+      - ./back/data/insert_db.sql:/docker-entrypoint-initdb.d/inserts.sql
+    ports:
+      - 3306:3306
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    environment:
+      ADMINER_DEFAULT_SERVER: tr2g2-mysql
+    depends_on:
+      - tr2g2-mysql
+
+volumes:
+  mysql-db:
+  mongo-db:
