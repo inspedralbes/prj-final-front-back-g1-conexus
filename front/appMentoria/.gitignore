@@ -30,3 +30,7 @@ coverage
 
 *.tsbuildinfo
 .env
+
+# Capacitor build
+android/
+ios/
