@@ -84,6 +84,19 @@ app.post("/classify-image", async (req, res) => {
     Personajes históricos que hayan cometido actos violentos o inapropiados o genocidios.
     Cualquier imagen que muestre rostros de personas no famosas, independientemente de la expresión facial, del entorno (incluso en conferencias, eventos públicos o con otras personas), o del contexto.
     Cualquier tipo de selfie, independientemente de quién la tome.
+    Toda imagen que contenga contenido sexual o erótico, incluso si no es explícito, se clasifica automáticamente como ofensiva.
+    Si la imagen contiene implicitamente contenido sexual o erótico, pero no es explícito, se clasifica como POTENCIALMENTE_SUGERENTE.
+    Personas en situaciones íntimas (ropa desabrochada, cuerpos entrelazados, posiciones eróticas).
+    Rostros de personas no famosas.
+    Contextos que sugieren contenido erótico sin ser explícito.
+    Selfies de cualquier tipo.
+    Toda imagen que contenga contenido sexual o erótico, incluso si no es explícito, se clasifica automáticamente como ofensiva.
+    Cualquier imagen con contenido sexual o erótico (explícito o implícito).
+    Si contiene una persona famosa con ropa interior o traje de baño, la cual se considera implícitamente sexual o sugerente y por lo tanto es ofensiva.
+    La imatge conté una persona famosa en roba interior, el que es considera implícitament sexual o suggerent i, per tant, ofensiu.
+    Si se muestra a una persona no famosa.
+    Si la imagen muestra una persona por falta de informacion.
+
     POTENCIALMENTE_SUGERENTE:
     La imagen presenta algunas características que podrían ser inapropiadas pero no cumplen con todas las condiciones para clasificarse como OFENSIVA. Ejemplos incluyen:
 
@@ -94,8 +107,9 @@ app.post("/classify-image", async (req, res) => {
     Subcategorías específicas:
     Para personas famosas:
     FAMOSOS_ADECUADA: La imagen muestra personas famosas, incluyendo streamers, youtubers y tiktokers, en contextos adecuados, sin contenido sugerente o inapropiado.
-    FAMOSOS_SUGERENTE: La imagen muestra personas famosas en situaciones ambiguas o contextos que podrían ser interpretados como sugerentes, pero no son explícitamente ofensivos.
+    FAMOSOS_SUGERENTE: La imagen muestra personas famosas en situaciones ambiguas o contextos que podrían ser interpretados como sugerentes, pero no son explícitamente ofensivos,  Toda imagen que contenga contenido sexual o erótico, incluso si no es explícito, se clasifica automáticamente como ofensiva.
     FAMOSOS_OFENSIVO: La imagen muestra personas famosas en situaciones explícitas, vulgares, degradantes o en contextos inapropiados.
+    FAMOSOS_POTENCIALMENTE_SUGERENTE: La imagen muestra personas famosas en situaciones ambiguas o contextos que podrían ser interpretados como sugerentes, pero no son explícitamente ofensivos (actrices porno como lana rhoades, jordi niño polla).
     Para personas no famosas:
     DESCONOCIDOS_ADECUADA: (No válida) Las imágenes con personas no famosas, independientemente del contexto, no son consideradas adecuadas.
     DESCONOCIDOS_POTENCIALMENTE_SUGERENTE: La imagen muestra personas no famosas en situaciones ambiguas o contextos que podrían ser interpretados como sugerentes, pero no son explícitamente ofensivos.
@@ -106,7 +120,7 @@ app.post("/classify-image", async (req, res) => {
     SIN_PERSONAS_OFENSIVA: La imagen no contiene personas, pero presenta contenido ofensivo.
     Especial:
     SELFIE_OFENSIVO: Toda imagen que sea una selfie, independientemente de si la toma una persona famosa o no, se clasifica automáticamente como ofensiva.
-
+    
         
         {
           "category": "ADECUADA" | "OFENSIVA" | "POTENCIALMENTE_SUGERENTE",
