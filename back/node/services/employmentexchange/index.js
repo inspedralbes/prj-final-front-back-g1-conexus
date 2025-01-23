@@ -85,7 +85,7 @@ app.post('/comments', async (req, res) => {
     if (running == true) {
         const analyzeContent = async (content) => {
             console.log("HOLA 1");
-            const serverIA = IA_TEXT_URL + '/classify-comment';
+            const serverIA = IA_TEXT_URL + '/classifyTextOffers';
             try {
                 const response = await fetch(serverIA, {
                     method: 'POST',
@@ -303,7 +303,7 @@ app.post('/publications', async (req, res) => {
         // Llamada a la IA para analizar título y descripción
         const analyzeContent = async (content) => {
             console.log("HOLA 1");
-            const serverIA = IA_TEXT_URL + '/classify-comment';
+            const serverIA = IA_TEXT_URL + '/classifyTextOffers';
             try {
                 const response = await fetch(serverIA, {
                     method: 'POST',
