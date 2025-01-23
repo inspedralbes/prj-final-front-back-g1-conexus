@@ -6,12 +6,22 @@ import path from "path";
 import dotenv from "dotenv";
 import cors from "cors";
 import fileUpload from 'express-fileupload';
+const path = require('path');
+const dotenv = require('dotenv');
 
+function loadEnv(envPath) {
+  const result = dotenv.config({ path: envPath });
+  if (result.error) {
+      throw result.error;
+  }
+  return result.parsed; 
+}
 
-dotenv.config();
+const iaimgEnd = loadEnv(path.resolve(__dirname, './.env'));
+
 
 const app = express();
-const port = process.env.PORT;
+const port = iaimgEnd.PORT;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -27,7 +37,7 @@ app.use((req, res, next) => {
 app.use(fileUpload());
 
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const genAI = new GoogleGenerativeAI(iaimgEnd.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 
