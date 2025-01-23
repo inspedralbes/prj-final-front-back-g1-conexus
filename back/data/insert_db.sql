@@ -104,12 +104,12 @@ INSERT INTO reviews (reviewed_user_id, reviewer_user_id, rating) VALUES
 (4, 5, 4.0);
 
 -- Inserciones para publications
-INSERT INTO publications (typesPublications_id, title, description, user_id, reports) VALUES 
-(1, 'Introducció al SQL', 'Aprèn les bases del SQL.', 1, 0), 
-(1, 'Bases de Dades Avançades', 'Endinsa\'t en la gestió de bases de dades.', 2, 0), 
-(1, 'Tendències en Data Science', 'Últimes tendències en ciència de dades.', 3, 1), 
-(1, 'Introducció al Machine Learning', 'Una guia per a principiants al machine learning.', 4, 0), 
-(1, 'Ressenyes Tecnològiques', 'Ressenyes dels últims productes tecnològics.', 5, 0);
+INSERT INTO publications (typesPublications_id, title, description, user_id, reports, text_ia, image_ia) VALUES 
+(1, 'Introducció al SQL', 'Aprèn les bases del SQL.', 1, 0, 1, 1), 
+(1, 'Bases de Dades Avançades', 'Endinsa\'t en la gestió de bases de dades.', 2, 0, 1, 1), 
+(1, 'Tendències en Data Science', 'Últimes tendències en ciència de dades.', 3, 1, 1, 1), 
+(1, 'Introducció al Machine Learning', 'Una guia per a principiants al machine learning.', 4, 0, 1, 1), 
+(1, 'Ressenyes Tecnològiques', 'Ressenyes dels últims productes tecnològics.', 5, 0, 1, 1);
 
 -- Inserciones para comments
 INSERT INTO comments (publication_id, user_id, commentReply_id, comment) VALUES 
