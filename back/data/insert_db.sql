@@ -112,12 +112,12 @@ INSERT INTO publications (typesPublications_id, title, description, user_id, rep
 (1, 'Ressenyes Tecnològiques', 'Ressenyes dels últims productes tecnològics.', 5, 0, 1, 1);
 
 -- Inserciones para comments
-INSERT INTO comments (publication_id, user_id, commentReply_id, comment) VALUES 
-(1, 2, NULL, 'Molt informatiu!'), 
-(2, 3, 1, 'Gràcies pels detalls.'), 
-(3, 4, NULL, 'Gran lectura!'), 
-(4, 5, NULL, 'Article útil.'), 
-(5, 1, NULL, 'Ben escrit.');
+INSERT INTO comments (publication_id, user_id, commentReply_id, comment, text_ia) VALUES 
+(1, 2, NULL, 'Molt informatiu!', 1), 
+(2, 3, 1, 'Gràcies pels detalls.', 1), 
+(3, 4, NULL, 'Gran lectura!', 1), 
+(4, 5, NULL, 'Article útil.', 1), 
+(5, 1, NULL, 'Ben escrit.', 1);
 
 -- Inserciones para reportsPublications
 INSERT INTO reportsPublications (publication_id, user_id, report) VALUES 

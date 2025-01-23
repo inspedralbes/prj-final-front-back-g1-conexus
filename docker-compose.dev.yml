@@ -1,5 +1,5 @@
 services:
-  tr2g2-front:
+  tr-final-front:
     image: node:23-bookworm-slim
     command: sh -c "cp .env.DEV .env && npm install && npm run dev"
     volumes:
@@ -8,9 +8,9 @@ services:
     ports:
       - 5173:5173
     links:
-      - tr2g2-back
+      - tr-final-back
 
-  tr2g2-back:
+  tr-final-back:
     build:
       dockerfile: ./back/node/dev.Dockerfile
       context: .
@@ -21,8 +21,8 @@ services:
     ports:
       - 3000:3000
     links:
-      - tr2g2-mysql
-      - tr2g2-mongodb
+      - tr-final-mysql
+      - tr-final-mongodb
       - chat
       - community
       - employmentexchange
@@ -39,8 +39,8 @@ services:
     ports:
       - 3001:3001
     depends_on:
-      - tr2g2-mongodb
-    #  - tr2g2-back
+      - tr-final-mongodb
+    #  - tr-final-back
 
   community:
     build:
@@ -108,7 +108,7 @@ services:
     ports:
       - 3007:3007
 
-  tr2g2-mongodb:
+  tr-final-mongodb:
     image: mongo
     restart: always
     ports:
@@ -127,12 +127,12 @@ services:
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
-      ME_CONFIG_MONGODB_URL: mongodb://root:example@tr2g2-mongodb:27017/
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@tr-final-mongodb:27017/
       ME_CONFIG_BASICAUTH: false
     depends_on:
-      - tr2g2-mongodb
+      - tr-final-mongodb
 
-  tr2g2-mysql:
+  tr-final-mysql:
     image: mysql
     restart: always
     environment:
@@ -151,9 +151,9 @@ services:
     ports:
       - 8080:8080
     environment:
-      ADMINER_DEFAULT_SERVER: tr2g2-mysql
+      ADMINER_DEFAULT_SERVER: tr-final-mysql
     depends_on:
-      - tr2g2-mysql
+      - tr-final-mysql
 
 volumes:
   mysql-db:
