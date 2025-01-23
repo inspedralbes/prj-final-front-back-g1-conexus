@@ -5,11 +5,19 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
-require('dotenv').config();
+const dotenv = require('dotenv');
 
+function loadEnv(envPath) {
+  const result = dotenv.config({ path: envPath });
+  if (result.error) {
+      throw result.error;
+  }
+  return result.parsed; 
+}
 
-const PORT = process.env.PORT;
+const chatEnv = loadEnv(path.resolve(__dirname, './.env'));
 
+const PORT = chatEnv.PORT;
 const app = express();
 const server = createServer(app);
 const io = new Server(server, {
@@ -29,7 +37,7 @@ app.use(cors({
     allowedHeaders: ["Access-Control-Allow-Origin", "Content-Type"],
 }));
 
-mongoose.connect( process.env.MONGO_URI, { dbName: 'Chat' })
+mongoose.connect( chatEnv.MONGO_URI, { dbName: 'Chat' })
   .then(() => console.log('Conexión exitosa a MongoDB'))
   .catch(err => console.error('Error de conexión a MongoDB:', err));
 
@@ -49,6 +57,10 @@ const Message = mongoose.model('Message', messageSchema);
 
 app.get('/', (req, res) => {
   res.send('Hello World! I am a chat service');
+});
+
+app.get('/chatTest', (req, res) => {
+  res.send(JSON.stringify(chatEnv));
 });
 
 app.get('/getChats', async (req, res) => {

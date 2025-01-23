@@ -2,17 +2,26 @@
 const fileUpload = require('express-fileupload');
 const express = require('express');
 const mysql = require('mysql2/promise');
-const path = require('path');
 const cors = require('cors');
 const fs = require('fs');
 const FormData = require('form-data');
-require('dotenv').config();
+const path = require('path');
+const dotenv = require('dotenv');
 
+function loadEnv(envPath) {
+  const result = dotenv.config({ path: envPath });
+  if (result.error) {
+      throw result.error;
+  }
+  return result.parsed; 
+}
+
+const comEnd = loadEnv(path.resolve(__dirname, './.env'));
 const app = express();
-const port = process.env.PORT;
-const IA_TEXT_URL = process.env.IA_TEXT_URL;
-const IA_IMAGE_URL = process.env.IA_IMAGE_URL;
-const NOTIFICATION_URL = process.env.NOTIFICATION_URL;
+const port = comEnd.PORT;
+const IA_TEXT_URL = comEnd.IA_TEXT_URL;
+const IA_IMAGE_URL = comEnd.IA_IMAGE_URL;
+const NOTIFICATION_URL = comEnd.NOTIFICATION_URL;
 
 /* ----------------------------------------- SERVER APP ----------------------------------------- */
 app.use(express.json());
@@ -30,10 +39,10 @@ app.use(fileUpload());
 
 /* ----------------------------------------- DATABASE ----------------------------------------- */
 const dbConfig = {
-    host: process.env.MYSQL_HOST,
-    user: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASS,
-    database: process.env.MYSQL_DB
+    host: comEnd.MYSQL_HOST,
+    user: comEnd.MYSQL_USER,
+    password: comEnd.MYSQL_PASS,
+    database: comEnd.MYSQL_DB
 };
 
 /* ----------------------------------------- ROUTES ----------------------------------------- */

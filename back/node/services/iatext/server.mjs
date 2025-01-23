@@ -3,16 +3,26 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { encode } from 'gpt-tokenizer';
 import dotenv from "dotenv";
 import cors from "cors";
+const path = require('path');
+const dotenv = require('dotenv');
 
-dotenv.config();
+function loadEnv(envPath) {
+  const result = dotenv.config({ path: envPath });
+  if (result.error) {
+      throw result.error;
+  }
+  return result.parsed; 
+}
+
+const iatextEnd = loadEnv(path.resolve(__dirname, './.env'));
 
 const app = express();
-const port = process.env.PORT;
+const port = iatextEnd.PORT;
 
 app.use(cors());
 app.use(express.json()); // Asegúrate de que el middleware para parsear JSON esté configurado
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const genAI = new GoogleGenerativeAI(iatextEnd.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 function extractJsonContent(responseText) {

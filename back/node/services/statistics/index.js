@@ -1,11 +1,21 @@
 const express = require('express');
-const path = require('path');
 const cors = require('cors');
 const fs = require('fs');
-require('dotenv').config();
 
+const path = require('path');
+const dotenv = require('dotenv');
+
+function loadEnv(envPath) {
+  const result = dotenv.config({ path: envPath });
+  if (result.error) {
+      throw result.error;
+  }
+  return result.parsed; 
+}
+
+const statEnd = loadEnv(path.resolve(__dirname, './.env'));
 const app = express();
-const port = process.env.PORT;
+const port = statEnd.PORT;
 
 app.use(express.json());
 app.use(cors({
