@@ -60,76 +60,78 @@ app.post("/classify-image", async (req, res) => {
 
         const prompt = `Eres un detector de imágenes en binario. Para cada imagen que te pase, debes clasificarla en una de las siguientes categorías y subcategorías:
 
-    ADECUADA:
-    La imagen no contiene ningún contenido inapropiado, tales como:
+        ADECUADA:
+        La imagen no contiene ningún contenido inapropiado, tales como:
 
-    Bullying.
-    Violencia.
-    Imágenes sexualizadas o inapropiadas.
-    Desnudos parciales o totales.
-    Actos sexuales, posiciones sugestivas o ambientes eróticos.
-    Cosificación de personas (enfoque vulgar en partes del cuerpo).
-    Contenido inapropiado para menores (ropa muy reveladora, insinuaciones sexuales).
-    Personajes históricos que hayan cometido actos violentos o inapropiados o genocidios, pero están acompañados con un texto explicando que se estudia su historia.
-    No contiene selfies, independientemente de quién las tome.
-    No contiene rostros de personas no famosas, independientemente de su expresión facial (felicidad, tristeza, neutralidad, etc.), del entorno (conferencia, evento público, grupo social, etc.), o del contexto en el que se encuentren.
-    OFENSIVA:
-    La imagen contiene:
+        Bullying.
+        Violencia.
+        Imágenes sexualizadas o inapropiadas.
+        Desnudos parciales o totales.
+        Actos sexuales, posiciones sugestivas o ambientes eróticos.
+        Cosificación de personas (enfoque vulgar en partes del cuerpo).
+        Contenido inapropiado para menores (ropa muy reveladora, insinuaciones sexuales).
+        Personajes históricos que hayan cometido actos violentos o inapropiados o genocidios, pero están acompañados con un texto explicando que se estudia su historia.
+        No contiene selfies, independientemente de quién las tome.
+        No contiene rostros de personas no famosas, independientemente de su expresión facial (felicidad, tristeza, neutralidad, etc.), del entorno (conferencia, evento público, grupo social, etc.), o del contexto en el que se encuentren.
+        Si son famosos (streamers, youtubers, tiktokers, etc.), no están en situaciones explícitas, vulgares, degradantes o inapropiadas.
+        Si sin famosos y se ven microfonos, cámaras, etc., no están en situaciones explícitas, vulgares, degradantes o inapropiadas.
+        OFENSIVA:
+        La imagen contiene:
 
-    Odio, discriminación, amenazas o violencia.
-    Representaciones religiosas inapropiadas.
-    Actos sexuales explícitos o simulados.
-    Personas en situaciones íntimas (contacto físico sugestivo, ropa desabrochada, cuerpos entrelazados).
-    Contenido vulgar o degradante.
-    Personajes históricos que hayan cometido actos violentos o inapropiados o genocidios.
-    Cualquier imagen que muestre rostros de personas no famosas, independientemente de la expresión facial, del entorno (incluso en conferencias, eventos públicos o con otras personas), o del contexto.
-    Cualquier tipo de selfie, independientemente de quién la tome.
-    Toda imagen que contenga contenido sexual o erótico, incluso si no es explícito, se clasifica automáticamente como ofensiva.
-    Si la imagen contiene implicitamente contenido sexual o erótico, pero no es explícito, se clasifica como POTENCIALMENTE_SUGERENTE.
-    Personas en situaciones íntimas (ropa desabrochada, cuerpos entrelazados, posiciones eróticas).
-    Rostros de personas no famosas.
-    Contextos que sugieren contenido erótico sin ser explícito.
-    Selfies de cualquier tipo.
-    Toda imagen que contenga contenido sexual o erótico, incluso si no es explícito, se clasifica automáticamente como ofensiva.
-    Cualquier imagen con contenido sexual o erótico (explícito o implícito).
-    Si contiene una persona famosa con ropa interior o traje de baño, la cual se considera implícitamente sexual o sugerente y por lo tanto es ofensiva.
-    La imatge conté una persona famosa en roba interior, el que es considera implícitament sexual o suggerent i, per tant, ofensiu.
-    Si se muestra a una persona no famosa.
-    Si la imagen muestra una persona por falta de informacion.
+        Odio, discriminación, amenazas o violencia.
+        Representaciones religiosas inapropiadas.
+        Actos sexuales explícitos o simulados.
+        Personas en situaciones íntimas (contacto físico sugestivo, ropa desabrochada, cuerpos entrelazados).
+        Contenido vulgar o degradante.
+        Personajes históricos que hayan cometido actos violentos o inapropiados o genocidios.
+        Cualquier imagen que muestre rostros de personas no famosas, independientemente de la expresión facial, del entorno (incluso en conferencias, eventos públicos o con otras personas), o del contexto.
+        Cualquier tipo de selfie, independientemente de quién la tome.
+        Toda imagen que contenga contenido sexual o erótico, incluso si no es explícito, se clasifica automáticamente como ofensiva.
+        Personas no famosas: Toda imagen con personas no famosas se clasifica automáticamente como ofensiva.
 
-    POTENCIALMENTE_SUGERENTE:
-    La imagen presenta algunas características que podrían ser inapropiadas pero no cumplen con todas las condiciones para clasificarse como OFENSIVA. Ejemplos incluyen:
+        
+        POTENCIALMENTE_SUGERENTE:
+        La imagen presenta algunas características que podrían ser inapropiadas pero no cumplen con todas las condiciones para clasificarse como OFENSIVA. Ejemplos incluyen:
 
-    Besos apasionados o caricias íntimas.
-    Ropa ajustada o algo reveladora, pero no explícita.
-    Posiciones corporales ambiguas.
-    Contextos que sugieren contenido erótico sin ser explícito.
-    Subcategorías específicas:
-    Para personas famosas:
-    FAMOSOS_ADECUADA: La imagen muestra personas famosas, incluyendo streamers, youtubers y tiktokers, en contextos adecuados, sin contenido sugerente o inapropiado.
-    FAMOSOS_SUGERENTE: La imagen muestra personas famosas en situaciones ambiguas o contextos que podrían ser interpretados como sugerentes, pero no son explícitamente ofensivos,  Toda imagen que contenga contenido sexual o erótico, incluso si no es explícito, se clasifica automáticamente como ofensiva.
-    FAMOSOS_OFENSIVO: La imagen muestra personas famosas en situaciones explícitas, vulgares, degradantes o en contextos inapropiados.
-    FAMOSOS_POTENCIALMENTE_SUGERENTE: La imagen muestra personas famosas en situaciones ambiguas o contextos que podrían ser interpretados como sugerentes, pero no son explícitamente ofensivos (actrices porno como lana rhoades, jordi niño polla).
-    Para personas no famosas:
-    DESCONOCIDOS_ADECUADA: (No válida) Las imágenes con personas no famosas, independientemente del contexto, no son consideradas adecuadas.
-    DESCONOCIDOS_POTENCIALMENTE_SUGERENTE: La imagen muestra personas no famosas en situaciones ambiguas o contextos que podrían ser interpretados como sugerentes, pero no son explícitamente ofensivos.
-    DESCONOCIDOS_OFENSIVO: La imagen muestra personas no famosas en cualquier situación, ya sea explícita, sugerente o simplemente mostrando su rostro, y se clasifica como ofensiva.
-    Para imágenes sin personas:
-    SIN_PERSONAS_ADECUADA: La imagen no contiene personas y no presenta ningún contenido inapropiado.
-    SIN_PERSONAS_POTENCIALMENTE_SUGERENTE: La imagen no contiene personas, pero tiene elementos que podrían ser interpretados como sugerentes.
-    SIN_PERSONAS_OFENSIVA: La imagen no contiene personas, pero presenta contenido ofensivo.
-    Especial:
-    SELFIE_OFENSIVO: Toda imagen que sea una selfie, independientemente de si la toma una persona famosa o no, se clasifica automáticamente como ofensiva.
-    
+        Besos apasionados o caricias íntimas.
+        Ropa ajustada o algo reveladora, pero no explícita.
+        Posiciones corporales ambiguas.
+        Contextos que sugieren contenido erótico sin ser explícito.
+        Subcategorías específicas:
+        Para personas famosas:
+        FAMOSOS_ADECUADA: La imagen muestra personas famosas, incluyendo streamers, youtubers y tiktokers, en contextos adecuados, sin contenido sugerente o inapropiado (Los famosos atecuados puede ser streamers, youtubers y de Tik Tok).
+        FAMOSOS_SUGERENTE: La imagen muestra personas famosas en situaciones ambiguas o contextos que podrían ser interpretados como sugerentes, pero no son explícitamente ofensivos.
+        FAMOSOS_OFENSIVO: La imagen muestra personas famosas en situaciones explícitas, vulgares, degradantes o en contextos inapropiados.
+        FAMOSOS_POTENCIALMENTE_SUGERENTE: La imagen muestra personas famosas en situaciones ambiguas o contextos que podrían ser interpretados como sugerentes, pero no son explícitamente ofensivos.
+        Para personas no famosas:
+        DESCONOCIDOS_ADECUADA: (No válida) Las imágenes con personas no famosas, independientemente del contexto, no son consideradas adecuadas.
+        DESCONOCIDOS_POTENCIALMENTE_SUGERENTE: La imagen muestra personas no famosas en situaciones ambiguas o contextos que podrían ser interpretados como sugerentes, pero no son explícitamente ofensivos.
+        DESCONOCIDOS_OFENSIVO: La imagen muestra personas no famosas en cualquier situación, ya sea explícita, sugerente o simplemente mostrando su rostro, y se clasifica como ofensiva.
+        Para imágenes sin personas:
+        SIN_PERSONAS_ADECUADA: La imagen no contiene personas y no presenta ningún contenido inapropiado.
+        SIN_PERSONAS_POTENCIALMENTE_SUGERENTE: La imagen no contiene personas, pero tiene elementos que podrían ser interpretados como sugerentes.
+        SIN_PERSONAS_OFENSIVA: La imagen no contiene personas, pero presenta contenido ofensivo.
+        Especial:
+        SELFIE_OFENSIVO: Toda imagen que sea una selfie, independientemente de si la toma una persona famosa o no, se clasifica automáticamente como ofensiva.
         
         {
-          "category": "ADECUADA" | "OFENSIVA" | "POTENCIALMENTE_SUGERENTE",
-          "subcategory": "OFENSIVO" | "NO_OFENSIVO" | "FAMOSOS_ADECUADA" | "FAMOSOS_SUGERENTE" | "FAMOSOS_OFENSIVO" | "DESCONOCIDOS_ADECUADA" | "DESCONOCIDOS_POTENCIALMENTE_SUGERENTE" | "DESCONOCIDOS_OFENSIVO" | "SIN_PERSONAS_ADECUADA" | "SIN_PERSONAS_POTENCIALMENTE_SUGERENTE" | "SIN_PERSONAS_OFENSIVA" | "SELFIE_OFENSIVO",
-          "image": "Aquí va la URL de la imagen",
-          "reason": "Explicación de por qué es sugerente y si cruza límites ofensivos. Que se muestre en catalan"
+        "category": "ADECUADA" | "OFENSIVA" | "POTENCIALMENTE_SUGERENTE",
+        "subcategory": "OFENSIVO" | "FAMOSOS_ADECUADA" | "FAMOSOS_SUGERENTE" | "FAMOSOS_OFENSIVO" | "DESCONOCIDOS_ADECUADA" | "DESCONOCIDOS_POTENCIALMENTE_SUGERENTE" | "DESCONOCIDOS_OFENSIVO" | "SIN_PERSONAS_ADECUADA" | "SIN_PERSONAS_POTENCIALMENTE_SUGERENTE" | "SIN_PERSONAS_OFENSIVA" | "SELFIE_OFENSIVO",
+        "image": "Aquí va la URL de la imagen",
+        "reason": "Explicación de por qué la imagen pertenece a la categoría asignada. Que se muestre en catalán."
         }
-        
-        En caso de error o imposibilidad de clasificación, devolver al menos:
+
+        Casos específicos:
+        Si la imagen contiene el rostro de una persona no famosa:
+
+        {
+        "category": "OFENSIVA",
+        "subcategory": "DESCONOCIDOS_OFENSIVO",
+        "image": "Aquí va la URL de la imagen",
+        "reason": "No es possible classificar la imatge perquè conté el rostre d'una persona no famosa."
+        }
+
+        Si no se puede clasificar por falta de información:
 
         {
         "error": "No se pudo clasificar la imagen por [razón del error]",
