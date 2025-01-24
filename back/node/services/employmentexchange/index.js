@@ -347,17 +347,24 @@ app.post('/publications', async (req, res) => {
         try {
             const fetchPromise = await import('node-fetch');
             const fetch = fetchPromise.default;
+            console.log("formData antes de hacer fetch", formData);
+            console.log("Headers:", formData.getHeaders());
             const response = await fetch(serverMjsUrl, {
                 method: 'POST',
                 body: formData,
                 headers: formData.getHeaders(),
             });
-
-            if (!response.ok)
+            console.log("b")
+            if (!response.ok) {
+                console.log("response", response);
+                console.log("formData");
                 throw new Error(`Error IA imagen: ${response.statusText}`);
-
+            }
+            console.log("c")
             imageAnalysis = await response.json();
+            console.log("d")
             imageIA = 1;
+            console.log("e")
         } catch (fetchError) {
             console.error("Error al llamar a la IA:", fetchError);
 

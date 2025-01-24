@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
+import fileUpload from "express-fileupload";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -32,6 +33,7 @@ app.use((req, res, next) => {
     res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
     next();
 });
+app.use(fileUpload());
 
 
 const genAI = new GoogleGenerativeAI(iaimgEnd.GEMINI_API_KEY);
@@ -50,6 +52,7 @@ app.get("/", (req, res) => {
 });
 app.post("/classify-image", async (req, res) => {
     try {
+        console.log("estoy dentro");
         if (!req.files || Object.keys(req.files).length === 0) {
             return res.status(400).json({ error: "No se recibió ningún archivo." });
         }

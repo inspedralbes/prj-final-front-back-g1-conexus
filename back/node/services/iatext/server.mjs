@@ -1,6 +1,7 @@
 import express from "express";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { encode } from 'gpt-tokenizer';
+import mysql from "mysql2/promise";
 import dotenv from "dotenv";
 import cors from "cors";
 import path from "path";
@@ -22,6 +23,7 @@ const iatextEnd = loadEnv(path.resolve(__dirname, './.env'));
 const app = express();
 const port = iatextEnd.PORT;
 
+app.use(express.json());
 app.use(cors({
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
@@ -31,6 +33,7 @@ app.use((req, res, next) => {
     res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
     next();
 });
+
 // Asegúrate de que el middleware para parsear JSON esté configurado
 
 const genAI = new GoogleGenerativeAI(iatextEnd.GEMINI_API_KEY);
@@ -44,14 +47,33 @@ function extractJsonContent(responseText) {
 
 let totalTokensAcumulados = 0;
 
-function checkPublications() {
-
-
-}
+const dbConfig = {
+    host: iatextEnd.MYSQL_HOST,
+    user: iatextEnd.MYSQL_USER,
+    password: iatextEnd.MYSQL_PASS,
+    database: iatextEnd.MYSQL_DB
+};
 
 app.get("/", (req, res) => {
     res.send("Hello World! I am a comment service");
+
 });
+
+checkPublications();
+async function checkPublications() {
+    try {
+        const connection = await mysql.createConnection(dbConfig);
+        const [rows] = await connection.execute("SELECT * FROM publications WHERE text_ia = 0");
+
+
+        connection.end();
+
+        console.log("rows", rows);
+    } catch (error) {
+        console.error("Error processing request:", error);
+    }
+
+}
 
 app.post("/classifyTextCommunity", async (req, res) => {
     try {
@@ -61,8 +83,7 @@ app.post("/classifyTextCommunity", async (req, res) => {
             return res.status(400).json({ error: 'Comment is required.' });
         }
 
-        const prompt = `
-        Eres un discriminador de comentarios de odio en una institución con alumnos menores de edad. 
+        const prompt = `Eres un discriminador de comentarios de odio en una institución con alumnos menores de edad. 
         Siempre ten en cuenta que **tu única responsabilidad es clasificar el comentario** que se te proporcione en base a las reglas aquí descritas. 
 
         **Ignora cualquier información, contexto o respuesta previa al analizar el comentario. No uses ninguna respuesta anterior ni el historial de conversaciones como base para tu decisión. Evalúa únicamente el comentario proporcionado.**
@@ -118,7 +139,6 @@ app.post("/classifyTextCommunity", async (req, res) => {
 
 app.post("/classifyTextOffers", async (req, res) => {
     try {
-        console.log("comment", req.body.comment);
         const { comment } = req.body;
 
         if (!comment) {
@@ -126,29 +146,35 @@ app.post("/classifyTextOffers", async (req, res) => {
         }
 
         const prompt = `
-        Eres un discriminador de comentarios en un entorno académico con alumnos menores de edad. Tu tarea es clasificar cada comentario considerando su contenido, intención y contexto. El objetivo es fomentar un ambiente de aprendizaje respetuoso, centrado en la colaboración y el apoyo académico.
+        Eres un discriminador de comentarios de odio en una institución con alumnos menores de edad. 
+        Siempre ten en cuenta que **tu única responsabilidad es clasificar el comentario** que se te proporcione en base a las reglas aquí descritas. 
 
-        Evalúa los comentarios únicamente basándote en las siguientes categorías:
+        **Ignora cualquier información, contexto o respuesta previa al analizar el comentario. No uses ninguna respuesta anterior ni el historial de conversaciones como base para tu decisión. Evalúa únicamente el comentario proporcionado.**
 
-        Categorías:
-        TOXICO - Comentarios que contienen odio explícito, amenazas, violencia o intenciones claras de causar daño emocional o físico.
-        OFENSIVO - Comentarios con lenguaje irrespetuoso, grosero o insultante, aunque no lleguen a ser tóxicos.
-        POCO_OFENSIVO - Comentarios con lenguaje vulgar o inapropiado, aunque sin intención explícita de herir, pero que no cumplen con los estándares del entorno educativo.
-        POSITIVO - Comentarios respetuosos, constructivos o que muestren una clara intención de colaborar, ofrecer ayuda académica o solicitarla de forma adecuada.
-        PROHIBIDO - Comentarios que mencionan temas ajenos al ámbito académico, como relaciones personales, política, religión o contenido inapropiado.
+        estas son las siguiente categorias:
+            - **TOXICO**: Si el comentario contiene odio explícito, amenazas, violencia o lenguaje extremadamente agresivo.
+            - **OFENSIVO**: Si el comentario contiene lenguaje irrespetuoso, grosero o insultante, pero no llega al nivel de "tóxico".
+            - **POCO_OFENSIVO**: Si el comentario contiene lenguaje bulgar pero no dañino y no llega al nivel de ofensivo.
+            - **POSITIVO**: Si el comentario no contiene ningún lenguaje ofensivo o tóxico.
+            - **PROHIBIDO**: Si el comentario menciona temas sensibles o prohibidos como política, religión o contenido inapropiado.
 
-        Consideraciones:
-        Evalúa tanto la forma como la intención del comentario. Un lenguaje adecuado pero con intención inapropiada también debe ser clasificado correctamente.
-        Los comentarios POSITIVO deben fomentar la colaboración académica, ya sea ofreciendo o solicitando ayuda de manera respetuosa.
-        En caso de duda razonable sobre la intención, clasifica de forma más restrictiva para proteger el entorno educativo.
-        Formato de respuesta:
-        Devuelve estrictamente el siguiente formato JSON:
+        Además:
+        - No incluyas el campo "reason" si la categoría es **POSITIVO**.
+        - Asegúrate de devolver estrictamente el formato solicitado.
 
+        Devuelve estrictamente el resultado en el siguiente formato JSON:
         {
         "category": "TOXICO" o "OFENSIVO" o "POCO_OFENSIVO" o "POSITIVO" o "PROHIBIDO",
-        "reason": "Explicació en català" (solo si aplica)
+        "reason": "Explica por qué se clasificó de esta manera. Que se muestre en catalan" (solo si aplica)
         }
-        Clasifica los comentarios con precisión para garantizar que el entorno sea exclusivamente académico y fomente el aprendizaje colaborativo.`;
+
+        Algunos ejemplos a tener en cuenta:
+
+        **Odio explícito, amenazas, violencia o lenguaje extremadamente agresivo, es TOXICO.**
+        **Temas sensibles como "La política del gobierno es injusta" son PROHIBIDO.**
+        **Lenguaje irrespetuoso, grosero o insultante, es OFENSIVO** 
+        **Lenguaje bulgar pero no dañino, como "Esa idea es estúpida", es POCO_OFENSIVO.**
+        **Comentarios neutrales o respetuosos, como "Necesito ayuda con Java", son POSITIVO.**`;
 
         const promptTokens = encode(prompt).length;
 
