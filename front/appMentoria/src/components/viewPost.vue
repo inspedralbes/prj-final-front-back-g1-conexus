@@ -91,7 +91,7 @@
                 class="w-full focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-600 pl-5 pr-20 bg-gray-200 rounded-md py-3 dark:bg-gray-800 dark:text-white"
               />
               <div class="absolute right-0 items-center inset-y-0 flex">
-                <button
+                <button v-if="!loadingComment"
                   @click="sendCommentInMongo(null)"
                   type="button"
                   class="inline-flex items-center justify-center rounded-full h-10 w-10 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300 focus:outline-none mr-4"
@@ -119,6 +119,30 @@
                       ></path>
                     </g>
                   </svg>
+                </button>
+                <button v-if="loadingComment"
+                  class="inline-flex items-center justify-center rounded-full h-10 w-10 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300 focus:outline-none mr-4"
+                >
+                <svg
+                  class="animate-spin h-4 w-4 text-gray-800 dark:text-gray-200"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                  ></circle>
+                  <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v8H4z"
+                  ></path>
+                </svg>
                 </button>
               </div>
             </div>
@@ -310,6 +334,7 @@ import Loading from "@/components/Loading.vue"; // Import the Loading component
 
 const community_url = import.meta.env.VITE_URL_BACK_COMMUNITY;
 const back_url = import.meta.env.VITE_URL_BACK;
+const loadingComment = ref(false);
 const users = ref([]);
 const comments = ref([]);
 const selectedPost = ref(null);
@@ -377,9 +402,11 @@ const sendCommentInMongo = async (ID) => {
       commentReply_id: null,
       created_at: new Date().toISOString(),
     };
+    loadingComment.value = true;
     await postCommunityComments(comment);
     socketBack.emit("newComment", comment);
     commentInput.value.value = "";
+    loadingComment.value = false;
   } else {
     if (!replyInputs.value[ID]) return;
     const message = replyInputs.value[ID];
