@@ -3,15 +3,18 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { encode } from 'gpt-tokenizer';
 import dotenv from "dotenv";
 import cors from "cors";
-const path = require('path');
-const dotenv = require('dotenv');
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 function loadEnv(envPath) {
-  const result = dotenv.config({ path: envPath });
-  if (result.error) {
-      throw result.error;
-  }
-  return result.parsed; 
+    const result = dotenv.config({ path: envPath });
+    if (result.error) {
+        throw result.error;
+    }
+    return result.parsed;
 }
 
 const iatextEnd = loadEnv(path.resolve(__dirname, './.env'));
@@ -19,8 +22,18 @@ const iatextEnd = loadEnv(path.resolve(__dirname, './.env'));
 const app = express();
 const port = iatextEnd.PORT;
 
-app.use(cors());
-app.use(express.json()); // Asegúrate de que el middleware para parsear JSON esté configurado
+app.use(cors({
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization'],
+}));
+
+app.use((req, res, next) => {
+    res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
+    next();
+});
+
+app.use(fileUpload());
+// Asegúrate de que el middleware para parsear JSON esté configurado
 
 const genAI = new GoogleGenerativeAI(iatextEnd.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });

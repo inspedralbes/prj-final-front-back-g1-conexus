@@ -1,20 +1,20 @@
 import express from "express";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { fileURLToPath } from 'url';
 import { encode } from 'gpt-tokenizer';
-import path from "path";
 import dotenv from "dotenv";
 import cors from "cors";
-import fileUpload from 'express-fileupload';
-const path = require('path');
-const dotenv = require('dotenv');
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 function loadEnv(envPath) {
-  const result = dotenv.config({ path: envPath });
-  if (result.error) {
-      throw result.error;
-  }
-  return result.parsed; 
+    const result = dotenv.config({ path: envPath });
+    if (result.error) {
+        throw result.error;
+    }
+    return result.parsed;
 }
 
 const iaimgEnd = loadEnv(path.resolve(__dirname, './.env'));
@@ -22,8 +22,6 @@ const iaimgEnd = loadEnv(path.resolve(__dirname, './.env'));
 
 const app = express();
 const port = iaimgEnd.PORT;
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 app.use(cors({
     credentials: true,
