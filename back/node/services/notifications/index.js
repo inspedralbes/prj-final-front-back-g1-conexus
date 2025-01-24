@@ -8,11 +8,11 @@ const path = require('path');
 const dotenv = require('dotenv');
 
 function loadEnv(envPath) {
-  const result = dotenv.config({ path: envPath });
-  if (result.error) {
-      throw result.error;
-  }
-  return result.parsed; 
+    const result = dotenv.config({ path: envPath });
+    if (result.error) {
+        throw result.error;
+    }
+    return result.parsed;
 }
 
 const notiEnd = loadEnv(path.resolve(__dirname, './.env'));
@@ -90,6 +90,29 @@ app.put('/notifications/:id', async (req, res) => {
             [id]
         );
 
+        connection.end();
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'Notification not found' });
+        }
+
+        res.json({ message: 'Notification marked as read' });
+    } catch (error) {
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
+app.put('/notificationsCheckedIA/user/:id', async (req, res) => {
+    const { id, request_id } = req.body;
+
+    try {
+        const connection = await mysql.createConnection(dbConfig);
+
+        // Actualizar el campo `revised` de la notificación a 1 (marcada como leída)
+        const [result] = await connection.execute(
+            'UPDATE notifications SET description = 1 WHERE id = ? AND request_id = ?',
+            [id, request_id]
+        );
         connection.end();
 
         if (result.affectedRows === 0) {

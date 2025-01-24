@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
+import fetch from "node-fetch";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -63,9 +64,110 @@ checkPublications();
 async function checkPublications() {
     try {
         const connection = await mysql.createConnection(dbConfig);
-        const [rows] = await connection.execute("SELECT * FROM publications WHERE text_ia = 0");
+        const [rows] = await connection.execute("SELECT id, typesPublications_id, user_id, title, description FROM publications WHERE text_ia = 0");
 
+        console.log(`Found ${rows.length} unverified publications.`);
 
+        for (const publicationsUnverified of rows) {
+            const { id, typesPublications_id, title, description } = publicationsUnverified;
+
+            let endpoint;
+
+            if (typesPublications_id === 1) {
+                endpoint = iatextEnd.ENDPOINT_URL_IATEXT + "/classifyTextCommunity";
+            } else if (typesPublications_id === 2) {
+                endpoint = iatextEnd.ENDPOINT_URL_IATEXT + "/classifyTextOffers";
+            } else {
+                console.error("Invalid type of publication.");
+                continue;
+            }
+            console.log("endpoint", endpoint);
+            try {
+                //title classification
+                const titleResponse = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ comment: title }),
+                });
+
+                if (!titleResponse.ok) {
+                    throw new Error(
+                        `Failed to classify title for publication ID: ${id}. Status: ${response.status}`
+                    );
+                }
+
+                const { category: titleCategory, reason: titleReason } = await titleResponse.json();
+                console.log(`Publication ID: ${id}, Title category: ${titleCategory}, Reason: ${titleReason || ""}`);
+
+                //description classification
+                const descriptionResponse = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ comment: description }),
+                });
+
+                if (!descriptionResponse.ok) {
+                    throw new Error(
+                        `Failed to classify description for publication ID: ${id}. Status: ${descriptionResponse.status}`
+                    );
+                }
+
+                const { category: categoryDescription, reason: reasonDescription } = await descriptionResponse.json();
+
+                console.log(`Publication id: ${id}, category: ${categoryDescription}, reason: ${reasonDescription || ""}`);
+
+                await connection.execute("UPDATE publications SET text_ia = 1 WHERE id = ?", [id]);
+
+                const isApropiateCategory = ["POSITIVO", "POCO_OFENSIVO"];
+                if (!isApropiateCategory.includes(categoryDescription) || !isApropiateCategory.includes(titleCategory)) {
+                    await connection.execute("UPDATE publications SET reports = 1 WHERE id = ?", [id]);
+
+                    console.log(`Publication ID: ${id} has been reported.`);
+
+                    const [resultReport] = await connection.execute(
+                        'INSERT INTO reportsPublications (publication_id, user_id, report, status) VALUES (?, ?, ?, ?)',
+                        [id, publicationsUnverified.user_id, reasonDescription || titleReason, 'pending']
+                    );
+
+                    const notificationPayload = {
+                        user_id: publicationsUnverified.user_id,
+                        description: `Tu publicación ha sido revisada y reportada`,
+                        report_id: resultReport.insertId,
+                    }
+
+                    if (typesPublications_id === 1) {
+                        notificationPayload.publication_id = id;
+                    } else if (typesPublications_id === 2) {
+                        notificationPayload.request_id = id;
+                    }
+
+                    try {
+                        const notificationResponse = await fetch(iatextEnd.ENDPOINT_URL_NOTIFICATIONS + '/notifications', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(notificationPayload),
+                        });
+
+                        if (!notificationResponse.ok) {
+                            throw new Error(
+                                `Failed to create notification for publication ID: ${id}. Status: ${notificationResponse.status}`
+                            );
+                        }
+                    } catch (error) {
+                        console.error("Error processing request:", error);
+                    }
+                }
+            } catch (error) {
+                console.error("Error processing request:", error);
+            }
+
+        }
         connection.end();
 
         console.log("rows", rows);
@@ -74,6 +176,7 @@ async function checkPublications() {
     }
 
 }
+
 
 app.post("/classifyTextCommunity", async (req, res) => {
     try {
