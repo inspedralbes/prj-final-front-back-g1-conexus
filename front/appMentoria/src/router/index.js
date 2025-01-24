@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAppStore } from '@/stores/index';
 import mainPage from '../views/mainPage.vue'
-import profilePage from '../views/profilePage.vue'
+import profilePage from '@/views/profilePage.vue'
 import profilesPage from '@/views/profilesPage.vue'
 import reportPage from '../views/reportPage.vue'
 import validationPage from '../views/validationPage.vue'
@@ -20,6 +20,8 @@ import myRequests from '../views/myRequests.vue'
 import servicePage from '../views/servicesListPage.vue'
 import stadisticsPage from '@/views/stadisticsPage.vue';
 import requestsPage from '../views/mainRequests.vue'
+import editProfilePage from '@/views/editProfilePage.vue';
+
 const routes = [
   {
     path: '/login',
@@ -125,6 +127,11 @@ const routes = [
     path: '/stadistics',
     name: 'stadisticsPage',
     component: stadisticsPage
+  }, 
+  {
+    path: '/editProfile',
+    name: 'editProfilePage',
+    component: editProfilePage
   }
 ];
 
@@ -141,7 +148,7 @@ router.beforeEach((to, from, next) => {
   // Si el usuario no está verificado y está intentando acceder a una ruta que no es permitida
   if (user && !user.verified) {
     // Si no está verificado, solo permite acceso a 'myprofile', 'main' y 'login'
-    const allowedRoutes = ['login', 'main', 'myprofile'];
+    const allowedRoutes = ['login', 'main', 'myprofile', 'editProfilePage'];
 
     if (allowedRoutes.includes(to.name)) {
       next(); // Permitimos el acceso a las rutas permitidas
