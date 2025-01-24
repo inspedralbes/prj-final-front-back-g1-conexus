@@ -31,8 +31,6 @@ app.use((req, res, next) => {
     res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
     next();
 });
-
-app.use(fileUpload());
 // Asegúrate de que el middleware para parsear JSON esté configurado
 
 const genAI = new GoogleGenerativeAI(iatextEnd.GEMINI_API_KEY);
@@ -120,6 +118,7 @@ app.post("/classifyTextCommunity", async (req, res) => {
 
 app.post("/classifyTextOffers", async (req, res) => {
     try {
+        console.log("comment", req.body.comment);
         const { comment } = req.body;
 
         if (!comment) {

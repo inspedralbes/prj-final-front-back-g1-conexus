@@ -11,11 +11,11 @@ const path = require('path');
 const dotenv = require('dotenv');
 
 function loadEnv(envPath) {
-  const result = dotenv.config({ path: envPath });
-  if (result.error) {
-      throw result.error;
-  }
-  return result.parsed; 
+    const result = dotenv.config({ path: envPath });
+    if (result.error) {
+        throw result.error;
+    }
+    return result.parsed;
 }
 
 const empEnd = loadEnv(path.resolve(__dirname, './.env'));
@@ -290,7 +290,7 @@ app.post('/publications', async (req, res) => {
     var notificationIAnoResponse;
 
     console.log("file", req.files);
-    console.log("body", req.body);
+    console.log("body response front", req.body);
 
     if (!title || !description || !req.files || !req.files.image) {
         return res.status(400).json({ error: 'Faltan datos obligatorios (título, descripción, imagen).' });
@@ -618,6 +618,9 @@ async function checkIA() {
     var running = true;
     const serverIAtext = IA_TEXT_URL + '/';
     const serverIAimage = IA_IMAGE_URL + '/';
+
+    console.log("serverIAtext", serverIAtext);
+    console.log("serverIAimage", serverIAimage);
 
     try {
         const responseText = await fetch(serverIAtext);
