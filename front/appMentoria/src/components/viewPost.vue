@@ -9,7 +9,7 @@
     <div v-else>
       <div
         v-if="selectedPost"
-        class="max-w-3xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden mt-6 dark:bg-gray-900"
+        class="max-w-3xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden mt-6 dark:bg-gray-800"
       >
         <button
           @click="goMain"
@@ -229,7 +229,7 @@
             (a, b) => new Date(b.created_at) - new Date(a.created_at)
           )"
           :key="post.id"
-          class="max-w-3xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden mt-6 dark:bg-gray-900"
+          class="max-w-3xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden mt-6 dark:bg-gray-800"
         >
           <div v-if="post.reports === 0">
             <header class="flex items-center p-4 border-b">

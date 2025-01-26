@@ -81,7 +81,7 @@ onMounted(async () => {
   <div id="app" :class="isDarkMode ? 'dark' : ''">
     <RouterView
       v-if="!isLoading || userAPP.name"
-      class="bg-slate-200 dark:bg-neutral-800 text-gray-900 dark:text-white"
+      class="bg-slate-200 dark:bg-gray-900 dark:text-gray-400 text-gray-500"
     />
     <div
       v-else
