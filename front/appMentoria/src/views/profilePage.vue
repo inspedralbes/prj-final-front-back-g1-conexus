@@ -1,9 +1,9 @@
 <template>
   <Header class="shadow-lg shadow-black/30"></Header>
 
-  <div v-if="user.value" class="dark:bg-gray-900 p-4">
+  <div v-if="user.value" class="dark:bg-gray-900 p-4 text-gray-900 dark:text-gray-100">
     <!-- User - Banner & Profile Image -->
-    <div class="dark:bg-gray-800 bg-white text-gray-100 p-6 rounded-xl shadow-lg shadow-black/30 my-4">
+    <div class="dark:bg-gray-800 bg-white p-6 rounded-xl shadow-lg shadow-black/30 my-4">
       <img :src="`${banner}`" alt="banner-image" class="h-32 sm:h-48 w-full rounded-xl object-cover" />
       <div class="flex flex-col items-center sm:flex-row sm:justify-between -translate-y-10 sm:-translate-y-16">
         <div class="flex flex-col sm:flex-row items-center sm:items-end">
@@ -31,7 +31,7 @@
     </div>
 
     <!-- User - Personal Info -->
-    <div class="dark:bg-gray-800 bg-white text-gray-100 p-6 rounded-xl shadow-lg shadow-black/30 my-4">
+    <div class="dark:bg-gray-800 bg-white p-6 rounded-xl shadow-lg shadow-black/30 my-4">
       <h2 class="text-xl font-semibold border-b border-gray-600 pb-2 mb-4">Informació Personal</h2>
       <div class="space-y-4">
         <!-- Full Name -->
