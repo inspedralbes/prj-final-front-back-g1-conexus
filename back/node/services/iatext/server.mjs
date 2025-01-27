@@ -7,6 +7,7 @@ import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
 import fetch from "node-fetch";
+import fs from "fs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -34,6 +35,8 @@ app.use((req, res, next) => {
     res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
     next();
 });
+
+// const prompts = JSON.parse(fs.readFileSync(path.resolve(__dirname, './prompts.json'), "utf-8"));
 
 // Asegúrate de que el middleware para parsear JSON esté configurado
 
@@ -128,14 +131,47 @@ async function checkPublications() {
 
                     console.log(`Publication ID: ${id} has been reported.`);
 
-                    const [resultReport] = await connection.execute(
-                        'INSERT INTO reportsPublications (publication_id, user_id, report, status) VALUES (?, ?, ?, ?)',
-                        [id, publicationsUnverified.user_id, reasonDescription || titleReason, 'pending']
-                    );
+                    const resultReport = {
+                        publication_id: id,
+                        user_id: publicationsUnverified.user_id,
+                        report: reasonDescription || titleReason,
+                        status: 'pending',
+                    }
+
+                    let endpointPubli;
+
+                    if (typesPublications_id === 1) {
+                        endpointPubli = iatextEnd.ENDPOINT_URL_COMMUNITY + "/reports/publications";
+                    } else if (typesPublications_id === 2) {
+                        endpointPubli = iatextEnd.ENDPOINT_URL_EMPLOYMENTEXCHANGE + "/reports/publications";
+                    }
+
+                    try {
+                        const reportResponse = await fetch(endpointPubli, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(resultReport),
+                        });
+
+                        if (!reportResponse.ok) {
+                            throw new Error(
+                                `Failed to report publication ID: ${id}. Status: ${reportResponse.status}`
+                            );
+                        }
+                    } catch (error) {
+                        console.error("Error processing request:", error);
+                    }
+
+                    // const [resultReport] = await connection.execute(
+                    //     'INSERT INTO reportsPublications (publication_id, user_id, report, status) VALUES (?, ?, ?, ?)',
+                    //     [id, publicationsUnverified.user_id, reasonDescription || titleReason, 'pending']
+                    // );
 
                     const notificationPayload = {
                         user_id: publicationsUnverified.user_id,
-                        description: `Tu publicación ha sido revisada y reportada`,
+                        description: `La teva publicació ha sigut revisada i reportada!`,
                         report_id: resultReport.insertId,
                     }
 
@@ -146,8 +182,8 @@ async function checkPublications() {
                     }
 
                     try {
-                        const notificationResponse = await fetch(iatextEnd.ENDPOINT_URL_NOTIFICATIONS + '/notifications', {
-                            method: 'POST',
+                        const notificationResponse = await fetch(iatextEnd.ENDPOINT_URL_NOTIFICATIONS + '/notificationCheckedIA/' + notificationPayload.publication_id || notificationPayload.request_id, {
+                            method: 'PUT',
                             headers: {
                                 'Content-Type': 'application/json',
                             },

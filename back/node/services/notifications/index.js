@@ -77,6 +77,7 @@ app.get('/notifications/:id', async (req, res) => {
     }
 });
 
+
 app.put('/notifications/:id', async (req, res) => {
     console.log("req.params", req.params);
     const { id } = req.params;
@@ -102,16 +103,16 @@ app.put('/notifications/:id', async (req, res) => {
     }
 });
 
-app.put('/notificationsCheckedIA/user/:id', async (req, res) => {
-    const { id, request_id } = req.body;
+app.put('/notificationCheckedIA/:id', async (req, res) => {
+    const { id, description, user_id, request_id, publication_id, report_id } = req.body;
 
     try {
         const connection = await mysql.createConnection(dbConfig);
 
         // Actualizar el campo `revised` de la notificación a 1 (marcada como leída)
         const [result] = await connection.execute(
-            'UPDATE notifications SET description = 1 WHERE id = ? AND request_id = ?',
-            [id, request_id]
+            'UPDATE notifications SET description = ? WHERE id = ? AND request_id = ?',
+            [description, id, request_id]
         );
         connection.end();
 
