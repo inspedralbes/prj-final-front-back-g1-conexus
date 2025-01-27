@@ -333,7 +333,7 @@ app.post('/publications', async (req, res) => {
 
         // Manejo de imagen
         // Llamada a la IA para analizar la imagen
-        const serverMjsUrl = IA_IMAGE_URL + '/classify-image';
+        const serverMjsUrl = IA_IMAGE_URL + '/classify-imageCommunity';
 
         let imageAnalysis = null;
         try {
@@ -366,10 +366,6 @@ app.post('/publications', async (req, res) => {
             const connection = await mysql.createConnection(dbConfig);
             const report = `Análisis: título (${titleAnalysis.category} | ${titleAnalysis.reason}), Descripció (${descriptionAnalysis.category} | ${descriptionAnalysis.reason}), imagen (${imageAnalysis.category} | ${imageAnalysis.reason})`;
 
-            if (imageAnalysis.error && imageAnalysis.error.includes("No se pudo clasificar la imagen por contenido sexual explícito o implícito que infringe las políticas de moderación.")) {
-                throw new Error('Publicación no permitida debido a contenido sexual explícito o implícito');
-            }
-
             const [result] = await connection.execute(
                 `INSERT INTO publications (typesPublications_id, title, description, user_id, image, text_ia, image_ia, expired_at)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
@@ -384,7 +380,7 @@ app.post('/publications', async (req, res) => {
             if (isReportableComment(descriptionAnalysis)) {
                 reasons.push(`descripción: ${descriptionAnalysis.reason}`);
             }
-            if (imageAnalysis.category === 'OFENSIVA' && imageAnalysis.category === 'CONTENIDO_SEXUAL' || imageAnalysis.subcategory === 'DESCONOCIDOS_OFENSIVO' || (imageAnalysis.category === 'POTENCIALMENTE_SUGERENTE' && imageAnalysis.subcategory === 'FAMOSOS_SUGERENTE' || imageAnalysis.subcategory === 'DESCONOCIDOS_POTENCIALMENTE_SUGERENTE' || imageAnalysis.subcategory === 'FAMOSOS_POTENCIALMENTE_SUGERENTE' || imageAnalysis.subcategory === 'FAMOSOS_OFENSIVO')) {
+            if (imageAnalysis.category === 'OFENSIVA' || (imageAnalysis.category === 'POTENCIALMENTE_SUGERENTE' && imageAnalysis.subcategory === 'OFENSIVO')) {
                 reasons.push(`imagen: ${imageAnalysis.reason}`);
             }
 

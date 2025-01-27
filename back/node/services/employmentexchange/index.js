@@ -332,7 +332,7 @@ app.post('/publications', async (req, res) => {
 
         // Manejo de imagen
         // Llamada a la IA para analizar la imagen
-        const serverMjsUrl = IA_IMAGE_URL + '/classify-image';
+        const serverMjsUrl = IA_IMAGE_URL + '/classify-imageOffers';
 
         let imageAnalysis = null;
         try {
@@ -382,7 +382,7 @@ app.post('/publications', async (req, res) => {
             if (isReportableComment(descriptionAnalysis)) {
                 reasons.push(`descripción: ${descriptionAnalysis.reason}`);
             }
-            if (imageAnalysis.category === 'OFENSIVA' && imageAnalysis.category === 'CONTENIDO_SEXUAL' || imageAnalysis.subcategory === 'DESCONOCIDOS_OFENSIVO' || (imageAnalysis.category === 'POTENCIALMENTE_SUGERENTE' && imageAnalysis.subcategory === 'FAMOSOS_SUGERENTE' || imageAnalysis.subcategory === 'DESCONOCIDOS_POTENCIALMENTE_SUGERENTE' || imageAnalysis.subcategory === 'FAMOSOS_POTENCIALMENTE_SUGERENTE' || imageAnalysis.subcategory === 'FAMOSOS_OFENSIVO')) {
+            if (imageAnalysis.category === 'OFENSIVA' && imageAnalysis.category === 'CONTENIDO_SEXUAL' || imageAnalysis.subcategory === 'SIN_PERSONAS_OFENSIVA'  || (imageAnalysis.category === 'POTENCIALMENTE_SUGERENTE' && imageAnalysis.subcategory === 'FAMOSOS_SUGERENTE' || imageAnalysis.subcategory === 'DESCONOCIDOS_POTENCIALMENTE_SUGERENTE' || imageAnalysis.subcategory === 'FAMOSOS_POTENCIALMENTE_SUGERENTE' || imageAnalysis.subcategory === 'FAMOSOS_OFENSIVO')) {
                 reasons.push(`imagen: ${imageAnalysis.reason}`);
             }
 
