@@ -42,7 +42,7 @@
           v-if="availability !== null"
           class="text-xs text-black dark:text-gray-400 mt-2"
         >
-          {{ $t("myRequests.disponibilitat") }}
+          {{ $t("myRequest.disponibilitat") }}
           <br />
           <span
             class="text-gray-500"
@@ -66,22 +66,22 @@
     <div
       class="flex justify-between items-center text-xs text-gray-500 dark:text-gray-400"
     >
-      <span> {{ $t("myRequests.date") }} {{ created_at }} </span>
+      <span> {{ $t("myRequest.date") }} {{ created_at }} </span>
 
       <!-- Icono de estado IA: reloj si ambos son 0, cruz roja si tiene reportes, tick verde si no tiene reportes -->
       <span v-if="isProcessing" class="text-yellow-500" title="En proceso"
-        > {{ $t("myRequests.processing") }}
+        > {{ $t("myRequest.processing") }}
         <i class="fas fa-clock"></i>
       </span>
       <span v-else-if="isReported" class="text-red-500" title="Reportado"
         >
-        {{ $t("myRequests.reported") }}
+        {{ $t("myRequest.reported") }}
 
         <i class="fas fa-times-circle"></i>
       </span>
       <span v-else class="text-green-500" title="No Reportado"
         >{{ 
-        $t("myRequests.posted")
+        $t("myRequest.posted")
          }}
         <i class="fas fa-check-circle"></i>
       </span>

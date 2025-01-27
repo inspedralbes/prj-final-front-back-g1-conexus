@@ -14,10 +14,20 @@ import { createI18n } from 'vue-i18n'
 const app = createApp(App)
 
 const i18n = createI18n({
-    locale: 'ca',
+    locale: 'en',
     messages: {
         es: {
+            viewPost:{
+                comentaris: 'Comentarios',
+            },
+            viewPeopleMentoria:{
+                chat: 'Chat',
+            },
             myRequests:{
+                title: 'Mis peticiones',
+                noRequests: 'No tienes peticiones',
+            },
+            myRequest:{
                 availability:"Disponibilitat:",
                 reports:"Reportes:",
                 date:"Fechas:",
@@ -40,11 +50,13 @@ const i18n = createI18n({
                 title: 'Añadir una petición:',
                 uploadImage: 'Subir imagen:',
                 availability: 'Disponible:',
-                addAvailabilty: '+ Añadir disponibilidad',
+                addAvailability: '+ Añadir disponibilidad',
                 selectDay: 'Selecciona un día',
                 startTime: 'Hora de inicio',
                 endTime: 'Hora de fin',
                 publishing: 'Publicando...',
+                titlePlaceholder: 'Título',
+                DescriptionPlaceholder:'En que piensas?',
             },
             norificationList:{
                 title:"Notificaciones",
@@ -124,7 +136,17 @@ const i18n = createI18n({
             },
         },
         en: {
+            viewPost:{
+                comentaris: 'Comments',
+            },
+            viewPeopleMentoria:{
+                chat: 'Chat',
+            },
             myRequests:{
+                title: 'My requests',
+                noRequests: 'You have no requests',
+            },
+            myRequest:{
                 availability:"Availability",
                 reports:"Reports:",
                 date:"Dates:",
@@ -147,11 +169,13 @@ const i18n = createI18n({
                 title: 'Add a request:',
                 uploadImage: 'Upload image:',
                 availability: 'Available:',
-                addAvailabilty: '+ Add availability',
+                addAvailability: '+ Add availability',
                 selectDay: 'Select a day',
                 startTime: 'Start time',
                 endTime: 'End time',
                 publishing: 'Publishing...',
+                titlePlaceholder: 'Title',
+                DescriptionPlaceholder:'What are you thinking?',
             },
             notificationList:{
                 title:"Notifications",
@@ -231,7 +255,17 @@ const i18n = createI18n({
             },
         },
         ca: {
+            viewPost:{
+                comentaris: 'Comentaris',
+            },
+            viewPeopleMentoria:{
+                chat: 'Xat',
+            },
             myRequests:{
+                title: 'Les meves peticions',
+                noRequests: 'No tens peticions',
+            },
+            myRequest:{
                 availability:"Disponibilitat:",
                 reports:"Reportes:",
                 date:"Dates:",
@@ -254,11 +288,13 @@ const i18n = createI18n({
                 title: 'Afegeix una petició:',
                 uploadImage: 'Puja una imatge:',    
                 availability: 'Disponible:',
-                addAvailabilty: '+ Afegeix disponibilitat',
+                addAvailability: '+ Afegeix disponibilitat',
                 selectDay: 'Selecciona un dia',
                 startTime: 'Hora d\'inici',
                 endTime: 'Hora de fi',
                 publishing: 'Publicant...',
+                titlePlaceholder: 'Títol',
+                DescriptionPlaceholder:'En què penses?',
             },
             notificationList:{
                 title:"Notificacions",

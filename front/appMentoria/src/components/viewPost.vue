@@ -81,7 +81,7 @@
           </main>
         </div>
         <div class="p-4">
-          <h3 class="text-lg font-bold">Comentaris</h3>
+          <h3 class="text-lg font-bold">{{ $t("viewPost.comentaris") }}</h3>
           <div class="border-t-2 border-gray-200 px-4 p-4 mb-2 sm:mb-0">
             <div class="relative flex">
               <input

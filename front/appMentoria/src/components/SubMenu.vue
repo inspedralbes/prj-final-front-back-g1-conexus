@@ -49,7 +49,7 @@
                 class="text-gray-700 flex justify-between w-full px-4 py-2 text-sm leading-5 text-left"
                 role="menuitem"
               >
-              {{ $t("subMenu.requests") }}
+              {{ $t("subMenu.request") }}
               </button>
               <div v-if="userTypes == 2" class="py-1">
                 <button
@@ -76,7 +76,7 @@
                   class="text-gray-700 flex justify-between w-full px-4 py-2 text-sm leading-5 text-left"
                   role="menuitem"
                 >
-                  {{$t("subMenu.stadistics")}}
+                  {{$t("subMenu.statistics")}}
                 </button>
               </div>
             </div>

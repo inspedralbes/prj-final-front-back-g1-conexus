@@ -48,7 +48,7 @@
                 @click="$router.push('/requests')"
                 class="text-white hover:text-gray-200 font-medium text-sm lg:text-base"
               >
-                {{ $t("header.requests") }}
+                {{ $t("header.request") }}
               </a>
             </template>
             <SubMenu></SubMenu>

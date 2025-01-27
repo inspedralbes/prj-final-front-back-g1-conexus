@@ -20,7 +20,7 @@
             rows="1"
             v-model="title"
             class="w-full border rounded-md leading-5 transition duration-150 ease-in-out sm:text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-300 dark:border-gray-700 dark:bg-neutral-900 dark:text-white"
-            placeholder="Títol"
+            :placeholder="$t('requestPost.titlePlaceholder')"
           ></textarea>
           <textarea
             id="des"
@@ -28,7 +28,7 @@
             rows="4"
             v-model="description"
             class="w-full mt-4 border rounded-md leading-5 transition duration-150 ease-in-out sm:text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-300 dark:border-gray-700 dark:bg-neutral-900 dark:text-white"
-            placeholder="Que Busques?"
+            :placeholder="$t('requestPost.DescriptionPlaceholder')"
           ></textarea>
         </div>
 

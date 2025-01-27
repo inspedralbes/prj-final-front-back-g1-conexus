@@ -93,7 +93,7 @@
             clip-rule="evenodd"
           ></path>
         </svg>
-        <span class="sr-only">{{$("navBar.chat")}}</span>
+        <span class="sr-only">{{$t("navBar.chat")}}</span>
       </router-link>
     </div>
   </div>
