@@ -6,14 +6,15 @@
       <h2
         class="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center"
       >
-        Formulari d'usuari
+      {{ $t('formNewDataUsers.title') }}
+        
       </h2>
 
       <button
         @click="toggleForm"
         class="bg-indigo-600 text-white py-2 px-4 rounded-full mb-6 hover:bg-indigo-700"
       >
-        Mostrar formulari
+        {{ formVisible ? $t("form.hideForm") : $t("form.showForm") }}
       </button>
 
       <!-- Formulario Desplegable -->
@@ -25,7 +26,7 @@
           <!-- Nom -->
           <div class="mb-4">
             <label for="name" class="block text-gray-700 dark:text-gray-300"
-              >Nom</label
+              >{{$t("formNewDataUsers.name")}}</label
             >
             <input
               type="text"
@@ -41,7 +42,7 @@
             <label
               for="profile_photo"
               class="block text-gray-700 dark:text-gray-300"
-              >Foto de perfil</label
+              >{{ $t("formNewDataUsers.profilePicture") }}</label
             >
             <input
               type="file"
@@ -56,7 +57,7 @@
             <label
               for="banner_photo"
               class="block text-gray-700 dark:text-gray-300"
-              >Foto de portada</label
+              >{{ $t("formNewDataUsers.banner") }}</label
             >
             <input
               type="file"
@@ -69,7 +70,7 @@
           <!-- Ciutat -->
           <div class="mb-4">
             <label for="city" class="block text-gray-700 dark:text-gray-300"
-              >Ciutat</label
+              >{{$t("formNewDataUsers.city")}}</label
             >
             <input
               type="text"
@@ -84,7 +85,7 @@
             <label
               for="discord_link"
               class="block text-gray-700 dark:text-gray-300"
-              >Enllaç Discord</label
+              >{{$t("formNewDataUsers.linkDiscord")}}</label
             >
             <input
               id="discord_link"
@@ -96,7 +97,7 @@
             <label
               for="github_link"
               class="block text-gray-700 dark:text-gray-300"
-              >Enllaç GitHub</label
+              >{{$t("formNewDataUsers.linkGithub")}}</label
             >
             <input
               id="github_link"
@@ -108,7 +109,7 @@
           <!-- Etiquetes -->
           <div class="mb-4">
             <label for="tags" class="block text-gray-700 dark:text-gray-300"
-              >Etiquetes (JSON)</label
+              >{{ $t("formNewDataUsers.tags") }}</label
             >
             <textarea
               id="tags"
@@ -116,7 +117,9 @@
               class="w-full p-3 mt-2 rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white"
             ></textarea>
             <small class="text-gray-500 dark:text-gray-400"
-              >Exemple de format: ["JavaScript", "Python", "React"]</small
+              >{{ $t("formNewDataUsers.tagsExample") }}
+              
+              </small
             >
           </div>
 
@@ -125,7 +128,8 @@
             <label
               for="availibility"
               class="block text-gray-700 dark:text-gray-300"
-              >Disponibilitat (JSON)</label
+              >
+              {{ $t("formNewDataUsers.availability") }}</label
             >
             <textarea
               id="availibility"
@@ -133,8 +137,9 @@
               class="w-full p-3 mt-2 rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white"
             ></textarea>
             <small class="text-gray-500 dark:text-gray-400"
-              >Exemple de format: {"monday":"9:00-12:00",
-              "friday":"9:00-12:00"}</small
+              >
+              {{ $t("formNewDataUsers.availabilityExample") }}
+              </small
             >
           </div>
 
@@ -144,7 +149,7 @@
               type="submit"
               class="bg-indigo-600 text-white py-3 px-6 rounded-full transition-all duration-500 hover:bg-indigo-700 focus:outline-none"
             >
-              Desar Usuari
+              {{ $t("formNewDataUsers.submit") }}
             </button>
           </div>
         </form>

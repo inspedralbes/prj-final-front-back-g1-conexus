@@ -4,7 +4,7 @@
       <!-- Header -->
       <div class="bg-gray-300 dark:bg-gray-700 p-6 rounded-md shadow-md text-center">
         <h2 class="text-2xl font-semibold text-gray-800 dark:text-white">
-          Horari de disponibilitat
+          {{ $t('calendar.title') }}
         </h2>
       </div>
 
@@ -14,10 +14,10 @@
           <thead>
             <tr class="bg-gray-200 dark:bg-gray-800">
               <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 dark:text-gray-300">
-                Dia
+                {{ $t('calendar.day') }}
               </th>
               <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 dark:text-gray-300">
-                Hores disponibles
+                {{ $t('calendar.availibility') }}
               </th>
             </tr>
           </thead>
@@ -53,13 +53,13 @@ const availibility = computed(() => {
 
 const formatDay = (day) => {
   const daysMap = {
-    monday: 'Dilluns',
-    tuesday: 'Dimarts',
-    wednesday: 'Dimecres',
-    thursday: 'Dijous',
-    friday: 'Divendres',
-    saturday: 'Dissabte',
-    sunday: 'Diumenge',
+    monday: $t('calendar.monday'),
+    tuesday: $t('calendar.tuesday'),
+    wednesday: $t('calendar.wednesday'),
+    thursday: $t('calendar.thursday'),
+    friday: $t('calendar.friday'),
+    saturday: $t('calendar.saturday'),
+    sunday: $t('calendar.sunday'),
   };
   return daysMap[day] || day;
 };
