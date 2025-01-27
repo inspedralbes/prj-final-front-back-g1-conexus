@@ -1,23 +1,27 @@
 <template>
-  <!-- <Header></Header> -->
+  <Header class="shadow-lg shadow-black/30"></Header>
 
-  <div v-if="user.value" class="dark:bg-gray-900">
-    <!-- Banner and Profile Image -->
-    <div>
-      <img :src="`${banner}`" alt="banner-image" class="h-32 sm:h-48 w-full shadow-lg shadow-black/30" />
-
-      <!-- Banner, profile and edit button -->
-      <div class="flex justify-between">
-        <div class="-translate-y-14 sm:-translate-y-20 ml-4">
-          <img :src="`${profile}`" alt="user-avatar-image"
-            class="border-4 border-solid border-white rounded-full object-cover w-28 h-28 sm:w-40 sm:h-40 bg-white shadow-lg shadow-black/30" />
+  <div v-if="user.value" class="dark:bg-gray-900 p-4">
+    <!-- User - Banner & Profile Image -->
+    <div class="dark:bg-gray-800 bg-white text-gray-100 p-6 rounded-xl shadow-lg shadow-black/30 my-4">
+      <img :src="`${banner}`" alt="banner-image" class="h-32 sm:h-48 w-full rounded-xl object-cover" />
+      <div class="flex flex-col items-center sm:flex-row sm:justify-between -translate-y-10 sm:-translate-y-16">
+        <div class="flex flex-col sm:flex-row items-center sm:items-end">
+          <img :src="`${profile}`" alt="user-avatar-image" class="rounded-xl object-cover w-20 h-20 sm:w-32 sm:h-32 bg-white sm:ml-4" />
+          <div class="flex flex-col text-center sm:text-left mt-4 sm:mt-0 sm:ml-4">
+            <h3 class="font-semibold text-xl sm:text-2xl text-gray-900 mb-1 dark:text-white">
+              {{ user.value.name }}
+            </h3>
+            <p class="text-sm sm:text-base text-gray-500 dark:text-gray-300">
+              {{ user.value.city || `Lloc on vius...` }}
+            </p>
+          </div>
         </div>
-
-        <div class="-translate-y-4 sm:-translate-y-8 mr-4">
+        <div class="mt-4 sm:mt-0 sm:mr-4">
           <button @click="$router.push('/editProfile')"
-            class="py-3 px-3 sm:py-4 sm:px-4 rounded-full bg-indigo-600 text-white shadow-lg shadow-black/30 hover:bg-indigo-700">
+            class="py-3 px-3 sm:py-4 sm:px-4 rounded-full bg-indigo-600 text-white shadow-lg shadow-black/30 hover:bg-indigo-700 transition">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-              stroke="currentColor" class="size-6 sm:size-8">
+              stroke="currentColor" class="w-5 h-5 sm:w-6 sm:h-6">
               <path stroke-linecap="round" stroke-linejoin="round"
                 d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
             </svg>
@@ -27,7 +31,7 @@
     </div>
 
     <!-- User - Personal Info -->
-    <div class="dark:bg-gray-800 text-gray-100 p-6 rounded-xl shadow-lg shadow-black/30 mx-4 mb-4">
+    <div class="dark:bg-gray-800 bg-white text-gray-100 p-6 rounded-xl shadow-lg shadow-black/30 my-4">
       <h2 class="text-xl font-semibold border-b border-gray-600 pb-2 mb-4">Informació Personal</h2>
       <div class="space-y-4">
         <!-- Full Name -->
