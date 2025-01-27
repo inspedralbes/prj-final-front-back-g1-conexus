@@ -12,7 +12,7 @@
             class="block text-gray-700 text-sm font-bold mb-2 dark:text-gray-300"
             for="title"
           >
-            Afegeix una Petició:
+           {{ $t("requestPost.title") }}
           </label>
           <textarea
             id="title"
@@ -38,7 +38,7 @@
             for="image-upload"
             class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
           >
-            Pujar imatge:
+            {{ $t("requestPost.uploadImage") }}
           </label>
           <input
             id="image-upload"
@@ -55,14 +55,15 @@
             for="availability"
             class="block text-gray-700 text-sm font-bold mb-2 dark:text-gray-300"
           >
-            Disponible:
+          {{ $t("requestPost.availability") }}
+      
           </label>
           <button
             class="p-2 bg-blue-100 rounded-md mb-4 w-full sm:w-auto dark:bg-blue-700 dark:text-white dark:hover:bg-blue-800"
             type="button"
             @click="addAvailability"
           >
-            + Afegir Disponibilitat
+          {{ $t("requestPost.addAvailability") }}
           </button>
           <div
             v-for="(availability, index) in availabilities"
@@ -73,7 +74,8 @@
               v-model="availability.day"
               class="border rounded-md p-2 text-sm w-full sm:w-auto dark:border-gray-700 dark:bg-neutral-900 dark:text-white"
             >
-              <option disabled value="">Selecciona un dia</option>
+              <option disabled value="">
+              {{ $t("requestPost.selectDay") }}</option>
               <option v-for="day in week" :key="day" :value="day">
                 {{ day }}
               </option>
@@ -83,7 +85,8 @@
               @change="validateTimes(index)"
               class="border rounded-md p-2 text-sm w-full sm:w-auto dark:border-gray-700 dark:bg-neutral-900 dark:text-white"
             >
-              <option disabled value="">Hora d'inici</option>
+              <option disabled value="">
+              {{ $t("requestPost.startTime") }}</option>
               <option
                 v-for="hour in filteredHours(index, 'start')"
                 :key="hour"
@@ -97,7 +100,7 @@
               @change="validateTimes(index)"
               class="border rounded-md p-2 text-sm w-full sm:w-auto dark:border-gray-700 dark:bg-neutral-900 dark:text-white justify-between"
             >
-              <option disabled value="">Hora de final</option>
+              <option disabled value="">{{$t("requestPost.endTime")}}</option>
               <option
                 v-for="hour in filteredHours(index, 'end')"
                 :key="hour"
@@ -183,7 +186,8 @@
                   d="M4 12a8 8 0 018-8v8H4z"
                 ></path>
               </svg>
-              Publicant...
+              {{ $t("requestPost.publishing") }}
+          
             </span>
           </button>
         </div>

@@ -17,6 +17,51 @@ const i18n = createI18n({
     locale: 'ca',
     messages: {
         es: {
+            myRequests:{
+                availability:"Disponibilitat:",
+                reports:"Reportes:",
+                date:"Fechas:",
+                processing: "Pendiente de revisar",
+                reported:"Reportado",
+                posted: "Publicado",
+            },
+            myPublications:{
+                title: 'Mis publicaciones',
+                noPublications: 'No tienes publicaciones',
+            },
+            subMenu:{
+                profile:"Perfil",
+                publications:"Mis publicaciones",
+                request:"Mis peticiones",
+                admin:"Admin",
+                statistics:"Estadísticas",
+            },
+            requestPost:{
+                title: 'Añadir una petición:',
+                uploadImage: 'Subir imagen:',
+                availability: 'Disponible:',
+                addAvailabilty: '+ Añadir disponibilidad',
+                selectDay: 'Selecciona un día',
+                startTime: 'Hora de inicio',
+                endTime: 'Hora de fin',
+                publishing: 'Publicando...',
+            },
+            norificationList:{
+                title:"Notificaciones",
+                all: "Todas",
+                comments: "Comentarios",
+                publications: "Publicaciones",
+                noNotifications: "No hay notificaciones que mostrar",
+            },
+            navBar: {
+                home: 'Inicio',
+                search: 'Buscar',
+                upload: 'Subir',
+                chat: 'Chat',
+            },
+            loading:{
+                title: 'Cargando...',
+            },
             headerVerification:{
                 title:"Pagina de reportes",
                 validationUser:"Verificación de usuario",
@@ -79,6 +124,51 @@ const i18n = createI18n({
             },
         },
         en: {
+            myRequests:{
+                availability:"Availability",
+                reports:"Reports:",
+                date:"Dates:",
+                processing: "Pending review",
+                reported:"Reported",
+                posted: "Posted",
+            },
+            myPublications:{
+                title: 'My publications',
+                noPublications: 'You have no publications',
+            },
+            subMenu:{
+                profile:"Profile",
+                publications:"My publications",
+                request:"My requests",
+                admin:"Admin",
+                statistics:"Statistics",
+            },
+            requestPost:{
+                title: 'Add a request:',
+                uploadImage: 'Upload image:',
+                availability: 'Available:',
+                addAvailabilty: '+ Add availability',
+                selectDay: 'Select a day',
+                startTime: 'Start time',
+                endTime: 'End time',
+                publishing: 'Publishing...',
+            },
+            notificationList:{
+                title:"Notifications",
+                all: "All",
+                comments: "Comments",
+                publications: "Publications",
+                noNotifications: "No notifications to show",
+            },
+            navBar: {
+                home: 'Home',
+                search: 'Search',
+                upload: 'Upload',
+                chat: 'Chat',
+            },
+            loading:{
+                title: 'Loading...',
+            },
             headerVerification:{
                 title: "Verification page",
                 validationUser: "User verification",
@@ -141,6 +231,51 @@ const i18n = createI18n({
             },
         },
         ca: {
+            myRequests:{
+                availability:"Disponibilitat:",
+                reports:"Reportes:",
+                date:"Dates:",
+                processing: "Pendent de revisar",
+                reported:"Reportat",
+                posted: "Publicat",
+            },
+            myPublications:{
+                title: 'Les meves publicacions',
+                noPublications: 'No tens publicacions',
+            },
+            subMenu:{
+                profile:"Perfil",
+                publications:"Les meves publicacions",
+                request:"Les meves peticions",
+                admin:"Admin",
+                statistics:"Estadístiques",
+            },
+            requestPost:{
+                title: 'Afegeix una petició:',
+                uploadImage: 'Puja una imatge:',    
+                availability: 'Disponible:',
+                addAvailabilty: '+ Afegeix disponibilitat',
+                selectDay: 'Selecciona un dia',
+                startTime: 'Hora d\'inici',
+                endTime: 'Hora de fi',
+                publishing: 'Publicant...',
+            },
+            notificationList:{
+                title:"Notificacions",
+                all: "Totes",
+                comments: "Comentaris",
+                publications: "Publicacions",
+                noNotifications: "No hi ha notificacions per mostrar",
+            },
+            navBar: {
+                home: 'Inici',
+                search: 'Cerca',
+                upload: 'Pujar',
+                chat: 'Xat',
+            },
+            loading:{
+                title: 'Carregant...',
+            },
             headerVerification:{
                 title:"Pagina de report",
                 validationUser:"Validació d'usuari",

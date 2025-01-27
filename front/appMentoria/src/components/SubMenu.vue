@@ -33,7 +33,7 @@
                 class="text-gray-700 flex justify-between w-full px-4 py-2 text-sm leading-5 text-left"
                 role="menuitem"
               >
-                Perfil
+              {{ $t("subMenu.profile") }}
               </button>
               <button
                 @click="$router.push('/mypublications')"
@@ -41,7 +41,7 @@
                 class="text-gray-700 flex justify-between w-full px-4 py-2 text-sm leading-5 text-left"
                 role="menuitem"
               >
-                Mis publicacions
+              {{ $t("subMenu.publications") }}
               </button>
               <button
                 @click="$router.push('/myrequests')"
@@ -49,7 +49,7 @@
                 class="text-gray-700 flex justify-between w-full px-4 py-2 text-sm leading-5 text-left"
                 role="menuitem"
               >
-                Mis Peticions
+              {{ $t("subMenu.requests") }}
               </button>
               <div v-if="userTypes == 2" class="py-1">
                 <button
@@ -58,7 +58,7 @@
                   class="text-gray-700 flex justify-between w-full px-4 py-2 text-sm leading-5 text-left"
                   role="menuitem"
                 >
-                  Admin
+                {{ $t("subMenu.admin") }}
                 </button>
               </div>
               <div v-if="userTypes == 3" class="py-1">
@@ -68,7 +68,7 @@
                   class="text-gray-700 flex justify-between w-full px-4 py-2 text-sm leading-5 text-left"
                   role="menuitem"
                 >
-                  Admin
+                {{ $t("subMenu.admin") }}
                 </button>
                 <button
                   @click="$router.push('/stadistics')"
@@ -76,7 +76,7 @@
                   class="text-gray-700 flex justify-between w-full px-4 py-2 text-sm leading-5 text-left"
                   role="menuitem"
                 >
-                  Estadisticas
+                  {{$t("subMenu.stadistics")}}
                 </button>
               </div>
             </div>
