@@ -35,6 +35,12 @@ const fetchChatsNow = async (userId) => {
     const result = await fetchChats(userId);
     chats.value = result.chats;
     chatsInfo.value = result.chatsInfo;
+    chats.value = chats.value.filter(chat => {
+      if (chat.user_two_id === userId && (!chat.interactions || chat.interactions.length === 0)) {
+        return false;
+      }
+      return true;
+    });
   } catch (error) {}
 };
 
