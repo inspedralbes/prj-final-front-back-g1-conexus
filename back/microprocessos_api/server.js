@@ -127,6 +127,7 @@ app.get('/startService/:id', (req, res) => {
             console.error(`err log: ${errorMessage.message}`);
             service.status = 'error';
             service.enabled = 'disabled';
+            service.process.kill();
             fs.appendFileSync(logErrorFilePath, `${JSON.stringify(errorMessage)}\n`);
             service.logError.push(errorMessage);
             io.emit('wsdata', JSON.stringify(services));
