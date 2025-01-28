@@ -181,6 +181,8 @@ async function checkPublications() {
                         notificationPayload.request_id = id;
                     }
 
+                    console.log("oyeeeeeeeeeeeeeee");
+
                     try {
                         const notificationResponse = await fetch(iatextEnd.ENDPOINT_URL_NOTIFICATIONS + '/notificationCheckedIA/' + notificationPayload.publication_id || notificationPayload.request_id, {
                             method: 'PUT',

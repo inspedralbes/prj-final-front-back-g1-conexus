@@ -104,27 +104,44 @@ app.put('/notifications/:id', async (req, res) => {
 });
 
 app.put('/notificationCheckedIA/:id', async (req, res) => {
-    const { id, description, user_id, request_id, publication_id, report_id } = req.body;
+    const { description, request_id, publication_id } = req.body;
 
     try {
+        // Validar que uno de los dos valores (request_id o publication_id) sea válido
+        if (request_id == null && publication_id == null) {
+            return res.status(400).json({ error: 'Either request_id or publication_id must be provided' });
+        }
+
         const connection = await mysql.createConnection(dbConfig);
 
-        // Actualizar el campo `revised` de la notificación a 1 (marcada como leída)
-        const [result] = await connection.execute(
-            'UPDATE notifications SET description = ? WHERE id = ? AND request_id = ?',
-            [description, id, request_id]
-        );
+        let query, queryParams;
+
+        if (request_id != null) {
+            // Si request_id es válido, actualiza usando request_id
+            query = 'UPDATE notifications SET description = ? WHERE request_id = ?';
+            queryParams = [description, request_id];
+        } else if (publication_id != null) {
+            // Si publication_id es válido, actualiza usando publication_id
+            query = 'UPDATE notifications SET description = ? WHERE publication_id = ?';
+            queryParams = [description, publication_id];
+        }
+
+        // Ejecutar la consulta SQL
+        const [result] = await connection.execute(query, queryParams);
         connection.end();
 
+        // Comprobar si se actualizó alguna fila
         if (result.affectedRows === 0) {
             return res.status(404).json({ error: 'Notification not found' });
         }
 
         res.json({ message: 'Notification marked as read' });
     } catch (error) {
+        console.error(error); // Registro del error para depuración
         res.status(500).json({ error: 'Database error' });
     }
 });
+
 
 app.post('/notifications', async (req, res) => {
 
