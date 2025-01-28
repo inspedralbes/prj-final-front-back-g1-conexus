@@ -6,13 +6,14 @@ const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
 const dotenv = require('dotenv');
+const notifier = require('node-notifier');
 
 function loadEnv(envPath) {
   const result = dotenv.config({ path: envPath });
   if (result.error) {
-      throw result.error;
+    throw result.error;
   }
-  return result.parsed; 
+  return result.parsed;
 }
 
 const chatEnv = loadEnv(path.resolve(__dirname, './.env'));
@@ -21,23 +22,23 @@ const PORT = chatEnv.PORT;
 const app = express();
 const server = createServer(app);
 const io = new Server(server, {
-    cors: {
-        origin: '*',
-        methods: ['GET', 'POST', 'PUT', 'DELETE'],
-        credentials: true,
-        allowedHeaders: ["Access-Control-Allow-Origin", "Content-Type"],
-    }
+  cors: {
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
+    allowedHeaders: ["Access-Control-Allow-Origin", "Content-Type"],
+  }
 });
 
 app.use(express.json());
 
 app.use(cors({
-    origin: '*',
-    credentials: true,
-    allowedHeaders: ["Access-Control-Allow-Origin", "Content-Type"],
+  origin: '*',
+  credentials: true,
+  allowedHeaders: ["Access-Control-Allow-Origin", "Content-Type"],
 }));
 
-mongoose.connect( chatEnv.MONGO_URI, { dbName: 'Chat' })
+mongoose.connect(chatEnv.MONGO_URI, { dbName: 'Chat' })
   .then(() => console.log('Conexión exitosa a MongoDB'))
   .catch(err => console.error('Error de conexión a MongoDB:', err));
 
@@ -105,6 +106,10 @@ app.post('/addChat', async (req, res) => {
       message = await Message.findByIdAndUpdate(_id, { user_one_id, user_two_id, interactions }, { new: true, upsert: true });
     } else {
       message = new Message({ user_one_id, user_two_id, interactions });
+      notifier.notify({
+        title: 'New chat',
+        message: `Chat between users ${user_one_id} and ${user_two_id} created`
+      })
       await message.save();
     }
     res.json(message);
@@ -127,9 +132,9 @@ app.post('/newChat', async (req, res) => {
     return res.status(400).send('A chat between these users already exists');
   }
   try {
-      message = new Message({ user_one_id, user_two_id, interactions });
-      await message.save();
-      res.json(message);
+    message = new Message({ user_one_id, user_two_id, interactions });
+    await message.save();
+    res.json(message);
   } catch (err) {
     res.status(500).send(err);
   }
