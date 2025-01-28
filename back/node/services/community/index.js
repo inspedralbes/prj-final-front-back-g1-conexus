@@ -342,7 +342,7 @@ app.post('/publications', async (req, res) => {
 
         // Manejo de imagen
         // Llamada a la IA para analizar la imagen
-        const serverMjsUrl = IA_IMAGE_URL + '/classify-image';
+        const serverMjsUrl = IA_IMAGE_URL + '/classify-imageCommunity';
 
         let imageAnalysis = null;
         try {
