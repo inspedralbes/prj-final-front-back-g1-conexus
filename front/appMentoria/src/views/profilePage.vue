@@ -34,7 +34,7 @@
             <p
               class="font-normal text-base leading-7 text-gray-500 dark:text-gray-300"
             >
-              {{ user.value.city || `Lloc on vius...` }}
+              {{ user.value.city || $t("profilePage.placeWhereYouLive") }}
             </p>
           </div>
           <button
@@ -57,7 +57,7 @@
             <span
               class="px-2 font-medium text-base leading-7 text-gray-700 transition-all duration-500 group-hover:text-indigo-600"
             >
-              {{ user.value.class_name || `Pendent d'asignar` }}
+              {{ user.value.class_name || $t("profilePage.pendant") }}
             </span>
           </button>
         </div>

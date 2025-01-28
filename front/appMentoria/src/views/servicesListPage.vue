@@ -8,7 +8,7 @@
       class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen flex flex-col pt-20 pb-20"
     >
       <div class="container mx-auto px-4">
-        <h1 class="text-2xl font-bold mb-6">Serveis</h1>
+        <h1 class="text-2xl font-bold mb-6">{{ $t("serviceListPage.title") }}</h1>
         <ul class="space-y-6">
           <li
             v-for="service in services"
@@ -72,7 +72,7 @@ const fetchServices = async () => {
     const response = await getServices();
     services.value = response.map((service) => ({
       ...service,
-      description: service.description || "No description available",
+      description: service.description || $t("serviceListPage.noDescription"),
     }));
   } catch (error) {
     console.error("Error fetching services", error);

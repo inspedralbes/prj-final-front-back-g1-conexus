@@ -3,7 +3,7 @@
     class="container mx-auto p-3 sm:p-4 bg-white bg-gray-100 dark:bg-gray-700 shadow-lg rounded-lg max-w-screen-xl"
   >
     <h1 class="text-2xl font-bold mb-5 text-gray-800 dark:text-gray-100">
-      Usuaris Reportats
+      {{ $t("ViewReportUser.title") }}
     </h1>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div
@@ -21,12 +21,12 @@
         <div class="flex flex-wrap justify-between mb-4">
           <div class="w-full md:w-1/2 mb-4">
             <p class="text-lg font-semibold text-gray-800 dark:text-gray-300">
-              Informe Nº: {{ report.id }}
+              {{$t("ViewReportUser.report")}}{{ report.id }}
             </p>
           </div>
           <div class="w-full md:w-1/2 mb-4 md:mb-0">
             <p class="text-base font-semibold text-gray-900 dark:text-gray-300">
-              Estat:
+              {{ $t("ViewReportUser.status") }}
             </p>
             <select
               v-model="report.status"
@@ -38,16 +38,16 @@
                 'appearance-none bg-gray-100 dark:bg-gray-600 dark:text-gray-800 border border-gray-300 dark:border-gray-600 text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 p-2 w-full md:w-32 shadow-sm': true,
               }"
             >
-              <option value="pending">Pendent</option>
-              <option value="revising">Revisant</option>
-              <option value="revised">Revisat</option>
+              <option value="pending">{{ $t("ViewReportUser.pending") }}</option>
+              <option value="revising">{{ $t("ViewReportUser.reviewing") }}</option>
+              <option value="revised">{{ $t("ViewReportUser.reviewed") }}</option>
             </select>
           </div>
         </div>
 
         <div class="mb-5">
           <p class="text-sm font-semibold text-gray-700 dark:text-gray-100">
-            Data:
+            {{ $t("ViewReportUser.date") }}:
           </p>
           <p class="text-base text-gray-800 dark:text-gray-200">
             {{ report.created_at }}
@@ -56,7 +56,7 @@
 
         <div class="mb-5">
           <p class="text-sm font-semibold text-gray-700 dark:text-gray-100">
-            Usuari Reportat:
+            {{ $t("ViewReportUser.userReported") }}:
           </p>
           <p class="text-base text-gray-800 dark:text-gray-200">
             {{ report.reported_user_name }}
@@ -68,7 +68,7 @@
 
         <div class="mb-5">
           <p class="text-sm font-semibold text-gray-700 dark:text-gray-100">
-            Usuari que Reporta:
+            {{ $t("ViewReportUser.reportingUser") }}:
           </p>
           <p class="text-base text-gray-800 dark:text-gray-200">
             {{ report.reporting_user_name }}
@@ -80,7 +80,7 @@
 
         <div class="mb-3">
           <p class="text-sm font-semibold text-gray-700 dark:text-gray-100">
-            Informe:
+            {{ $t("ViewReportUser.report") }}:
           </p>
           <p class="text-base text-gray-800 dark:text-gray-200">
             {{ report.report }}
@@ -92,7 +92,7 @@
             @click="deleteReport(report.id)"
             class="bg-red-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-600"
           >
-            Eliminar
+            {{ $t("ViewReportUser.delete") }}
           </button>
         </div>
       </div>

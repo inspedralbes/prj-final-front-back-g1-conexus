@@ -117,15 +117,15 @@ const fullImageUrl = computed(() => {
 // Computed property para mostrar el estado de verificación por IA del texto
 const textIaStatus = computed(() => {
   return props.text_ia === 0
-    ? "Text no verificat per IA"
-    : "Text verificat per IA";
+    ? $t("myRequest.textNotVerified")
+    : $t("myRequest.textVerified");
 });
 
 // Computed property para mostrar el estado de verificación por IA de la imagen
 const imageIaStatus = computed(() => {
   return props.image_ia === 0
-    ? "Imatge no verificat per IA"
-    : "Imatge verificat per IA";
+    ? $t("myRequest.imgNotVerified")
+    : $t("myRequest.imgVerified");
 });
 
 // Computed property para determinar si el estado es 'En proceso' (tanto texto como imagen IA en 0)

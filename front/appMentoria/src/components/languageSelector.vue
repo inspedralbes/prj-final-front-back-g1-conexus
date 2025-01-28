@@ -41,7 +41,7 @@
             class="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
           >
             <span :class="`fi iconFlag fis fi-es`" />
-            <span class="ml-2">Español</span>
+            <span class="ml-2">{{ $t("languageSelector.spanish") }}</span>
           </a>
           <a
             href="#"
@@ -49,7 +49,7 @@
             @click="changeLanguage('gb')"
           >
             <span :class="`fi iconFlag fis fi-gb`" />
-            <span class="ml-2">English</span>
+            <span class="ml-2">{{$t("languageSelector.english")}}</span>
           </a>
           <a
             href="#"
@@ -57,7 +57,77 @@
             @click="changeLanguage('es-ct')"
           >
             <span :class="`fi fis iconFlag fi-es-ct`" />
-            <span class="ml-2">Català</span>
+            <span class="ml-2">{{ $t("languageSelector.catalan") }}</span>
+          </a>
+        </li>
+        <li>
+          <a
+            @click="changeLanguage('cn')"
+            href="#"
+            class="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+          >
+            <span :class="`fi iconFlag fis fi-cn`" />
+            <span class="ml-2">{{ $t("languageSelector.chinese") }}</span>
+          </a>
+        </li>
+        <li>
+          <a
+            @click="changeLanguage('es-pv')"
+            href="#"
+            class="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+          >
+            <span :class="`fi iconFlag fis fi-es-pv`" />
+            <span class="ml-2">{{ $t("languageSelector.euskera") }}</span>
+          </a>
+        </li>
+        <li>
+          <a
+            @click="changeLanguage('es-ga')"
+            href="#"
+            class="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+          >
+            <span :class="`fi iconFlag fis fi-es-ga`" />
+            <span class="ml-2">{{ $t("languageSelector.gallego") }}</span>
+          </a>
+        </li>
+        <li>
+          <a
+            @click="changeLanguage('jp')"
+            href="#"
+            class="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+          >
+            <span :class="`fi iconFlag fis fi-jp`" />
+            <span class="ml-2">{{ $t("languageSelector.japanese") }}</span>
+          </a>
+        </li>
+        <li>
+          <a
+            @click="changeLanguage('de')"
+            href="#"
+            class="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+          >
+            <span :class="`fi iconFlag fis fi-de`" />
+            <span class="ml-2">{{ $t("languageSelector.german") }}</span>
+          </a>
+        </li>
+        <li>
+          <a
+            @click="changeLanguage('pk')"
+            href="#"
+            class="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+          >
+            <span :class="`fi iconFlag fis fi-pk`" />
+            <span class="ml-2">{{ $t("languageSelector.urdu") }}</span>
+          </a>
+        </li>
+        <li>
+          <a
+            @click="changeLanguage('pt')"
+            href="#"
+            class="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+          >
+            <span :class="`fi iconFlag fis fi-pt`" />
+            <span class="ml-2">{{ $t("languageSelector.portuguese") }}</span>
           </a>
         </li>
       </ul>
@@ -68,6 +138,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useAppStore } from "../stores/index";
+import { changeLocale } from "../main.js";
 
 const selectedLanguage = ref("gb");
 const isDropdownVisible = ref(false);
@@ -78,7 +149,40 @@ const toggleDropdown = () => {
 
 const changeLanguage=(language)=>{
   useAppStore().setLanguage(language);
+  switch(language){
+    case "es":
+      language = "es";
+      break;
+    case "gb":
+      language = "en";
+      break;
+    case "es-ct":
+      language = "ca";
+      break;
+    case "cn":
+      language = "zh";
+      break;
+    case "es-pv":
+      language = "eu";
+      break;
+    case "es-ga":
+      language = "gl";
+      break;
+    case "jp":
+      language = "ja";
+      break;
+    case "de":
+      language = "de";
+      break;
+    case "pk":
+      language = "ur";
+      break;
+    case "pt":
+      language = "pt";
+      break;
+  }
   selectedLanguage.value = useAppStore().getLanguage();
+  changeLocale(language);
   toggleDropdown()
 
 }
@@ -87,15 +191,40 @@ onMounted(() => {
   const locale = new Intl.Locale(navigator.language);
   let language = "";
   language = locale.language;
-  if (language == "ca") {
-    language = "es-ct";
-  } else {
-    if (language == "en" || language != "es") {
+  switch(language){
+    case "es":
+      language = "es";
+      break;
+    case "en":
       language = "gb";
-    }
+      break;
+    case "ca":
+      language = "es-ct";
+      break;
+    case "zh":
+      language = "cn";
+      break;
+    case "eu":
+      language = "es-pv";
+      break;
+    case "gl":
+      language = "es-ga";
+      break;
+    case "ja":
+      language = "jp";
+      break;
+    case "de":
+      language = "de";
+      break;
+    case "ur":
+      language = "pk";
+      break;
+    case "pt":
+      language = "pt";
+      break;
   }
   useAppStore().setLanguage(language);
-
+  changeLanguage(language);
   selectedLanguage.value = useAppStore().getLanguage();
 });
 </script>

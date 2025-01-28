@@ -11,7 +11,7 @@
             <!-- Gráfico de Usuarios -->
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
                 <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4 text-center">
-                    Gràfics d'Usuaris
+                    {{ $t('StadisticsPage.userGraph') }}
                 </h2>
                 <div class="space-y-4">
                     <div v-for="(folder, folderName) in images.users" :key="folderName">
@@ -28,7 +28,7 @@
             <!-- Gráfico de Comentarios -->
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
                 <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4 text-center">
-                    Gràfics de Comentaris
+                    {{ $t('StadisticsPage.commentGraph') }}
                 </h2>
                 <div class="space-y-4">
                     <div v-for="(folder, folderName) in images.comments" :key="folderName">
@@ -45,7 +45,7 @@
             <!-- Gráfico de Publicaciones -->
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
                 <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4 text-center">
-                    Gràfics de Publicacions
+                    {{ $t('StadisticsPage.postGraph') }}
                 </h2>
                 <div class="space-y-4">
                     <div v-for="(folder, folderName) in images.publications" :key="folderName">
