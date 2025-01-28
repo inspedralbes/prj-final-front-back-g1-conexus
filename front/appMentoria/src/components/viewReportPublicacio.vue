@@ -38,7 +38,7 @@
               @change="updateReportStatus(report.id, report.status)"
               :class="{
                 'bg-yellow-200 dark:bg-yellow-600': report.status === 'pending',
-                'bg-blue-300 dark:bg-blue-400': report.status === 'revising',
+                'bg-blue-200 dark:bg-blue-800': report.status === 'revising',
                 'bg-green-200 dark:bg-green-600': report.status === 'revised',
                 'appearance-none bg-gray-100 dark:bg-gray-600 dark:text-gray-900 border border-gray-300 dark:border-gray-600 text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 p-2 w-full md:w-32 shadow-sm': true,
               }"
@@ -166,24 +166,17 @@ export default {
   },
   methods: {
     async updateReportStatus(id, status) {
-    const report = this.reports.find((r) => r.id === id);
-    try {
-        const response = await updateReportPublication(
-            id,
-            status,
-            report.publication_id,
-            report.user_id,
-            report.report
-        );
+      try {
+        const response = await updateReportPublication(id, status);
         if (response.error) {
-            console.error(response.error);
+          console.error(response.error);
         } else {
-            console.log("Estado actualizado correctamente");
+          console.log("Estat actualitzat correctament");
         }
-    } catch (error) {
-        console.error("Error al actualizar el estado:", error);
-    }
-},
+      } catch (error) {
+        console.error("Error al actualitzar l'estat:", error);
+      }
+    },
 
     async deleteReport(id) {
       try {

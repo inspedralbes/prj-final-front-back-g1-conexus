@@ -654,20 +654,14 @@ app.post('/reports/publications', async (req, res) => {
 });
 
 app.put('/reports/publications/:id', async (req, res) => {
-    console.log('Body:', req.body);
     const { id } = req.params;
-    const { publication_id, user_id, report, status } = req.body;
-
-    // Verifica que todos los parámetros estén definidos
-    if (publication_id === undefined || user_id === undefined || report === undefined || status === undefined) {
-        return res.status(400).json({ error: 'Missing required parameters' });
-    }
+    const { status } = req.body;
 
     try {
         const connection = await mysql.createConnection(dbConfig);
         const [result] = await connection.execute(
-            'UPDATE reportsPublications SET publication_id = ?, user_id = ?, report = ?, status = ? WHERE id = ?',
-            [publication_id, user_id, report, status, id]
+            'UPDATE reportsPublications SET status = ? WHERE id = ?',
+            [ status, id]
         );
         connection.end();
 
@@ -675,7 +669,6 @@ app.put('/reports/publications/:id', async (req, res) => {
 
         res.json({ message: 'ReportPublication updated successfully' });
     } catch (error) {
-        console.error('Database error:', error);
         res.status(500).json({ error: 'Database error' });
     }
 });

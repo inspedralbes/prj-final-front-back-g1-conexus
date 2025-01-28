@@ -32,8 +32,10 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(fileUpload());
+// app.use(fileUpload());
 // Asegúrate de que el middleware para parsear JSON esté configurado
+app.use(express.json());
+
 
 const genAI = new GoogleGenerativeAI(iatextEnd.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
