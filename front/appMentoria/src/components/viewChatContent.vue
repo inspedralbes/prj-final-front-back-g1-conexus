@@ -96,8 +96,12 @@
               >
                 <p>{{ interaction.message }}</p>
                 <p>
-                  <small>{{ interaction.timestamp }}</small>
+                  <small>{{ new Date(interaction.timestamp).toLocaleString() }}</small>
                 </p>
+                <button @click="confirmReport(interaction)" class="flex items-center space-x-1">
+                  <svg fill="#ffffff" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff" class="w-4 h-4"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path fill-rule="evenodd" d="M3.25 4a.25.25 0 00-.25.25v12.5c0 .138.112.25.25.25h2.5a.75.75 0 01.75.75v3.19l3.427-3.427A1.75 1.75 0 0111.164 17h9.586a.25.25 0 00.25-.25V4.25a.25.25 0 00-.25-.25H3.25zm-1.75.25c0-.966.784-1.75 1.75-1.75h17.5c.966 0 1.75.784 1.75 1.75v12.5a1.75 1.75 0 01-1.75 1.75h-9.586a.25.25 0 00-.177.073l-3.5 3.5A1.457 1.457 0 015 21.043V18.5H3.25a1.75 1.75 0 01-1.75-1.75V4.25zM12 6a.75.75 0 01.75.75v4a.75.75 0 01-1.5 0v-4A.75.75 0 0112 6zm0 9a1 1 0 100-2 1 1 0 000 2z"></path></g></svg>
+                  <p class="text-sm"><small>Report</small></p>
+                </button>
               </span>
             </div>
           </div>
@@ -181,10 +185,7 @@
 
 <script setup>
 import { ref, onMounted, defineProps, watch, nextTick } from "vue";
-import {
-  fetchMessages,
-  sendMessageInMongo,
-} from "@/services/communicationManager";
+import { fetchMessages, sendMessageInMongo } from "@/services/communicationManager";
 import socketChat from "../services/socketChat";
 
 const props = defineProps({
@@ -263,4 +264,11 @@ onMounted(async () => {
 watch(interactions, () => {
   scrollToBottom();
 });
+
+const confirmReport = (interaction) => {
+    if (confirm(`Are you sure you want to report this message from ${users.value.find(user => user.id === interaction.userId)?.name}: "${interaction.message}"?`)) {
+        // Logic to handle the report
+    console.log(`Message reported: ${interaction.message}`);
+    }
+};
 </script>
