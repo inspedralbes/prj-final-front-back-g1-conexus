@@ -8,7 +8,7 @@
         class="p-4 border-b flex flex-col md:flex-row justify-between items-center dark:border-gray-600"
       >
         <h2 class="text-lg font-semibold text-gray-700 dark:text-white">
-         {{ $t("myRequest.title") }}
+         {{ $t("myRequests.title") }}
         </h2>
       </div>
 

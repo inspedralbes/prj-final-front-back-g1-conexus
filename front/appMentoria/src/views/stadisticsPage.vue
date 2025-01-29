@@ -3,7 +3,7 @@
     <div v-if="!isLoading" class="bg-gray-100 dark:bg-gray-900 min-h-screen py-12 px-6">
         <!-- Encabezado -->
         <h1 class="text-3xl font-bold text-gray-900 dark:text-white text-center mb-8">
-            Estadístiques
+            {{ $t('StadisticsPage.title') }}
         </h1>
 
         <!-- Contenedor Principal -->

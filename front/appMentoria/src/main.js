@@ -37,6 +37,7 @@ const i18n = createI18n({
                 gallego: 'Gallego',
             },
             StadisticsPage:{
+                title: 'Estadísticas',
                 userGraph: "Graficos de usuarios",
                 commentsGraph: "Graficos de comentarios",
                 postGraph: "Graficos de publicaciones"  
@@ -313,6 +314,7 @@ const i18n = createI18n({
                 gallego: 'Galician',
             },
             StadisticsPage:{
+                title: 'Statistics',
                 userGraph: "User graphs",
                 commentsGraph: "Comments graphs",
                 postGraph: "Post graphs"
@@ -589,6 +591,7 @@ const i18n = createI18n({
                 gallego: 'Gallec',
             },
             StadisticsPage:{
+                title: 'Estadístiques',
                 userGraph: "Gràfics d'usuaris",
                 commentsGraph: "Gràfics de comentaris",
                 postGraph: "Gràfics de publicacions"
@@ -869,6 +872,7 @@ const i18n = createI18n({
                 gallego: '加利西亚语',
             },
             StadisticsPage: {
+                title: '统计',
                 userGraph: "用户图表",
                 commentsGraph: "评论图表",
                 postGraph: "帖子图表"
@@ -1145,6 +1149,7 @@ const i18n = createI18n({
                 gallego: 'Galizisch'
             },
             StadisticsPage: {
+                title: 'Statistiken',
                 userGraph: "Benutzergrafiken",
                 commentsGraph: "Kommentar-Grafiken",
                 postGraph: "Beitragsgrafiken"
@@ -1421,6 +1426,7 @@ const i18n = createI18n({
                 gallego: 'گالیشیائی'
             },
             StadisticsPage: {
+                title: 'اعداد و شمار',
                 userGraph: "صارف کے گراف",
                 commentsGraph: "تبصرے کے گراف",
                 postGraph: "پوسٹ کے گراف"
@@ -1697,6 +1703,7 @@ const i18n = createI18n({
                 gallego: 'Galego'
             },
             StadisticsPage: {
+                title: 'Estatísticas',
                 userGraph: "Gráficos de usuários",
                 commentsGraph: "Gráficos de comentários",
                 postGraph: "Gráficos de postagens"
@@ -1973,6 +1980,7 @@ const i18n = createI18n({
                 gallego: 'ガリシア語'
             },
             StadisticsPage: {
+                title: '統計',
                 userGraph: "ユーザーグラフ",
                 commentsGraph: "コメントグラフ",
                 postGraph: "投稿グラフ"
@@ -2249,6 +2257,7 @@ const i18n = createI18n({
                 gallego: 'Galegoa'
             },
             StadisticsPage: {
+                title: 'Estatistikak',
                 userGraph: "Erabiltzaileen grafikoak",
                 commentsGraph: "Iruzkin grafikoak",
                 postGraph: "Post grafikoak"
@@ -2525,6 +2534,7 @@ const i18n = createI18n({
                 gallego: 'Galego'
             },
             StadisticsPage: {
+                title: 'Estatísticas',
                 userGraph: "Gráficos de usuarios",
                 commentsGraph: "Gráficos de comentarios",
                 postGraph: "Gráficos de publicacións"
