@@ -1,163 +1,152 @@
 <template>
-    <Header></Header>
-    <div v-if="user.value.name">
-        <div class="bg-gray-100 dark:bg-gray-900 py-12 px-6">
-            <div class="max-w-7xl mx-auto px-6 md:px-8 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg text-center">
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">
-                    Formulari d'usuari
-                </h2>
-
-                <button @click="toggleForm"
-                    class="bg-indigo-600 text-white py-2 px-4 rounded-full mb-6 hover:bg-indigo-700">
-                    Mostrar formulari
-                </button>
-
-                <!-- Formulario Desplegable -->
-                <div v-show="formVisible">
-                    <form @submit.prevent="submitForm" class="w-full max-w-full lg:max-w-lg mx-auto">
-                        <!-- Nom -->
-                        <div class="mb-4">
-                            <label for="name" class="block text-gray-700 dark:text-gray-300">Nom</label>
-                            <input type="text" id="name" v-model="form.name"
-                                class="w-full p-3 mt-2 rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white"
-                                required />
+    <Header class="shadow-lg shadow-black/30"></Header>
+    <div v-if="user.value" class="dark:bg-gray-900 p-4 text-gray-900 dark:text-gray-100">
+        <div class="space-y-8">
+            <!-- Formulario 1: Información general -->
+            <div class="bg-white shadow-md rounded-lg p-6">
+                <h2 class="text-2xl font-bold mb-4">Editar Banner i Perfil</h2>
+                <form @submit.prevent="submitProfileEdit">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="profileName" class="block font-medium">Nom Complet</label>
+                            <input v-model="user.value.name" type="text" id="profileName" required
+                                class="w-full border border-gray-300 rounded-lg p-2 mt-1" />
                         </div>
-
-                        <!-- Perfil foto -->
-                        <div class="mb-4">
-                            <label for="profile_photo" class="block text-gray-700 dark:text-gray-300">Foto de
-                                perfil</label>
-                            <input type="file" id="profile_photo" @change="onFileChange($event, 'profile_photo')"
-                                class="w-full p-3 mt-2 rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white" />
+                        <div>
+                            <label for="profileCity" class="block font-medium">Ciutat</label>
+                            <input v-model="user.value.city" type="text" id="profileCity" required
+                                class="w-full border border-gray-300 rounded-lg p-2 mt-1" />
                         </div>
-
-                        <!-- Banner foto -->
-                        <div class="mb-4">
-                            <label for="banner_photo" class="block text-gray-700 dark:text-gray-300">Foto de
-                                portada</label>
-                            <input type="file" id="banner_photo" @change="onFileChange($event, 'banner_photo')"
-                                class="w-full p-3 mt-2 rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white" />
+                        <!-- Banner Section -->
+                        <div class="col-span-1 md:col-span-2">
+                            <label class="block font-medium">Imatge de Banner</label>
+                            <div class="flex items-center space-x-4">
+                                <!-- Current Banner Preview -->
+                                <div class="w-32 h-20 bg-gray-100 rounded-lg overflow-hidden border">
+                                    <img :src="banner" alt="Banner Actual" class="w-full h-full object-cover" />
+                                </div>
+                                <!-- New Banner Input -->
+                                <div>
+                                    <input type="file" @change="previewNewBanner" accept="image/*"
+                                        class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
+                                </div>
+                            </div>
+                            <!-- Preview for the New Banner -->
+                            <div v-if="newBanner" class="mt-2 w-32 h-20 bg-gray-100 rounded-lg overflow-hidden border">
+                                <img :src="newBanner" alt="Nova Imatge de Banner" class="w-full h-full object-cover" />
+                            </div>
                         </div>
-
-                        <!-- Ciutat -->
-                        <div class="mb-4">
-                            <label for="city" class="block text-gray-700 dark:text-gray-300">Ciutat</label>
-                            <input type="text" id="city" v-model="form.city"
-                                class="w-full p-3 mt-2 rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white" />
+                        <!-- Profile Image Section -->
+                        <div class="col-span-1 md:col-span-2">
+                            <label class="block font-medium">Imatge de Perfil</label>
+                            <div class="flex items-center space-x-4">
+                                <!-- Current Profile Image Preview -->
+                                <div class="w-20 h-20 bg-gray-100 rounded-full overflow-hidden border">
+                                    <img :src="profile" alt="Imatge de Perfil Actual"
+                                        class="w-full h-full object-cover" />
+                                </div>
+                                <!-- New Profile Image Input -->
+                                <div>
+                                    <input type="file" @change="previewNewProfile" accept="image/*"
+                                        class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
+                                </div>
+                            </div>
+                            <!-- Preview for the New Profile Image -->
+                            <div v-if="newProfile"
+                                class="mt-2 w-20 h-20 bg-gray-100 rounded-full overflow-hidden border">
+                                <img :src="newProfile" alt="Nova Imatge de Perfil" class="w-full h-full object-cover" />
+                            </div>
                         </div>
-
-                        <!-- Enllaços (Discord i GitHub) -->
-                        <div class="mb-4">
-                            <label for="discord_link" class="block text-gray-700 dark:text-gray-300">Enllaç
-                                Discord</label>
-                            <input id="discord_link" v-model="form.discord_link"
-                                class="w-full p-3 mt-2 rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white" />
+                    </div>
+                    <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-lg mt-4 hover:bg-blue-600">
+                        Desar Canvis
+                    </button>
+                </form>
+            </div>
+            <!-- Formulario 2: Información Personal -->
+            <div class="bg-white shadow-md rounded-lg p-6">
+                <h2 class="text-2xl font-bold mb-4">Editar Información Personal</h2>
+                <form @submit.prevent="submitPersonalInfo">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="contactEmail" class="block font-medium">Correo Electrónico</label>
+                            <input v-model="personalInfo.contactEmail" type="email" id="contactEmail"
+                                class="w-full border border-gray-300 rounded-lg p-2 mt-1">
                         </div>
-                        <div class="mb-4">
-                            <label for="github_link" class="block text-gray-700 dark:text-gray-300">Enllaç
-                                GitHub</label>
-                            <input id="github_link" v-model="form.github_link"
-                                class="w-full p-3 mt-2 rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white" />
+                        <div>
+                            <label for="contactPhone" class="block font-medium">Teléfono</label>
+                            <input v-model="personalInfo.contactPhone" type="tel" id="contactPhone"
+                                class="w-full border border-gray-300 rounded-lg p-2 mt-1">
                         </div>
-
-                        <!-- Etiquetes -->
-                        <div class="mb-4">
-                            <label for="tags" class="block text-gray-700 dark:text-gray-300">Etiquetes (JSON)</label>
-                            <textarea id="tags" v-model="form.tags"
-                                class="w-full p-3 mt-2 rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white"></textarea>
-                            <small class="text-gray-500 dark:text-gray-400">Exemple de format: ["JavaScript", "Python",
-                                "React"]</small>
+                        <div>
+                            <label for="title" class="block font-medium">Título</label>
+                            <input v-model="personalInfo.title" type="text" id="title"
+                                class="w-full border border-gray-300 rounded-lg p-2 mt-1">
                         </div>
-
-                        <!-- Disponibilitat -->
-                        <div class="mb-4">
-                            <label for="availibility" class="block text-gray-700 dark:text-gray-300">Disponibilitat
-                                (JSON)</label>
-                            <textarea id="availibility" v-model="form.availibility"
-                                class="w-full p-3 mt-2 rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white"></textarea>
-                            <small class="text-gray-500 dark:text-gray-400">Exemple de format: {"monday":"9:00-12:00",
-                                "friday":"9:00-12:00"}</small>
+                        <div class="col-span-1 md:col-span-2">
+                            <label for="description" class="block font-medium">Descripción</label>
+                            <textarea v-model="personalInfo.description" id="description" rows="4"
+                                class="w-full border border-gray-300 rounded-lg p-2 mt-1"></textarea>
                         </div>
-
-                        <!-- Botó de Submit -->
-                        <div class="flex justify-center mt-6">
-                            <button type="submit"
-                                class="bg-indigo-600 text-white py-3 px-6 rounded-full transition-all duration-500 hover:bg-indigo-700 focus:outline-none">
-                                Desar Usuari
-                            </button>
+                        
+                        <div class="col-span-1 md:col-span-2">
+                            <label for="softwareSkills" class="block font-medium">Habilidades Técnicas</label>
+                            <input v-model="personalInfo.softwareSkills" type="text" id="softwareSkills"
+                                placeholder="Ej: Ruby, Rails, JavaScript"
+                                class="w-full border border-gray-300 rounded-lg p-2 mt-1">
                         </div>
-                    </form>
-                </div>
+                        <div class="col-span-1 md:col-span-2">
+                            <label for="languages" class="block font-medium">Idiomas</label>
+                            <input v-model="personalInfo.languages" type="text" id="languages"
+                                class="w-full border border-gray-300 rounded-lg p-2 mt-1">
+                        </div>
+                    </div>
+                    <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-lg mt-4 hover:bg-blue-600">
+                        Guardar Cambios
+                    </button>
+                </form>
             </div>
         </div>
     </div>
-    <div v-else>
+    <div v-else class="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
         <Loading />
     </div>
-
-    <NavBar />
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { createNewDataUser } from "@/services/communicationManager";
+import { ref, onMounted, reactive } from "vue";
+import { useAppStore } from "@/stores/index";
+import Loading from "@/components/Loading.vue";
+import Header from "@/components/Header.vue";
 
-// Estado para el formulario
-const form = ref({
-    name: "",
-    profile_photo: null,
-    banner_photo: null,
-    city: "",
-    discord_link: "",
-    github_link: "",
-    tags: "",
-    availibility: "",
-});
+const appStore = useAppStore();
 
-const formVisible = ref(false); // Para mostrar/ocultar el formulario
+var user = reactive({});
+var profile = ref(null);
+var banner = ref(null);
 
-// Función para manejar archivos
-const onFileChange = (event, fieldName) => {
-    const file = event.target.files[0];
-    if (file) {
-        form.value[fieldName] = file;
-    }
-};
+var generalInfo = reactive({});
+var personalInfo = reactive({});
 
-// Función para mostrar/ocultar el formulario
-const toggleForm = () => {
-    formVisible.value = !formVisible.value;
-};
+onMounted(() => {
+    user.value = appStore.getUser();
+    profile.value = user.value.profile;
+    banner.value = user.value.banner;
 
-// Función para manejar el envío del formulario
-const submitForm = async () => {
-    try {
-        const userData = { ...form.value };
-        // Validar y convertir JSON
-        if (userData.tags) userData.tags = JSON.parse(userData.tags);
-        if (userData.availibility)
-            userData.availibility = JSON.parse(userData.availibility);
-
-        const response = await createNewDataUser(userData);
-
-        if (response.error) {
-            alert(`Error: ${response.error}`);
-        } else {
-            alert("Usuari creat correctament");
-            form.value = {
-                name: "",
-                profile_photo: null,
-                banner_photo: null,
-                city: "",
-                discord_link: "",
-                github_link: "",
-                tags: "",
-                availibility: "",
-            };
-            formVisible.value = false;
+    if (typeof user.value.tags == "string") {
+        try {
+            user.value.tags = JSON.parse(user.value.tags);
+        } catch (error) {
+            console.error("Error al parsear tags:", error);
         }
-    } catch (error) {
-        alert("Error en el format JSON.");
     }
-};
+
+    if (typeof user.value.availibility == "string") {
+        try {
+            user.value.availibility = JSON.parse(user.value.availibility);
+        } catch (error) {
+            console.error("Error al parsear availibility:", error);
+        }
+    }
+});
 </script>

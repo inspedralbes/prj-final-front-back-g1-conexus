@@ -81,11 +81,11 @@ onMounted(async () => {
   <div id="app" :class="isDarkMode ? 'dark' : ''">
     <RouterView
       v-if="!isLoading || userAPP.name"
-      class="bg-slate-200 dark:bg-gray-900 dark:text-gray-400 text-gray-500"
+      class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100"
     />
     <div
       v-else
-      class="flex items-center justify-center min-h-screen bg-white dark:bg-neutral-800"
+      class="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900"
     >
       <Loading />
     </div>

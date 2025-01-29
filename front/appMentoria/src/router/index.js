@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAppStore } from '@/stores/index';
 import mainPage from '../views/mainPage.vue'
-import profilePage from '@/views/profilePage.vue'
+import profilePage from '@/views/myProfilePage.vue'
 import profilesPage from '@/views/profilesPage.vue'
 import reportPage from '../views/reportPage.vue'
 import validationPage from '../views/validationPage.vue'
