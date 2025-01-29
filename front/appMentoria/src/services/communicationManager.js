@@ -753,23 +753,15 @@ export const createReportPublication = async (
 };
 
 // Update a report publication by ID
-export const updateReportPublication = async (id, status, publication_id, user_id, report) => {
+export const updateReportPublication = async (id, status) => {
     try {
-        const response = await fetch(
-            `${COMMUNITY_URL}/reports/publications/${id}`,
-            {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    status,
-                    publication_id,
-                    user_id,
-                    report,
-                }),
-            }
-        );
+        const response = await fetch(`${COMMUNITY_URL}/reports/publications/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ status }),
+        });
 
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
@@ -777,8 +769,8 @@ export const updateReportPublication = async (id, status, publication_id, user_i
 
         return await response.json();
     } catch (error) {
-        console.error("Network error:", error);
-        return { error: "Network error. Please try again later." };
+        console.error('Network error:', error);
+        return { error: 'Network error. Please try again later.' };
     }
 };
 

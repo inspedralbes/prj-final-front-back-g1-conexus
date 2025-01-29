@@ -135,6 +135,26 @@ app.post('/newChat', async (req, res) => {
   }
 });
 
+const TWENTY_FOUR_HOURS_IN_MS = 24 * 60 * 60 * 1000;
+
+setInterval(async () => {
+  try {
+    const chats = await Message.find();
+    const now = new Date();
+
+    for (const chat of chats) {
+      const createdAt = chat._id.getTimestamp();
+
+      if (chat.interactions.length === 0 && now - createdAt > TWENTY_FOUR_HOURS_IN_MS) {
+        await Message.findByIdAndDelete(chat._id);
+        console.log(`Deleted chat with id: ${chat._id}`);
+      }
+    }
+  } catch (err) {
+    console.error('Error checking chats:', err);
+  }
+}, 10000);
+
 io.on('connection', (socket) => {
   console.log('a user connected');
 
