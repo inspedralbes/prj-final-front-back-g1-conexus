@@ -127,6 +127,14 @@ INSERT INTO reportsPublications (publication_id, user_id, report) VALUES
 (4, 1, 'Plagi'), 
 (5, 2, 'Informació falsa');
 
+-- Inserciones para reportsChats
+INSERT INTO reportsChats (message_id, user_id, content, report, status) VALUES 
+(1, 2, 'Gilipollas', 'Llenguatge ofensiu', 'pending'), 
+(2, 3, 'Soy un primo nigeriano', 'Spam', 'pending'), 
+(3, 4, 'Quiero sexo', 'Contingut inadequat', 'pending'), 
+(4, 5, '???', 'Informació falsa', 'pending'), 
+(5, 1, 'Missatge plagiat', 'Plagi', 'pending');
+
 -- Inserciones para reportsComments
 INSERT INTO reportsComments (comment_id, user_id, report) VALUES 
 (1, 3, 'Llenguatge ofensiu'), 

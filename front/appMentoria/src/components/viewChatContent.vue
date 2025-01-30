@@ -266,9 +266,10 @@ watch(interactions, () => {
 });
 
 const confirmReport = (interaction) => {
-    if (confirm(`Estàs segur que vols reportar aquest missatge: "${interaction.message}"?`)) {
-        // Logic to handle the report
-    console.log(`Message reported: ${interaction.message}`);
-    }
+  const reason = prompt(`Estàs segur que vols reportar aquest missatge: "${interaction.message}"? Si és així, indica el motiu:`);
+  if (reason) {
+    // Logic to handle the report
+    console.log(`Message reported: ${interaction.message}, Reason: ${reason}`);
+  }
 };
 </script>
