@@ -266,7 +266,7 @@ watch(interactions, () => {
 });
 
 const confirmReport = (interaction) => {
-    if (confirm(`Are you sure you want to report this message: "${interaction.message}"?`)) {
+    if (confirm(`Estàs segur que vols reportar aquest missatge: "${interaction.message}"?`)) {
         // Logic to handle the report
     console.log(`Message reported: ${interaction.message}`);
     }
