@@ -2,19 +2,28 @@
 const fileUpload = require('express-fileupload');
 const express = require('express');
 const mysql = require('mysql2/promise');
-const path = require('path');
 const cors = require('cors');
 const fs = require('fs');
 const FormData = require('form-data');
 const { request } = require('http');
 const { text } = require('stream/consumers');
-require('dotenv').config();
+const path = require('path');
+const dotenv = require('dotenv');
 
+function loadEnv(envPath) {
+  const result = dotenv.config({ path: envPath });
+  if (result.error) {
+      throw result.error;
+  }
+  return result.parsed; 
+}
+
+const empEnd = loadEnv(path.resolve(__dirname, './.env'));
 const app = express();
-const port = process.env.PORT;
-const IA_TEXT_URL = process.env.IA_TEXT_URL;
-const IA_IMAGE_URL = process.env.IA_IMAGE_URL;
-const NOTIFICATION_URL = process.env.NOTIFICATION_URL;
+const port = empEnd.PORT;
+const IA_TEXT_URL = empEnd.IA_TEXT_URL;
+const IA_IMAGE_URL = empEnd.IA_IMAGE_URL;
+const NOTIFICATION_URL = empEnd.NOTIFICATION_URL;
 
 /* ----------------------------------------- SERVER APP ----------------------------------------- */
 app.use(express.json());
@@ -31,10 +40,10 @@ app.use(fileUpload());
 
 /* ----------------------------------------- DATABASE ----------------------------------------- */
 const dbConfig = {
-    host: process.env.MYSQL_HOST,
-    user: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASS,
-    database: process.env.MYSQL_DB
+    host: empEnd.MYSQL_HOST,
+    user: empEnd.MYSQL_USER,
+    password: empEnd.MYSQL_PASS,
+    database: empEnd.MYSQL_DB
 };
 
 /* ----------------------------------------- ROUTES ----------------------------------------- */
@@ -85,7 +94,7 @@ app.post('/comments', async (req, res) => {
     if (running == true) {
         const analyzeContent = async (content) => {
             console.log("HOLA 1");
-            const serverIA = IA_TEXT_URL + '/classify-comment';
+            const serverIA = IA_TEXT_URL + '/classifyTextOffers';
             try {
                 const response = await fetch(serverIA, {
                     method: 'POST',
@@ -303,7 +312,7 @@ app.post('/publications', async (req, res) => {
         // Llamada a la IA para analizar título y descripción
         const analyzeContent = async (content) => {
             console.log("HOLA 1");
-            const serverIA = IA_TEXT_URL + '/classify-comment';
+            const serverIA = IA_TEXT_URL + '/classifyTextOffers';
             try {
                 const response = await fetch(serverIA, {
                     method: 'POST',
@@ -332,7 +341,7 @@ app.post('/publications', async (req, res) => {
 
         // Manejo de imagen
         // Llamada a la IA para analizar la imagen
-        const serverMjsUrl = IA_IMAGE_URL + '/classify-image';
+        const serverMjsUrl = IA_IMAGE_URL + '/classify-imageOffers';
 
         let imageAnalysis = null;
         try {
@@ -365,6 +374,10 @@ app.post('/publications', async (req, res) => {
             const connection = await mysql.createConnection(dbConfig);
             const report = `Análisis: título (${titleAnalysis.category} | ${titleAnalysis.reason}), Descripció (${descriptionAnalysis.category} | ${descriptionAnalysis.reason}), imagen (${imageAnalysis.category} | ${imageAnalysis.reason})`;
 
+            if (imageAnalysis.error && imageAnalysis.error.includes("No se pudo clasificar la imagen por contenido sexual explícito o implícito que infringe las políticas de moderación.")) {
+                throw new Error('Publicación no permitida debido a contenido sexual explícito o implícito');
+            }
+            
             const [result] = await connection.execute(
                 'INSERT INTO publications (typesPublications_id, title, description, user_id, image, availability, reports, text_ia, image_ia, expired_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
                 [2, title, description, user_id, `/upload/${imageName}`, availability, 0, 1, 1, expired_at || null]
@@ -378,7 +391,7 @@ app.post('/publications', async (req, res) => {
             if (isReportableComment(descriptionAnalysis)) {
                 reasons.push(`descripción: ${descriptionAnalysis.reason}`);
             }
-            if (imageAnalysis.category === 'OFENSIVA' || (imageAnalysis.category === 'POTENCIALMENTE_SUGERENTE' && imageAnalysis.subcategory === 'OFENSIVO')) {
+            if (imageAnalysis.category === 'OFENSIVA' && imageAnalysis.category === 'CONTENIDO_SEXUAL' || imageAnalysis.subcategory === 'SIN_PERSONAS_OFENSIVA'  || (imageAnalysis.category === 'POTENCIALMENTE_SUGERENTE' && imageAnalysis.subcategory === 'FAMOSOS_SUGERENTE' || imageAnalysis.subcategory === 'DESCONOCIDOS_POTENCIALMENTE_SUGERENTE' || imageAnalysis.subcategory === 'FAMOSOS_POTENCIALMENTE_SUGERENTE' || imageAnalysis.subcategory === 'FAMOSOS_OFENSIVO')) {
                 reasons.push(`imagen: ${imageAnalysis.reason}`);
             }
 

@@ -1,14 +1,24 @@
 /* ----------------------------------------- IMPORTS ----------------------------------------- */
 const express = require('express');
 const mysql = require('mysql2/promise');
-const path = require('path');
 const cors = require('cors');
 const FormData = require('form-data');
 
-require('dotenv').config();
+const path = require('path');
+const dotenv = require('dotenv');
+
+function loadEnv(envPath) {
+  const result = dotenv.config({ path: envPath });
+  if (result.error) {
+      throw result.error;
+  }
+  return result.parsed; 
+}
+
+const notiEnd = loadEnv(path.resolve(__dirname, './.env'));
 
 const app = express();
-const port = process.env.PORT;
+const port = notiEnd.PORT;
 
 /* ----------------------------------------- SERVER APP ----------------------------------------- */
 app.use(express.json());
@@ -26,10 +36,10 @@ app.use((req, res, next) => {
 
 /* ----------------------------------------- DATABASE ----------------------------------------- */
 const dbConfig = {
-    host: process.env.MYSQL_HOST,
-    user: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASS,
-    database: process.env.MYSQL_DB
+    host: notiEnd.MYSQL_HOST,
+    user: notiEnd.MYSQL_USER,
+    password: notiEnd.MYSQL_PASS,
+    database: notiEnd.MYSQL_DB
 };
 
 /* ----------------------------------------- ROUTES ----------------------------------------- */

@@ -5,10 +5,13 @@ import { useAppStore } from "@/stores/index";
 import router from "@/router";
 import { getUserForRefreshLogin } from "./services/communicationManager";
 import Loading from "./components/Loading.vue";
+import LanguageSelector from "./components/languageSelector.vue";
+
 
 const userAPP = reactive({}); // Objeto reactivo para el usuario
 const isDarkMode = ref(false);
 const isLoading = ref(true); // Bandera para controlar el estado de carga
+
 
 async function validateLogin() {
   const profileURL = ref("");
@@ -55,8 +58,9 @@ async function validateLogin() {
     return null; // Retorna null si ocurre un error inesperado
   }
 }
-
+let language
 onMounted(async () => {
+  
   const darkModePreference = localStorage.getItem("darkMode");
   if (darkModePreference == "enabled") {
     isDarkMode.value = true;
@@ -73,12 +77,14 @@ onMounted(async () => {
     router.push({ name: "login" });
   }
 
-  isLoading.value = false; // Desactiva el estado de carga
+  isLoading.value = false; 
 });
 </script>
 
 <template>
+
   <div id="app" :class="isDarkMode ? 'dark' : ''">
+  <LanguageSelector />
     <RouterView
       v-if="!isLoading || userAPP.name"
       class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100"

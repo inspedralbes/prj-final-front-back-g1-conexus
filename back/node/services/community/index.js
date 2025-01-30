@@ -2,17 +2,26 @@
 const fileUpload = require('express-fileupload');
 const express = require('express');
 const mysql = require('mysql2/promise');
-const path = require('path');
 const cors = require('cors');
 const fs = require('fs');
 const FormData = require('form-data');
-require('dotenv').config();
+const path = require('path');
+const dotenv = require('dotenv');
 
+function loadEnv(envPath) {
+  const result = dotenv.config({ path: envPath });
+  if (result.error) {
+      throw result.error;
+  }
+  return result.parsed; 
+}
+
+const comEnd = loadEnv(path.resolve(__dirname, './.env'));
 const app = express();
-const port = process.env.PORT;
-const IA_TEXT_URL = process.env.IA_TEXT_URL;
-const IA_IMAGE_URL = process.env.IA_IMAGE_URL;
-const NOTIFICATION_URL = process.env.NOTIFICATION_URL;
+const port = comEnd.PORT;
+const IA_TEXT_URL = comEnd.IA_TEXT_URL;
+const IA_IMAGE_URL = comEnd.IA_IMAGE_URL;
+const NOTIFICATION_URL = comEnd.NOTIFICATION_URL;
 
 /* ----------------------------------------- SERVER APP ----------------------------------------- */
 app.use(express.json());
@@ -30,10 +39,10 @@ app.use(fileUpload());
 
 /* ----------------------------------------- DATABASE ----------------------------------------- */
 const dbConfig = {
-    host: process.env.MYSQL_HOST,
-    user: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASS,
-    database: process.env.MYSQL_DB
+    host: comEnd.MYSQL_HOST,
+    user: comEnd.MYSQL_USER,
+    password: comEnd.MYSQL_PASS,
+    database: comEnd.MYSQL_DB
 };
 
 /* ----------------------------------------- ROUTES ----------------------------------------- */
@@ -85,7 +94,7 @@ app.post('/comments', async (req, res) => {
     if (running == true) {
         const analyzeContent = async (content) => {
             console.log("HOLA 1");
-            const serverIA = IA_TEXT_URL + '/classify-comment';
+            const serverIA = IA_TEXT_URL + '/classifyTextCommunity';
             try {
                 const response = await fetch(serverIA, {
                     method: 'POST',
@@ -304,7 +313,7 @@ app.post('/publications', async (req, res) => {
         // Llamada a la IA para analizar título y descripción
         const analyzeContent = async (content) => {
             console.log("HOLA 1");
-            const serverIA = IA_TEXT_URL + '/classify-comment';
+            const serverIA = IA_TEXT_URL + '/classifyTextCommunity';
             try {
                 const response = await fetch(serverIA, {
                     method: 'POST',
@@ -333,7 +342,7 @@ app.post('/publications', async (req, res) => {
 
         // Manejo de imagen
         // Llamada a la IA para analizar la imagen
-        const serverMjsUrl = IA_IMAGE_URL + '/classify-image';
+        const serverMjsUrl = IA_IMAGE_URL + '/classify-imageCommunity';
 
         let imageAnalysis = null;
         try {
@@ -645,20 +654,14 @@ app.post('/reports/publications', async (req, res) => {
 });
 
 app.put('/reports/publications/:id', async (req, res) => {
-    console.log('Body:', req.body);
     const { id } = req.params;
-    const { publication_id, user_id, report, status } = req.body;
-
-    // Verifica que todos los parámetros estén definidos
-    if (publication_id === undefined || user_id === undefined || report === undefined || status === undefined) {
-        return res.status(400).json({ error: 'Missing required parameters' });
-    }
+    const { status } = req.body;
 
     try {
         const connection = await mysql.createConnection(dbConfig);
         const [result] = await connection.execute(
-            'UPDATE reportsPublications SET publication_id = ?, user_id = ?, report = ?, status = ? WHERE id = ?',
-            [publication_id, user_id, report, status, id]
+            'UPDATE reportsPublications SET status = ? WHERE id = ?',
+            [ status, id]
         );
         connection.end();
 
@@ -666,7 +669,6 @@ app.put('/reports/publications/:id', async (req, res) => {
 
         res.json({ message: 'ReportPublication updated successfully' });
     } catch (error) {
-        console.error('Database error:', error);
         res.status(500).json({ error: 'Database error' });
     }
 });

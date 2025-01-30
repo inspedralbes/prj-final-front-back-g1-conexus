@@ -1,0 +1,274 @@
+{
+    "chatContent": {
+        "writeMessage": "پیغام لکھیں..."
+    },
+    "languageSelector": {
+        "spanish": "ہسپانوی",
+        "english": "انگریزی",
+        "catalan": "کیٹالان",
+        "chinese": "چینی",
+        "urdu": "اردو",
+        "german": "جرمن",
+        "portuguese": "پرتگالی",
+        "japanese": "جاپانی",
+        "euskera": "باسک",
+        "gallego": "گالیشیائی"
+    },
+    "StadisticsPage": {
+        "title": "اعداد و شمار",
+        "userGraph": "صارف کے گراف",
+        "commentsGraph": "تبصرے کے گراف",
+        "postGraph": "پوسٹ کے گراف"
+    },
+    "serviceListPage": {
+        "title": "خدمات",
+        "noDescription": "کوئی تفصیل دستیاب نہیں"
+    },
+    "profilePage": {
+        "placeWhereYouLive": "جہاں آپ رہتے ہیں...",
+        "pendant": "تفویض کرنے کے لئے زیر التواء"
+    },
+    "LoginRegisterPage": {
+        "subTitle": "@inspedralbes.cat ای میل",
+        "accessGoogle": "گوگل کے ساتھ رسائی حاصل کریں",
+        "accessGithub": "گٹ ہب کے ساتھ رسائی حاصل کریں",
+        "logIn": "یا لاگ ان کریں",
+        "mailPlaceholder": "ای میل",
+        "passwordPlaceholder": "پاس ورڈ",
+        "loginButton": "لاگ ان کریں",
+        "projectBy": "پروجیکٹ ٹیم کے ذریعہ بنایا گیا",
+        "withTheHelpOf": "، کی مدد سے",
+        "error": "لاگ ان کرتے وقت ایک خرابی پیش آگئی",
+        "errorFields": "لاگ ان میں خرابی، درج کردہ ڈیٹا چیک کریں",
+        "invalidMail": "لاگ ان میں خرابی، ای میل درست نہیں ہے"
+    },
+    "AddComunityPost": {
+        "create": "ایک پوسٹ بنائیں",
+        "title": "عنوان:",
+        "titlePlaceholder": "پوسٹ کا عنوان لکھیں",
+        "description": "تفصیل:",
+        "descriptionPlaceholder": "پوسٹ کی تفصیل لکھیں",
+        "postImage": "تصویر اپ لوڈ کریں:",
+        "preview": "پیش نظارہ:",
+        "publish": "شائع کریں",
+        "publishing": "شائع ہو رہا ہے...",
+        "notAllFields": "براہ کرم تمام فیلڈز کو مکمل کریں اور ایک تصویر اپ لوڈ کریں۔",
+        "error": "پوسٹ شائع کرتے وقت ایک خرابی پیش آگئی:"
+    },
+    "viewValidationUser": {
+        "title": "صارفین کی توثیق کریں",
+        "user": "صارف نمبر",
+        "userType": "صارف کی قسم:",
+        "student": "طالب علم",
+        "teacher": "استاد",
+        "admin": "ایڈمن",
+        "class": "کلاس:",
+        "banner": "بینر:",
+        "profile": "پروفائل:",
+        "validate": "توثیق کریں",
+        "delete": "حذف کریں",
+        "unknown": "نامعلوم"
+    },
+    "ViewValidationUpdate": {
+        "title": "صارفین کی توثیق/اپ ڈیٹ کریں",
+        "user": "صارف نمبر:",
+        "userType": "صارف کی قسم:",
+        "student": "طالب علم",
+        "teacher": "استاد",
+        "admin": "ایڈمن",
+        "class": "کلاس:",
+        "banner": "بینر:",
+        "profile": "پروفائل:",
+        "validate": "توثیق کریں",
+        "delete": "حذف کریں",
+        "unknown": "نامعلوم"
+    },
+    "viewRequest": {
+        "coments": "تبصرے",
+        "comentPlaceholder": "ایک تبصرہ لکھیں!",
+        "seeMore": "مزید دیکھیں",
+        "seeLess": "کم دیکھیں",
+        "availability": "دستیابی",
+        "from": "سے",
+        "to": "تک"
+    },
+    "ViewReportUser": {
+        "title": "رپورٹ شدہ صارفین",
+        "reportN": "رپورٹ نمبر",
+        "status": "حالت:",
+        "pending": "زیر التواء",
+        "reviewing": "جائزہ لے رہے ہیں",
+        "reviewed": "جائزہ لیا گیا",
+        "date": "تاریخ:",
+        "userReporting": "رپورٹ کرنے والا صارف:",
+        "userReported": "رپورٹ شدہ صارف:",
+        "report": "رپورٹ:",
+        "delete": "حذف کریں"
+    },
+    "ViewReportPublicacio": {
+        "title": "رپورٹ شدہ پوسٹس",
+        "reportN": "رپورٹ نمبر",
+        "status": "حالت:",
+        "pending": "زیر التواء",
+        "reviewing": "جائزہ لے رہے ہیں",
+        "reviewed": "جائزہ لیا گیا",
+        "date": "تاریخ:",
+        "userReporting": "رپورٹ کرنے والا صارف:",
+        "userPost": "پوسٹ کا صارف:",
+        "postTitle": "پوسٹ کا عنوان:",
+        "postDescription": "پوسٹ کی تفصیل:",
+        "report": "رپورٹ:",
+        "reportedImage": "رپورٹ شدہ تصویر:",
+        "viewImage": "تصویر دیکھیں",
+        "delete": "حذف کریں"
+    },
+    "ViewMyPublicationItem": {
+        "availability": "دستیابی:",
+        "reports": "رپورٹس:",
+        "date": "تاریخ:",
+        "pending": "زیر التواء جائزہ",
+        "reported": "رپورٹ شدہ",
+        "published": "شائع شدہ",
+        "textNotVerified": "متن کی تصدیق AI سے نہیں ہوئی",
+        "textVerified": "متن کی تصدیق AI سے ہوئی",
+        "imgNotVerified": "تصویر کی تصدیق AI سے نہیں ہوئی",
+        "imgVerified": "تصویر کی تصدیق AI سے ہوئی",
+        "available": "دستیاب",
+        "notAvailable": "دستیاب نہیں"
+    },
+    "ViewReportComments": {
+        "title": "رپورٹ شدہ تبصرے",
+        "report": "رپورٹ نمبر",
+        "status": "حالت:",
+        "pending": "زیر التواء",
+        "reviewing": "جائزہ لے رہے ہیں",
+        "reviewed": "جائزہ لیا گیا",
+        "date": "تاریخ:",
+        "comment": "تبصرہ:",
+        "reportingUser": "رپورٹ کرنے والا صارف:",
+        "commentUser": "تبصرہ لکھنے والا صارف:",
+        "delete": "حذف کریں"
+    },
+    "viewPost": {
+        "comentaris": "تبصرے"
+    },
+    "viewPeopleMentoria": {
+        "chat": "چیٹ"
+    },
+    "myRequests": {
+        "title": "میری درخواستیں",
+        "noRequests": "آپ کی کوئی درخواست نہیں ہے"
+    },
+    "myRequest": {
+        "availability": "دستیابی",
+        "reports": "رپورٹس:",
+        "date": "تاریخیں:",
+        "processing": "زیر التواء جائزہ",
+        "reported": "رپورٹ شدہ",
+        "posted": "شائع شدہ",
+        "textNotVerified": "متن کی تصدیق AI سے نہیں ہوئی",
+        "textVerified": "متن کی تصدیق AI سے ہوئی",
+        "imgNotVerified": "تصویر کی تصدیق AI سے نہیں ہوئی",
+        "imgVerified": "تصویر کی تصدیق AI سے ہوئی"
+    },
+    "myPublications": {
+        "title": "میری اشاعتیں",
+        "noPublications": "آپ کی کوئی اشاعت نہیں ہے"
+    },
+    "subMenu": {
+        "hi": "ہیلو,",
+        "profile": "پروفائل",
+        "publications": "میری اشاعتیں",
+        "request": "میری درخواستیں",
+        "admin": "ایڈمن",
+        "statistics": "اعداد و شمار"
+    },
+    "requestPost": {
+        "title": "ایک درخواست شامل کریں:",
+        "uploadImage": "تصویر اپ لوڈ کریں:",
+        "availability": "دستیاب:",
+        "addAvailability": "+ دستیابی شامل کریں",
+        "selectDay": "ایک دن منتخب کریں",
+        "startTime": "شروع ہونے کا وقت",
+        "endTime": "ختم ہونے کا وقت",
+        "publishing": "شائع ہو رہا ہے...",
+        "titlePlaceholder": "عنوان",
+        "DescriptionPlaceholder": "آپ کیا سوچ رہے ہیں؟"
+    },
+    "notificationList": {
+        "title": "اطلاعات",
+        "all": "سب",
+        "comments": "تبصرے",
+        "publications": "اشاعتیں",
+        "noNotifications": "دکھانے کے لئے کوئی اطلاع نہیں"
+    },
+    "navBar": {
+        "home": "ہوم",
+        "search": "تلاش کریں",
+        "upload": "اپ لوڈ کریں",
+        "chat": "چیٹ"
+    },
+    "loading": {
+        "title": "لوڈ ہو رہا ہے..."
+    },
+    "headerVerification": {
+        "title": "تصدیق کا صفحہ",
+        "validationUser": "صارف کی تصدیق",
+        "validationPost": "پوسٹ کی تصدیق"
+    },
+    "headerReport": {
+        "title": "رپورٹ کا صفحہ",
+        "reportUser": "صارف کی رپورٹ دیکھیں",
+        "reportPost": "پوسٹ کی رپورٹ دیکھیں",
+        "reportComment": "تبصرہ کی رپورٹ دیکھیں"
+    },
+    "header": {
+        "report": "رپورٹ",
+        "validation": "تصدیق",
+        "services": "خدمات",
+        "comunity": "کمیونٹی",
+        "mentors": "سرپرست",
+        "request": "درخواستیں"
+    },
+    "formNewDataUsers": {
+        "title": "صارف کا فارم",
+        "showForm": "فارم دکھائیں",
+        "hideForm": "فارم چھپائیں",
+        "name": "نام",
+        "profilePicture": "پروفائل تصویر",
+        "banner": "بینر",
+        "city": "شہر",
+        "linkDiscord": "Discord لنک",
+        "linkGithub": "Github لنک",
+        "submit": "صارف کو محفوظ کریں",
+        "tags": "ٹیگز (JSON)",
+        "tagsExample": "مثال فارمیٹ: [\"JavaScript\", \"Python\", \"React\"]",
+        "availability": "دستیابی (JSON)",
+        "availabilityExample": "مثال فارمیٹ: {\"monday\":\"9:00-12:00\", \"friday\":\"9:00-12:00\"}"
+    },
+    "post": {
+        "title": "ایک پوسٹ شامل کریں",
+        "titlePlaceholder": "عنوان",
+        "postDescriptionPlaceholder": "آپ کیا سوچ رہے ہیں؟",
+        "maxChar": "زیادہ سے زیادہ 230 حروف",
+        "publish": "شائع کریں"
+    },
+    "calendar": {
+        "title": "دستیابی کا شیڈول",
+        "day": "دن",
+        "availability": "دستیاب گھنٹے",
+        "monday": "پیر",
+        "tuesday": "منگل",
+        "wednesday": "بدھ",
+        "thursday": "جمعرات",
+        "friday": "جمعہ",
+        "saturday": "ہفتہ",
+        "sunday": "اتوار"
+    },
+    "menu": {
+        "comunity": "کمیونٹی",
+        "mentors": "سرپرست",
+        "request": "درخواستیں",
+        "share": "شیئر کریں"
+    }
+}

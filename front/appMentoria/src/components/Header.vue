@@ -14,19 +14,20 @@
                   @click="$router.push('/report')"
                   class="text-white hover:text-gray-200 font-medium text-sm lg:text-base"
                 >
-                  Report
+                  {{ $t("header.report") }}
                 </a>
                 <a
                   @click="$router.push('/validation')"
                   class="text-white hover:text-gray-200 font-medium text-sm lg:text-base"
                 >
-                  Validation
+                  {{ $t("header.validation") }}
+        
                 </a>
                 <a
                   @click="$router.push('/services')"
                   class="text-white hover:text-gray-200 font-medium text-sm lg:text-base"
                 >
-                  Services
+                  {{ $t("header.services") }}
                 </a>
               </div>
             </template>
@@ -35,19 +36,19 @@
                 @click="$router.push('/')"
                 class="text-white hover:text-gray-200 font-medium text-sm lg:text-base"
               >
-                Comunitat
+                {{ $t("header.comunity") }}
               </a>
               <a
                 @click="$router.push('/profiles')"
                 class="text-white hover:text-gray-200 font-medium text-sm lg:text-base"
               >
-                Mentors
+                {{ $t("header.mentors") }}
               </a>
               <a
                 @click="$router.push('/requests')"
                 class="text-white hover:text-gray-200 font-medium text-sm lg:text-base"
               >
-                Peticions
+                {{ $t("header.request") }}
               </a>
             </template>
             <SubMenu></SubMenu>

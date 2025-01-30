@@ -4,7 +4,8 @@ export const useAppStore = defineStore( 'appStore', {
   state: () => ({
     user: {},
     accessToken: '',
-    refreshToken: ''
+    refreshToken: '',
+    language: ''
   }),
   actions: {
     setUser(user) {
@@ -27,6 +28,12 @@ export const useAppStore = defineStore( 'appStore', {
     },
     getTypeUser() {
       return this.user.typesUsers_id
+    },
+    setLanguage(language) {
+      this.language = language
+    },
+    getLanguage() {
+      return this.language
     }
   }
 });

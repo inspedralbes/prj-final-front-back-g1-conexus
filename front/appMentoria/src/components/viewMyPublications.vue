@@ -8,7 +8,7 @@
         class="p-4 border-b flex flex-col md:flex-row justify-between items-center dark:border-gray-600"
       >
         <h2 class="text-lg font-semibold text-gray-700 dark:text-white">
-          Meves publicacions
+          {{$t("myPublications.title")}}
         </h2>
       </div>
 
@@ -33,7 +33,7 @@
 
       <!-- Sin Publicaciones -->
       <p v-else class="text-center py-6 text-gray-500 dark:text-gray-400">
-        No tienes publicaciones.
+        {{ $t("myPublications.noPublications") }}
       </p>
     </div>
   </div>

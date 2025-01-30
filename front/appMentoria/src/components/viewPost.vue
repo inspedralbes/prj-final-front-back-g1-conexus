@@ -81,7 +81,7 @@
           </main>
         </div>
         <div class="p-4">
-          <h3 class="text-lg font-bold">Comentaris</h3>
+          <h3 class="text-lg font-bold">{{ $t("viewPost.comentaris") }}</h3>
           <div class="border-t-2 border-gray-200 px-4 p-4 mb-2 sm:mb-0">
             <div class="relative flex">
               <input
@@ -91,7 +91,7 @@
                 class="w-full focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-600 pl-5 pr-20 bg-gray-200 rounded-md py-3 dark:bg-gray-800 dark:text-white"
               />
               <div class="absolute right-0 items-center inset-y-0 flex">
-                <button
+                <button v-if="!loadingComment[null]"
                   @click="sendCommentInMongo(null)"
                   type="button"
                   class="inline-flex items-center justify-center rounded-full h-10 w-10 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300 focus:outline-none mr-4"
@@ -119,6 +119,30 @@
                       ></path>
                     </g>
                   </svg>
+                </button>
+                <button v-if="loadingComment[null]"
+                  class="inline-flex items-center justify-center rounded-full h-10 w-10 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300 focus:outline-none mr-4"
+                >
+                <svg
+                  class="animate-spin h-4 w-4 text-gray-800 dark:text-gray-200"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                  ></circle>
+                  <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v8H4z"
+                  ></path>
+                </svg>
                 </button>
               </div>
             </div>
@@ -186,7 +210,7 @@
                     style="width: 100%"
                   />
                   <div class="absolute right-0 items-center inset-y-0 flex">
-                    <button
+                    <button v-if="!loadingComment[comment.id]"
                       @click="sendCommentInMongo(comment.id)"
                       type="button"
                       class="inline-flex items-center justify-center rounded-full h-10 w-10 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300 focus:outline-none mr-4"
@@ -214,6 +238,30 @@
                           ></path>
                         </g>
                       </svg>
+                    </button>
+                    <button v-if="loadingComment[comment.id]"
+                      class="inline-flex items-center justify-center rounded-full h-10 w-10 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300 focus:outline-none mr-4"
+                    >
+                    <svg
+                      class="animate-spin h-4 w-4 text-gray-800 dark:text-gray-200"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                      class="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      stroke-width="4"
+                      ></circle>
+                      <path
+                      class="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v8H4z"
+                      ></path>
+                    </svg>
                     </button>
                   </div>
                 </div>
@@ -310,6 +358,7 @@ import Loading from "@/components/Loading.vue"; // Import the Loading component
 
 const community_url = import.meta.env.VITE_URL_BACK_COMMUNITY;
 const back_url = import.meta.env.VITE_URL_BACK;
+const loadingComment = ref({});
 const users = ref([]);
 const comments = ref([]);
 const selectedPost = ref(null);
@@ -377,9 +426,11 @@ const sendCommentInMongo = async (ID) => {
       commentReply_id: null,
       created_at: new Date().toISOString(),
     };
+    loadingComment.value[null] = true;
     await postCommunityComments(comment);
     socketBack.emit("newComment", comment);
     commentInput.value.value = "";
+    loadingComment.value[null] = false;
   } else {
     if (!replyInputs.value[ID]) return;
     const message = replyInputs.value[ID];
@@ -390,8 +441,10 @@ const sendCommentInMongo = async (ID) => {
       commentReply_id: ID,
       created_at: new Date().toISOString(),
     };
+    loadingComment.value[ID] = true;
     await postCommunityComments(replyComment);
     socketBack.emit("newComment", replyComment);
+    loadingComment.value[ID] = false;
     replyInputs.value[ID] = "";
   }
 };

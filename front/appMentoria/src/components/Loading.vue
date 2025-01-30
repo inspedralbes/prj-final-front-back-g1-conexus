@@ -17,7 +17,7 @@
           fill="currentFill"
         />
       </svg>
-      <span class="sr-only">Loading...</span>
+      <span class="sr-only">{{ $t("loading.title") }}</span>
     </div>
   </div>
 </template>

@@ -29,7 +29,7 @@
       <div
         class="max-w-xl w-full bg-white dark:bg-neutral-800 p-6 rounded-lg shadow-md"
       >
-        <h1 class="text-2xl font-bold mb-4 text-center">Crear Publicació</h1>
+        <h1 class="text-2xl font-bold mb-4 text-center">{{$t("AddComunityPost.create")}}</h1>
 
         <!-- Campo del título -->
         <div class="mb-4">
@@ -37,13 +37,13 @@
             for="title"
             class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
           >
-            Títol:
+            {{$t("AddComunityPost.title")}}:
           </label>
           <input
             id="title"
             v-model="title"
             type="text"
-            placeholder="Escriu el títol de la publicació"
+            :placeholder="$t('AddComunityPost.titlePlaceholder')"
             class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 dark:border-gray-700 dark:bg-neutral-900 dark:text-white"
           />
         </div>
@@ -54,12 +54,12 @@
             for="description"
             class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
           >
-            Descripció:
+            {{ $t('AddComunityPost.description') }}
           </label>
           <textarea
             id="description"
             v-model="description"
-            placeholder="Escriu la descripció de la publicació"
+            :placeholder="$t('AddComunityPost.descriptionPlaceholder')"
             class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 dark:border-gray-700 dark:bg-neutral-900 dark:text-white"
             rows="4"
           ></textarea>
@@ -71,7 +71,7 @@
             for="image-upload"
             class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
           >
-            Pujar imatge:
+            {{ $t('AddComunityPost.postImage') }}
           </label>
           <input
             id="image-upload"
@@ -85,7 +85,7 @@
         <!-- Vista previa de la imagen -->
         <div v-if="imagePreview" class="mb-4">
           <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            Vista prèvia:
+            {{ $t('AddComunityPost.imagePreview') }}
           </p>
           <img
             :src="imagePreview"
@@ -101,7 +101,7 @@
           class="w-full py-2 px-4 bg-blue-500 dark:bg-blue-700 text-white font-semibold rounded-lg hover:bg-blue-600 dark:hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-300 flex justify-center items-center"
           :disabled="isLoading"
         >
-          <span v-if="!isLoading">Publicar</span>
+          <span v-if="!isLoading">{{ $t("AddComunityPost.publish") }}</span>
           <span v-else class="flex items-center gap-2">
             <svg
               class="animate-spin h-4 w-4 text-white"
@@ -123,7 +123,7 @@
                 d="M4 12a8 8 0 018-8v8H4z"
               ></path>
             </svg>
-            Publicant...
+            {{ $t("AddComunityPost.publishing") }}
           </span>
         </button>
       </div>
@@ -167,7 +167,7 @@ function handleImageUpload(event) {
 
 async function submitPost() {
   if (!title.value || !description.value || !imageFile.value) {
-    alert("Por favor, completa todos los campos y sube una imagen.");
+    alert($t("AddComunityPost.notAllFields"));
     return;
   }
 
@@ -183,7 +183,7 @@ async function submitPost() {
     const response = await postCommunityPublication(formData);
     if (!response.ok) {
       const errorData = await response.json();
-      alert("Error al crear la publicación.");
+      alert($t("AddComunityPost.error") + errorData.message);
       return;
     }
 

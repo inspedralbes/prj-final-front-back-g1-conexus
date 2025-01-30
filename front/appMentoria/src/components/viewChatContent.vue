@@ -118,7 +118,7 @@
         <input
           ref="messageInput"
           type="text"
-          placeholder="Write your message!"
+          :placeholder="$t('chatContent.writeMessage')"
           class="w-full focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-600 pl-5 pr-20 bg-gray-200 rounded-md py-3 dark:bg-gray-800 dark:text-white"
         />
         <div class="absolute right-0 items-center inset-y-0 flex">

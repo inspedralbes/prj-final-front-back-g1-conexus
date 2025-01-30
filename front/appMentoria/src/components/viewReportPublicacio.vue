@@ -5,7 +5,7 @@
     <h1
       class="text-lg sm:text-xl font-bold mb-3 text-gray-900 dark:text-gray-100"
     >
-      Publicacions Reportades
+      {{ $t("ViewReportPublicacio.title") }}
     </h1>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div
@@ -23,7 +23,7 @@
         <div class="flex flex-wrap justify-between mb-4">
           <div class="w-1/2 sm:w-1/2 mb-4">
             <p class="text-lg font-semibold text-gray-900 dark:text-gray-300">
-              Informe Nº:
+              {{ $t("ViewReportPublicacio.reportN") }}:
             </p>
             <p class="text-gray-700 dark:text-gray-400 text-base">
               {{ report.id }}
@@ -31,26 +31,26 @@
           </div>
           <div class="w-full md:w-1/2 mb-4 md:mb-0">
             <p class="text-base font-semibold text-gray-900 dark:text-gray-300">
-              Estat:
+              {{ $t("ViewReportPublicacio.status") }}
             </p>
             <select
               v-model="report.status"
               @change="updateReportStatus(report.id, report.status)"
               :class="{
                 'bg-yellow-200 dark:bg-yellow-600': report.status === 'pending',
-                'bg-blue-300 dark:bg-blue-400': report.status === 'revising',
+                'bg-blue-200 dark:bg-blue-800': report.status === 'revising',
                 'bg-green-200 dark:bg-green-600': report.status === 'revised',
                 'appearance-none bg-gray-100 dark:bg-gray-600 dark:text-gray-900 border border-gray-300 dark:border-gray-600 text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 p-2 w-full md:w-32 shadow-sm': true,
               }"
             >
-              <option value="pending">Pendent</option>
-              <option value="revising">Revisant</option>
-              <option value="revised">Revisat</option>
+              <option value="pending">{{ $t("ViewReportPublicacio.pending") }}</option>
+              <option value="revising">{{ $t("ViewReportPublicacio.reviewing") }}</option>
+              <option value="revised">{{ $t("ViewReportPublicacio.reviewed") }}</option>
             </select>
           </div>
           <div class="w-full sm:w-1/3 mt-1">
             <p class="text-base font-semibold text-gray-900 dark:text-gray-300">
-              Data:
+              {{ $t("ViewReportPublicacio.date") }}:
             </p>
             <p class="text-gray-700 dark:text-gray-400 text-sm mt-1">
               {{ report.created_at }}
@@ -59,7 +59,7 @@
         </div>
         <div class="mb-6">
           <p class="text-base font-semibold text-gray-900 dark:text-gray-300">
-            Usuari que Reporta:
+            {{ $t("ViewReportPublicacio.userReporting") }}:
           </p>
           <p class="text-gray-700 dark:text-gray-300 text-sm">
             {{ report.reporting_user_name }}
@@ -70,7 +70,7 @@
         </div>
         <div class="mb-6">
           <p class="text-base font-semibold text-gray-900 dark:text-gray-300">
-            Usuari de la Publicació:
+            {{ $t("ViewReportPublicacio.userPost") }}:
           </p>
           <p class="text-gray-700 dark:text-gray-300 text-sm">
             {{ report.publication_user_name }}
@@ -81,7 +81,7 @@
         </div>
         <div class="mb-6">
           <p class="text-base font-semibold text-gray-900 dark:text-gray-300">
-            Títol de la Publicació:
+            {{ $t("ViewReportPublicacio.postTitle") }}
           </p>
           <p class="text-gray-700 dark:text-gray-400 text-sm">
             {{ report.title }}
@@ -89,7 +89,7 @@
         </div>
         <div class="mb-6">
           <p class="text-base font-semibold text-gray-900 dark:text-gray-300">
-            Descripció de la Publicació:
+            {{ $t("ViewReportPublicacio.postDescription") }}
           </p>
           <p class="text-gray-700 dark:text-gray-400 text-sm">
             {{ report.description }}
@@ -97,7 +97,7 @@
         </div>
         <div class="mb-6">
           <p class="text-basee font-semibold text-gray-900 dark:text-gray-300">
-            Informe:
+            {{ $t("ViewReportPublicacio.report") }}:
           </p>
           <p class="text-gray-700 dark:text-gray-400 text-sm">
             {{ report.report }}
@@ -105,7 +105,7 @@
         </div>
         <div class="mb-6">
           <p class="text-base font-semibold text-gray-900 dark:text-gray-300">
-            Imatge Reportada:
+            {{ $t("ViewReportPublicacio.reportedImage") }}:
           </p>
           <select
             v-model="report.selectedImage"
@@ -113,7 +113,7 @@
           >
             <option :value="null">Selecciona una imatge</option>
             <option :value="`${communityUrl}${report.image}`">
-              Veure Imatge
+              {{ $t("ViewReportPublicacio.viewImage") }}
             </option>
           </select>
           <img
@@ -128,7 +128,7 @@
             @click="deleteReport(report.id)"
             class="bg-red-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-600"
           >
-            Eliminar
+            {{ $t("ViewReportPublicacio.delete") }}
           </button>
         </div>
       </div>
@@ -166,24 +166,17 @@ export default {
   },
   methods: {
     async updateReportStatus(id, status) {
-    const report = this.reports.find((r) => r.id === id);
-    try {
-        const response = await updateReportPublication(
-            id,
-            status,
-            report.publication_id,
-            report.user_id,
-            report.report
-        );
+      try {
+        const response = await updateReportPublication(id, status);
         if (response.error) {
-            console.error(response.error);
+          console.error(response.error);
         } else {
-            console.log("Estado actualizado correctamente");
+          console.log("Estat actualitzat correctament");
         }
-    } catch (error) {
-        console.error("Error al actualizar el estado:", error);
-    }
-},
+      } catch (error) {
+        console.error("Error al actualitzar l'estat:", error);
+      }
+    },
 
     async deleteReport(id) {
       try {

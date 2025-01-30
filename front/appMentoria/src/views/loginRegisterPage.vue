@@ -19,7 +19,7 @@
           </div>
           <h1 class="text-2xl xl:text-3xl font-extrabold mb-5">CONEXUS</h1>
           <h2 class="text-xl font-light xl:text-2xl mb-3">
-            Correu @inspedralbes.cat
+            {{ $t("LoginRegisterPage.subTitle") }}
           </h2>
           <div class="w-full flex-1 mt-3">
             <div class="flex flex-col items-center">
@@ -47,7 +47,7 @@
                     />
                   </svg>
                 </div>
-                <span class="ml-4"> Accedeix amb Google </span>
+                <span class="ml-4">{{ $t("LoginRegisterPage.accessGoogle") }}</span>
               </button>
 
               <button
@@ -62,7 +62,7 @@
                     />
                   </svg>
                 </div>
-                <span class="ml-4"> Accedeix amb GitHub </span>
+                <span class="ml-4">{{ $t("LoginRegisterPage.accessGithub") }}</span>
               </button>
             </div>
 
@@ -70,7 +70,7 @@
               <div
                 class="leading-none px-2 inline-block text-sm text-gray-600 dark:text-white tracking-wide font-medium bg-white dark:bg-neutral-600 transform translate-y-1/2"
               >
-                O Inicia sessió
+                {{ $t("LoginRegisterPage.logIn") }}
               </div>
             </div>
 
@@ -78,13 +78,13 @@
               <input
                 class="w-full px-8 py-4 rounded-lg font-medium dark:bg-gray-900 dark:text-white border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
                 type="email"
-                placeholder="Correu electrònic"
+                :placeholder="$t('LoginRegisterPage.mailPlaceholder')"
                 v-model="userLogin.email"
               />
               <input
                 class="w-full px-8 py-4 rounded-lg font-medium dark:bg-gray-900 dark:text-white border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
                 type="password"
-                placeholder="Contrasenya"
+                :placeholder="$t('LoginRegisterPage.passwordPlaceholder')"
                 v-model="userLogin.password"
               />
               <button
@@ -103,16 +103,16 @@
                   <circle cx="8.5" cy="7" r="4" />
                   <path d="M20 8v6M23 11h-6" />
                 </svg>
-                <span class="ml-3"> Inicia sessió </span>
+                <span class="ml-3"> {{ $t("LoginRegisterPage.loginButton") }}</span>
               </button>
               <p
                 class="mt-6 text-xs text-gray-600 dark:text-gray-100 text-center"
               >
-                Projecte realitzat per l'equip de
+                {{ $t("LoginRegisterPage.projectBy") }}
                 <span class="border-b border-gray-500 border-dotted">
                   Conexus
                 </span>
-                , amb l'ajuda del
+                {{ $t("LoginRegisterPage.withTheHelpOf") }}
                 <span class="border-b border-gray-500 border-dotted">
                   Institut Pedralbes
                 </span>
@@ -190,7 +190,7 @@ const signInWithGoogle = async () => {
 
     validateAndLogin(userAPIs);
   } catch (error) {
-    message.value = `Error al iniciar sessió`;
+    message.value = $t("LoginRegisterPage.error");
     messageType.value = "error";
   }
 };
@@ -207,7 +207,7 @@ const signInWithGithub = async () => {
 
     validateAndLogin(userAPIs);
   } catch (error) {
-    message.value = `Error al iniciar sessió`;
+    message.value = $t("LoginRegisterPage.error");
     messageType.value = "error";
   }
 };
@@ -247,7 +247,7 @@ const signInWithApp = async () => {
     localStorage.setItem("accessToken", response.accessToken);
     localStorage.setItem("refreshToken", response.refreshToken);
   } catch (error) {
-    message.value = `Error al iniciar sessió, comprova les dades introduïdes`;
+    message.value = $t("LoginRegisterPage.errorFields");
     messageType.value = "error";
   } finally {
     if (succes) {
@@ -262,7 +262,7 @@ async function validateAndLogin(user) {
   let bannerURL = ref("");
 
   if (!user.email.includes("@inspedralbes.cat")) {
-    message.value = `Error al iniciar sessió. Correu no vàlid`;
+    message.value = $t("LoginRegisterPage.invalidMail");
     messageType.value = "error";
   } else {
     try {

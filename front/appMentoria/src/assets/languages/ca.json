@@ -1,0 +1,279 @@
+{
+    "chatContent": {
+        "writeMessage": "Escriu un missatge..."
+    },
+    "languageSelector": {
+        "spanish": "Espanyol",
+        "english": "Anglès",
+        "catalan": "Català",
+        "chinese": "Xinès",
+        "urdu": "Urdu",
+        "german": "Alemany",
+        "portuguese": "Portuguès",
+        "japanese": "Japonès",
+        "euskera": "Euskera",
+        "gallego": "Gallec"
+    },
+    "StadisticsPage": {
+        "title": "Estadístiques",
+        "userGraph": "Gràfics d'usuaris",
+        "commentsGraph": "Gràfics de comentaris",
+        "postGraph": "Gràfics de publicacions"
+    },
+    "serviceListPage": {
+        "title": "Serveis",
+        "noDescription": "No hi ha descripció disponible"
+    },
+    "profilePage": {
+        "placeWhereYouLive": "Lloc on vius...",
+        "pendant": "Pendent d'assignar"
+    },
+    "LoginRegisterPage": {
+        "subTitle": "Correu @inspedralbes.cat",
+        "accessGoogle": "Accedeix amb Google",
+        "accessGithub": "Accedeix amb Github",
+        "logIn": "O inicia sessió",
+        "mailPlaceholder": "Correu electrònic",
+        "passwordPlaceholder": "Contrasenya",
+        "loginButton": "Inicia sessió",
+        "projectBy": "Projecte realitzat per l'equip de",
+        "withTheHelpOf": ", amb l'ajuda de",
+        "error": "Ha ocorregut un error en iniciar sessió",
+        "errorFields": "Error en iniciar sessió, comprova les dades introduïdes",
+        "invalidMail": "Error en iniciar sessió, el correu no és vàlid"
+    },
+    "AddComunityPost": {
+        "create": "Crear una publicació",
+        "title": "Títol:",
+        "titlePlaceholder": "Escriu el títol de la publicació",
+        "description": "Descripció:",
+        "descriptionPlaceholder": "Escriu la descripció de la publicació",
+        "postImage": "Pujar Imatge:",
+        "preview": "Vista prèvia:",
+        "publish": "Publicar",
+        "publishing": "Publicant...",
+        "notAllFields": "Si us plau, completa tots els camps i puja una imatge.",
+        "error": "Ha ocorregut un error al publicar la publicació:"
+    },
+    "viewValidationUser": {
+        "title": "Validar usuaris",
+        "user": "Usuari Nº ",
+        "userType": "Tipus d'usuari: ",
+        "student": "Estudiant",
+        "teacher": "Professor",
+        "admin": "Administrador",
+        "class": "Classe: ",
+        "banner": "Banner: ",
+        "profile": "Perfil: ",
+        "validate": "Validar",
+        "delete": "Eliminar",
+        "unknown": "Desconegut"
+    },
+    "ViewValidationUpdate":{
+        "title": "Validar/Actualitzar usuaris",
+        "user": "Usuari Nº: ",
+        "userType": "Tipus d'usuari: ",
+        "student": "Estudiant",
+        "teacher": "Professor",
+        "admin": "Administrador",
+        "class": "Classe: ",
+        "banner": "Banner: ",
+        "profile": "Perfil: ",
+        "validate": "Validar",
+        "delete": "Eliminar",
+        "unknown": "Desconegut"
+    },
+    "viewRequest": {
+        "coments": "Comentaris",
+        "comentPlaceholder": "Escriu un comentari!",
+        "seeMore": "Veure més",
+        "seeLess": "Veure menys",
+        "availability": "Disponibilitat",
+        "from": "De",
+        "to": "a"
+    },
+    "ViewReportUser":{
+        "title": "Usuaris reportats",
+        "reportN": "Informe Nº",
+        "status": "Estat:",
+        "pending": "Pendent",
+        "reviewing": "Revisant",
+        "reviewed": "Revisat",
+        "date": "Data:",
+        "userReporting": "Usuari que reporta:",
+        "userReported": "Usuari reportat:",
+        "report": "Informe:",
+        "delete": "Eliminar"
+    },
+    "ViewReportPublicacio":{
+        "title": "Publicacions reportades",
+        "reportN": "Informe Nº",
+        "status": "Estat:",
+        "pending": "Pendent",
+        "reviewing": "Revisant",
+        "reviewed": "Revisat",
+        "date": "Data:",
+        "userReporting": "Usuari que reporta:",
+        "userPost": "Usuari de la publicació:",
+        "postTitle": "Títol de la publicació:",
+        "postDescription": "Descripció de la publicació:",
+        "report": "Informe:",
+        "reportedImage": "Imatge reportada:",
+        "viewImage": "Veure imatge",
+        "delete": "Eliminar"
+    },
+    "ViewMyPublicationItem":{
+        "availability": "Disponibilitat: ",
+        "reports": "Reportes: ",
+        "date": "Data: ",
+        "pending": "Pendent de revisar",
+        "reported": "Reportat",
+        "published": "Publicat",
+        "textNotVerified": "Text no verificat per IA",
+        "textVerified": "Text verificat per IA",
+        "imgNotVerified": "Imatge no verificada per IA",
+        "imgVerified": "Imatge verificada per IA",
+        "available": "Disponible",
+        "notAvailable": "No disponible"
+    },
+    "ViewReportComments":{
+        "title": "Comentaris reportats",
+        "reportN": "Informe Nº",
+        "status": "Estat:",
+        "pending": "Pendent",
+        "reviewing": "Revisant",
+        "reviewed": "Revisat",
+        "date": "Data:",
+        "comment": "Comentari:",
+        "reportingUser": "Usuari que reporta:",
+        "commentUser": "Usuari que va escriure el comentari:",
+        "report": "Informe:",
+        "delete": "Eliminar"
+    },
+    "viewPost":{
+        "comentaris": "Comentaris"
+    },
+    "viewPeopleMentoria":{
+        "chat": "Xat"
+    },
+    "myRequests":{
+        "title": "Les meves peticions",
+        "noRequests": "No tens peticions",
+        "textNotVerified": "Text no verificat per IA",
+        "textVerified": "Text verificat per IA",
+        "imgNotVerified": "Imatge no verificada per IA",
+        "imgVerified": "Imatge verificada per IA"
+    },
+    "myRequest":{
+        "availability":"Disponibilitat:",
+        "reports":"Reportes:",
+        "date":"Dates:",
+        "processing": "Pendent de revisar",
+        "reported":"Reportat",
+        "posted": "Publicat",
+        "textNotVerified": "Text no verificat per IA",
+        "textVerified": "Text verificat per IA",
+        "imgNotVerified": "Imatge no verificada per IA",
+        "imgVerified": "Imatge verificada per IA"
+    },
+    "myPublications":{
+        "title": "Les meves publicacions",
+        "noPublications": "No tens publicacions"
+    },
+    "subMenu":{
+        "hi":"Hola,",
+        "profile":"Perfil",
+        "publications":"Les meves publicacions",
+        "request":"Les meves peticions",
+        "admin":"Admin",
+        "statistics":"Estadístiques"
+    },
+    "requestPost":{
+        "title": "Afegeix una petició:",
+        "uploadImage": "Puja una imatge:",    
+        "availability": "Disponible:",
+        "addAvailability": "+ Afegeix disponibilitat",
+        "selectDay": "Selecciona un dia",
+        "startTime": "Hora d'inici",
+        "endTime": "Hora de fi",
+        "publishing": "Publicant...",
+        "titlePlaceholder": "Títol",
+        "DescriptionPlaceholder":"En què penses?"
+    },
+    "notificationList":{
+        "title":"Notificacions",
+        "all": "Totes",
+        "comments": "Comentaris",
+        "publications": "Publicacions",
+        "noNotifications": "No hi ha notificacions per mostrar"
+    },
+    "navBar": {
+        "home": "Inici",
+        "search": "Cerca",
+        "upload": "Pujar",
+        "chat": "Xat"
+    },
+    "loading":{
+        "title": "Carregant..."
+    },
+    "headerVerification":{
+        "title":"Pagina de report",
+        "validationUser":"Validació d'usuari",
+        "validationPost":"Validació de publicació"
+    },
+    "headerReport":{
+        "title":"Pagina de report",
+        "reportUser":"Veure report d'usuari",
+        "reportPost":"Veure report de publicació",
+        "reportComment":"Veure report de comentari"
+    },
+    "header":{
+        "report": "Reportar",
+        "validation": "Validació",
+        "services": "Serveis",
+        "comunity": "Comunitat",
+        "mentors": "Mentors",
+        "request": "Peticions"
+    },
+    "formNewDataUsers":{
+        "title": "Formulari d'usuari",
+        "showForm": "Mostra formulari",
+        "hideForm": "Amaga formulari",
+        "name": "Nom",
+        "profilePicture": "Foto de perfil",
+        "banner": "Banner",
+        "city": "Ciutat",
+        "linkDiscord": "Enllaç a Discord",
+        "linkGithub": "Enllaç a Github",
+        "submit":"Desa usuari",
+        "tags": "Etiquetes (JSON)",
+        "tagsExample":"Exemple de format: [\"JavaScript\", \"Python\", \"React\"]",
+        "availability": "Disponibilitat (JSON)",
+        "availabilityExample": "Exemple de format: {\"monday\":\"9:00-12:00\", \"friday\":\"9:00-12:00\"}"
+    },
+    "post":{
+        "title": "Afegeix una publicació",
+        "titlePlaceholder": "Títol",
+        "postDescriptionPlaceholder":"En què penses?",
+        "maxChar":"Màxim 230 caràcters",
+        "publish": "Publicar"
+    },
+    "calendar": {
+        "title": "Horari de disponibilitat",
+        "day": "Dia",
+        "availability": "Hores disponibles",
+        "monday": "Dilluns",
+        "tuesday": "Dimarts",
+        "wednesday": "Dimecres",
+        "thursday": "Dijous",
+        "friday": "Divendres",
+        "saturday": "Dissabte",
+        "sunday": "Diumenge"
+    },
+    "menu": {
+        "comunity": "Comunitat",
+        "mentors": "Mentors",
+        "request": "Peticions",
+        "share": "Compartir"
+    }
+}
