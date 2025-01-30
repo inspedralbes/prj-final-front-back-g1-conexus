@@ -3,7 +3,10 @@ import { RouterView } from "vue-router";
 import { ref, onMounted, reactive } from "vue";
 import { useAppStore } from "@/stores/index";
 import router from "@/router";
-import { getUserForRefreshLogin } from "./services/communicationManager";
+import {
+  getUserForRefreshLogin,
+  subscribeToPushNotifications,
+} from "./services/communicationManager";
 import Loading from "./components/Loading.vue";
 
 const userAPP = reactive({}); // Objeto reactivo para el usuario
@@ -69,6 +72,7 @@ onMounted(async () => {
   const user = await validateLogin();
   if (user) {
     Object.assign(userAPP, user); // Asigna las propiedades al objeto reactivo
+    await subscribeToPushNotifications(user);
   } else {
     router.push({ name: "login" });
   }

@@ -101,12 +101,36 @@ app.post('/addChat', async (req, res) => {
   console.log('req.body:', req.body);
   try {
     let message;
+    let isFirstInteraction = false;
     if (_id) {
+      message = await Message.findById(_id);
+      if (message && message.interactions.length === 0 && interactions.length > 0) {
+        isFirstInteraction = true;
+      }
       message = await Message.findByIdAndUpdate(_id, { user_one_id, user_two_id, interactions }, { new: true, upsert: true });
     } else {
       message = new Message({ user_one_id, user_two_id, interactions });
-
+      if (interactions.length > 0) {
+        isFirstInteraction = true;
+      }
       await message.save();
+    }
+
+    if (isFirstInteraction) {
+      const notificationPayload = {
+        user_id: user_two_id,
+        title: 'Nou missatge',
+        message: `Tens un nou missatge de ${user_one_id}!`
+      };
+
+      await fetch(chatEnv.ENDPOINT_URL_PUSH_NOTIFICATIONS + '/sendNotification', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(notificationPayload)
+
+      })
     }
     res.json(message);
   } catch (err) {
@@ -128,7 +152,7 @@ app.post('/newChat', async (req, res) => {
     return res.status(400).send('A chat between these users already exists');
   }
   try {
-    message = new Message({ user_one_id, user_two_id, interactions });
+    const message = new Message({ user_one_id, user_two_id, interactions });
     await message.save();
     res.json(message);
   } catch (err) {

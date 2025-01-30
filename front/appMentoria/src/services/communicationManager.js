@@ -165,6 +165,67 @@ export const logout = async () => {
     }
 };
 
+export const subscribeToPushNotifications = async (user) => {
+    if ("serviceWorker" in navigator && "PushManager" in window) {
+        try {
+            const registration = await navigator.serviceWorker.register(
+                "/service-worker.js"
+            );
+            console.log("Service Worker registrado!", registration);
+
+            const permission = await Notification.requestPermission();
+            if (permission === "granted") {
+                console.log("Permiso para notificaciones concedido");
+
+                const subscription = await registration.pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey: urlBase64ToUint8Array(
+                        import.meta.env.VITE_PUBLIC_VAPID_KEY
+                    ),
+                });
+
+                console.log("Suscripción a notificaciones push: ", subscription);
+
+
+                const response = await fetch(`${import.meta.env.VITE_URL_BACK_PUSH_NOTIFICATIONS}/subscribe`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ user_id: user.id, subscription })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Failed to subscribe to push notifications");
+                }
+
+                return response.json();
+            } else {
+                console.log("Permiso para notificaciones denegado");
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    } else {
+        console.warn("Service Workers no soportados");
+    }
+}
+
+function urlBase64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding)
+        .replace(/-/g, '+')
+        .replace(/_/g, '/');
+
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+
+    for (let i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+}
+
 // Create new data user
 export const createNewDataUser = async (userData) => {
 

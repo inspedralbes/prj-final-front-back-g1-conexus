@@ -28,44 +28,45 @@ app.use(cors({
     allowedHeaders: ["Access-Control-Allow-Origin", "Content-Type"],
 }));
 
+webpush.setVapidDetails('mailto:test@conexushub.com', pushNotificationsEnv.PUBLIC_VAPID_KEY, pushNotificationsEnv.PRIVATE_VAPID_KEY);
 app.get('/', (req, res) => {
     res.send('Hello World! I am a push notifications service');
 });
 
-webpush.setVapidDetails('mailto:test@conexushub.com', pushNotificationsEnv.PUBLIC_VAPID_KEY, pushNotificationsEnv.PRIVATE_VAPID_KEY);
+// app.use(require('./routes/index'));
 
-const subscriptions = [];
+
+const subscriptions = {};
 
 app.post('/subscribe', (req, res) => {
-    const subscription = req.body;
+    const { user_id, subscription } = req.body;
 
-    if (!subscriptions.endpoint) {
+    if (!subscription || !subscription.endpoint) {
         return res.status(400).json({ error: 'invalid Subscription endpoint' });
     }
 
-    subscriptions.push(subscription);
-    console.log("subscription saved", subscription);
+    subscriptions[user_id] = subscription;
+    console.log("subscription saved", subscriptions);
     res.status(201).json({ message: 'Subscription saved' });
 });
 
-app.post('/sendNotification-addChat', (req, res) => {
-    const { title, message } = req.body;
+app.post('/sendNotification', (req, res) => {
+    const { user_id, title, message } = req.body;
 
-    const notificationPayload = {
-        notification: {
-            title: title,
-            body: message,
-            icon: 'assets/icons/icon-512x512.png',
-        }
-    };
+    const subscription = subscriptions[user_id];
+    if (!subscription) {
+        return res.status(404).json({ error: 'Subscription not found' });
+    }
 
-    Promise.all(subscriptions.map(subscription => webpush.sendNotification(subscription, JSON.stringify(notificationPayload))))
+    webpush.sendNotification(subscription, JSON.stringify({ title, message }))
         .then(() => res.status(200).json({ message: 'Notification sent' }))
         .catch(err => {
-            console.error('Error sending notification', err);
-            res.sendStatus(500);
+            console.error(err);
+            res.status(500).json({ error: 'Error sending notification' });
         });
 });
+
+
 console.log(pushNotificationsEnv.PUBLIC_VAPID_KEY, pushNotificationsEnv.PRIVATE_VAPID_KEY);
 
 server.listen(PORT, () => {
