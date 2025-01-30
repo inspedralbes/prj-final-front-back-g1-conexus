@@ -1,0 +1,275 @@
+{
+    "chatContent": {
+        "writeMessage": "Idatzi mezua..."
+    },
+    "languageSelector": {
+        "spanish": "Espainiera",
+        "english": "Ingelesa",
+        "catalan": "Katalana",
+        "chinese": "Txinera",
+        "urdu": "Urdua",
+        "german": "Alemana",
+        "portuguese": "Portugesa",
+        "japanese": "Japoniera",
+        "euskera": "Euskara",
+        "gallego": "Galegoa"
+    },
+    "StadisticsPage": {
+        "title": "Estatistikak",
+        "userGraph": "Erabiltzaileen grafikoak",
+        "commentsGraph": "Iruzkin grafikoak",
+        "postGraph": "Post grafikoak"
+    },
+    "serviceListPage": {
+        "title": "Zerbitzuak",
+        "noDescription": "Ez dago deskribapenik eskuragarri"
+    },
+    "profilePage": {
+        "placeWhereYouLive": "Bizilekua...",
+        "pendant": "Esleitzeko zain"
+    },
+    "LoginRegisterPage": {
+        "subTitle": "@inspedralbes.cat posta",
+        "accessGoogle": "Google-rekin sartu",
+        "accessGithub": "Github-rekin sartu",
+        "logIn": "Edo saioa hasi",
+        "mailPlaceholder": "Posta elektronikoa",
+        "passwordPlaceholder": "Pasahitza",
+        "loginButton": "Saioa hasi",
+        "projectBy": "Proiektua taldeak egina",
+        "withTheHelpOf": ", laguntzarekin",
+        "error": "Errore bat gertatu da saioa hastean",
+        "errorFields": "Saioa hasteko errorea, sartutako datuak egiaztatu",
+        "invalidMail": "Saioa hasteko errorea, posta elektronikoa baliogabea da"
+    },
+    "AddComunityPost": {
+        "create": "Post bat sortu",
+        "title": "Izenburua:",
+        "titlePlaceholder": "Idatzi postaren izenburua",
+        "description": "Deskribapena:",
+        "descriptionPlaceholder": "Idatzi postaren deskribapena",
+        "postImage": "Irudia igo:",
+        "preview": "Aurrebista:",
+        "publish": "Argitaratu",
+        "publishing": "Argitaratzen...",
+        "notAllFields": "Mesedez, bete eremu guztiak eta igo irudi bat.",
+        "error": "Errore bat gertatu da post argitaratzean:"
+    },
+    "viewValidationUser": {
+        "title": "Erabiltzaileak balioztatu",
+        "user": "Erabiltzaile zenbakia",
+        "userType": "Erabiltzaile mota:",
+        "student": "Ikaslea",
+        "teacher": "Irakaslea",
+        "admin": "Administratzailea",
+        "class": "Klasea:",
+        "banner": "Banner:",
+        "profile": "Profila:",
+        "validate": "Balioztatu",
+        "delete": "Ezabatu",
+        "unknown": "Ezezaguna"
+    },
+    "ViewValidationUpdate": {
+        "title": "Erabiltzaileak balioztatu/eguneratu",
+        "user": "Erabiltzaile zenbakia:",
+        "userType": "Erabiltzaile mota:",
+        "student": "Ikaslea",
+        "teacher": "Irakaslea",
+        "admin": "Administratzailea",
+        "class": "Klasea:",
+        "banner": "Banner:",
+        "profile": "Profila:",
+        "validate": "Balioztatu",
+        "delete": "Ezabatu",
+        "unknown": "Ezezaguna"
+    },
+    "viewRequest": {
+        "coments": "Iruzkinak",
+        "comentPlaceholder": "Idatzi iruzkin bat!",
+        "seeMore": "Gehiago ikusi",
+        "seeLess": "Gutxiago ikusi",
+        "availability": "Eskuragarritasuna",
+        "from": "Tik",
+        "to": "Ra"
+    },
+    "ViewReportUser": {
+        "title": "Erreportatutako erabiltzaileak",
+        "reportN": "Erreport zenbakia",
+        "status": "Egoera:",
+        "pending": "Zain",
+        "reviewing": "Berrikusten",
+        "reviewed": "Berrikusita",
+        "date": "Data:",
+        "userReporting": "Erreportatzen duen erabiltzailea:",
+        "userReported": "Erreportatutako erabiltzailea:",
+        "report": "Erreporta:",
+        "delete": "Ezabatu"
+    },
+    "ViewReportPublicacio": {
+        "title": "Erreportatutako postak",
+        "reportN": "Erreport zenbakia",
+        "status": "Egoera:",
+        "pending": "Zain",
+        "reviewing": "Berrikusten",
+        "reviewed": "Berrikusita",
+        "date": "Data:",
+        "userReporting": "Erreportatzen duen erabiltzailea:",
+        "userPost": "Postaren erabiltzailea:",
+        "postTitle": "Postaren izenburua:",
+        "postDescription": "Postaren deskribapena:",
+        "report": "Erreporta:",
+        "reportedImage": "Erreportatutako irudia:",
+        "viewImage": "Irudia ikusi",
+        "delete": "Ezabatu"
+    },
+    "ViewMyPublicationItem": {
+        "availability": "Eskuragarritasuna:",
+        "reports": "Erreportak:",
+        "date": "Data:",
+        "pending": "Berrikusteko zain",
+        "reported": "Erreportatuta",
+        "published": "Argitaratuta",
+        "textNotVerified": "AI-k egiaztatu gabeko testua",
+        "textVerified": "AI-k egiaztatutako testua",
+        "imgNotVerified": "AI-k egiaztatu gabeko irudia",
+        "imgVerified": "AI-k egiaztatutako irudia",
+        "available": "Eskuragarri",
+        "notAvailable": "Eskuragarri ez"
+    },
+    "ViewReportComments": {
+        "title": "Erreportatutako iruzkinak",
+        "reportN": "Erreport zenbakia",
+        "status": "Egoera:",
+        "pending": "Zain",
+        "reviewing": "Berrikusten",
+        "reviewed": "Berrikusita",
+        "date": "Data:",
+        "comment": "Iruzkina:",
+        "reportingUser": "Erreportatzen duen erabiltzailea:",
+        "commentUser": "Iruzkina idatzi duen erabiltzailea:",
+        "report": "Erreporta:",
+        "delete": "Ezabatu"
+    },
+    "viewPost": {
+        "comentaris": "Iruzkinak"
+    },
+    "viewPeopleMentoria": {
+        "chat": "Txata"
+    },
+    "myRequests": {
+        "title": "Nire eskaerak",
+        "noRequests": "Ez duzu eskaerarik"
+    },
+    "myRequest": {
+        "availability": "Eskuragarritasuna",
+        "reports": "Erreportak:",
+        "date": "Datak:",
+        "processing": "Berrikusteko zain",
+        "reported": "Erreportatuta",
+        "posted": "Argitaratuta",
+        "textNotVerified": "AI-k egiaztatu gabeko testua",
+        "textVerified": "AI-k egiaztatutako testua",
+        "imgNotVerified": "AI-k egiaztatu gabeko irudia",
+        "imgVerified": "AI-k egiaztatutako irudia"
+    },
+    "myPublications": {
+        "title": "Nire argitalpenak",
+        "noPublications": "Ez duzu argitalpenik"
+    },
+    "subMenu": {
+        "hi": "Kaixo,",
+        "profile": "Profila",
+        "publications": "Nire argitalpenak",
+        "request": "Nire eskaerak",
+        "admin": "Admin",
+        "statistics": "Estatistikak"
+    },
+    "requestPost": {
+        "title": "Eskaera bat gehitu:",
+        "uploadImage": "Irudia igo:",
+        "availability": "Eskuragarri:",
+        "addAvailability": "+ Eskuragarritasuna gehitu",
+        "selectDay": "Egun bat aukeratu",
+        "startTime": "Hasiera ordua",
+        "endTime": "Amaiera ordua",
+        "publishing": "Argitaratzen...",
+        "titlePlaceholder": "Izenburua",
+        "DescriptionPlaceholder": "Zer pentsatzen ari zara?"
+    },
+    "notificationList": {
+        "title": "Jakinarazpenak",
+        "all": "Guztiak",
+        "comments": "Iruzkinak",
+        "publications": "Argitalpenak",
+        "noNotifications": "Ez dago erakusteko jakinarazpenik"
+    },
+    "navBar": {
+        "home": "Hasiera",
+        "search": "Bilatu",
+        "upload": "Igo",
+        "chat": "Txata"
+    },
+    "loading": {
+        "title": "Kargatzen..."
+    },
+    "headerVerification": {
+        "title": "Egiaztapen orria",
+        "validationUser": "Erabiltzailearen egiaztapena",
+        "validationPost": "Postaren egiaztapena"
+    },
+    "headerReport": {
+        "title": "Erreporten orria",
+        "reportUser": "Erabiltzailearen erreporta ikusi",
+        "reportPost": "Postaren erreporta ikusi",
+        "reportComment": "Iruzkinaren erreporta ikusi"
+    },
+    "header": {
+        "report": "Erreportatu",
+        "validation": "Egiaztapena",
+        "services": "Zerbitzuak",
+        "comunity": "Komunitatea",
+        "mentors": "Mentoreak",
+        "request": "Eskaerak"
+    },
+    "formNewDataUsers": {
+        "title": "Erabiltzailearen formularioa",
+        "showForm": "Formularioa erakutsi",
+        "hideForm": "Formularioa ezkutatu",
+        "name": "Izena",
+        "profilePicture": "Profilaren argazkia",
+        "banner": "Banner",
+        "city": "Hiria",
+        "linkDiscord": "Discord esteka",
+        "linkGithub": "Github esteka",
+        "submit": "Erabiltzailea gorde",
+        "tags": "Etiketak (JSON)",
+        "tagsExample": "Adibide formatua: [\"JavaScript\", \"Python\", \"React\"]",
+        "availability": "Eskuragarritasuna (JSON)",
+        "availabilityExample": "Adibide formatua: {\"monday\":\"9:00-12:00\", \"friday\":\"9:00-12:00\"}"
+    },
+    "post": {
+        "title": "Post bat gehitu",
+        "titlePlaceholder": "Izenburua",
+        "postDescriptionPlaceholder": "Zer pentsatzen ari zara?",
+        "maxChar": "Gehienez 230 karaktere",
+        "publish": "Argitaratu"
+    },
+    "calendar": {
+        "title": "Eskuragarritasun ordutegia",
+        "day": "Eguna",
+        "availability": "Eskuragarri orduak",
+        "monday": "Astelehena",
+        "tuesday": "Asteartea",
+        "wednesday": "Asteazkena",
+        "thursday": "Osteguna",
+        "friday": "Ostirala",
+        "saturday": "Larunbata",
+        "sunday": "Igandea"
+    },
+    "menu": {
+        "comunity": "Komunitatea",
+        "mentors": "Mentoreak",
+        "request": "Eskaerak",
+        "share": "Partekatu"
+    }
+}

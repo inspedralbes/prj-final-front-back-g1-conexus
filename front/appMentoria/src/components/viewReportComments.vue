@@ -21,7 +21,7 @@
         <div class="flex flex-wrap justify-between mb-4">
           <div class="w-full md:w-1/2 mb-4">
             <p class="text-lg font-semibold text-gray-800 dark:text-gray-300">
-              {{ $t('ViewReportComments.report') }} : {{ report.id }}
+              {{ $t('ViewReportComments.reportN') }} : {{ report.id }}
             </p>
           </div>
           <div class="w-full md:w-1/2 mb-4 md:mb-0">

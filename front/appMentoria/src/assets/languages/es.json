@@ -1,0 +1,275 @@
+{
+    "chatContent":{
+        "writeMessage":"Escribe un mensaje..."
+    },
+    "languageSelector":{
+        "spanish": "Español",
+        "english": "Inglés",
+        "catalan": "Catalán",
+        "chinese": "Chino",
+        "urdu": "Urdu",
+        "german": "Alemán",
+        "portuguese": "Portugués",
+        "japanese": "Japonés",
+        "euskera": "Euskera",
+        "gallego": "Gallego"
+    },
+    "StadisticsPage":{
+        "title": "Estadísticas",
+        "userGraph": "Graficos de usuarios",
+        "commentsGraph": "Graficos de comentarios",
+        "postGraph": "Graficos de publicaciones"  
+    },
+    "serviceListPage":{
+        "title": "Servicios",
+        "noDescription": "No hay descripción disponible"
+    },
+    "profilePage":{
+        "placeWhereYouLive":"Lugar donde vives...",
+        "pendant":"Pendiente de asignar"
+    },
+    "LoginRegisterPage":{
+        "subTitle":"Correo @inspedralbes.cat",
+        "accessGoogle":"Acceder con Google",
+        "accessGithub":"Acceder con Github",
+        "logIn":"O inicia sesión",
+        "mailPlaceholder":"Correo electrónico",
+        "passwordPlaceholder":"Contraseña",
+        "loginButton":"Inicia sesión",
+        "projectBy":"Proyecto realizado por el equipo de",
+        "withTheHelpOf":", con la ayuda de",
+        "error":"Ha ocurrido un error al iniciar sesión",
+        "errorFields":"Error al iniciar sesión, comprueba los datos introducidos",
+        "invalidMail":"Error al iniciar sesión, el correo no es válido"
+    },
+    "AddComunityPost": {
+        "create": "Crear una publicación",
+        "title": "Título:",
+        "titlePlaceholder": "Escribe el título de la publicación",
+        "description": "Descripción:",
+        "descriptionPlaceholder": "Escribe la descripción de la publicación",
+        "postImage": "Subir Imagen:",
+        "preview": "Vista previa:",
+        "publish": "Publicar",
+        "publishing": "Publicando...",
+        "notAllFields": "Por favor, completa todos los campos y sube una imagen.",
+        "error": "Ha ocurrido un error al publicar la publicación"
+    },
+    "viewValidationUser": {
+        "title": "Validar usuarios",
+        "user": "Usuario Nº ",
+        "userType": "Tipo de usuario: ",
+        "student": "Estudiante",
+        "teacher": "Profesor",
+        "admin": "Administrador",
+        "class": "Clase: ",
+        "banner": "Cabecera: ",
+        "profile": "Perfil: ",
+        "validate": "Validar",
+        "delete": "Eliminar",
+        "unknown": "Desconocido"
+    },
+    "ViewValidationUpdate": {
+        "title": "Validar/Actualizar usuarios",
+        "user": "Usuario Nº: ",
+        "userType": "Tipo de usuario: ",
+        "student": "Estudiante",
+        "teacher": "Profesor",
+        "admin": "Administrador",
+        "class": "Clase: ",
+        "banner": "Cabecera: ",
+        "profile": "Perfil: ",
+        "validate": "Validar",
+        "delete": "Eliminar",
+        "unknown": "Desconocido"
+    },
+    "viewRequest": {
+        "coments": "Comentarios",
+        "comentPlaceholder": "Escribe un comentario!",
+        "seeMore": "Ver más",
+        "seeLess": "Ver menos",
+        "availability": "Disponibilidad",
+        "from": "De",
+        "to": "a"
+    },
+    "ViewReportUser": {
+        "title": "Usuarios reportados",
+        "reportN": "Informe Nº",
+        "status": "Estado:",
+        "pending": "Pendiente",
+        "reviewing": "Revisando",
+        "reviewed": "Revisado",
+        "date": "Fecha:",
+        "userReporting": "Usuario que reporta:",
+        "userReported": "Usuario reportado:",
+        "report": "Informe:",
+        "delete": "Eliminar"
+    },
+    "ViewReportPublicacio": {
+        "title": "Publicaciones reportadas",
+        "reportN": "Informe Nº",
+        "status": "Estado:",
+        "pending": "Pendiente",
+        "reviewing": "Revisando",
+        "reviewed": "Revisado",
+        "date": "Fecha:",
+        "userReporting": "Usuario que reporta:",
+        "userPost": "Usuario de la publicación:",
+        "postTitle": "Título de la publicación:",
+        "postDescription": "Descripción de la publicación:",
+        "report": "Informe:",
+        "reportedImage": "Imagen reportada:",
+        "viewImage": "Ver imagen",
+        "delete": "Eliminar"
+    },
+    "ViewMyPublicationItem": {
+        "availability": "Disponibilidad:",
+        "reports": "Reportes: ",
+        "date": "Fecha: ",
+        "pending": "Pendiente de revisar",
+        "reported": "Reportado",
+        "published": "Publicado", 
+        "textNotVerified": "Texto no verificado por IA",
+        "textVerified": "Texto verificado por IA",
+        "imgNotVerified": "Imagen no verificada por IA",  
+        "imgVerified": "Imagen verificada por IA",
+        "available": "Disponible",
+        "notAvailable": "No disponible"
+    },
+    "ViewReportComments":{
+        "title": "Comentarios reportados",
+        "reportN": "Informe Nº",
+        "status": "Estado:",
+        "pending": "Pendiente",
+        "reviewing": "Revisando",
+        "reviewed": "Revisado",
+        "date": "Fecha:",
+        "comment": "Comentario:",
+        "reportingUser": "Usuario que reporta:",
+        "commentUser": "Usuario que escribio el comentario:",
+        "report": "Informe:",
+        "delete": "Eliminar"
+    },
+    "viewPost":{
+        "comentaris": "Comentarios"
+    },
+    "viewPeopleMentoria":{
+        "chat": "Chat"
+    },
+    "myRequests":{
+        "title": "Mis peticiones",
+        "noRequests": "No tienes peticiones"
+    },
+    "myRequest":{
+        "availability": "Disponibilitat:",
+        "reports": "Reportes:",
+        "date": "Fechas:",
+        "processing": "Pendiente de revisar",
+        "reported": "Reportado",
+        "posted": "Publicado",
+        "textNotVerified": "Texto no verificado por IA",
+        "textVerified": "Texto verificado por IA",
+        "imgNotVerified": "Imagen no verificada por IA",
+        "imgVerified": "Imagen verificada por IA"
+    },
+    "myPublications":{
+        "title": "Mis publicaciones",
+        "noPublications": "No tienes publicaciones"
+    },
+    "subMenu": {
+        "hi": "Hola",
+        "profile": "Perfil",
+        "publications": "Mis publicaciones",
+        "request": "Mis peticiones",
+        "admin": "Admin",
+        "statistics": "Estadísticas"
+    },
+    "requestPost": {
+        "title": "Añadir una petición:",
+        "uploadImage": "Subir imagen:",
+        "availability": "Disponible:",
+        "addAvailability": "+ Añadir disponibilidad",
+        "selectDay": "Selecciona un día",
+        "startTime": "Hora de inicio",
+        "endTime": "Hora de fin",
+        "publishing": "Publicando...",
+        "titlePlaceholder": "Título",
+        "DescriptionPlaceholder": "En que piensas?"
+    },
+    "norificationList": {
+        "title": "Notificaciones",
+        "all": "Todas",
+        "comments": "Comentarios",
+        "publications": "Publicaciones",
+        "noNotifications": "No hay notificaciones que mostrar"
+    },
+    "navBar": {
+        "home": "Inicio",
+        "search": "Buscar",
+        "upload": "Subir",
+        "chat": "Chat"
+    },
+    "loading": {
+        "title": "Cargando..."
+    },
+    "headerVerification": {
+        "title": "Pagina de reportes",
+        "validationUser": "Verificación de usuario",
+        "validationPost": "Validacion de post"
+    },
+    "headerReport": {
+        "title": "Pagina de reportes",
+        "reportUser": "Ver reporte de usuario",
+        "reportPost": "Ver reporte de publicación",
+        "reportComment": "Ver reporte de comentario"
+    },
+    "header": {
+        "report": "Reportar",
+        "validation": "Validación",
+        "services": "Servicios",
+        "comunity": "Comunidad",
+        "mentors": "Mentores",
+        "request": "Peticiones"
+    },
+    "formNewDataUsers": {
+        "title": "Formulario de usuario",
+        "showForm": "Mostrar formulario",
+        "hideForm": "Ocultar formulario",
+        "name": "Nombre",
+        "profilePicture": "Foto de perfil",
+        "banner": "Cabecera",
+        "city": "Ciudad",
+        "linkDiscord": "Enlace a Discord",
+        "linkGithub": "Enlace a Github",
+        "submit": "Guardar usuario",
+        "tags": "Etiquetas (JSON)",
+        "tagsExample": "Ejemplo de formato: [\"JavaScript\", \"Python\", \"React\"]",
+        "availability": "Disponibilidad (JSON)",
+        "availabilityExample": "Ejemplo de formato: {\"monday\":\"9:00-12:00\", \"friday\":\"9:00-12:00\"}"
+    },
+    "post": {
+        "title": "Añade una publicación",
+        "titlePlaceholder": "Título",
+        "postDescriptionPlaceholder": "En que piensas?",
+        "maxChar": "Máximo 230 caracteres",
+        "publish": "Publicar"
+    },
+    "calendar": {
+        "title": "Horario de disponibilidad",
+        "day": "Día",
+        "availability": "Horas disponibles",
+        "monday": "Lunes",
+        "tuesday": "Martes",
+        "wednesday": "Miércoles",
+        "thursday": "Jueves",
+        "friday": "Viernes",
+        "saturday": "Sábado",
+        "sunday": "Domingo"
+    },
+    "menu": {
+        "comunity": "Comunidad",
+        "mentors": "Mentores",
+        "request": "Peticiones",
+        "share": "Compartir"
+    }
+}
