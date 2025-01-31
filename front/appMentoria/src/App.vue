@@ -72,7 +72,7 @@ onMounted(async () => {
   const user = await validateLogin();
   if (user) {
     Object.assign(userAPP, user); // Asigna las propiedades al objeto reactivo
-    await subscribeToPushNotifications(user);
+    // await subscribeToPushNotifications(user);
   } else {
     router.push({ name: "login" });
   }
