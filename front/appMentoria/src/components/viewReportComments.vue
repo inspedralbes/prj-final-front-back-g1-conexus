@@ -107,9 +107,9 @@
 </template>
 
 <script>
-import { updateReportComment } from "@/services/communicationsScripts/communicationManager";
-import { deleteReportComment } from "@/services/communicationsScripts/communicationManager";
-import { fetchAllReportsComments } from "@/services/communicationsScripts/communicationManager";
+import { updateReportComment } from "@/services/communicationsScripts/mainManager";
+import { deleteReportComment } from "@/services/communicationsScripts/mainManager";
+import { fetchAllReportsComments } from "@/services/communicationsScripts/mainManager";
 
 export default {
   data() {

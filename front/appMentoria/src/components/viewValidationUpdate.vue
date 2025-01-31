@@ -114,7 +114,7 @@ import {
   fetchUserValidation,
   deleteUserValidation,
   fetchAllClasses,
-} from "@/services/communicationsScripts/communicationManager";
+} from "@/services/communicationsScripts/mainManager";
 
 export default {
   data() {

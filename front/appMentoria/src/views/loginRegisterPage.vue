@@ -143,7 +143,7 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import ToggleDarkMode from "@/components/ToggleDarkMode.vue";
-import { loginAPI, loginDB } from "@/services/communicationsScripts/communicationManager";
+import { loginAPI, loginDB } from "@/services/communicationsScripts/mainManager";
 import { useAppStore } from "@/stores/index";
 import router from "@/router";
 

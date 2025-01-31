@@ -8,9 +8,9 @@ const CHAT_URL = import.meta.env.VITE_URL_BACK_CHAT;
 const COMMUNITY_URL = import.meta.env.VITE_URL_BACK_COMMUNITY;
 const EMPLOYMENTEXCHANGE_URL = import.meta.env.VITE_URL_BACK_EMPLOYMENT_EXCHANGE;
 const STADISTICS_URL = import.meta.env.VITE_URL_BACK_STADISTICS;
-const MICROOSERVICES_URL = import.meta.env.VITE_URL_BACK_MICROSERVICES;
+const MICROSERVICES_URL = import.meta.env.VITE_URL_BACK_MICROSERVICES;
 const NOTIFICATIONS_URL = import.meta.env.VITE_URL_BACK_NOTIFICATIONS;
-const VITE_URL_BACK_CHAT = import.meta.env.VITE_CHATS_URL;
+
 // Refresh acces token
 export const refreshToken = async () => {
     try {
@@ -159,46 +159,6 @@ export const logout = async () => {
         localStorage.removeItem('user');
 
         return { message: 'Logout successful' };
-    } catch (error) {
-        console.error('Network error:', error);
-        return { error: 'Network error. Please try again later.' };
-    }
-};
-
-// Create new data user
-export const createNewDataUser = async (userData) => {
-
-    let sendUserData = {
-        userPinia: useAppStore().user,
-        userData: userData,
-    };
-
-    try {
-        const response = await fetch(`${BACK_URL}/newDataUsers`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-            },
-            body: JSON.stringify(sendUserData),
-        });
-
-        if (response.status === 401) {
-            const refreshResult = await refreshToken();
-
-            if (refreshResult.error) {
-                return { error: 'No se pudo renovar el token. Inicia sesión nuevamente.' };
-            }
-
-            // Reintenta la petición después de renovar el token
-            return await createNewDataUser(userData);
-        }
-
-        if (!response.ok) {
-            return { error: `HTTP error! status: ${response.status}` };
-        }
-
-        return await response.json();
     } catch (error) {
         console.error('Network error:', error);
         return { error: 'Network error. Please try again later.' };
@@ -921,7 +881,7 @@ export const updateUserValidation = async (id) => {
 
 export const getServices = async () => {
     try {
-        const response = await fetch(`${MICROOSERVICES_URL}/getProcess`, {
+        const response = await fetch(`${MICROSERVICES_URL}/getProcess`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -937,7 +897,7 @@ export const getServices = async () => {
 
 export const changeServiceViewUsers = async (id, enabled) => {
     try {
-        const response = await fetch(`${MICROOSERVICES_URL}/changeServiceViewUserFront/${id}`, {
+        const response = await fetch(`${MICROSERVICES_URL}/changeServiceViewUserFront/${id}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",

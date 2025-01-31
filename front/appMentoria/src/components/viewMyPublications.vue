@@ -41,7 +41,7 @@
   
   <script setup>
 import { ref, onMounted } from "vue";
-import { getMyPublications } from "@/services/communicationsScripts/communicationManager";
+import { getMyPublications } from "@/services/communicationsScripts/mainManager";
 import { useAppStore } from "@/stores/index";
 import viewMyPublicationItem from "./viewMyPublicationItem.vue";
 

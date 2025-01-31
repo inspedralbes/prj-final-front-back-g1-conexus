@@ -122,7 +122,7 @@
 import { ref, onMounted, reactive } from "vue";
 import ToggleDarkMode from "./ToggleDarkMode.vue";
 import { useAppStore } from "@/stores/index";
-import { logout } from "@/services/communicationsScripts/communicationManager";
+import { logout } from "@/services/communicationsScripts/mainManager";
 import { useRouter } from "vue-router";
 
 const appStore = useAppStore();

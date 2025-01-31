@@ -100,9 +100,9 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import NotificationItem from "./NotificationItem.vue";
-import { getNotifications } from "@/services/communicationsScripts/communicationManager";
+import { getNotifications } from "@/services/communicationsScripts/mainManager";
 import { useAppStore } from "@/stores/index";
-import { updateNotificationRevision } from "@/services/communicationsScripts/communicationManager";
+import { updateNotificationRevision } from "@/services/communicationsScripts/mainManager";
 
 // Obtener datos del usuario desde Pinia
 const appStore = useAppStore();

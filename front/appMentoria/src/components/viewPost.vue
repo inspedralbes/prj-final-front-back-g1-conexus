@@ -351,7 +351,7 @@ import {
   getUsers,
   getCommunityComments,
   postCommunityComments,
-} from "../services/communicationsScripts/communicationManager";
+} from "../services/communicationsScripts/mainManager";
 import socketBack from "../services/socketsScripts/socketBack.js";
 import { useAppStore } from "@/stores/index";
 import Loading from "@/components/Loading.vue"; // Import the Loading component
