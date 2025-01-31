@@ -1,4 +1,45 @@
 {
+    "editProfile": {
+        "title": "بینر اور پروفائل میں ترمیم کریں",
+        "fullName": "پورا نام",
+        "city": "شہر",
+        "bannerimg": "بینر کی تصویر",
+        "profileimg": "پروفائل کی تصویر",
+        "save": "تبدیلیاں محفوظ کریں"
+    },
+    "formPersonal": {
+        "title": "ذاتی معلومات میں ترمیم کریں",
+        "email": "ای میل:",
+        "phone": "فون:",
+        "save": "تبدیلیاں محفوظ کریں"
+    },
+    "formAvailability": {
+        "title": "دستیابی کے شیڈول میں ترمیم کریں",
+        "email": "ای میل:",
+        "save": "تبدیلیاں محفوظ کریں"
+    },
+    "PersonalInfo":{
+        "titlePage": "ذاتی معلومات",
+        "nameAndSurname": "نام اور کنیت",
+        "desc": "تفصیل",
+        "noDesc": "اس صارف نے کوئی تفصیل شامل نہیں کی ہے۔",
+        "socialMedia": "سوشل میڈیا",
+        "githubProfile": "گٹ ہب پروفائل",
+        "LinkedinProfile": "لنکڈ ان پروفائل",
+        "TwitterProfile": "ٹوئٹر پروفائل",
+        "InstagramProfile": "انسٹاگرام پروفائل",
+        "FacebookProfile": "فیس بک پروفائل",
+        "location": "مقام",
+        "title": "عنوان",
+        "studying": "پڑھائی کر رہا ہے...",
+        "contact": "رابطہ",
+        "email": "ای میل:",
+        "phone": "فون:",
+        "softwareSkills": "سافٹ ویئر کی مہارتیں",
+        "languages": "زبانیں",
+        "noLanguages": "ابھی تک کوئی نہیں...",
+        "edit": "ترمیم کریں"
+    },
     "chatContent": {
         "writeMessage": "پیغام لکھیں..."
     },
@@ -263,7 +304,8 @@
         "thursday": "جمعرات",
         "friday": "جمعہ",
         "saturday": "ہفتہ",
-        "sunday": "اتوار"
+        "sunday": "اتوار",
+        "edit": "ترتیب دیں"
     },
     "menu": {
         "comunity": "کمیونٹی",

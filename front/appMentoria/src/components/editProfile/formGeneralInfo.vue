@@ -1,9 +1,5 @@
 <template>
-    <Header class="shadow-lg shadow-black/30"></Header>
-    <div v-if="user.value" class="dark:bg-gray-900 p-4 text-gray-900 dark:text-gray-100">
-        <div class="space-y-8">
-            <!-- Formulario 1: Información general -->
-            <div class="dark:bg-gray-800 bg-white p-6 rounded-xl shadow-lg shadow-black/30 my-4">
+    <div class="dark:bg-gray-800 bg-white p-6 rounded-xl shadow-lg shadow-black/30 my-4">
                 <h2 class="text-2xl font-semibold border-b border-gray-600 pb-4 mb-4">{{ $t("editProfile.title") }}</h2>
                 <form enctype="multipart/form-data" class="border-b border-gray-600 pb-4 mb-4">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -66,50 +62,7 @@
                     {{ $t("editProfile.save") }}
                 </button>
             </div>
-            <!-- Formulario 2: Información Personal -->
-            <div class="dark:bg-gray-800 bg-white p-6 rounded-xl shadow-lg shadow-black/30 my-4">
-                <h2 class="text-2xl font-semibold border-b border-gray-600 pb-4 mb-4">Editar Informació Personal</h2>
-                <form class="border-b border-gray-600 pb-4 mb-4">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label for="contactEmail" class="block font-medium">Correo Electrónico</label>
-                            <input v-model="personalInfo.contactEmail" type="email" id="contactEmail"
-                                class="w-full border border-gray-300 rounded-lg p-2 mt-1 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
-                        </div>
-                        <div>
-                            <label for="contactPhone" class="block font-medium">Teléfono</label>
-                            <input v-model="personalInfo.contactPhone" type="tel" id="contactPhone"
-                                class="w-full border border-gray-300 rounded-lg p-2 mt-1 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
-                        </div>
-                    </div>
-                </form>
-                <button class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
-                    Desar Canvis
-                </button>
-            </div>
-            <!-- Formulario 3: Información de Disponibilidad -->
-            <div class="dark:bg-gray-800 bg-white p-6 rounded-xl shadow-lg shadow-black/30 my-4">
-                <h2 class="text-2xl font-semibold border-b border-gray-600 pb-4 mb-4">Editar Horari de Disponibilitat</h2>
-                <form class="border-b border-gray-600 pb-4 mb-4">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label for="contactEmail" class="block font-medium">Correo Electrónico</label>
-                            <input v-model="personalInfo.contactEmail" type="email" id="contactEmail"
-                                class="w-full border border-gray-300 rounded-lg p-2 mt-1 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
-                        </div>
-                    </div>
-                </form>
-                <button class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
-                    Desar Canvis
-                </button>
-            </div>
-        </div>
-    </div>
-    <div v-else class="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
-        <Loading />
-    </div>
 </template>
-
 <script setup>
 import { ref, onMounted, reactive } from "vue";
 import { useAppStore } from "@/stores/index";

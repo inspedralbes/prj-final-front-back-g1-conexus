@@ -1,4 +1,45 @@
 {
+    "editProfile": {
+        "title": "Editar Banner e Perfil",
+        "fullName": "Nome completo",
+        "city": "Cidade",
+        "bannerimg": "Imagem de banner",
+        "profileimg": "Imagem de perfil",
+        "save": "Guardar mudanças"
+    },
+    "formPersonal": {
+        "title": "Editar Informação Pessoal",
+        "email": "Email:",
+        "phone": "Telefone:",
+        "save": "Guardar mudanças"
+    },
+    "formAvailability": {
+        "title": "Editar Horário de Disponibilidade",
+        "email": "Email:",
+        "save": "Guardar mudanças"
+    },
+    "PersonalInfo": {
+        "titlePage": "Informação pessoal",
+        "nameAndSurname": "Nome e sobrenome",
+        "desc": "Descrição",
+        "noDesc": "Este usuário não adicionou nenhuma descrição.",
+        "socialMedia": "Redes sociais",
+        "githubProfile": "Perfil do Github",
+        "LinkedinProfile": "Perfil do Linkedin",
+        "TwitterProfile": "Perfil do Twitter",
+        "InstagramProfile": "Perfil do Instagram",
+        "FacebookProfile": "Perfil do Facebook",
+        "location": "Localização",
+        "title": "Título",
+        "studying": "Estudando...",
+        "contact": "Contato",
+        "email": "Email:",
+        "phone": "Telefone:",
+        "softwareSkills": "Habilidades em software",
+        "languages": "Idiomas",
+        "noLanguages": "Ainda não há...",
+        "edit": "Editar"
+    },
     "chatContent": {
         "writeMessage": "Escreva uma mensagem..."
     },
@@ -264,7 +305,8 @@
         "thursday": "Quinta-feira",
         "friday": "Sexta-feira",
         "saturday": "Sábado",
-        "sunday": "Domingo"
+        "sunday": "Domingo",
+        "edit": "Editar"
     },
     "menu": {
         "comunity": "Comunidade",

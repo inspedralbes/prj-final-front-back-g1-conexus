@@ -1,4 +1,45 @@
 {
+    "editProfile": {
+        "title": "编辑横幅和个人资料",
+        "fullName": "全名",
+        "city": "城市",
+        "bannerimg": "横幅图片",
+        "profileimg": "个人资料图片",
+        "save": "保存更改"
+    },
+    "formPersonal": {
+        "title": "编辑个人信息",
+        "email": "电子邮件:",
+        "phone": "电话:",
+        "save": "保存更改"
+    },
+    "formAvailability": {
+        "title": "编辑可用时间表",
+        "email": "电子邮件:",
+        "save": "保存更改"
+    },
+    "PersonalInfo": {
+        "titlePage": "个人信息",
+        "nameAndSurname": "姓名",
+        "desc": "描述",
+        "noDesc": "该用户未添加任何描述。",
+        "socialMedia": "社交媒体",
+        "githubProfile": "Github 个人资料",
+        "LinkedinProfile": "Linkedin 个人资料",
+        "TwitterProfile": "Twitter 个人资料",
+        "InstagramProfile": "Instagram 个人资料",
+        "FacebookProfile": "Facebook 个人资料",
+        "location": "位置",
+        "title": "标题",
+        "studying": "学习中...",
+        "contact": "联系",
+        "email": "电子邮件:",
+        "phone": "电话:",
+        "softwareSkills": "软件技能",
+        "languages": "语言",
+        "noLanguages": "还没有...",
+        "edit": "编辑"
+    },
     "chatContent": {
         "writeMessage": "写信息..."
     },
@@ -263,7 +304,8 @@
         "thursday": "星期四",
         "friday": "星期五",
         "saturday": "星期六",
-        "sunday": "星期日"
+        "sunday": "星期日",
+        "edit": "编辑"
     },
     "menu": {
         "comunity": "社区",

@@ -1,4 +1,45 @@
 {
+    "editProfile": {
+        "title": "Banner und Profil bearbeiten",
+        "fullName": "Vollständiger Name",
+        "city": "Stadt",
+        "bannerimg": "Bannerbild",
+        "profileimg": "Profilbild",
+        "save": "Änderungen speichern"
+    },
+    "formPersonal": {
+        "title": "Persönliche Informationen bearbeiten",
+        "email": "E-Mail:",
+        "phone": "Telefon:",
+        "save": "Änderungen speichern"
+    },
+    "formAvailability": {
+        "title": "Verfügbarkeitszeiten bearbeiten",
+        "email": "E-Mail:",
+        "save": "Änderungen speichern"
+    },
+    "PersonalInfo": {
+        "titlePage": "Persönliche Informationen",
+        "nameAndSurname": "Name und Nachname",
+        "desc": "Beschreibung",
+        "noDesc": "Dieser Benutzer hat keine Beschreibung hinzugefügt.",
+        "socialMedia": "Soziale Medien",
+        "githubProfile": "Github-Profil",
+        "LinkedinProfile": "Linkedin-Profil",
+        "TwitterProfile": "Twitter-Profil",
+        "InstagramProfile": "Instagram-Profil",
+        "FacebookProfile": "Facebook-Profil",
+        "location": "Standort",
+        "title": "Titel",
+        "studying": "Studiert...",
+        "contact": "Kontakt",
+        "email": "E-Mail:",
+        "phone": "Telefon:",
+        "softwareSkills": "Softwarekenntnisse",
+        "languages": "Sprachen",
+        "noLanguages": "Noch keine...",
+        "edit": "Bearbeiten"
+    },
     "chatContent": {
         "writeMessage": "Schreibe eine Nachricht..."
     },
@@ -257,6 +298,7 @@
         "publish": "Veröffentlichen"
     },
     "calendar": {
+        
         "title": "Verfügbarkeitsplan",
         "day": "Tag",
         "availability": "Verfügbare Stunden",
@@ -266,7 +308,8 @@
         "thursday": "Donnerstag",
         "friday": "Freitag",
         "saturday": "Samstag",
-        "sunday": "Sonntag"
+        "sunday": "Sonntag",
+        "edit": "Bearbeiten"
     },
     "menu": {
         "comunity": "Gemeinschaft",

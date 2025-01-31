@@ -10,7 +10,7 @@
                         {{ user.value.name }}
                     </h3>
                     <p class="text-sm sm:text-base text-gray-500 dark:text-gray-300">
-                        {{ user.value.city || `Lloc on vius...` }}
+                        {{ user.value.city || $t("profilePage.placeWhereYouLive") }}
                     </p>
                 </div>
             </div>

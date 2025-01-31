@@ -5,21 +5,21 @@
             <div class="space-y-4">
                 <!-- Full Name -->
                 <div class="space-y-1">
-                    <h3 class="font-semibold">Nom i cognoms</h3>
+                    <h3 class="font-semibold">{{ $t("PersonalInfo.titlePage") }}</h3>
                     <p class="text-gray-500 dark:text-gray-400">{{ user.value.name }}</p>
                 </div>
 
                 <!-- Biography -->
                 <div class="space-y-1">
-                    <h3 class="font-semibold">Descripció</h3>
+                    <h3 class="font-semibold">{{ $t("PersonalInfo.desc") }}</h3>
                     <p class="text-gray-500 dark:text-gray-400">
-                        {{ user.value.description || "Aquest usuari no ha afegit cap descripció." }}
+                        {{ user.value.description || $t("PersonalInfo.noDesc") }}
                     </p>
                 </div>
 
                 <!-- Social Links -->
                 <div class="space-y-1">
-                    <h3 class="font-semibold">Xarxes Socials</h3>
+                    <h3 class="font-semibold">{{ $t("PersonalInfo.socialMedia") }}</h3>
                     <div class="flex space-x-4 mt-4">
                         <!-- Github Icon with Tooltip -->
                         <div v-if="user.value.github_link" class="relative group">
@@ -39,7 +39,7 @@
                             <!-- Tooltip -->
                             <div
                                 class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-gray-800 dark:bg-gray-700 text-white text-sm rounded-lg py-1 px-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg">
-                                Github profile
+                               {{ $t("PersonalInfo.githubProfile") }}
                             </div>
                             <!-- Tooltip Arrow -->
                             <div
@@ -65,7 +65,7 @@
                             <!-- Tooltip -->
                             <div
                                 class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-gray-800 dark:bg-gray-700 text-white text-sm rounded-lg py-1 px-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg">
-                                LinkedIn profile
+                                {{ $t("PersonalInfo.LinkedinProfile") }}
                             </div>
                             <!-- Tooltip Arrow -->
                             <div
@@ -89,7 +89,7 @@
                             <!-- Tooltip -->
                             <div
                                 class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-gray-800 dark:bg-gray-700 text-white text-sm rounded-lg py-1 px-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg">
-                                Twitter profile
+                                {{ $t("PersonalInfo.TwitterProfile") }}
                             </div>
                             <!-- Tooltip Arrow -->
                             <div
@@ -114,7 +114,7 @@
                             <!-- Tooltip -->
                             <div
                                 class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-gray-800 dark:bg-gray-700 text-white text-sm rounded-lg py-1 px-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg">
-                                Instagram profile
+                                {{ $t("PersonalInfo.InstagramProfile") }}
                             </div>
                             <!-- Tooltip Arrow -->
                             <div
@@ -139,7 +139,7 @@
                             <!-- Tooltip -->
                             <div
                                 class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-gray-800 dark:bg-gray-700 text-white text-sm rounded-lg py-1 px-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg">
-                                Facebook profile
+                                {{ $t("PersonalInfo.FacebookProfile") }}
                             </div>
                             <!-- Tooltip Arrow -->
                             <div
@@ -151,7 +151,7 @@
 
                 <!-- Location -->
                 <div class="space-y-1">
-                    <h3 class="font-semibold">Ubicació</h3>
+                    <h3 class="font-semibold">{{ $t("PersonalInfo.location") }}</h3>
                     <div class="flex items-center space-x-1 text-gray-500 dark:text-gray-400">
                         <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
                             height="24" fill="currentColor" viewBox="0 0 24 24">
@@ -167,7 +167,7 @@
             <div class="space-y-4">
                 <!-- Job Title -->
                 <div class="space-y-1">
-                    <h3 class="font-semibold">Títol</h3>
+                    <h3 class="font-semibold">{{ $t("PersonalInfo.title") }}</h3>
                     <div class="flex items-center space-x-2 text-gray-500 dark:text-gray-400">
                         <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
                             height="24" fill="currentColor" viewBox="0 0 24 24">
@@ -175,21 +175,21 @@
                                 d="M10 2a3 3 0 0 0-3 3v1H5a3 3 0 0 0-3 3v2.382l1.447.723.005.003.027.013.12.056c.108.05.272.123.486.212.429.177 1.056.416 1.834.655C7.481 13.524 9.63 14 12 14c2.372 0 4.52-.475 6.08-.956.78-.24 1.406-.478 1.835-.655a14.028 14.028 0 0 0 .606-.268l.027-.013.005-.002L22 11.381V9a3 3 0 0 0-3-3h-2V5a3 3 0 0 0-3-3h-4Zm5 4V5a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v1h6Zm6.447 7.894.553-.276V19a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3v-5.382l.553.276.002.002.004.002.013.006.041.02.151.07c.13.06.318.144.557.242.478.198 1.163.46 2.01.72C7.019 15.476 9.37 16 12 16c2.628 0 4.98-.525 6.67-1.044a22.95 22.95 0 0 0 2.01-.72 15.994 15.994 0 0 0 .707-.312l.041-.02.013-.006.004-.002.001-.001-.431-.866.432.865ZM12 10a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H12Z"
                                 clip-rule="evenodd" />
                         </svg>
-                        <p>{{ user.value.job || 'Estudiant...' }}</p>
+                        <p>{{ user.value.job || $t("PersonalInfo.studying") }}</p>
                     </div>
                 </div>
 
                 <!-- Contact Info -->
                 <div class="space-y-1">
-                    <h3 class="font-semibold">Contacte</h3>
-                    <p class="text-gray-500 dark:text-gray-400">Correu electrònic: {{ user.value.email }}</p>
-                    <p class="text-gray-500 dark:text-gray-400">Telèfon: {{ user.value.mobilePhone || 'No hi ha...' }}
+                    <h3 class="font-semibold">{{ $t("PersonalInfo.contact") }}</h3>
+                    <p class="text-gray-500 dark:text-gray-400">{{ $t("PersonalInfo.email") }} {{ user.value.email }}</p>
+                    <p class="text-gray-500 dark:text-gray-400">{{ $t("PersonalInfo.phone") }} {{ user.value.mobilePhone || 'No hi ha...' }}
                     </p>
                 </div>
 
                 <!-- Software Skills -->
                 <div class="space-y-1">
-                    <h3 class="font-semibold">Software Skills</h3>
+                    <h3 class="font-semibold">{{ $t("PersonalInfo.softwareSkills") }}</h3>
                     <div class="flex space-x-4">
                         <span v-for="tag in user.value.tags" :key="tag"
                             class="p-2 rounded-lg text-gray-700 bg-gray-100 dark:text-gray-300 dark:bg-gray-700">{{ tag
@@ -199,8 +199,8 @@
 
                 <!-- Languages -->
                 <div class="space-y-1">
-                    <h3 class="font-semibold">Idiomes</h3>
-                    <p class="text-gray-500 dark:text-gray-400">{{ user.value.languages || `Encara no hi han...` }}</p>
+                    <h3 class="font-semibold">{{ $t("PersonalInfo.languages") }}</h3>
+                    <p class="text-gray-500 dark:text-gray-400">{{ user.value.languages || $t("PersonalInfo.noLanguages") }}</p>
                 </div>
             </div>
         </div>
@@ -212,7 +212,7 @@
                     d="M5 8a4 4 0 1 1 7.796 1.263l-2.533 2.534A4 4 0 0 1 5 8Zm4.06 5H7a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h2.172a2.999 2.999 0 0 1-.114-1.588l.674-3.372a3 3 0 0 1 .82-1.533L9.06 13Zm9.032-5a2.907 2.907 0 0 0-2.056.852L9.967 14.92a1 1 0 0 0-.273.51l-.675 3.373a1 1 0 0 0 1.177 1.177l3.372-.675a1 1 0 0 0 .511-.273l6.07-6.07a2.91 2.91 0 0 0-.944-4.742A2.907 2.907 0 0 0 18.092 8Z"
                     clip-rule="evenodd" />
             </svg>
-            <span>Editar</span>
+            <span>{{ $t("PersonalInfo.edit") }}</span>
         </button>
     </div>
 </template>

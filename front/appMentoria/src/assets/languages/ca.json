@@ -1,4 +1,46 @@
 {
+    
+    "editProfile": {
+        "title": "Editar Banner i Perfil",
+        "fullName": "Nom complet",
+        "city": "Ciutat",
+        "bannerimg": "Imatge de banner",
+        "profileimg": "Imatge de perfil",
+        "save": "Guardar canvis"
+    },
+    "formPersonal": {
+        "title": "Editar Informació Personal",
+        "email": "Correu electrònic:",
+        "phone": "Telèfon:",
+        "save": "Guardar canvis"
+    },
+    "formAvailability": {
+        "title": "Editar Horari de Disponibilitat",
+        "email": "Correu electrònic:",
+        "save": "Guardar canvis"
+    },
+    "PersonalInfo":{
+        "titlePage": "Informació personal",
+        "nameAndSurname": "Nom i cognoms",
+        "desc": "Descripció",
+        "noDesc":"Aquest usuari no ha afegit cap descripció.",
+        "socialMedia": "Xarxes socials",
+        "githubProfile": "Perfil de Github",
+        "LinkedinProfile": "Perfil de Linkedin",
+        "TwitterProfile": "Perfil de Twitter",
+        "InstagramProfile": "Perfil de Instagram",
+        "FacebookProfile": "Perfil de Facebook",
+        "location": "Ubicació",
+        "title": "Títol",
+        "studying": "Estudiant...",
+        "contact": "Contacte",
+        "email": "Correu electrònic:",
+        "phone": "Telèfon:",
+        "softwareSkills":"Habilitats en programari",
+        "languages":"Idiomes",
+        "noLanguages":"Encara no hi han...",
+        "edit":"Editar"
+    },
     "chatContent": {
         "writeMessage": "Escriu un missatge..."
     },
@@ -268,7 +310,8 @@
         "thursday": "Dijous",
         "friday": "Divendres",
         "saturday": "Dissabte",
-        "sunday": "Diumenge"
+        "sunday": "Diumenge",
+        "edit": "Editar"
     },
     "menu": {
         "comunity": "Comunitat",
