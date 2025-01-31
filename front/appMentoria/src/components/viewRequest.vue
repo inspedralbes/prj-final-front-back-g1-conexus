@@ -82,7 +82,7 @@
           </main>
         </div>
         <div class="p-4">
-          <h3 class="text-lg font-bold">Comentaris</h3>
+          <h3 class="text-lg font-bold">{{ $t("viewRequest.coments") }}</h3>
           <div class="border-t-2 border-gray-200 px-4 p-4 mb-2 sm:mb-0">
             <div class="relative flex">
               <input
@@ -183,7 +183,7 @@
                 <div class="relative flex mb-4 mr-5">
                   <input
                     type="text"
-                    placeholder="Escriu un comentari!"
+                    :placeholder="$t('viewRequest.comentPlaceholder')"
                     v-model="replyInputs[comment.id]"
                     class="w-3/4 focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-600 pl-3 pr-16 bg-gray-200 rounded-md py-2 dark:bg-gray-800 dark:text-white"
                     style="width: 100%"
@@ -275,8 +275,8 @@
               >
                 {{
                   expandedRequests.includes(request.id)
-                    ? "Veure menys"
-                    : "Veure més"
+                    ? $t("viewRequest.seeLess")
+                    : $t("viewRequest.seeMore")
                 }}
               </button>
             </div>
@@ -284,7 +284,7 @@
             <!-- Mostrar disponibilidad cuando expandido -->
             <div v-if="expandedRequests.includes(request.id)" class="mt-6">
               <h2 class="text-lg font-semibold text-center text-white mb-4">
-                Disponibilitat
+                {{ $t("viewRequest.availability") }}
               </h2>
               <div
                 class="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg shadow-md"
@@ -301,7 +301,7 @@
                       day.day
                     }}</strong>
                     <span class="text-sm text-gray-500 dark:text-gray-400">
-                      de {{ day.startTime }} a {{ day.endTime }}
+                      {{ $t("viewRequest.from") }} {{ day.startTime }} {{ $t("viewRequest.to") }} {{ day.endTime }}
                     </span>
                   </span>
                 </p>

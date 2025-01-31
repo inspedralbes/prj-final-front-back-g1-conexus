@@ -9,7 +9,7 @@
     <div v-else>
       <div
         v-if="selectedPost"
-        class="max-w-3xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden mt-6 dark:bg-gray-900"
+        class="max-w-3xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden mt-6 dark:bg-gray-800"
       >
         <button
           @click="goMain"
@@ -81,7 +81,7 @@
           </main>
         </div>
         <div class="p-4">
-          <h3 class="text-lg font-bold">Comentaris</h3>
+          <h3 class="text-lg font-bold">{{ $t("viewPost.comentaris") }}</h3>
           <div class="border-t-2 border-gray-200 px-4 p-4 mb-2 sm:mb-0">
             <div class="relative flex">
               <input
@@ -277,7 +277,7 @@
             (a, b) => new Date(b.created_at) - new Date(a.created_at)
           )"
           :key="post.id"
-          class="max-w-3xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden mt-6 dark:bg-gray-900"
+          class="max-w-3xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden mt-6 dark:bg-gray-800"
         >
           <div v-if="post.reports === 0">
             <header class="flex items-center p-4 border-b">

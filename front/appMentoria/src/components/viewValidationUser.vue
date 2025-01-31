@@ -3,7 +3,7 @@
     class="container mx-auto p-3 sm:p-4 bg-white bg-gray-100 dark:bg-gray-700 shadow-lg rounded-lg max-w-screen-xl"
   >
     <h1 class="text-2xl font-bold mb-5 text-gray-800 dark:text-gray-100">
-      Validar Usuaris
+      {{ $t("ViewValidationUpdate.title") }}
     </h1>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div
@@ -21,12 +21,12 @@
         <div class="flex flex-wrap justify-between mb-4">
           <div class="w-full md:w-1/2 mb-4">
             <p class="text-lg font-semibold text-gray-800 dark:text-gray-300">
-              User Nº: {{ user.id }}
+              {{ $t("viewValidationUser.user") }}{{ user.id }}
             </p>
           </div>
           <div class="w-full md:w-1/2 mb-4 md:mb-0">
             <p class="text-base font-semibold text-gray-900 dark:text-gray-300">
-              Tipus de usuari:
+              {{ $t("viewValidationUser.userType") }}
             </p>
             <select
               v-model="user.typesUsers_id"
@@ -37,15 +37,15 @@
                 'appearance-none bg-gray-100 dark:bg-gray-600 dark:text-gray-800 border border-gray-300 dark:border-gray-600 dark:bg-white text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 p-2 w-full md:w-32 shadow-sm',
               ]"
             >
-              <option value="1">Estudiant</option>
-              <option value="2">Professor</option>
-              <option value="3">Administrador</option>
+              <option value="1">{{ $t("viewValidationUser.student") }}</option>
+              <option value="2">{{ $t("viewValidationUser.teacher") }}</option>
+              <option value="3">{{ $t("viewValidationUser.admin") }}</option>
             </select>
           </div>
         </div>
         <div class="mb-5">
           <p class="text-sm font-semibold text-gray-700 dark:text-gray-100">
-            Clase:
+            {{ $t("viewValidationUser.class") }}
           </p>
           <p class="text-base text-gray-800 dark:text-gray-200">
             {{ getClassById(user.class_id) }}
@@ -54,7 +54,7 @@
 
         <div class="mb-5">
           <p class="text-sm font-semibold text-gray-700 dark:text-gray-100">
-            Usuari:
+            {{ $t("viewValidationUser.user") }}
           </p>
           <p class="text-base text-gray-800 dark:text-gray-200">
             {{ user.name }}
@@ -67,7 +67,7 @@
         <div class="mb-5">
           <div class="mb-5"></div>
           <p class="text-sm font-semibold text-gray-700 dark:text-gray-100">
-            Banner:
+            {{ $t("viewValidationUser.banner") }}
           </p>
           <img
             :src="user.banner"
@@ -77,7 +77,7 @@
         </div>
         <div class="mb-5">
           <p class="text-sm font-semibold text-gray-700 dark:text-gray-100">
-            Profile:
+            {{ $t("viewValidationUser.profile") }}
           </p>
           <img
             :src="user.profile"
@@ -90,13 +90,13 @@
             @click="validateUser(user.id, user.typesUsers_id)"
             class="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600 mr-2"
           >
-            Validar
+          {{ $t("viewValidationUser.validate") }}
           </button>
           <button
             @click="deleteUser(user.id)"
             class="bg-red-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-600"
           >
-            Eliminar
+          {{ $t("viewValidationUser.delete") }}
           </button>
         </div>
       </div>
@@ -185,7 +185,7 @@ export default {
     },
     getClassById(classId) {
       const userClass = this.classes.find((cls) => cls.id === classId);
-      return userClass ? userClass.name : "Unknown";
+      return userClass ? userClass.name : this.$t("ViewValidationUpdate.unknown");
     },
   },
 };

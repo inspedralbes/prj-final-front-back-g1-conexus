@@ -42,10 +42,11 @@
           v-if="availability !== null"
           class="text-xs text-gray-500 dark:text-gray-400 mt-2"
         >
-          Disponibilidad: {{ availability ? "Disponible" : "No disponible" }}
+
+          {{ $t("ViewMyPublicationItem.availability") }} {{ availability ? $t("ViewMyPublicationItem.available"): $t("ViewMyPublicationItem.notAvailable") }}
         </p>
         <p v-if="isReported" class="text-xs text-red-500 font-medium mt-2">
-          Reports: {{ reports }}
+        {{ $t("ViewMyPublicationItem.reports") }} {{ reports }}
         </p>
       </div>
     </div>
@@ -57,19 +58,20 @@
     <div
       class="flex justify-between items-center text-xs text-gray-500 dark:text-gray-400"
     >
-      <span> Data: {{ created_at }} </span>
+      <span>{{$t("ViewMyPublicationItem.date")}} {{ created_at }} </span>
 
       <!-- Icono de estado IA: reloj si ambos son 0, cruz roja si tiene reportes, tick verde si no tiene reportes -->
       <span v-if="isProcessing" class="text-yellow-500" title="En proceso"
-        >Pendent de revisar
+        >{{ $t("ViewMyPublicationItem.pending") }}
+
         <i class="fas fa-clock"></i>
       </span>
       <span v-else-if="isReported" class="text-red-500" title="Reportado"
-        >Reportat
+        >{{ $t("ViewMyPublicationItem.reported") }}
         <i class="fas fa-times-circle"></i>
       </span>
       <span v-else class="text-green-500" title="No Reportado"
-        >Publicat
+        >{{ $t("ViewMyPublicationItem.published") }}
         <i class="fas fa-check-circle"></i>
       </span>
     </div>
@@ -104,15 +106,15 @@ const fullImageUrl = computed(() => {
 // Computed property para mostrar el estado de verificación por IA del texto
 const textIaStatus = computed(() => {
   return props.text_ia === 0
-    ? "Text no verificat per IA"
-    : "Text verificat per IA";
+    ? $t("ViewMyPublicationItem.textNotVerified")
+    : $t("ViewMyPublicationItem.textVerified");
 });
 
 // Computed property para mostrar el estado de verificación por IA de la imagen
 const imageIaStatus = computed(() => {
   return props.image_ia === 0
-    ? "Imatge no verificat per IA"
-    : "Imatge verificat per IA";
+    ? $t("ViewMyPublicationItem.imgNotVerified")
+    : $t("ViewMyPublicationItem.imgVerified");
 });
 
 // Computed property para determinar si el estado es 'En proceso' (tanto texto como imagen IA en 0)

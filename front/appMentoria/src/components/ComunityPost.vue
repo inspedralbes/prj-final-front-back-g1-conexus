@@ -5,7 +5,7 @@
         <!-- Post Content Section -->
         <div class="mb-6">
           <label class="block text-gray-700 text-sm font-bold mb-2"
-            >Afegeix una Publicació:</label
+            >{{ $t("post.title") }}</label
           >
           <div class="pb-4">
             <textarea
@@ -13,7 +13,7 @@
               name="postContent"
               rows="1"
               class="w-full border-2 rounded-md leading-5 transition duration-150 ease-in-out sm:text-sm sm:leading-5 resize-none focus:outline-none focus:border-blue-500"
-              placeholder="Títol"
+              :placeholder="$t('post.titlePlaceholder')"
               required
             ></textarea>
           </div>
@@ -23,7 +23,7 @@
               name="postContent"
               rows="4"
               class="w-full border-2 rounded-md leading-5 transition duration-150 ease-in-out sm:text-sm sm:leading-5 resize-none focus:outline-none focus:border-blue-500"
-              placeholder="En que hi penses?"
+              :placeholder="$t('post.descriptionPlaceholder')"
               required
             ></textarea>
           </div>
@@ -39,7 +39,7 @@
             type="submit"
             class="flex justify-center items-center bg-blue-500 hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue text-white py-2 px-4 rounded-md transition duration-300 gap-2"
           >
-            Post
+            {{ $t("post.publish") }}
             <svg
               width="19"
               height="19"
@@ -56,7 +56,7 @@
               />
             </svg>
           </button>
-          <span class="text-gray-500 text-sm">Max 280 characters</span>
+          <span class="text-gray-500 text-sm">{{ $t("post.maxChar") }}</span>
         </div>
       </form>
     </div>

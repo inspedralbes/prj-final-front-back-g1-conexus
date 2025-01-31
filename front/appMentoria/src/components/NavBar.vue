@@ -18,7 +18,7 @@
             d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"
           ></path>
         </svg>
-        <span class="sr-only">Home</span>
+        <span class="sr-only">{{ $t("navBar.home") }}</span>
       </button>
       <a
         class="inline-flex flex-col items-center text-xs font-medium text-blue-400 py-3 px-4 flex-grow"
@@ -36,7 +36,7 @@
             clip-rule="evenodd"
           ></path>
         </svg>
-        <span class="sr-only">Search</span>
+        <span class="sr-only">{{$t("navBar.search")}}</span>
       </a>
 
       <button
@@ -59,7 +59,7 @@
             ></path>
           </svg>
         </div>
-        <span class="sr-only">Upload</span>
+        <span class="sr-only">{{$t("navBar.upload")}}</span>
         <button-add-post v-if="showButtonAddPost"></button-add-post>
       </button>
       <button
@@ -93,7 +93,7 @@
             clip-rule="evenodd"
           ></path>
         </svg>
-        <span class="sr-only">Chat</span>
+        <span class="sr-only">{{$t("navBar.chat")}}</span>
       </router-link>
     </div>
   </div>

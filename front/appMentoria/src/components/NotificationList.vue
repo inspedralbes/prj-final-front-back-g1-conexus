@@ -8,7 +8,7 @@
         class="p-4 border-b flex flex-col md:flex-row justify-between items-center dark:border-gray-600"
       >
         <h2 class="text-lg font-semibold text-gray-700 dark:text-white">
-          Notificacions
+          {{$t("notificationList.title")}}
         </h2>
 
         <!-- Botones Filtros -->
@@ -22,7 +22,7 @@
             "
             @click="filter = 'all'"
           >
-            Totes
+            {{$t("notificationList.all")}}
           </button>
           <button
             class="px-3 py-1 text-sm rounded-md"
@@ -33,7 +33,7 @@
             "
             @click="filter = 'Comentari'"
           >
-            Comentaris
+            {{$t("notificationList.comments")}}
           </button>
           <button
             class="px-3 py-1 text-sm rounded-md"
@@ -44,7 +44,7 @@
             "
             @click="togglePublicationsFilter"
           >
-            Publicacions
+            {{$t("notificationList.publications")}}
           </button>
           <!-- <button
             class="px-3 py-1 text-sm rounded-md"
@@ -91,7 +91,7 @@
         v-if="filteredNotifications.length === 0"
         class="p-4 text-center text-gray-500 dark:text-gray-400"
       >
-        No hi ha notificacions per mostrar.
+       {{ $t("notificationList.noNotifications") }}
       </div>
     </div>
   </div>

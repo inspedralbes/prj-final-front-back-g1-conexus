@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS users (
     password VARCHAR(255) NOT NULL,
     banner VARCHAR(255),
     profile VARCHAR(255),
+    description TEXT,
     city VARCHAR(255),
     tags JSON DEFAULT NULL,
     discord_link VARCHAR(255),

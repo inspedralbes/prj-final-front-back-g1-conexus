@@ -14,9 +14,11 @@
     "@capacitor/core": "^7.0.1",
     "@capacitor/ios": "^7.0.1",
     "firebase": "^11.0.2",
+    "flag-icons": "^7.3.2",
     "pinia": "^2.2.6",
     "socket.io-client": "^4.8.1",
     "vue": "^3.5.13",
+    "vue-i18n": "^10.0.5",
     "vue-router": "^4.4.5"
   },
   "devDependencies": {
