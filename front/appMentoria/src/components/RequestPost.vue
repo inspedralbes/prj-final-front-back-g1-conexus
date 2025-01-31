@@ -201,7 +201,7 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { postEmploymentExchangePublication } from "@/services/communicationManager";
+import { postEmploymentExchangePublication } from "@/services/communicationsScripts/communicationManager";
 import { useAppStore } from "@/stores/index";
 import NavBar from "./NavBar.vue";
 const router = useRouter();

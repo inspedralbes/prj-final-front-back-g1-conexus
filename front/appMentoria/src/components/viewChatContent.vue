@@ -184,8 +184,8 @@ import { ref, onMounted, defineProps, watch, nextTick } from "vue";
 import {
   fetchMessages,
   sendMessageInMongo,
-} from "@/services/communicationManager";
-import socketChat from "../services/socketChat";
+} from "@/services/communicationsScripts/communicationManager";
+import socketChat from "../services/socketsScripts/socketChat";
 
 const props = defineProps({
   chatId: {

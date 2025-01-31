@@ -3,7 +3,7 @@ import { RouterView } from "vue-router";
 import { ref, onMounted, reactive } from "vue";
 import { useAppStore } from "@/stores/index";
 import router from "@/router";
-import { getUserForRefreshLogin } from "./services/communicationManager";
+import { getUserForRefreshLogin } from "./services/communicationsScripts/communicationManager";
 import Loading from "./components/Loading.vue";
 import LanguageSelector from "./components/languageSelector.vue";
 

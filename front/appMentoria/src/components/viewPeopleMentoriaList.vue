@@ -9,7 +9,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import ViewPeopleMentoria from '@/components/viewPeopleMentoria.vue';
-import { getUsersForOther } from '../services/communicationManager';
+import { getUsersForOther } from '../services/communicationsScripts/communicationManager';
 
 const users = ref([]);
 

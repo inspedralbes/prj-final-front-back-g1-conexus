@@ -138,9 +138,9 @@
 
 
 <script>
-import { updateReportPublication } from "@/services/communicationManager";
-import { deleteReportPublication } from "@/services/communicationManager";
-import { fetchAllReportsPublications } from "@/services/communicationManager";
+import { updateReportPublication } from "@/services/communicationsScripts/communicationManager";
+import { deleteReportPublication } from "@/services/communicationsScripts/communicationManager";
+import { fetchAllReportsPublications } from "@/services/communicationsScripts/communicationManager";
 
 export default {
   data() {

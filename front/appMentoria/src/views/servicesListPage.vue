@@ -63,7 +63,7 @@ import { ref, onMounted } from "vue";
 import {
   getServices,
   changeServiceViewUsers,
-} from "@/services/communicationManager";
+} from "@/services/communicationsScripts/communicationManager";
 
 const services = ref([]);
 

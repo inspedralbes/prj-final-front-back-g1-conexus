@@ -5,7 +5,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import ViewRequest from "@/components/viewRequest.vue";
-import { getEmploymentExchangePublication } from "../services/communicationManager";
+import { getEmploymentExchangePublication } from "../services/communicationsScripts/communicationManager";
 
 const requests = ref([]);
 

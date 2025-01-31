@@ -1,5 +1,5 @@
 import { ref } from "vue";
-import socketChat from "./socketChat";
+import socketChat from "../socketsScripts/socketChat";
 import { useRouter } from "vue-router";
 import { useAppStore } from '@/stores/index';
 

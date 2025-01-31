@@ -110,7 +110,7 @@ import {
   deleteUserInDb,
   fetchAllClasses,
   updateUserValidation,
-} from "@/services/communicationManager";
+} from "@/services/communicationsScripts/communicationManager";
 
 export default {
   data() {
