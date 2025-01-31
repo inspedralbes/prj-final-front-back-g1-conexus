@@ -1,8 +1,14 @@
 {
-    "chatContent":{
-        "writeMessage":"Escribe un mensaje..."
+    "mainPage": {
+        "allow": "Permitir Notificaciones",
+        "questionPermission": "¿Quieres recibir notificaciones para enterarte de eventos o actualizaciones?",
+        "acceptedPermission": "Permitir",
+        "rejectedPermission": "Bloquear"
     },
-    "languageSelector":{
+    "chatContent": {
+        "writeMessage": "Escribe un mensaje..."
+    },
+    "languageSelector": {
         "spanish": "Español",
         "english": "Inglés",
         "catalan": "Catalán",
@@ -14,33 +20,33 @@
         "euskera": "Euskera",
         "gallego": "Gallego"
     },
-    "StadisticsPage":{
+    "StadisticsPage": {
         "title": "Estadísticas",
         "userGraph": "Graficos de usuarios",
         "commentsGraph": "Graficos de comentarios",
-        "postGraph": "Graficos de publicaciones"  
+        "postGraph": "Graficos de publicaciones"
     },
-    "serviceListPage":{
+    "serviceListPage": {
         "title": "Servicios",
         "noDescription": "No hay descripción disponible"
     },
-    "profilePage":{
-        "placeWhereYouLive":"Lugar donde vives...",
-        "pendant":"Pendiente de asignar"
+    "profilePage": {
+        "placeWhereYouLive": "Lugar donde vives...",
+        "pendant": "Pendiente de asignar"
     },
-    "LoginRegisterPage":{
-        "subTitle":"Correo @inspedralbes.cat",
-        "accessGoogle":"Acceder con Google",
-        "accessGithub":"Acceder con Github",
-        "logIn":"O inicia sesión",
-        "mailPlaceholder":"Correo electrónico",
-        "passwordPlaceholder":"Contraseña",
-        "loginButton":"Inicia sesión",
-        "projectBy":"Proyecto realizado por el equipo de",
-        "withTheHelpOf":", con la ayuda de",
-        "error":"Ha ocurrido un error al iniciar sesión",
-        "errorFields":"Error al iniciar sesión, comprueba los datos introducidos",
-        "invalidMail":"Error al iniciar sesión, el correo no es válido"
+    "LoginRegisterPage": {
+        "subTitle": "Correo @inspedralbes.cat",
+        "accessGoogle": "Acceder con Google",
+        "accessGithub": "Acceder con Github",
+        "logIn": "O inicia sesión",
+        "mailPlaceholder": "Correo electrónico",
+        "passwordPlaceholder": "Contraseña",
+        "loginButton": "Inicia sesión",
+        "projectBy": "Proyecto realizado por el equipo de",
+        "withTheHelpOf": ", con la ayuda de",
+        "error": "Ha ocurrido un error al iniciar sesión",
+        "errorFields": "Error al iniciar sesión, comprueba los datos introducidos",
+        "invalidMail": "Error al iniciar sesión, el correo no es válido"
     },
     "AddComunityPost": {
         "create": "Crear una publicación",
@@ -128,15 +134,15 @@
         "date": "Fecha: ",
         "pending": "Pendiente de revisar",
         "reported": "Reportado",
-        "published": "Publicado", 
+        "published": "Publicado",
         "textNotVerified": "Texto no verificado por IA",
         "textVerified": "Texto verificado por IA",
-        "imgNotVerified": "Imagen no verificada por IA",  
+        "imgNotVerified": "Imagen no verificada por IA",
         "imgVerified": "Imagen verificada por IA",
         "available": "Disponible",
         "notAvailable": "No disponible"
     },
-    "ViewReportComments":{
+    "ViewReportComments": {
         "title": "Comentarios reportados",
         "reportN": "Informe Nº",
         "status": "Estado:",
@@ -150,17 +156,17 @@
         "report": "Informe:",
         "delete": "Eliminar"
     },
-    "viewPost":{
+    "viewPost": {
         "comentaris": "Comentarios"
     },
-    "viewPeopleMentoria":{
+    "viewPeopleMentoria": {
         "chat": "Chat"
     },
-    "myRequests":{
+    "myRequests": {
         "title": "Mis peticiones",
         "noRequests": "No tienes peticiones"
     },
-    "myRequest":{
+    "myRequest": {
         "availability": "Disponibilitat:",
         "reports": "Reportes:",
         "date": "Fechas:",
@@ -172,7 +178,7 @@
         "imgNotVerified": "Imagen no verificada por IA",
         "imgVerified": "Imagen verificada por IA"
     },
-    "myPublications":{
+    "myPublications": {
         "title": "Mis publicaciones",
         "noPublications": "No tienes publicaciones"
     },

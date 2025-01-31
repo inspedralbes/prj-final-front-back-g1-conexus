@@ -1,4 +1,10 @@
 {
+    "mainPage": {
+        "allow": "Benachrichtigungen erlauben",
+        "questionPermission": "Möchtest du Benachrichtigungen erhalten, um über Ereignisse oder Aktualisierungen informiert zu werden?",
+        "acceptedPermission": "Erlauben",
+        "rejectedPermission": "Blockieren"
+    },
     "chatContent": {
         "writeMessage": "Schreibe eine Nachricht..."
     },
@@ -54,8 +60,8 @@
         "publishing": "Veröffentlichen...",
         "notAllFields": "Bitte fülle alle Felder aus und lade ein Bild hoch.",
         "error": "Beim Veröffentlichen des Beitrags ist ein Fehler aufgetreten:"
-        },
-        "viewValidationUser": {
+    },
+    "viewValidationUser": {
         "title": "Benutzer validieren",
         "userN": "Benutzer Nr.",
         "userType": "Benutzertyp:",
@@ -69,7 +75,7 @@
         "validate": "Validieren",
         "delete": "Löschen",
         "unknown": "Unbekannt"
-        },
+    },
     "ViewValidationUpdate": {
         "title": "Benutzer validieren/aktualisieren",
         "userN": "Benutzer Nr.:",

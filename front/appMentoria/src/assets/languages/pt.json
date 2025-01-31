@@ -1,4 +1,10 @@
 {
+    "mainPage": {
+        "allow": "Permitir Notificações",
+        "questionPermission": "Você quer receber notificações para saber sobre eventos ou atualizações?",
+        "acceptedPermission": "Permitir",
+        "rejectedPermission": "Bloquear"
+    },
     "chatContent": {
         "writeMessage": "Escreva uma mensagem..."
     },

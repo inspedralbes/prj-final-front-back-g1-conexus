@@ -1,4 +1,10 @@
 {
+    "mainPage": {
+        "allow": "允许通知",
+        "questionPermission": "你想接收通知以了解事件或更新吗？",
+        "acceptedPermission": "允许",
+        "rejectedPermission": "阻止"
+    },
     "chatContent": {
         "writeMessage": "写信息..."
     },

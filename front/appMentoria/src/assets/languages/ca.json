@@ -1,4 +1,10 @@
 {
+    "mainPage": {
+        "allow": "Permetre Notificacions",
+        "questionPermission": "Vols rebre notificacions per estar al corrent d'esdeveniments o actualitzacions?",
+        "acceptedPermission": "Permetre",
+        "rejectedPermission": "Bloquejar"
+    },
     "chatContent": {
         "writeMessage": "Escriu un missatge..."
     },
@@ -69,7 +75,7 @@
         "delete": "Eliminar",
         "unknown": "Desconegut"
     },
-    "ViewValidationUpdate":{
+    "ViewValidationUpdate": {
         "title": "Validar/Actualitzar usuaris",
         "user": "Usuari Nº: ",
         "userType": "Tipus d'usuari: ",
@@ -92,7 +98,7 @@
         "from": "De",
         "to": "a"
     },
-    "ViewReportUser":{
+    "ViewReportUser": {
         "title": "Usuaris reportats",
         "reportN": "Informe Nº",
         "status": "Estat:",
@@ -105,7 +111,7 @@
         "report": "Informe:",
         "delete": "Eliminar"
     },
-    "ViewReportPublicacio":{
+    "ViewReportPublicacio": {
         "title": "Publicacions reportades",
         "reportN": "Informe Nº",
         "status": "Estat:",
@@ -122,7 +128,7 @@
         "viewImage": "Veure imatge",
         "delete": "Eliminar"
     },
-    "ViewMyPublicationItem":{
+    "ViewMyPublicationItem": {
         "availability": "Disponibilitat: ",
         "reports": "Reportes: ",
         "date": "Data: ",
@@ -136,7 +142,7 @@
         "available": "Disponible",
         "notAvailable": "No disponible"
     },
-    "ViewReportComments":{
+    "ViewReportComments": {
         "title": "Comentaris reportats",
         "reportN": "Informe Nº",
         "status": "Estat:",
@@ -150,13 +156,13 @@
         "report": "Informe:",
         "delete": "Eliminar"
     },
-    "viewPost":{
+    "viewPost": {
         "comentaris": "Comentaris"
     },
-    "viewPeopleMentoria":{
+    "viewPeopleMentoria": {
         "chat": "Xat"
     },
-    "myRequests":{
+    "myRequests": {
         "title": "Les meves peticions",
         "noRequests": "No tens peticions",
         "textNotVerified": "Text no verificat per IA",
@@ -164,33 +170,33 @@
         "imgNotVerified": "Imatge no verificada per IA",
         "imgVerified": "Imatge verificada per IA"
     },
-    "myRequest":{
-        "availability":"Disponibilitat:",
-        "reports":"Reportes:",
-        "date":"Dates:",
+    "myRequest": {
+        "availability": "Disponibilitat:",
+        "reports": "Reportes:",
+        "date": "Dates:",
         "processing": "Pendent de revisar",
-        "reported":"Reportat",
+        "reported": "Reportat",
         "posted": "Publicat",
         "textNotVerified": "Text no verificat per IA",
         "textVerified": "Text verificat per IA",
         "imgNotVerified": "Imatge no verificada per IA",
         "imgVerified": "Imatge verificada per IA"
     },
-    "myPublications":{
+    "myPublications": {
         "title": "Les meves publicacions",
         "noPublications": "No tens publicacions"
     },
-    "subMenu":{
-        "hi":"Hola,",
-        "profile":"Perfil",
-        "publications":"Les meves publicacions",
-        "request":"Les meves peticions",
-        "admin":"Admin",
-        "statistics":"Estadístiques"
+    "subMenu": {
+        "hi": "Hola,",
+        "profile": "Perfil",
+        "publications": "Les meves publicacions",
+        "request": "Les meves peticions",
+        "admin": "Admin",
+        "statistics": "Estadístiques"
     },
-    "requestPost":{
+    "requestPost": {
         "title": "Afegeix una petició:",
-        "uploadImage": "Puja una imatge:",    
+        "uploadImage": "Puja una imatge:",
         "availability": "Disponible:",
         "addAvailability": "+ Afegeix disponibilitat",
         "selectDay": "Selecciona un dia",
@@ -198,10 +204,10 @@
         "endTime": "Hora de fi",
         "publishing": "Publicant...",
         "titlePlaceholder": "Títol",
-        "DescriptionPlaceholder":"En què penses?"
+        "DescriptionPlaceholder": "En què penses?"
     },
-    "notificationList":{
-        "title":"Notificacions",
+    "notificationList": {
+        "title": "Notificacions",
         "all": "Totes",
         "comments": "Comentaris",
         "publications": "Publicacions",
@@ -213,21 +219,21 @@
         "upload": "Pujar",
         "chat": "Xat"
     },
-    "loading":{
+    "loading": {
         "title": "Carregant..."
     },
-    "headerVerification":{
-        "title":"Pagina de report",
-        "validationUser":"Validació d'usuari",
-        "validationPost":"Validació de publicació"
+    "headerVerification": {
+        "title": "Pagina de report",
+        "validationUser": "Validació d'usuari",
+        "validationPost": "Validació de publicació"
     },
-    "headerReport":{
-        "title":"Pagina de report",
-        "reportUser":"Veure report d'usuari",
-        "reportPost":"Veure report de publicació",
-        "reportComment":"Veure report de comentari"
+    "headerReport": {
+        "title": "Pagina de report",
+        "reportUser": "Veure report d'usuari",
+        "reportPost": "Veure report de publicació",
+        "reportComment": "Veure report de comentari"
     },
-    "header":{
+    "header": {
         "report": "Reportar",
         "validation": "Validació",
         "services": "Serveis",
@@ -235,7 +241,7 @@
         "mentors": "Mentors",
         "request": "Peticions"
     },
-    "formNewDataUsers":{
+    "formNewDataUsers": {
         "title": "Formulari d'usuari",
         "showForm": "Mostra formulari",
         "hideForm": "Amaga formulari",
@@ -245,17 +251,17 @@
         "city": "Ciutat",
         "linkDiscord": "Enllaç a Discord",
         "linkGithub": "Enllaç a Github",
-        "submit":"Desa usuari",
+        "submit": "Desa usuari",
         "tags": "Etiquetes (JSON)",
-        "tagsExample":"Exemple de format: [\"JavaScript\", \"Python\", \"React\"]",
+        "tagsExample": "Exemple de format: [\"JavaScript\", \"Python\", \"React\"]",
         "availability": "Disponibilitat (JSON)",
         "availabilityExample": "Exemple de format: {\"monday\":\"9:00-12:00\", \"friday\":\"9:00-12:00\"}"
     },
-    "post":{
+    "post": {
         "title": "Afegeix una publicació",
         "titlePlaceholder": "Títol",
-        "postDescriptionPlaceholder":"En què penses?",
-        "maxChar":"Màxim 230 caràcters",
+        "postDescriptionPlaceholder": "En què penses?",
+        "maxChar": "Màxim 230 caràcters",
         "publish": "Publicar"
     },
     "calendar": {
