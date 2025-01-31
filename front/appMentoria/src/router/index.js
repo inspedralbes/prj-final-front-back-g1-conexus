@@ -129,9 +129,10 @@ const routes = [
     component: stadisticsPage
   }, 
   {
-    path: '/editProfile',
+    path: '/editProfile/:editing',
     name: 'editProfilePage',
-    component: editProfilePage
+    component: editProfilePage,
+    props: true
   }
 ];
 

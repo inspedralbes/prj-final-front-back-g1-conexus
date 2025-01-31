@@ -28,7 +28,7 @@
     </div>
   </div>
   <!-- Edit button -->
-  <button @click="$router.push('/editProfile')"
+  <button @click="$router.push('/editProfile/calendar')"
     class="flex items-center space-x-1 mt-6 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg shadow">
     <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
       fill="currentColor" viewBox="0 0 24 24">

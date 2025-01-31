@@ -18,7 +18,7 @@ import pt from './assets/languages/pt.json'
 import ja from './assets/languages/ja.json'
 import eu from './assets/languages/eu.json'
 import gl from './assets/languages/gl.json'
-
+import en from './assets/languages/en.json'
 
 
 
@@ -29,6 +29,7 @@ const app = createApp(App)
 const i18n = createI18n({
     locale: 'ca',
     messages: {
+        "en":en,
         "es": es,
         "ca": ca,
         "zh": zh,
