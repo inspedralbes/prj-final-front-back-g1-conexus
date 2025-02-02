@@ -41,7 +41,7 @@
   
   <script setup>
 import { ref, onMounted } from "vue";
-import { getMyPublications } from "@/services/communicationsScripts/mainManager";
+import { getMyPublicationsInCommunity } from "@/services/communicationsScripts/communityManager";
 import { useAppStore } from "@/stores/index";
 import viewMyPublicationItem from "./viewMyPublicationItem.vue";
 
@@ -95,8 +95,8 @@ const handleRemove = (id) => {
 
 onMounted(fetchPublications);
 </script>
-  
-  <style scoped>
+
+<style scoped>
 .container {
   max-width: 1200px;
 }

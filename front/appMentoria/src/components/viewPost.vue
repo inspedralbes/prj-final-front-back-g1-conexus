@@ -347,11 +347,8 @@
   
 <script setup>
 import { ref, onMounted, defineProps } from "vue";
-import {
-  getUsers,
-  getCommunityComments,
-  postCommunityComments,
-} from "../services/communicationsScripts/mainManager";
+import { getUsers } from "../services/communicationsScripts/mainManagr";
+import { getCommunityComments, postCommunityComments } from "@/services/communicationsScripts/communityManager";
 import socketBack from "../services/socketsScripts/socketBack.js";
 import { useAppStore } from "@/stores/index";
 import Loading from "@/components/Loading.vue"; // Import the Loading component

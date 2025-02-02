@@ -343,11 +343,8 @@
   
 <script setup>
 import { ref, onMounted, defineProps, computed } from "vue";
-import {
-  getUsers,
-  getEmploymentExchangeComments,
-  postEmploymentExchangeComments,
-} from "../services/communicationsScripts/mainManager";
+import { getUsers } from "@/services/communicationsScripts/mainManager";
+import { getEmploymentExchangeComments, postEmploymentExchangeComments } from "@/services/communicationsScripts/employmentExchangeManager";
 import socketBack from "../services/socketsScripts/socketBack.js";
 import { useAppStore } from "@/stores/index";
 import Loading from "@/components/Loading.vue"; // Import the Loading component

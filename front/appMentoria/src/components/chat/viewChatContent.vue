@@ -181,11 +181,8 @@
 
 <script setup>
 import { ref, onMounted, defineProps, watch, nextTick } from "vue";
-import {
-  fetchMessages,
-  sendMessageInMongo,
-} from "@/services/communicationsScripts/mainManager";
-import socketChat from "../services/socketsScripts/socketChat";
+import { fetchMessages, sendMessageInMongo } from "@/services/communicationsScripts/chatManager";
+import socketChat from "@/services/socketsScripts/socketChat";
 
 const props = defineProps({
   chatId: {
@@ -260,6 +257,7 @@ onMounted(async () => {
   interactions.value = chatData.value._rawValue.interactions;
   scrollToBottom();
 });
+
 watch(interactions, () => {
   scrollToBottom();
 });

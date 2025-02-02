@@ -41,7 +41,7 @@
   
 <script setup>
 import { ref, onMounted } from "vue";
-import { getMyPeticions } from "@/services/communicationsScripts/mainManager";
+import { getMyPeticions } from "@/services/communicationsScripts/employmentexchangeManager";
 import { useAppStore } from "@/stores/index";
 import viewMyRequestItem from "./viewMyRequestItem.vue";
 

@@ -55,15 +55,12 @@
     />
   </div>
 </template>
-    
-  <script setup>
+
+<script setup>
 import Header from "@/components/Header.vue";
 import NavBar from "@/components/NavBar.vue";
 import { ref, onMounted } from "vue";
-import {
-  getServices,
-  changeServiceViewUsers,
-} from "@/services/communicationsScripts/mainManager";
+import { getServices, changeServiceViewUsers } from "@/services/communicationsScripts/microservicesManager";
 
 const services = ref([]);
 
@@ -93,7 +90,7 @@ onMounted(() => {
   fetchServices();
 });
 </script>
-    
-  <style scoped>
+
+<style scoped>
 /* Estilos específicos con Tailwind ya incluidos */
 </style>

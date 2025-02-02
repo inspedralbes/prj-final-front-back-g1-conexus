@@ -11,5 +11,5 @@
 <script setup>
 import NavBar from '@/components/NavBar.vue';
 import Header from '@/components/Header.vue';
-import ViewChatList from '@/components/ViewChatList.vue';
+import ViewChatList from '@/components/chat/ViewChatList.vue';
 </script>

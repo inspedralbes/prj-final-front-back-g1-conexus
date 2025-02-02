@@ -140,7 +140,7 @@
 import Header from "@/components/Header.vue";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { postCommunityPublication } from "@/services/communicationsScripts/mainManager";
+import { postCommunityPublication } from "@/services/communicationsScripts/communityManager";
 import { useAppStore } from "@/stores/index";
 import Loading from "@/components/Loading.vue";
 import NavBar from "@/components/NavBar.vue";
