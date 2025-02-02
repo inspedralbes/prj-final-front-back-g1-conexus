@@ -1,0 +1,32 @@
+version: '3'
+services:
+  app:
+    image: jc21/nginx-proxy-manager:latest
+    restart: unless-stopped
+    ports:
+      - 3010:81
+      - 3011:80
+      - 3012:443
+    volumes:
+      - /data/nginxproxymanager/config.json:/app/config/production.json
+      - /data/nginxproxymanager/data:/data
+      - /etc/letsencrypt:/etc/letsencrypt
+    depends_on:
+      - certbot
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt
+      - /data/nginxproxymanager/data:/data/letsencrypt
+    command: certbot certonly --webroot --webroot-path=/data/letsencrypt --email your-email@example.com --agree-tos --no-eff-email -d example.com
+
+  db:
+    image: jc21/mariadb-aria:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: "Qeqvriqr1965"
+      MYSQL_DATABASE: "Qeqvriqr1965"
+      MYSQL_USER: "Qeqvriqr1965"
+      MYSQL_PASSWORD: "Qeqvriqr1965"
+    volumes:
+      - /data/mariadb:/var/lib/mysql
