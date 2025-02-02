@@ -4,9 +4,9 @@ services:
     image: jc21/nginx-proxy-manager:latest
     restart: unless-stopped
     ports:
-      - 3010:81
-      - 3011:80
-      - 3012:443
+      - 81:81
+      - 80:80
+      - 443:443
     volumes:
       - /data/nginxproxymanager/config.json:/app/config/production.json
       - /data/nginxproxymanager/data:/data
@@ -24,9 +24,9 @@ services:
   db:
     image: jc21/mariadb-aria:latest
     environment:
-      MYSQL_ROOT_PASSWORD: "Qeqvriqr1965"
-      MYSQL_DATABASE: "Qeqvriqr1965"
-      MYSQL_USER: "Qeqvriqr1965"
-      MYSQL_PASSWORD: "Qeqvriqr1965"
+      MYSQL_ROOT_PASSWORD: "HUqWbWyUDo20SE"
+      MYSQL_DATABASE: "npm"
+      MYSQL_USER: "npm"
+      MYSQL_PASSWORD: "HUqWbWyUDo20SE"
     volumes:
       - /data/mariadb:/var/lib/mysql
