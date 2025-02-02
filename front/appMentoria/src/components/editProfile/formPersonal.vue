@@ -24,19 +24,23 @@
 import { ref, onMounted, reactive } from "vue";
 import { useAppStore } from "@/stores/index";
 
+
 const appStore = useAppStore();
 
-var user = reactive({});
+var user = ref({});
 var profile = ref(null);
 var banner = ref(null);
-
-var personalInfo = reactive({});
+var personalInfo=ref({})
 
 onMounted(() => {
     user.value = appStore.getUser();
     profile.value = user.value.profile;
     banner.value = user.value.banner;
-
+    personalInfo.value = {
+        contactEmail: user.value.contactEmail || "",
+        contactPhone: user.value.contactPhone || ""
+    };
+    console.log("pepepeppee"+user.value)
     if (typeof user.value.tags == "string") {
         try {
             user.value.tags = JSON.parse(user.value.tags);

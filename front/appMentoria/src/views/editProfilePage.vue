@@ -3,13 +3,13 @@
     <div v-if="user.value" class="dark:bg-gray-900 p-4 text-gray-900 dark:text-gray-100">
         <div class="space-y-8">
             <!-- Formulario 1: Información general -->
-            <BannerProfile v-if="editing.editing=='banner'"/>
+            <FormGeneralInfo v-if="editing.editing=='banner'"/>
             
             <!-- Formulario 2: Información Personal -->
-            <PersonalInfo v-if="editing.editing=='profile'"/>
+            <FormPersonal v-if="editing.editing=='profile'"/>
             
             <!-- Formulario 3: Información de Disponibilidad -->
-            <Calendar v-if="editing.editing=='calendar'"/>
+            <FormAvailability v-if="editing.editing=='calendar'"/>
           
         </div>
     </div>
@@ -26,6 +26,9 @@ import Header from "@/components/Header.vue";
 import BannerProfile from "@/components/profile/BannerProfile.vue";
 import Calendar from "@/components/profile/Calendar.vue"
 import PersonalInfo from "@/components/profile/PersonalInfo.vue";
+import FormAvailability from "@/components/editProfile/formAvailability.vue";
+import FormPersonal from "@/components/editProfile/formPersonal.vue";
+import FormGeneralInfo from "@/components/editProfile/formGeneralInfo.vue";
 const appStore = useAppStore();
 
 var user = reactive({});

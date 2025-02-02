@@ -5,12 +5,12 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label for="profileName" class="block font-medium">{{ $t("editProfile.fullName") }}</label>
-                            <input v-model="user.value.name" type="text" id="profileName" required
+                            <input v-model="user.name" type="text" id="profileName" required
                                 class="w-full border border-gray-300 rounded-lg p-2 mt-1 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
                         </div>
                         <div>
-                            <label for="profileCity" class="block font-medium">{{ $("editProfile.city") }}</label>
-                            <input v-model="user.value.city" type="text" id="profileCity" required
+                            <label for="profileCity" class="block font-medium">{{ $t("editProfile.city") }}</label>
+                            <input v-model="user.city" type="text" id="profileCity" required
                                 class="w-full border border-gray-300 rounded-lg p-2 mt-1 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
                         </div>
                         <!-- Banner Section -->
@@ -66,23 +66,20 @@
 <script setup>
 import { ref, onMounted, reactive } from "vue";
 import { useAppStore } from "@/stores/index";
-import Loading from "@/components/Loading.vue";
-import Header from "@/components/Header.vue";
+
 
 const appStore = useAppStore();
 
-var user = reactive({});
+var user = ref({});
 var profile = ref(null);
 var banner = ref(null);
 
-var generalInfo = reactive({});
-var personalInfo = reactive({});
 
 onMounted(() => {
     user.value = appStore.getUser();
     profile.value = user.value.profile;
     banner.value = user.value.banner;
-
+    console.log("pepepeppee"+user.value)
     if (typeof user.value.tags == "string") {
         try {
             user.value.tags = JSON.parse(user.value.tags);
