@@ -994,18 +994,22 @@ app.get('/reports/chats/:id', async (req, res) => {
 });
 
 app.post('/reports/chats', async (req, res) => {
-    const { chat_id, user_id, report } = req.body;
-
+    const { message_id, user_id, content, report } = req.body;
+  
     try {
-        const connection = await mysql.createConnection(dbConfig);
-        const [result] = await connection.execute('INSERT INTO reportsChats (chat_id, user_id, report) VALUES (?, ?, ?)', [chat_id, user_id, report]);
-        connection.end();
-
-        res.status(201).send({ id: result.insertId });
+      const connection = await mysql.createConnection(dbConfig);
+      const [result] = await connection.execute(
+        'INSERT INTO reportsChats (message_id, user_id, content, report) VALUES (?, ?, ?, ?)',
+        [message_id, user_id, content, report]
+      );
+      connection.end();
+  
+      res.status(201).send({ id: result.insertId });
     } catch (error) {
-        res.status(500).json({ error: 'Database error' });
+      console.error('Error saving report:', error);
+      res.status(500).json({ error: 'Database error' });
     }
-});
+  });
 
 app.put('/reports/chats/:id', async (req, res) => {
     const { id } = req.params;

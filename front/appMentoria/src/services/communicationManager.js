@@ -1132,3 +1132,25 @@ export const getMyPeticions = async (userID) => {
         console.error('Error fetching my publications:', error);
     }
 }
+
+export const reportChat = async (message_id, user_id, content, report) => {
+    try {
+      const response = await fetch(`${BACK_URL}/reports/chats`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message_id, user_id, content, report }),
+      });
+  
+      if (!response.ok) {
+        return { error: `HTTP error! status: ${response.status}` };
+      }
+  
+      return await response.json();
+    } catch (error) {
+      console.error('Error reporting chat:', error);
+      return { error: 'Network error. Please try again later.' };
+    }
+  };
+  

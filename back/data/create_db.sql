@@ -157,7 +157,7 @@ CREATE TABLE IF NOT EXISTS reportsUsers (
 -- Table 14: reportsChats (depends on users)
 CREATE TABLE IF NOT EXISTS reportsChats (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    message_id INT NOT NULL,
+    message_id VARCHAR(24) NOT NULL,
     user_id INT NOT NULL,
     content TEXT NOT NULL,
     report TEXT NOT NULL,
