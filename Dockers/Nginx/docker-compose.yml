@@ -28,5 +28,7 @@ services:
       MYSQL_DATABASE: "npm"
       MYSQL_USER: "npm"
       MYSQL_PASSWORD: "HUqWbWyUDo20SE"
+    ports:
+      - 4306:4306
     volumes:
       - /data/mariadb:/var/lib/mysql
