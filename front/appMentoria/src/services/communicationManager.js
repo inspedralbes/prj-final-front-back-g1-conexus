@@ -379,6 +379,7 @@ export const fetchMessages = async (chatId) => {
         chatData.value.userName = chatData.value.user_one_name;
         chatData.value.interactions = chatData.value.interactions.map(
             (interaction) => ({
+                _id: interaction._id,
                 message: interaction.message,
                 userId: interaction.userId,
                 timestamp: interaction.timestamp,
