@@ -377,12 +377,14 @@ export const fetchMessages = async (chatId) => {
         const chatData = ref({});
         chatData.value = data[0];
         chatData.value.userName = chatData.value.user_one_name;
+        chatData.value.reported = data[0].reports;
         chatData.value.interactions = chatData.value.interactions.map(
             (interaction) => ({
                 _id: interaction._id,
                 message: interaction.message,
                 userId: interaction.userId,
                 timestamp: interaction.timestamp,
+                reports: interaction.reports,
             })
         );
         return chatData;
