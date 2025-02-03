@@ -53,7 +53,10 @@ app.post('/subscribe', (req, res) => {
 app.post('/sendNotification', (req, res) => {
     const { user_id, title, message } = req.body;
 
+    console.log("body", req.body);
+
     const subscription = subscriptions[user_id];
+    console.log("subscription", subscription);
     if (!subscription) {
         return res.status(404).json({ error: 'Subscription not found' });
     }

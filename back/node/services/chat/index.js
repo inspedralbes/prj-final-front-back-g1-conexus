@@ -96,7 +96,7 @@ app.get('/getChat/:id', async (req, res) => {
 });
 
 app.post('/addChat', async (req, res) => {
-  console.log('addChat')
+  console.log('addChat');
   const { _id, user_one_id, user_two_id, interactions } = req.body;
   console.log('req.body:', req.body);
   try {
@@ -117,6 +117,7 @@ app.post('/addChat', async (req, res) => {
     }
 
     if (isFirstInteraction) {
+      console.log("eyyyyyyyyyyy estoy dentro");
       const notificationPayload = {
         user_id: user_two_id,
         title: 'Nou missatge',
@@ -129,11 +130,12 @@ app.post('/addChat', async (req, res) => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(notificationPayload)
-
-      })
+      });
     }
+
     res.json(message);
   } catch (err) {
+    console.error('Error en /addChat:', err);
     res.status(500).send(err);
   }
 });
@@ -195,10 +197,27 @@ io.on('connection', (socket) => {
     try {
       const chat = await Message.findById(chatId);
       if (chat) {
+        const isFirstInteraction = chat.interactions.length === 0;
         chat.interactions.push(newMessage);
         await chat.save();
         io.emit('receiveMessage', newMessage);
         console.log('Message saved:', newMessage);
+
+        if (isFirstInteraction) {
+          const notificationPayload = {
+            user_id: userId === chat.user_one_id ? chat.user_two_id : chat.user_one_id,
+            title: 'Nou missatge',
+            message: `Tens un nou missatge de ${userId}!`
+          };
+
+          await fetch(chatEnv.ENDPOINT_URL_PUSH_NOTIFICATIONS + '/sendNotification', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(notificationPayload)
+          });
+        }
       }
     } catch (err) {
       console.error('Error saving message:', err);

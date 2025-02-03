@@ -4,7 +4,7 @@ self.addEventListener('push', function (event) {
 
     const options = {
         body: data.message,
-        icon: '/path/to/icon.png',
+        icon: './logo.png',
         badge: '/path/to/badge.png'
     };
 
