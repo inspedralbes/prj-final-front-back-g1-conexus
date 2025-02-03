@@ -379,6 +379,7 @@ export const fetchMessages = async (chatId) => {
         chatData.value.userName = chatData.value.user_one_name;
         chatData.value.interactions = chatData.value.interactions.map(
             (interaction) => ({
+                _id: interaction._id,
                 message: interaction.message,
                 userId: interaction.userId,
                 timestamp: interaction.timestamp,
@@ -663,6 +664,113 @@ export const updateReportComment = async (id, status) => {
 export const deleteReportComment = async (id) => {
     try {
         const response = await fetch(`${BACK_URL}/reports/comments/${id}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (!response.ok) {
+            return { error: `HTTP error! status: ${response.status}` };
+        }
+
+        return { message: "Report deleted successfully" };
+    } catch (error) {
+        console.error("Network error:", error);
+        return { error: "Network error. Please try again later." };
+    }
+};
+
+// Fetch all reports Chats
+export const fetchAllReportsChats = async () => {
+    try {
+        const response = await fetch(`${BACK_URL}/reports/chats`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (!response.ok) {
+            return { error: `HTTP error! status: ${response.status}` };
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Network error:", error);
+        return { error: "Network error. Please try again later." };
+    }
+};
+
+// Fetch a single report Chats by ID
+export const fetchReportChatsById = async (id) => {
+    try {
+        const response = await fetch(`${BACK_URL}7reports/chats/${id}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (!response.ok) {
+            return { error: `HTTP error! status: ${response.status}` };
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Network error:", error);
+        return { error: "Network error. Please try again later." };
+    }
+};
+
+// Create a new report comment
+export const createReportChats = async (comment_id, user_id, report) => {
+    try {
+        const response = await fetch(`${BACK_URL}/chats/comments`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ comment_id, user_id, report }),
+        });
+
+        if (!response.ok) {
+            return { error: `HTTP error! status: ${response.status}` };
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Network error:", error);
+        return { error: "Network error. Please try again later." };
+    }
+};
+
+// Update a report comment by ID
+export const updateReportChats = async (id, status) => {
+    try {
+        const response = await fetch(`${BACK_URL}/reports/Chats/${id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ status }),
+        });
+
+        if (!response.ok) {
+            return { error: `HTTP error! status: ${response.status}` };
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Network error:", error);
+        return { error: "Network error. Please try again later." };
+    }
+};
+
+// Delete a report comment by ID
+export const deleteReportChats = async (id) => {
+    try {
+        const response = await fetch(`${BACK_URL}/reports/Chats/${id}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -1017,3 +1125,25 @@ export const getMyPeticions = async (userID) => {
         console.error('Error fetching my publications:', error);
     }
 }
+
+export const reportChat = async (message_id, user_id, content, report) => {
+    try {
+      const response = await fetch(`${BACK_URL}/reports/chats`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message_id, user_id, content, report }),
+      });
+  
+      if (!response.ok) {
+        return { error: `HTTP error! status: ${response.status}` };
+      }
+  
+      return await response.json();
+    } catch (error) {
+      console.error('Error reporting chat:', error);
+      return { error: 'Network error. Please try again later.' };
+    }
+  };
+  

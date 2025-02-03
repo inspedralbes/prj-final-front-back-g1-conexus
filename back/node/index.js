@@ -947,6 +947,103 @@ app.delete('/reports/users/:id', async (req, res) => {
     }
 });
 
+// CRUD operations for chats reports
+app.get('/reports/chats', async (req, res) => {
+    try {
+        const connection = await mysql.createConnection(dbConfig);
+        const [results] = await connection.execute(`
+            SELECT 
+                reportsChats.id, 
+                reportsChats.chat_id, 
+                reportsChats.user_id AS reporting_user_id, 
+                reportsChats.report, 
+                reportsChats.status, 
+                reportsChats.created_at, 
+                chats.message, 
+                chats.user_id AS chat_user_id,
+                reporting_user.name AS reporting_user_name,
+                chat_user.name AS chat_user_name,
+                chat_user.email AS chat_user_email
+            FROM reportsChats 
+            JOIN chats ON reportsChats.chat_id = chats.id 
+            JOIN users AS reporting_user ON reportsChats.user_id = reporting_user.id
+            JOIN users AS chat_user ON chats.user_id = chat_user.id
+        `);
+        connection.end();
+
+        res.status(200).send(results);
+    } catch (error) {
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
+app.get('/reports/chats/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const connection = await mysql.createConnection(dbConfig);
+        const [result] = await connection.execute('SELECT * FROM reportsChats WHERE id = ?', [id]);
+        connection.end();
+
+        if (result.length === 0) return res.status(404).send({ message: 'Report not found' });
+
+        res.status(200).send(result[0]);
+    } catch (error) {
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
+app.post('/reports/chats', async (req, res) => {
+    const { message_id, user_id, content, report } = req.body;
+  
+    try {
+      const connection = await mysql.createConnection(dbConfig);
+      const [result] = await connection.execute(
+        'INSERT INTO reportsChats (message_id, user_id, content, report) VALUES (?, ?, ?, ?)',
+        [message_id, user_id, content, report]
+      );
+      connection.end();
+  
+      res.status(201).send({ id: result.insertId });
+    } catch (error) {
+      console.error('Error saving report:', error);
+      res.status(500).json({ error: 'Database error' });
+    }
+  });
+
+app.put('/reports/chats/:id', async (req, res) => {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    try {
+        const connection = await mysql.createConnection(dbConfig);
+        const [result] = await connection.execute('UPDATE reportsChats SET status = ? WHERE id = ?', [status, id]);
+        connection.end();
+
+        if (result.affectedRows === 0) return res.status(404).send({ message: 'Report not found' });
+
+        res.status(200).send({ message: 'Status updated successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
+app.delete('/reports/chats/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const connection = await mysql.createConnection(dbConfig);
+        const [result] = await connection.execute('DELETE FROM reportsChats WHERE id = ?', [id]);
+        connection.end();
+
+        if (result.affectedRows === 0) return res.status(404).send({ message: 'Report not found' });
+
+        res.status(204).send();
+    } catch (error) {
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
 // Create users rewiews
 app.post('/reviews', async (req, res) => {
     const { reviewed_user_id, reviewer_user_id, rating } = req.body;

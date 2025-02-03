@@ -155,7 +155,19 @@ CREATE TABLE IF NOT EXISTS reportsUsers (
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
--- Table 14: newDataUsers (depends on users, typesUsers and classes)
+-- Table 14: reportsChats (depends on users)
+CREATE TABLE IF NOT EXISTS reportsChats (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    message_id VARCHAR(24) NOT NULL,
+    user_id INT NOT NULL,
+    content TEXT NOT NULL,
+    report TEXT NOT NULL,
+    status ENUM('pending', 'revising', 'revised') DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+-- Table 15: newDataUsers (depends on users, typesUsers and classes)
 CREATE TABLE IF NOT EXISTS newDataUsers (
     id INT AUTO_INCREMENT PRIMARY KEY,
     typesUsers_id INT NOT NULL DEFAULT 1,
@@ -179,7 +191,7 @@ CREATE TABLE IF NOT EXISTS newDataUsers (
     FOREIGN KEY (qualification_id) REFERENCES qualifications(id)
 );
 
--- Table 15: notifications (depends on users)
+-- Table 16: notifications (depends on users)
 CREATE TABLE IF NOT EXISTS notifications (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
