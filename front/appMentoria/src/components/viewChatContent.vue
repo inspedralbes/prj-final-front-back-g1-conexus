@@ -84,7 +84,7 @@
 
 <script setup>
 import { ref, onMounted, defineProps, watch, nextTick } from "vue";
-import { fetchMessages, sendMessageInMongo, reportChat } from "@/services/communicationManager";
+import { fetchMessages, sendMessageInMongo, reportChat, reportChatMongo } from "@/services/communicationManager";
 import socketChat from "../services/socketChat";
 
 const props = defineProps({
@@ -179,6 +179,12 @@ const confirmReport = async (interaction) => {
   if (reason) {
     try {
       const response = await reportChat(interaction._id, interaction.userId, interaction.message, reason);
+      const result = await reportChatMongo(props.chatId, interaction._id);
+      if (result.error) {
+        console.log(`Error: ${result.error}`);
+      } else {
+        console.log("Message reported successfully!");
+      }
       if (response.error) {
         console.error('Error reporting message:', response.error);
       } else {

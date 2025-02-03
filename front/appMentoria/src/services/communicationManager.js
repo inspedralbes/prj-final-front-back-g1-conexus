@@ -1154,4 +1154,26 @@ export const reportChat = async (message_id, user_id, content, report) => {
       return { error: 'Network error. Please try again later.' };
     }
   };
+
+
+  export const reportChatMongo = async (chatId, messageId) => {
+    try {
+      const response = await fetch(`${CHAT_URL}/reportMessage`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ chatId, messageId }),
+      });
+  
+      if (!response.ok) {
+        return { error: `HTTP error! status: ${response.status}` };
+      }
+  
+      return await response.json();
+    } catch (error) {
+      console.error('Error reporting chat:', error);
+      return { error: 'Network error. Please try again later.' };
+    }
+  };
   

@@ -152,6 +152,25 @@ app.post("/newChat", async (req, res) => {
   }
 });
 
+app.post("/reportMessage", async (req, res) => {
+  const { chatId, messageId } = req.body;
+
+  try {
+    const chat = await Message.findById(chatId);
+    if (!chat) {
+      return res.status(404).json({ error: "Chat not found" });
+    }
+    chat.reports = 1;
+    await chat.save();
+
+    res.status(200).json({ message: "Message reported successfully", reports: chat.reports });
+  } catch (err) {
+    console.error("Error reporting message:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
 const TWENTY_FOUR_HOURS_IN_MS = 24 * 60 * 60 * 1000;
 
 setInterval(async () => {
