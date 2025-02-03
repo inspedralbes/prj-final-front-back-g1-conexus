@@ -1088,7 +1088,7 @@ app.post('/refresh', async (req, res) => {
 });
 
 // Function to verify token
-function verifyToken(req, res, next) {
+export function verifyToken(req, res, next) {
     const authHeader = req.headers['authorization'];
     if (!authHeader) {
         return res.status(401).json({ error: 'Token es requerido' });
@@ -1112,20 +1112,20 @@ function verifyToken(req, res, next) {
         req.user = decoded;
         next();
     });
-}
+};
 
 // Function to hash password
 async function hashPassword(password) {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
     return hashedPassword
-}
+};
 
 // Function to compare password
 async function comparePassword(password, hashedPassword) {
     const match = await bcrypt.compare(password, hashedPassword);
     return match
-}
+};
 
 // Start the server
 server.listen(port, () => {

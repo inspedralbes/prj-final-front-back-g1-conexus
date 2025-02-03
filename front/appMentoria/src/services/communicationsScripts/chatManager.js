@@ -26,12 +26,7 @@ export const fetchMessages = async (chatId) => {
 };
 
 // Send message
-export const sendMessageInMongo = async (
-    chatData,
-    currentUser,
-    messageInput
-) => {
-
+export const sendMessageInMongo = async (chatData, currentUser, messageInput) => {
     const newMessage = {
         message: messageInput,
         userId: currentUser,

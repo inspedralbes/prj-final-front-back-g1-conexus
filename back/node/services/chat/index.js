@@ -6,6 +6,7 @@ const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
 const dotenv = require('dotenv');
+const { verifyToken } = require('../../index');
 
 function loadEnv(envPath) {
   const result = dotenv.config({ path: envPath });
@@ -59,20 +60,7 @@ app.get('/', (req, res) => {
   res.send('Hello World! I am a chat service');
 });
 
-app.get('/chatTest', (req, res) => {
-  res.send(JSON.stringify(chatEnv));
-});
-
-app.get('/getChats', async (req, res) => {
-  try {
-    const messages = await Message.find();
-    res.json(messages);
-  } catch (err) {
-    res.status(500).send(err);
-  }
-});
-
-app.get('/getChats/:id', async (req, res) => {
+app.get('/getChats/:id', verifyToken, async (req, res) => {
   const id = req.params.id;
   try {
     const messages = await Message.find();
@@ -85,7 +73,7 @@ app.get('/getChats/:id', async (req, res) => {
   }
 });
 
-app.get('/getChat/:id', async (req, res) => {
+app.get('/getChat/:id', verifyToken, async (req, res) => {
   const id = req.params.id;
   try {
     const messages = await Message.find({ _id: id });
@@ -95,7 +83,7 @@ app.get('/getChat/:id', async (req, res) => {
   }
 });
 
-app.post('/addChat', async (req, res) => {
+app.post('/addChat', verifyToken, async (req, res) => {
   console.log('addChat')
   const { _id, user_one_id, user_two_id, interactions } = req.body;
   console.log('req.body:', req.body);
@@ -113,7 +101,7 @@ app.post('/addChat', async (req, res) => {
   }
 });
 
-app.post('/newChat', async (req, res) => {
+app.post('/newChat', verifyToken, async (req, res) => {
   console.log('newChat')
   const { _id, user_one_id, user_two_id, interactions } = req.body;
   const existingChat = await Message.findOne({
