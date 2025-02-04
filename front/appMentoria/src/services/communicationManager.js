@@ -1017,3 +1017,36 @@ export const getMyPeticions = async (userID) => {
         console.error('Error fetching my publications:', error);
     }
 }
+export const editData = async (userData) => {
+    console.log(userData);
+    try {
+        const response = await fetch(`${BACK_URL}/editData/${userData.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+            body: JSON.stringify(userData),
+        });
+
+        if (response.status === 401) {
+            const refreshResult = await refreshToken();
+
+            if (refreshResult.error) {
+                return { error: 'No se pudo renovar el token. Inicia sesión nuevamente.' };
+            }
+
+            // Reintenta la petición después de renovar el token
+            return await editData(userData);
+        }
+
+        if (!response.ok) {
+            return { error: `HTTP error! status: ${response.status}` };
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Network error:', error);
+        return { error: 'Network error. Please try again later.' };
+    }
+}

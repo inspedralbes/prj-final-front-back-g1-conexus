@@ -174,6 +174,37 @@ app.post('/login', async (req, res) => {
     }
 });
 
+//Edit generalInfo
+app.put("/editGeneralInfo", async (req,res)=>{
+
+})
+
+//Edit PersonalInfo
+app.put("/editData/:id",async (req,res)=>{
+    const { id } = req.params;
+    const { description,phone,tags,skills,Instagram,Twitter,Linkedin,Facebook,Github,title } = req.body;
+    const connection = await mysql.createConnection(dbConfig);
+    console.log("editDataTime")
+    try {
+        const [result] = await connection.execute(
+            'UPDATE users SET Linkedin = ?, Instagram = ?, description = ?, Twitter = ?, Github = ?, Facebook = ?, title=?, phone=?,softwareSkills=?, languages=? WHERE id = ?',
+            [Linkedin,Instagram,description,Twitter,Github,Facebook,title,phone,skills,tags,id]
+        );
+        connection.end();
+
+        if (result.affectedRows == 0) return res.status(404).json({ error: 'User not found' });
+
+        res.status(200).json({ message: 'User updated successfully' });
+    } catch (error) {
+        res.status(500).json({ "error": 'Database error', "errorText": error });
+    }
+})
+
+//Edit Availability
+app.put("/editAvailability",async (req,res)=>{
+    
+})
+
 // Access User for email
 app.get('/user', verifyToken, async (req, res) => {
     const email = req.query.email;

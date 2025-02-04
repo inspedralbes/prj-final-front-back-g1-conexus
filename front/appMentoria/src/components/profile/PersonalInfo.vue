@@ -22,7 +22,7 @@
                     <h3 class="font-semibold">{{ $t("PersonalInfo.socialMedia") }}</h3>
                     <div class="flex space-x-4 mt-4">
                         <!-- Github Icon with Tooltip -->
-                        <div v-if="user.value.github_link" class="relative group">
+                        <div v-if="user.value.Github" class="relative group">
                             <!-- Icon -->
                             <button
                                 class="text-gray-500 p-2 rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700">
@@ -47,7 +47,7 @@
                             </div>
                         </div>
                         <!-- LinkedIn Icon with Tooltip -->
-                        <div v-if="user.value.linkedin_link" class="relative group">
+                        <div v-if="user.value.Linkedin" class="relative group">
                             <!-- Icon -->
                             <button
                                 class="text-gray-500 p-2 rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700">
@@ -73,7 +73,7 @@
                             </div>
                         </div>
                         <!-- Twitter Icon with Tooltip -->
-                        <div v-if="user.value.twitter_link" class="relative group">
+                        <div v-if="user.value.Twitter" class="relative group">
                             <!-- Icon -->
                             <button
                                 class="text-gray-500 p-2 rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700">
@@ -97,7 +97,7 @@
                             </div>
                         </div>
                         <!-- Instagram Icon with Tooltip -->
-                        <div v-if="user.value.instagram_link" class="relative group">
+                        <div v-if="user.value.Instagram" class="relative group">
                             <!-- Icon -->
                             <button
                                 class="text-gray-500 p-2 rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700">
@@ -122,7 +122,7 @@
                             </div>
                         </div>
                         <!-- Facebook Icon with Tooltip -->
-                        <div v-if="user.value.facebook_link" class="relative group">
+                        <div v-if="user.value.Facebook" class="relative group">
                             <!-- Icon -->
                             <button
                                 class="text-gray-500 p-2 rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700">
@@ -175,7 +175,7 @@
                                 d="M10 2a3 3 0 0 0-3 3v1H5a3 3 0 0 0-3 3v2.382l1.447.723.005.003.027.013.12.056c.108.05.272.123.486.212.429.177 1.056.416 1.834.655C7.481 13.524 9.63 14 12 14c2.372 0 4.52-.475 6.08-.956.78-.24 1.406-.478 1.835-.655a14.028 14.028 0 0 0 .606-.268l.027-.013.005-.002L22 11.381V9a3 3 0 0 0-3-3h-2V5a3 3 0 0 0-3-3h-4Zm5 4V5a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v1h6Zm6.447 7.894.553-.276V19a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3v-5.382l.553.276.002.002.004.002.013.006.041.02.151.07c.13.06.318.144.557.242.478.198 1.163.46 2.01.72C7.019 15.476 9.37 16 12 16c2.628 0 4.98-.525 6.67-1.044a22.95 22.95 0 0 0 2.01-.72 15.994 15.994 0 0 0 .707-.312l.041-.02.013-.006.004-.002.001-.001-.431-.866.432.865ZM12 10a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H12Z"
                                 clip-rule="evenodd" />
                         </svg>
-                        <p>{{ user.value.job || $t("PersonalInfo.studying") }}</p>
+                        <p>{{ user.value.title || $t("PersonalInfo.studying") }}</p>
                     </div>
                 </div>
 
@@ -183,15 +183,15 @@
                 <div class="space-y-1">
                     <h3 class="font-semibold">{{ $t("PersonalInfo.contact") }}</h3>
                     <p class="text-gray-500 dark:text-gray-400">{{ $t("PersonalInfo.email") }} {{ user.value.email }}</p>
-                    <p class="text-gray-500 dark:text-gray-400">{{ $t("PersonalInfo.phone") }} {{ user.value.mobilePhone || 'No hi ha...' }}
+                    <p class="text-gray-500 dark:text-gray-400">{{ $t("PersonalInfo.phone") }} {{ user.value.phone || 'No hi ha...' }}
                     </p>
                 </div>
 
                 <!-- Software Skills -->
                 <div class="space-y-1">
                     <h3 class="font-semibold">{{ $t("PersonalInfo.softwareSkills") }}</h3>
-                    <div class="flex space-x-4">
-                        <span v-for="tag in user.value.tags" :key="tag"
+                    <div class="flex flex-wrap space-x-4 w-full overflow-hidden">
+                        <span v-for="tag in user.value.softwareSkills.split(', ')" :key="tag"
                             class="p-2 rounded-lg text-gray-700 bg-gray-100 dark:text-gray-300 dark:bg-gray-700">{{ tag
                             }}</span>
                     </div>
@@ -200,7 +200,12 @@
                 <!-- Languages -->
                 <div class="space-y-1">
                     <h3 class="font-semibold">{{ $t("PersonalInfo.languages") }}</h3>
-                    <p class="text-gray-500 dark:text-gray-400">{{ user.value.languages || $t("PersonalInfo.noLanguages") }}</p>
+                    <p class="text-gray-500 dark:text-gray-400" v-if="!user.value.languages ">{{  $t("PersonalInfo.noLanguages") }}</p>
+                    <div class="flex flex-wrap space-x-4 w-full overflow-hidden">
+                        <span v-for="lang in user.value.languages.split(', ')" :key="lang"
+                        class="flex-inline items-center px-3 py-1 bg-gray-200 text-gray-700 rounded-full m-2">{{ lang
+                            }}</span>
+                    </div>
                 </div>
             </div>
         </div>
