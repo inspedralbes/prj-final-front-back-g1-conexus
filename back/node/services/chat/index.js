@@ -116,22 +116,22 @@ app.post('/addChat', async (req, res) => {
       await message.save();
     }
 
-    if (isFirstInteraction) {
-      console.log("eyyyyyyyyyyy estoy dentro");
-      const notificationPayload = {
-        user_id: user_two_id,
-        title: 'Nou missatge',
-        message: `Tens un nou missatge de ${user_one_id}!`
-      };
+    // if (isFirstInteraction) {
+    //   console.log("eyyyyyyyyyyy estoy dentro");
+    //   const notificationPayload = {
+    //     user_id: user_two_id,
+    //     title: 'Nou missatge',
+    //     message: `Tens un nou missatge de ${user_one_id}!`
+    //   };
 
-      await fetch(chatEnv.ENDPOINT_URL_PUSH_NOTIFICATIONS + '/sendNotification', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(notificationPayload)
-      });
-    }
+    //   await fetch(chatEnv.ENDPOINT_URL_PUSH_NOTIFICATIONS + '/sendNotification', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify(notificationPayload)
+    //   });
+    // }
 
     res.json(message);
   } catch (err) {
@@ -206,17 +206,21 @@ io.on('connection', (socket) => {
         if (isFirstInteraction) {
           const notificationPayload = {
             user_id: userId === chat.user_one_id ? chat.user_two_id : chat.user_one_id,
-            title: 'Nou missatge',
+            title: 'Nou chat obert',
             message: `Tens un nou missatge de ${userId}!`
           };
 
-          await fetch(chatEnv.ENDPOINT_URL_PUSH_NOTIFICATIONS + '/sendNotification', {
+          console.log("toy dentro perras");
+
+          const response = await fetch(chatEnv.ENDPOINT_URL_PUSH_NOTIFICATIONS + '/sendNotification', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
             },
             body: JSON.stringify(notificationPayload)
           });
+
+          console.log("response", response.json());
         }
       }
     } catch (err) {

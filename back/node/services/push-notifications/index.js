@@ -53,18 +53,37 @@ app.post('/subscribe', (req, res) => {
 app.post('/sendNotification', (req, res) => {
     const { user_id, title, message } = req.body;
 
-    console.log("body", req.body);
+    console.log("aaaaaa body", req.body);
 
+    // Obtener la suscripción del usuario desde la base de datos
     const subscription = subscriptions[user_id];
     console.log("subscription", subscription);
+
     if (!subscription) {
         return res.status(404).json({ error: 'Subscription not found' });
     }
 
-    webpush.sendNotification(subscription, JSON.stringify({ title, message }))
-        .then(() => res.status(200).json({ message: 'Notification sent' }))
+    // Payload de la notificación
+    const payload = JSON.stringify({ title, message });
+
+    // Enviar notificación
+    webpush.sendNotification(subscription, payload)
+        .then(() => {
+            console.log('Notificación enviada con éxito');
+            res.status(200).json({ message: 'Notification sent' });
+        })
         .catch(err => {
-            console.error(err);
+            console.error('Error al enviar la notificación:', err);
+
+            // Verificar si la suscripción ha caducado (código 410)
+            if (err.statusCode === 410) {
+                // Eliminar la suscripción caducada de la base de datos
+                delete subscriptions[user_id];  // Asegúrate de eliminar la suscripción en tu base de datos
+                console.log('Suscripción caducada eliminada');
+                return res.status(410).json({ error: 'Subscription expired and removed' });
+            }
+
+            // Manejo de otros errores
             res.status(500).json({ error: 'Error sending notification' });
         });
 });

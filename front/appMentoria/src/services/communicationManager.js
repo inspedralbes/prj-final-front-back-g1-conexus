@@ -169,7 +169,7 @@ export const subscribeToPushNotifications = async (user) => {
     if ("serviceWorker" in navigator && "PushManager" in window) {
         try {
             const registration = await navigator.serviceWorker.register(
-                "/service-worker.js"
+                "./service-worker.js"
             );
             console.log("Service Worker registrado!", registration);
 
