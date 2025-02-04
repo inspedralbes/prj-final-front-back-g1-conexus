@@ -347,7 +347,7 @@
   
 <script setup>
 import { ref, onMounted, defineProps } from "vue";
-import { getUsers } from "../services/communicationsScripts/mainManagr";
+import { getUsers } from "../services/communicationsScripts/mainManager";
 import { getCommunityComments, postCommunityComments } from "@/services/communicationsScripts/communityManager";
 import socketBack from "../services/socketsScripts/socketBack.js";
 import { useAppStore } from "@/stores/index";

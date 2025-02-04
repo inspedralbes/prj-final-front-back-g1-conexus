@@ -1,6 +1,9 @@
 .env
 /node_modules
 
+/middlewares/node_modules
+/middlewares/.env
+
 /services/chat/node_modules
 /services/chat/.env
 

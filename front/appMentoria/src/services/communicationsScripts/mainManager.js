@@ -53,6 +53,8 @@ export const logout = async () => {
         const refreshToken = localStorage.getItem('refreshToken');
         const accessToken = localStorage.getItem('accessToken');
 
+        console.log('refreshToken:');
+
         const response = await fetch(`${BACK_URL}/logout`, {
             method: 'POST',
             headers: {
@@ -64,6 +66,8 @@ export const logout = async () => {
 
         if (response.status === 401) {
             const refreshResult = await refreshToken();
+            console.log('refreshResult:', refreshResult);
+            console.log('Holaaaaaaaaaaaaaaaa');
 
             if (refreshResult.error) {
                 return { error: 'No se pudo renovar el token. Inicia sesión nuevamente.' };

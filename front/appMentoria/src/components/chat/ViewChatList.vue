@@ -19,7 +19,7 @@
 <script setup>
 import { ref, onMounted, watch } from "vue";
 import ViewChat from "@/components/chat/viewInfoChat.vue";
-import socketChat from "../services/socketsScripts/socketChat";
+import socketChat from "@/services/socketsScripts/socketChat";
 import { useAppStore } from "@/stores/index";
 import { getUsers } from "@/services/communicationsScripts/mainManager";
 import { fetchChats } from "@/services/communicationsScripts/chatManager";

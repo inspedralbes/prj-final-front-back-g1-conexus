@@ -22,11 +22,6 @@ services:
       - 3000:3000
     links:
       - tr-final-mysql
-      - tr-final-mongodb
-      - chat
-      - community
-      - employmentexchange
-      - statistics
 
   chat:
     build:
@@ -34,6 +29,7 @@ services:
       dockerfile: ../../dev.Dockerfile
     command: sh -c "cp .env.DEV .env && npm install && node index.js"
     volumes:
+      - ./back/node/middlewares:/usr/src/app/auth
       - ./back/node/services/chat:/usr/src/app
     working_dir: /usr/src/app
     ports:

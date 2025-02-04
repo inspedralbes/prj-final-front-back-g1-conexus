@@ -6,7 +6,8 @@ const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
 const dotenv = require('dotenv');
-const { verifyToken } = require('../../index');
+// const { verifyToken } = require('../../middlewares/auth.js');
+const { verifyToken } = require('./auth/auth.js');
 
 function loadEnv(envPath) {
   const result = dotenv.config({ path: envPath });
@@ -20,6 +21,19 @@ const chatEnv = loadEnv(path.resolve(__dirname, './.env'));
 
 const PORT = chatEnv.PORT;
 const app = express();
+
+app.use(express.json());
+app.use(cors({
+    origin: '*',
+    credentials: true,
+    allowedHeaders: ["Access-Control-Allow-Origin", "Content-Type"],
+}));
+
+app.use((req, res, next) => {
+  res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
+  next();
+});
+
 const server = createServer(app);
 const io = new Server(server, {
     cors: {
@@ -29,14 +43,6 @@ const io = new Server(server, {
         allowedHeaders: ["Access-Control-Allow-Origin", "Content-Type"],
     }
 });
-
-app.use(express.json());
-
-app.use(cors({
-    origin: '*',
-    credentials: true,
-    allowedHeaders: ["Access-Control-Allow-Origin", "Content-Type"],
-}));
 
 mongoose.connect( chatEnv.MONGO_URI, { dbName: 'Chat' })
   .then(() => console.log('Conexión exitosa a MongoDB'))

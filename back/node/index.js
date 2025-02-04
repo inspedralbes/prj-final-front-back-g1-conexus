@@ -8,14 +8,9 @@ const bcrypt = require('bcryptjs');
 const mysql = require('mysql2/promise');
 const path = require('path');
 const cors = require('cors');
-const FormData = require('form-data');
-const fs = require('fs');
 require('dotenv').config();
 
-const secretKey = process.env.SECRET_KEY;
-const refreshKey = process.env.REFRESH_KEY;
-
-const refreshTokensDB = new Set();
+const { createTokens, verifyToken, refreshToken, refreshTokensDB } = require('./middlewares/auth');
 
 const app = express();
 const port = process.env.PORT;
@@ -107,12 +102,9 @@ app.post('/loginAPI', async (req, res) => {
             }
         }
 
-        const tokenJW = jwt.sign({ id: userLogin.id, email: userLogin.email }, secretKey, { expiresIn: '1h' });
-        const refreshToken = jwt.sign({ id: userLogin.id, email: userLogin.email }, refreshKey, { expiresIn: '7d' });
+        const tokens = createTokens(userLogin);
 
-        refreshTokensDB.add(refreshToken);
-
-        res.status(200).json({ message: 'Login successful', accessToken: tokenJW, refreshToken: refreshToken, userLogin });
+        res.status(200).json({ message: 'Login successful', accessToken: tokens.accessToken, refreshToken: tokens.refreshToken, userLogin });
     } catch (error) {
         console.error('Database error:', error);
         res.status(500).json({ error: 'Database error' });
@@ -159,12 +151,9 @@ app.post('/login', async (req, res) => {
             }
         }
 
-        const aToken = jwt.sign({ id: userLogin.id, email: userLogin.email }, secretKey, { expiresIn: '1h' });
-        const rToken = jwt.sign({ id: userLogin.id, email: userLogin.email }, refreshKey, { expiresIn: '7d' })
+        const tokens = createTokens(userLogin);
 
-        refreshTokensDB.add(rToken);
-
-        res.status(200).json({ message: 'Login successful', accessToken: aToken, refreshToken: rToken, userLogin });
+        res.status(200).json({ message: 'Login successful', accessToken: tokens.accessToken, refreshToken: tokens.refreshToken, userLogin });
     } catch (error) {
         console.error('Database error:', error);
         res.status(500).json({ error: 'Database error' });
@@ -313,132 +302,6 @@ app.delete('/users/:id', async (req, res) => {
         if (result.affectedRows == 0) return res.status(404).json({ error: 'User not found' });
 
         res.json({ message: 'User deleted successfully' });
-    } catch (error) {
-        res.status(500).json({ error: 'Database error' });
-    }
-});
-
-// CRUD operations for newDataUsers
-app.get('/newDataUsers', async (req, res) => {
-    try {
-        const connection = await mysql.createConnection(dbConfig);
-        const [rows] = await connection.execute('SELECT * FROM newDataUsers');
-        connection.end();
-        res.json(rows);
-    } catch (error) {
-        res.status(500).json({ error: 'Database error' });
-    }
-});
-
-app.get('/newDataUsers/:id', async (req, res) => {
-    const { id } = req.params;
-
-    try {
-        const connection = await mysql.createConnection(dbConfig);
-        const [rows] = await connection.execute('SELECT * FROM newDataUsers WHERE id = ?', [id]);
-        connection.end();
-
-        if (rows.length == 0) return res.status(404).json({ error: 'User not found' });
-
-        res.json(rows[0]);
-    } catch (error) {
-        res.status(500).json({ error: 'Database error' });
-    }
-});
-
-app.post('/newDataUsers', verifyToken, async (req, res) => {
-    try {
-        console.log('New data user:', req.body);
-        const { userPinia, userData } = req.body;
-
-        // Validar que ambos objetos existan
-        if (!userPinia || !userData) {
-            return res.status(400).json({ error: 'Datos incompletos: se necesitan userPinia y userData.' });
-        }
-
-        // Fusionar los datos: Actualizar userPinia con los valores de userData
-        const updatedUser = {
-            ...userPinia,
-            ...userData,
-            tags: userData.tags || userPinia.tags, // Manejar valores específicos
-            availibility: userData.availibility || userPinia.availibility,
-        };
-
-        console.log('Usuario actualizado:', updatedUser);
-
-        // Convertir `tags` y `availibility` a JSON string si no están vacíos
-        if (updatedUser.tags && typeof updatedUser.tags !== 'string') {
-            updatedUser.tags = JSON.stringify(updatedUser.tags);
-        }
-
-        if (updatedUser.availibility && typeof updatedUser.availibility !== 'string') {
-            updatedUser.availibility = JSON.stringify(updatedUser.availibility);
-        }
-
-        // Aquí va la lógica para guardar los datos en la base de datos
-        const connection = await mysql.createConnection(dbConfig);
-        const query = `
-            INSERT INTO newDataUsers (typesUsers_id, user_id, name, email, password, banner, profile, class_id, city, discord_link, github_link, tags, availibility)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `;
-        const values = [
-            updatedUser.typesUsers_id,
-            updatedUser.user_id,
-            updatedUser.name,
-            updatedUser.email,
-            updatedUser.password,
-            updatedUser.banner,
-            updatedUser.profile,
-            updatedUser.class_id,
-            updatedUser.city,
-            updatedUser.discord_link,
-            updatedUser.github_link,
-            updatedUser.tags,
-            updatedUser.availibility,
-        ];
-        await connection.execute(query, values);
-        connection.end();
-
-        // Simulación de respuesta exitosa
-        res.status(201).json({ message: 'Datos del usuario actualizados correctamente', updatedUser });
-    } catch (error) {
-        console.error('Error al procesar los datos:', error);
-        res.status(500).json({ error: 'Error interno del servidor' });
-    }
-});
-
-app.put('/newDataUsers/:id', async (req, res) => {
-    const { id } = req.params;
-    const { typesUsers_id, user_id, name, email, password, token, banner, profile, status, class_id } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    try {
-        const connection = await mysql.createConnection(dbConfig);
-        const [result] = await connection.execute(
-            'UPDATE newDataUsers SET typesUsers_id = ?, user_id = ?, name = ?, email = ?, password = ?, token = ?, banner = ?, profile = ?, status = ?, class_id = ? WHERE id = ?',
-            [typesUsers_id, user_id, name, email, hashedPassword, token, banner, profile, status, class_id, id]
-        );
-        connection.end();
-
-        if (result.affectedRows == 0) return res.status(404).json({ error: 'User not found' });
-
-        res.json({ message: 'New data user updated successfully' });
-    } catch (error) {
-        res.status(500).json({ error: 'Database error' });
-    }
-});
-
-app.delete('/newDataUsers/:id', async (req, res) => {
-    const { id } = req.params;
-
-    try {
-        const connection = await mysql.createConnection(dbConfig);
-        const [result] = await connection.execute('DELETE FROM newDataUsers WHERE id = ?', [id]);
-        connection.end();
-
-        if (result.affectedRows == 0) return res.status(404).json({ error: 'User not found' });
-
-        res.json({ message: 'New data user deleted successfully' });
     } catch (error) {
         res.status(500).json({ error: 'Database error' });
     }
@@ -1028,8 +891,7 @@ app.put('/verified/users/:id', async (req, res) => {
     }
 });
 
-
-// Get type of users
+// This Routes its for statistics
 app.get('/typesUsers', async (req, res) => {
     try {
         const connection = await mysql.createConnection(dbConfig);
@@ -1064,55 +926,7 @@ app.get('/publications', async (req, res) => {
     }
 });
 
-// Route for refresh access token
-app.post('/refresh', async (req, res) => {
-    console.log('Refresh token 0:', req.body);
-    const { refreshToken } = req.body;
-
-    console.log('Refresh token 1:', refreshToken);
-
-    if (!refreshToken) return res.status(401).send('Token is required');
-    if (!refreshTokensDB.has(refreshToken)) return res.status(403).send('Invalid token');
-
-    try {
-        console.log('Refresh token 2:', refreshToken);
-        const decoded = jwt.verify(refreshToken, refreshKey);
-        console.log('Decoded:', decoded);
-        const newAccessToken = jwt.sign({ id: decoded.id, email: decoded.email }, secretKey, { expiresIn: '1h' });
-        res.json({ accessToken: newAccessToken });
-    } catch (err) {
-        console.log('Error refresh:', err);
-        refreshTokensDB.delete(refreshToken);
-        res.status(403).json({ error: 'Invalid token or expired' });
-    }
-});
-
-// Function to verify token
-export function verifyToken(req, res, next) {
-    const authHeader = req.headers['authorization'];
-    if (!authHeader) {
-        return res.status(401).json({ error: 'Token es requerido' });
-    }
-
-    const token = authHeader.split(' ')[1];
-    if (!token) {
-        return res.status(401).json({ error: 'Formato de token inválido' });
-    }
-
-    console.log('Token:', token);
-
-    jwt.verify(token, secretKey, (err, decoded) => {
-        console.log('Decoded:', decoded);
-        if (err) {
-            if (err.name === 'TokenExpiredError') {
-                return res.status(401).json({ error: 'Token expirado' });
-            }
-            return res.status(403).json({ error: 'Fallo al autenticar el token' });
-        }
-        req.user = decoded;
-        next();
-    });
-};
+app.post('/refresh', refreshToken);
 
 // Function to hash password
 async function hashPassword(password) {
