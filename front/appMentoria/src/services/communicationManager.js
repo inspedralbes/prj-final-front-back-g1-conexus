@@ -377,12 +377,14 @@ export const fetchMessages = async (chatId) => {
         const chatData = ref({});
         chatData.value = data[0];
         chatData.value.userName = chatData.value.user_one_name;
+        chatData.value.reported = data[0].reports;
         chatData.value.interactions = chatData.value.interactions.map(
             (interaction) => ({
                 _id: interaction._id,
                 message: interaction.message,
                 userId: interaction.userId,
                 timestamp: interaction.timestamp,
+                reports: interaction.reports,
             })
         );
         return chatData;
@@ -1134,6 +1136,28 @@ export const reportChat = async (message_id, user_id, content, report) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ message_id, user_id, content, report }),
+      });
+  
+      if (!response.ok) {
+        return { error: `HTTP error! status: ${response.status}` };
+      }
+  
+      return await response.json();
+    } catch (error) {
+      console.error('Error reporting chat:', error);
+      return { error: 'Network error. Please try again later.' };
+    }
+  };
+
+
+  export const reportChatMongo = async (chatId, messageId) => {
+    try {
+      const response = await fetch(`${CHAT_URL}/reportMessage`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ chatId, messageId }),
       });
   
       if (!response.ok) {
