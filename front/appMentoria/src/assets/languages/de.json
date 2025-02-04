@@ -11,7 +11,12 @@
         "title": "Persönliche Informationen bearbeiten",
         "email": "E-Mail:",
         "phone": "Telefon:",
-        "save": "Änderungen speichern"
+        "save": "Änderungen speichern",
+        "description": "Beschreibung:",
+        "academicTitle": "Akademischer Titel:",
+        "SocialMedia": "Soziale Medien",
+        "languages": "Sprachen",
+        "softwareSkills": "Softwarekenntnisse"
     },
     "formAvailability": {
         "title": "Verfügbarkeitszeiten bearbeiten",

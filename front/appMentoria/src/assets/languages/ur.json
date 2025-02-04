@@ -11,7 +11,13 @@
         "title": "ذاتی معلومات میں ترمیم کریں",
         "email": "ای میل:",
         "phone": "فون:",
-        "save": "تبدیلیاں محفوظ کریں"
+        "save": "تبدیلیاں محفوظ کریں",
+        "description":"تفصیل:",
+        "academicTitle":"اکیڈمک عنوان:",
+        "SocialMedia":"سوشل میڈیا",
+        "languages":"زبانیں",
+        "softwareSkills":"سافٹ ویئر کی مہارتیں"
+
     },
     "formAvailability": {
         "title": "دستیابی کے شیڈول میں ترمیم کریں",

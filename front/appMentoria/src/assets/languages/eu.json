@@ -11,7 +11,13 @@
         "title": "Informazio Pertsonala Editatu",
         "email": "Posta elektronikoa:",
         "phone": "Telefonoa:",
-        "save": "Aldaketak gorde"
+        "save": "Aldaketak gorde",
+        "description":"Deskribapena:",
+        "academicTitle":"Titulazio akademikoa:",
+        "SocialMedia":"Sare sozialak",
+        "languages":"Hizkuntzak",
+        "softwareSkills":"Software trebetasunak"
+
     },
     "formAvailability": {
         "title": "Eskuragarritasun Ordutegia Editatu",

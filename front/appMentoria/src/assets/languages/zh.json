@@ -11,7 +11,13 @@
         "title": "编辑个人信息",
         "email": "电子邮件:",
         "phone": "电话:",
-        "save": "保存更改"
+        "save": "保存更改",
+        "description":"描述:",
+        "academicTitle":"学术头衔:",
+        "SocialMedia":"社交媒体",
+        "languages":"语言",
+        "softwareSkills":"软件技能"
+
     },
     "formAvailability": {
         "title": "编辑可用时间表",

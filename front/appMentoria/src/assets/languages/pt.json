@@ -8,10 +8,16 @@
         "save": "Guardar mudanças"
     },
     "formPersonal": {
-        "title": "Editar Informação Pessoal",
+        "title": "Editar Informações Pessoais",
         "email": "Email:",
         "phone": "Telefone:",
-        "save": "Guardar mudanças"
+        "save": "Guardar mudanças",
+        "description":"Descrição:",
+        "academicTitle":"Título acadêmico:",
+        "SocialMedia":"Redes sociais",
+        "languages":"Idiomas",
+        "softwareSkills":"Habilidades em software"
+
     },
     "formAvailability": {
         "title": "Editar Horário de Disponibilidade",

@@ -11,7 +11,13 @@
         "title": "個人情報を編集",
         "email": "メールアドレス:",
         "phone": "電話:",
-        "save": "変更を保存"
+        "save": "変更を保存",
+        "description":"説明:",
+        "academicTitle":"学位:",
+        "SocialMedia":"ソーシャルメディア",
+        "languages":"言語",
+        "softwareSkills":"ソフトウェアスキル"
+
     },
     "formAvailability": {
         "title": "利用可能時間を編集",

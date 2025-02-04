@@ -12,7 +12,13 @@
         "title": "Editar Informació Personal",
         "email": "Correu electrònic:",
         "phone": "Telèfon:",
-        "save": "Guardar canvis"
+        "save": "Guardar canvis",
+        "description":"Descripció:",
+        "academicTitle":"Títol acadèmic:",
+        "SocialMedia":"Xarxes socials",
+        "languages":"Idiomes",
+        "softwareSkills":"Habilitats en programari"
+
     },
     "formAvailability": {
         "title": "Editar Horari de Disponibilitat",

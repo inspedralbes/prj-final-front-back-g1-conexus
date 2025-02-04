@@ -7,12 +7,18 @@
     "profileimg":"Imagen de perfil",
     "save":"Guardar cambios"
 },   
-"formPersonal":{
-    "title":"Editar Informació Personal",
-    "email":"Correo electrónico:",
-    "phone":"Teléfono:",
-    "save":"Guardar cambios"
-} ,
+"formPersonal": {
+        "title": "Editar Información Personal",
+        "email": "Correo electrónico:",
+        "phone": "Teléfono:",
+        "save": "Guardar cambios",
+        "description":"Descripción:",
+        "academicTitle":"Título académico:",
+        "SocialMedia":"Redes sociales",
+        "languages":"Idiomas",
+        "softwareSkills":"Habilidades en software"
+
+    },
 "formAvailability":{
     "title":"Editar Horari de Disponibilitat",
     "email":"Correo electrónico:",

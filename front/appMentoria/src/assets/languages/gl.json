@@ -11,7 +11,13 @@
         "title": "Editar Información Persoal",
         "email": "Correo electrónico:",
         "phone": "Teléfono:",
-        "save": "Gardar cambios"
+        "save": "Gardar cambios",
+        "description":"Descrición:",
+        "academicTitle":"Título académico:",
+        "SocialMedia":"Redes sociais",
+        "languages":"Idiomas",
+        "softwareSkills":"Habilidades en software"
+
     },
     "formAvailability": {
         "title": "Editar Horario de Dispoñibilidade",

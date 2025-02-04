@@ -12,7 +12,13 @@
         "title": "Edit Personal Information",
         "email": "Email:",
         "phone": "Phone:",
-        "save": "Save Changes"
+        "save": "Save changes",
+        "description":"Description:",
+        "academicTitle":"Academic Title:",
+        "SocialMedia":"Social Media",
+        "languages":"Languages",
+        "softwareSkills":"Software Skills"
+
     },
     "formAvailability": {
         "title": "Edit Availability Schedule",
