@@ -35,7 +35,7 @@ app.use((req, res, next) => {
     res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
     next();
 });
-app.use(fileUpload());
+// app.use(fileUpload());
 // Asegúrate de que el middleware para parsear JSON esté configurado
 app.use(express.json());
 
