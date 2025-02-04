@@ -11,15 +11,6 @@ services:
       - /data/nginxproxymanager/config.json:/app/config/production.json
       - /data/nginxproxymanager/data:/data
       - /etc/letsencrypt:/etc/letsencrypt
-    depends_on:
-      - certbot
-
-  certbot:
-    image: certbot/certbot
-    volumes:
-      - /etc/letsencrypt:/etc/letsencrypt
-      - /data/nginxproxymanager/data:/data/letsencrypt
-    command: certbot certonly --webroot --webroot-path=/data/letsencrypt --email your-email@example.com --agree-tos --no-eff-email -d example.com
 
   db:
     image: jc21/mariadb-aria:latest
