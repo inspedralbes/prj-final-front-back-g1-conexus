@@ -1,14 +1,14 @@
 services:
-  tr2g2-front:
-    image: node:23-bookworm-slim
-    command: sh -c "cp .env.prod .env && npm install && npm run dev"
-    volumes:
-      - ./front/appMentoria:/usr/src/app
-    working_dir: /usr/src/app
-    ports:
-      - 3009:5173
-    links:
-      - tr2g2-back
+  # tr2g2-front:
+  #   image: node:23-bookworm-slim
+  #   command: sh -c "cp .env.prod .env && npm install && npm run dev && npm run build"
+  #   volumes:
+  #     - ./front/appMentoria:/usr/src/app
+  #   working_dir: /usr/src/app
+  #   ports:
+  #     - 3009:5173
+  #   links:
+  #     - tr2g2-back
 
   tr2g2-back:
     build:
@@ -20,94 +20,35 @@ services:
     working_dir: /usr/src/app
     ports:
       - 3000:3000
-    links:
-      - tr2g2-mysql
-      - tr2g2-mongodb
-      - chat
-      - community
-      - employmentexchange
-      - statistics
 
-  chat:
-    build:
-      context: ./back/node/services/chat
-      dockerfile: ../../dev.Dockerfile
-    command: sh -c "cp .env.prod .env && npm install && node index.js"
+  apache:
+    image: httpd:latest
+    ports:
+      - '3010:80'
     volumes:
-      - ./back/node/services/chat:/usr/src/app
+      - ./front/appMentoria/dist:/usr/local/apache2/htdocs/
+
+  microprocesos_api:
+    build:
+      dockerfile: ./back/node/dev.Dockerfile
+      context: .
+    command: sh -c "cp .env.prod .env && npm install && node server.js"
+    volumes:
+      - ./back/microprocessos_api:/usr/src/app
+      - ./back/node/services:/usr/src/app/services
     working_dir: /usr/src/app
     ports:
       - 3001:3001
-    depends_on:
-      - tr2g2-mongodb
-    #  - tr2g2-back
-
-  community:
-    build:
-      context: ./back/node/services/community
-      dockerfile: ../../dev.Dockerfile
-    command: sh -c "cp .env.prod .env && npm install && npm run dev"
-    volumes:
-      - ./back/node/services/community:/usr/src/app
-    working_dir: /usr/src/app
-    ports:
       - 3002:3002
-
-  employmentexchange:
-    build:
-      context: ./back/node/services/employmentexchange
-      dockerfile: ../../dev.Dockerfile
-    command: sh -c "cp .env.prod .env && npm install && npm run dev"
-    volumes:
-      - ./back/node/services/employmentexchange:/usr/src/app
-    working_dir: /usr/src/app
-    ports:
       - 3003:3003
-
-  ia-image:
-    build:
-      context: ./back/node/services/iaimage
-      dockerfile: ../../dev.Dockerfile
-    command: sh -c "cp .env.prod .env && npm install && npm run dev"
-    volumes:
-      - ./back/node/services/iaimage:/usr/src/app
-    working_dir: /usr/src/app
-    ports:
       - 3004:3004
-
-  ia-text:
-    build: 
-      context: ./back/node/services/iatext
-      dockerfile: ../../dev.Dockerfile
-    command: sh -c "cp .env.prod .env && npm install && npm run dev"
-    volumes:
-      - ./back/node/services/iatext:/usr/src/app
-    working_dir: /usr/src/app
-    ports:
       - 3005:3005
-
-  notifications:
-    build:
-      context: ./back/node/services/notifications
-      dockerfile: ../../dev.Dockerfile
-    command: sh -c "cp .env.prod .env && npm install && npm run dev"
-    volumes:
-      - ./back/node/services/notifications:/usr/src/app
-    working_dir: /usr/src/app
-    ports:
       - 3006:3006
-
-  statistics:
-    build: 
-      context: ./back/node/services/statistics
-      dockerfile: ../../dev.Dockerfile
-    command: sh -c "cp .env.prod .env && npm install && npm run dev"
-    volumes:
-      - ./back/node/services/statistics:/usr/src/app
-    working_dir: /usr/src/app
-    ports:
       - 3007:3007
-
+      - 3008:3008
+    links:
+     - tr2g2-mysql
+     - tr2g2-mongodb
   tr2g2-mongodb:
     image: mongo
     restart: always
@@ -149,7 +90,7 @@ services:
     image: adminer
     restart: always
     ports:
-      - 3008:8080
+      - 3009:8080
     environment:
       ADMINER_DEFAULT_SERVER: tr2g2-mysql
     depends_on:
