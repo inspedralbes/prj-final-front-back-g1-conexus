@@ -175,8 +175,57 @@ app.post('/login', async (req, res) => {
 });
 
 //Edit generalInfo
-app.put("/editGeneralInfo", async (req,res)=>{
+app.put("/editGeneralInfo/:id", async (req,res)=>{
+    const { id } = req.params;
+    const { name, city } = req.body;
 
+    let profilePicture = req.files ? req.files.profilePicture : null;
+    let bannerPicture = req.files ? req.files.bannerPicture : null;
+
+    console.log("bannerPicture", req.files);
+
+    if (profilePicture) {
+        const profilePath = path.join(__dirname, 'upload', profilePicture.name);
+        await profilePicture.mv(profilePath);
+        profilePicture = `/upload/${profilePicture.name}`;
+    }
+
+    if (bannerPicture) {
+        const bannerPath = path.join(__dirname, 'upload', bannerPicture.name);
+        await bannerPicture.mv(bannerPath);
+        bannerPicture = `/upload/${bannerPicture.name}`;
+    }
+    try {
+        const connection = await mysql.createConnection(dbConfig);
+        let query = 'UPDATE users SET name = ?, city = ?';
+        let values = [name, city];
+
+        if (bannerPicture) {
+            query += ', banner = ?';
+            values.push(bannerPicture);
+        }
+
+        if (profilePicture) {
+            query += ', profile = ?';
+            values.push(profilePicture);
+        }
+
+        query += ' WHERE id = ?';
+        values.push(id);
+
+        const [result] = await connection.execute(query, values);
+        
+
+        if (result.affectedRows == 0) return res.status(404).json({ error: 'User not found' });
+
+        const [updatedUser] = await connection.execute('SELECT * FROM users WHERE id = ?', [id]);
+        connection.end();
+        if (updatedUser.length == 0) return res.status(404).json({ error: 'User not found' });
+        console.log("Responding")
+        res.status(200).json(updatedUser);
+    } catch (error) {
+        res.status(500).json({ error: 'Database error' });
+    }
 })
 
 //Edit PersonalInfo

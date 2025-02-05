@@ -1050,3 +1050,40 @@ export const editData = async (userData) => {
         return { error: 'Network error. Please try again later.' };
     }
 }
+
+export const editGeneralInfo = async (userData, bannerPicture, profilePicture) => {
+    try {
+        let dataToSend=new FormData();
+        dataToSend.append('profilePicture',profilePicture);
+        dataToSend.append('bannerPicture',bannerPicture);
+        dataToSend.append('name',userData.get('name'));
+        dataToSend.append('city',userData.get('city'));
+      
+        let res = await fetch(`${BACK_URL}/editGeneralInfo/${userData.get('id')}`, {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+            body: dataToSend,
+        });
+        console.log("lmao", userData.get('profilePicture'));
+        if (res.status === 401) {
+            const refreshResult = await refreshToken();
+            if (refreshResult.error) {
+                return { error: 'No se pudo renovar el token. Inicia sesión nuevamente.' };
+            }
+            return await editGeneralInfo(userData);
+        }
+        if (!res.ok) {
+            return { error: `HTTP error! status: ${res.status}` };
+        }
+        let response=await res.json();
+        response[0].banner=BACK_URL+response[0].banner
+        response[0].profile=BACK_URL+response[0].profile
+        console.log(response[0])
+        return response[0];
+    } catch (error) {
+        console.error('Error updating general info:', error);
+        throw error;
+    }
+}
