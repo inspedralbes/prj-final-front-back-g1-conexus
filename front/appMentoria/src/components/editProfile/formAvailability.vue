@@ -4,9 +4,9 @@
                 <form class="border-b border-gray-600 pb-4 mb-4">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label for="contactEmail" class="block font-medium">{{ $t("formAvailability.email") }}</label>
-                            <input v-model="personalInfo.contactEmail" type="email" id="contactEmail"
-                                class="w-full border border-gray-300 rounded-lg p-2 mt-1 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                            <label for="availabilityRange" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t("formAvailability.rangeLabel") }}</label>
+                            <span class="text-sm text-gray-500 dark:text-gray-400">{{ user.availibility }}</span>
+                            <!-- <VRangeComponent></VRangeComponent> -->
                         </div>
                     </div>
                 </form>
@@ -18,7 +18,8 @@
 <script setup>
 import { ref, onMounted, reactive } from "vue";
 import { useAppStore } from "@/stores/index";
-
+import VRangeComponent from 'v-range-component'
+import 'v-range-component/dist/styles.css'
 
 const appStore = useAppStore();
 
@@ -29,8 +30,6 @@ var banner = ref(null);
 
 onMounted(() => {
     user.value = appStore.getUser();
-    profile.value = user.value.profile;
-    banner.value = user.value.banner;
     console.log("pepepeppee"+user.value)
     if (typeof user.value.tags == "string") {
         try {

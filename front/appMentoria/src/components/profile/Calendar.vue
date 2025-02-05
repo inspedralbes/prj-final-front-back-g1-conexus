@@ -5,7 +5,7 @@
   <!-- Table -->
   <div class="border-b border-gray-600 pb-6">
     <div class="bg-white dark:bg-gray-700 mt-6 rounded-md shadow-md overflow-hidden">
-      <table class="min-w-full border-collapse">
+      <table v-if="availibility" class="min-w-full border-collapse">
         <thead>
           <tr class="bg-gray-200 dark:bg-gray-900">
             <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 dark:text-gray-300">
@@ -22,6 +22,13 @@
             <td class="py-3 px-4 text-sm" :class="hours ? 'text-green-600' : 'text-red-500'">
               {{ hours || 'No disponible' }}
             </td>
+          </tr>
+        </tbody>
+      </table>
+      <table v-else>
+        <tbody>
+          <tr>
+            <td class="py-3 px-4 text-sm text-gray-800 dark:text-white">{{ $t("calendar.noAvailability") }}</td>
           </tr>
         </tbody>
       </table>

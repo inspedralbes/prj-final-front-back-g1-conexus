@@ -70,9 +70,11 @@
 import { ref, onMounted } from "vue";
 import { useAppStore } from "@/stores/index";
 import {editData} from "@/services/communicationManager.js";
-import router from "@/router";
+import { useRouter } from 'vue-router';
+
 
 const appStore = useAppStore();
+const router = useRouter();
 
 var user = ref({});
 var profile = ref(null);
@@ -97,11 +99,10 @@ async function sendEditData(){
         dataToSend.Github = personalInfo.value.Github || null;
         dataToSend.title = personalInfo.value.academicTitle || null;
         dataToSend.id = user.value.id;
-        let res= await editData(dataToSend)
-        console.log(res);
+        let res = await editData(dataToSend)
         if(res.status==200){
             console.log("Data sent successfully");
-            router.push({ name: "myProfilePage" });
+            router.push({ name: "myprofile" });
         }
     } catch (error) {
         console.error("Error sending edit data:", error);

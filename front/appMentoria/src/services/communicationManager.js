@@ -1043,8 +1043,10 @@ export const editData = async (userData) => {
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
         }
-
-        return await response.json();
+        let res=await response.json();
+        console.log(res)
+        res.status=200
+        return res;
     } catch (error) {
         console.error('Network error:', error);
         return { error: 'Network error. Please try again later.' };
