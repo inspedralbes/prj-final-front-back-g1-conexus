@@ -21,6 +21,7 @@ import servicePage from '../views/servicesListPage.vue'
 import stadisticsPage from '@/views/stadisticsPage.vue';
 import requestsPage from '../views/mainRequests.vue'
 import editProfilePage from '@/views/editProfilePage.vue';
+import profileCard from '@/views/myProfilePage.vue';
 
 const routes = [
   {
@@ -42,6 +43,11 @@ const routes = [
     path: '/myprofile',
     name: 'myprofile',
     component: profilePage,
+  },
+  {
+    path: '/myCard',
+    name: 'myCard',
+    component: profileCard,
   },
   {
     path: '/addComunityPost',
@@ -127,7 +133,7 @@ const routes = [
     path: '/stadistics',
     name: 'stadisticsPage',
     component: stadisticsPage
-  }, 
+  },
   {
     path: '/editProfile',
     name: 'editProfilePage',
@@ -148,7 +154,7 @@ router.beforeEach((to, from, next) => {
   // Si el usuario no está verificado y está intentando acceder a una ruta que no es permitida
   if (user && !user.verified) {
     // Si no está verificado, solo permite acceso a 'myprofile', 'main' y 'login'
-    const allowedRoutes = ['login', 'main', 'myprofile', 'editProfilePage'];
+    const allowedRoutes = ['login', 'main', 'myprofile', 'editProfilePage', 'myCard'];
 
     if (allowedRoutes.includes(to.name)) {
       next(); // Permitimos el acceso a las rutas permitidas
