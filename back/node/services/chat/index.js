@@ -7,7 +7,7 @@ const fs = require('fs');
 const path = require('path');
 const dotenv = require('dotenv');
 // const { verifyToken } = require('../../middlewares/auth.js');
-const { verifyToken } = require('./auth/auth.js');
+const { verifyToken, refreshTokensDB } = require('/usr/src/app/middlewares/auth.js');
 
 function loadEnv(envPath) {
   const result = dotenv.config({ path: envPath });
@@ -26,13 +26,8 @@ app.use(express.json());
 app.use(cors({
     origin: '*',
     credentials: true,
-    allowedHeaders: ["Access-Control-Allow-Origin", "Content-Type"],
+    allowedHeaders: ["Content-Type", "Authorization"],
 }));
-
-app.use((req, res, next) => {
-  res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
-  next();
-});
 
 const server = createServer(app);
 const io = new Server(server, {
@@ -67,6 +62,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/getChats/:id', verifyToken, async (req, res) => {
+  console.log('Refresh tokens:', refreshTokensDB.values());
   const id = req.params.id;
   try {
     const messages = await Message.find();

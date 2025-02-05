@@ -10,7 +10,7 @@ function createTokens(user) {
     const accessToken = jwt.sign(
         { id: user.id, email: user.email },
         secretKey,
-        { expiresIn: '1m' }
+        { expiresIn: '1h' }
     );
 
     const refreshToken = jwt.sign(
@@ -20,11 +20,16 @@ function createTokens(user) {
     );
 
     refreshTokensDB.add(refreshToken);
+
+    console.log('Refresh tokens:', refreshTokensDB.values());
+
     return { accessToken, refreshToken };
 }
 
 // Middleware para verificar el token de acceso
 function verifyToken(req, res, next) {
+    console.log('bd:', refreshTokensDB.values());
+
     const authHeader = req.headers['authorization'];
     if (!authHeader) {
         return res.status(401).json({ error: 'Token es requerido' });
@@ -65,7 +70,7 @@ function refreshToken(req, res) {
         const newAccessToken = jwt.sign(
             { id: decoded.id, email: decoded.email },
             secretKey,
-            { expiresIn: '1m' }
+            { expiresIn: '1h' }
         );
         res.json({ accessToken: newAccessToken });
     } catch (err) {
