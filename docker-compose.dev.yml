@@ -23,10 +23,6 @@ services:
     links:
       - tr-final-mysql
       - tr-final-mongodb
-      - chat
-      - community
-      - employmentexchange
-      - statistics
 
   chat:
     build:

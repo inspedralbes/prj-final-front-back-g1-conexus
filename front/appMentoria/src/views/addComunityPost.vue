@@ -143,7 +143,7 @@ import { useRouter } from "vue-router";
 import { postCommunityPublication } from "@/services/communicationManager";
 import { useAppStore } from "@/stores/index";
 import Loading from "@/components/Loading.vue";
-import NavBar from "@/components/NavBar.vue";
+import NavBar from "@/components/navBar/NavBarApp.vue";
 
 const router = useRouter();
 const title = ref("");

@@ -10,7 +10,7 @@
 
 <script setup>
 
-import NavBar from '@/components/NavBar.vue';
+import NavBar from '@/components/navBar/NavBarApp.vue';
 import Header from '@/components/Header.vue';
 import NotificationList from '@/components/NotificationList.vue';
 

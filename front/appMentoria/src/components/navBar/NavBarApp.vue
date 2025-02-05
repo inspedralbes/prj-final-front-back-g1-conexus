@@ -101,7 +101,7 @@
 
 <script setup>
 import { ref } from "vue";
-import ButtonAddPost from "./buttonAddPost.vue";
+import ButtonAddPost from "../buttonAddPost.vue";
 
 const showButtonAddPost = ref(false);
 
