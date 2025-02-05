@@ -107,6 +107,7 @@ app.post("/addChat", async (req, res) => {
   console.log("req.body:", req.body);
   try {
     let message;
+    let isFirstInteraction = false;
     if (_id) {
       message = await Message.findByIdAndUpdate(
         _id,
@@ -117,8 +118,27 @@ app.post("/addChat", async (req, res) => {
       message = new Message({ user_one_id, user_two_id, reports, interactions });
       await message.save();
     }
+
+    // if (isFirstInteraction) {
+    //   console.log("eyyyyyyyyyyy estoy dentro");
+    //   const notificationPayload = {
+    //     user_id: user_two_id,
+    //     title: 'Nou missatge',
+    //     message: `Tens un nou missatge de ${user_one_id}!`
+    //   };
+
+    //   await fetch(chatEnv.ENDPOINT_URL_PUSH_NOTIFICATIONS + '/sendNotification', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify(notificationPayload)
+    //   });
+    // }
+
     res.json(message);
   } catch (err) {
+    console.error('Error en /addChat:', err);
     res.status(500).send(err);
   }
 });
@@ -209,10 +229,31 @@ io.on("connection", (socket) => {
     try {
       const chat = await Message.findById(chatId);
       if (chat) {
+        const isFirstInteraction = chat.interactions.length === 0;
         chat.interactions.push(newMessage);
         await chat.save();
-        io.emit("receiveMessage", newMessage);
-        console.log("Message saved:", newMessage);
+        io.emit('receiveMessage', newMessage);
+        console.log('Message saved:', newMessage);
+
+        if (isFirstInteraction) {
+          const notificationPayload = {
+            user_id: userId === chat.user_one_id ? chat.user_two_id : chat.user_one_id,
+            title: 'Nou chat obert',
+            message: `Tens un nou missatge de ${userId}!`
+          };
+
+          console.log("toy dentro perras");
+
+          const response = await fetch(chatEnv.ENDPOINT_URL_PUSH_NOTIFICATIONS + '/sendNotification', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(notificationPayload)
+          });
+
+          console.log("response", response.json());
+        }
       }
     } catch (err) {
       console.error("Error saving message:", err);

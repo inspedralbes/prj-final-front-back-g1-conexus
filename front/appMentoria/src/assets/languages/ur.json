@@ -1,4 +1,10 @@
 {
+    "mainPage": {
+        "allow": "اطلاعات کی اجازت دیں",
+        "questionPermission": "کیا آپ واقعات یا اپ ڈیٹس کے بارے میں جاننے کے لئے اطلاعات وصول کرنا چاہتے ہیں؟",
+        "acceptedPermission": "اجازت دیں",
+        "rejectedPermission": "روکیں"
+    },
     "chatContent": {
         "writeMessage": "پیغام لکھیں..."
     },

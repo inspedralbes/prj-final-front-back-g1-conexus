@@ -1,4 +1,10 @@
 {
+    "mainPage": {
+        "allow": "通知を許可する",
+        "questionPermission": "イベントや更新情報を受け取るために通知を受け取りたいですか？",
+        "acceptedPermission": "許可する",
+        "rejectedPermission": "ブロックする"
+    },
     "chatContent": {
         "writeMessage": "メッセージを書く..."
     },
