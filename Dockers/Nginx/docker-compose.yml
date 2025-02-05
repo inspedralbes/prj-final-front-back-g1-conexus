@@ -11,6 +11,7 @@ services:
       - /data/nginxproxymanager/config.json:/app/config/production.json
       - /data/nginxproxymanager/data:/data
       - /etc/letsencrypt:/etc/letsencrypt
+      - /root/prj-final-front-back-g1-conexus/front/appMentoria/dist:/data/web
 
   db:
     image: jc21/mariadb-aria:latest

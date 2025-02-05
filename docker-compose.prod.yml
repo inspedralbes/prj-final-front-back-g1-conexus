@@ -14,28 +14,21 @@ services:
     build:
       dockerfile: ./back/node/dev.Dockerfile
       context: .
-    command: sh -c "cp .env.prod .env && npm install && npm run dev"
+    command: sh -c "cp .env.prod .env && npm install -g pnpm && pnpm -v && pnpm install && pnpm run dev"
     volumes:
       - ./back/node:/usr/src/app
     working_dir: /usr/src/app
     ports:
       - 3000:3000
 
-  apache:
-    image: httpd:latest
-    ports:
-      - '3010:80'
-    volumes:
-      - ./front/appMentoria/dist:/usr/local/apache2/htdocs/
-
   microprocesos_api:
     build:
-      dockerfile: ./back/node/dev.Dockerfile
+      dockerfile: ./back/microprocesos_api/.dev.Dockerfile
       context: .
-    command: sh -c "cp .env.prod .env && npm install && node server.js"
+    command: sh -c "cp .env.prod .env && npm install -g pnpm && pnpm -v && pnpm install && chmod 777 .script.prod.sh && ./.script.prod.sh && node server.js"
     volumes:
       - ./back/microprocessos_api:/usr/src/app
-      - ./back/node/services:/usr/src/app/services
+      - ./back/node/services:/usr/src/node/services
     working_dir: /usr/src/app
     ports:
       - 3001:3001
@@ -46,6 +39,7 @@ services:
       - 3006:3006
       - 3007:3007
       - 3008:3008
+      - 3013:24848
     links:
      - tr2g2-mysql
      - tr2g2-mongodb
