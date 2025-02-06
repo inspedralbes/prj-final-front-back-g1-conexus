@@ -2,12 +2,17 @@
 export default {
   darkMode: 'class',
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        buttomLight: 'var(--buttom-light)',
+      }
+    },
   },
   plugins: [],
   content: [
     "./index.html",
     "./src/**/*.{vue,js,ts,jsx,tsx}",
+    "./components/**/*.{vue,js,ts,jsx,tsx}",
   ]
 }
 

@@ -91,7 +91,7 @@ onMounted(async () => {
     />
     <div
       v-else
-      class="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900"
+      class="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-dark-all"
     >
       <Loading />
     </div>

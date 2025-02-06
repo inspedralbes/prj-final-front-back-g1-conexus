@@ -1,11 +1,11 @@
 <template>
   <div class="flex flex-col min-h-screen">
     <Header class="fixed top-0 left-0 right-0 z-10"></Header>
-    <NavBarWeb class="hidden lg:fixed lg:block lg:top-0 lg:left-0 lg:bottom-auto lg:w-45 lg:h-full lg:rounded-none"></NavBarWeb>
+    <NavBarWeb class="hidden lg:fixed md:w-60 lg:block lg:top-0 py-9 lg:left-0 lg:bottom-auto lg:w-45 lg:h-full lg:rounded-none"></NavBarWeb>
     <NavBarApp 
       class="fixed bottom-0 left-0 right-0 lg:hidden">
     </NavBarApp>
-    <main class="flex-grow mt-16 mb-20 lg:mb-0"> 
+    <main class="flex-grow mt-16 mb-20 lg:mb-0 md:ml-20"> 
       <ViewPostList></ViewPostList>
     </main>
   </div>
