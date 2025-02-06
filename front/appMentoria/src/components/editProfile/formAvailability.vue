@@ -33,12 +33,42 @@
 </template>
 
 <script setup>
-import { ref, onMounted, reactive } from "vue";
+import { ref, onMounted, reactive, watch } from "vue";
 import { useAppStore } from "@/stores/index";
 import { updateAvailability } from "@/services/communicationManager";
 import { useI18n } from "vue-i18n";
 import router from "@/router";
 
+const { t, locale } = useI18n();
+watch(locale, () => {
+    retranslate();
+});
+
+function retranslate(){
+ availabilities.value.forEach((availability, index) => {
+    if(index==0){
+        availability.day = t("formAvailability.monday");
+    }
+    if(index==1){
+        availability.day = t("formAvailability.tuesday");
+    }
+    if(index==2){
+        availability.day = t("formAvailability.wednesday");
+    }
+    if(index==3){
+        availability.day = t("formAvailability.thursday");
+    }
+    if(index==4){
+        availability.day = t("formAvailability.friday");
+    }
+    if(index==5){
+        availability.day = t("formAvailability.saturday");
+    }
+    if(index==6){
+        availability.day = t("formAvailability.sunday");
+    }
+});
+}
 
 const appStore = useAppStore();
 const hours = ref([
@@ -67,8 +97,6 @@ const hours = ref([
     "22:00", "22:15", "22:30", "22:45",
     "23:00", "23:15", "23:30", "23:45"
 ]);
-
-const { t } = useI18n();
 
 const week = ref([
 t("formAvailability.monday"),

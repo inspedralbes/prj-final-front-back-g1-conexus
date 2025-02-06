@@ -58,7 +58,6 @@ async function validateLogin() {
     return null; // Retorna null si ocurre un error inesperado
   }
 }
-let language
 onMounted(async () => {
   
   const darkModePreference = localStorage.getItem("darkMode");
