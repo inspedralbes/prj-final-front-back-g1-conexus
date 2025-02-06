@@ -23,11 +23,25 @@ services:
     links:
       - tr-final-mysql
 
-  tr-final-microprocesos:
+  # tr-final-microservices:
+  #   build:
+  #     context: ./back/microprocessos_api
+  #     dockerfile: ../node/dev.Dockerfile
+  #   command: sh -c "cp .env.DEV .env && npm install && npm run dev"
+  #   volumes:
+  #     - ./back/microprocessos_api:/usr/src/app
+  #     - ./back/node/services:/
+  #   working_dir: /usr/src/app
+  #   ports:
+  #     - 4000:4000
+  #   depends_on:
+  #     - tr-final-mongodb
+
+  microprocesos_api:
     build:
-      dockerfile: ./back/microprocessos_api/dev.Dockerfile
+      dockerfile: ./back/microprocesos_api/.dev.Dockerfile
       context: .
-    command: sh -c "cp .env.dev .env && npm install && chmod 777 .script.dev.sh && ./.script.dev.sh && npm run dev"
+    command: sh -c "cp .env.prod .env && npm install -g pnpm && pnpm -v && pnpm install && chmod 777 .script.prod.sh && ./.script.prod.sh && node server.js"
     volumes:
       - ./back/microprocessos_api:/usr/src/app
       - ./back/node/services:/usr/src/node/services
@@ -43,8 +57,8 @@ services:
       - 3008:3008
       - 4000:4000
     links:
-      - tr-final-mysql
-      - tr-final-mongodb
+      - tr2g2-mysql
+      - tr2g2-mongodb
 
   tr-final-mongodb:
     image: mongo

@@ -3,7 +3,6 @@ const { createServer } = require('http');
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const fs = require('fs');
 const path = require('path');
 const dotenv = require('dotenv');
 const { verifyToken, refreshTokensDB } = require('../../middlewares/auth.js');

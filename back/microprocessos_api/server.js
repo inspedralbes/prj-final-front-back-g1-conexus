@@ -229,6 +229,7 @@ app.get('/startAllServices', (req, res) => {
 
         console.log(`Started service ${service.name} with id ${service.id}`);
     });
+    res.send(services);
 });
 
 app.get('/getStatusService/:id', (req, res) => {
@@ -258,6 +259,7 @@ app.get('/stopService/:id', (req, res) => {
     } else {
         res.status(404).send('Service not found');
     }
+    res.send(services);
 });
 
 app.get('/stopAllServices', (req, res) => {

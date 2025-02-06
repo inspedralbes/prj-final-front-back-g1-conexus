@@ -2,7 +2,6 @@
 const fileUpload = require('express-fileupload');
 const { Server } = require('socket.io');
 const { createServer } = require('http');
-const jwt = require('jsonwebtoken');
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const mysql = require('mysql2/promise');
