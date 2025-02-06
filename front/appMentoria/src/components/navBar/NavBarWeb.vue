@@ -1,8 +1,8 @@
 <template>
     <div>
       <div class="flex flex-1 bg-gray-50">
-        <div class="hidden md:flex md:w-64 md:flex-col lg:w-80">
-          <div class="flex flex-col flex-grow pt-5 overflow-y-auto bg-[#fff9ee]">  
+        <div class="hidden md:flex md:w-64 md:flex-col lg:w-80 lg:flex lg:flex-col lg:h-full">
+          <div class="flex flex-col flex-grow pt-5 overflow-y-auto bg-[var(--containers-light)]">  
             <div class="px-4 mt-8 py-5">
               <label for="" class="sr-only"> Search </label>
               <div class="relative">
@@ -99,11 +99,14 @@
                     Settings
                   </a>
                 </nav> -->
-              </div>
+                <button class="flex items-center px-4 text-sm font-medium transition-all duration-200 text-gray-900 hover:text-white rounded-lg hover:bg-buttomLight group">
+                  <svg class="w-5 h-5 mr-6 text-gray-800 dark:text-white group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                      <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4.243a1 1 0 1 0-2 0V11H7.757a1 1 0 1 0 0 2H11v3.243a1 1 0 1 0 2 0V13h3.243a1 1 0 1 0 0-2H13V7.757Z" clip-rule="evenodd"/>
+                  </svg>
+                </button>
 
 
                 <div class="pb-4 mt-20">
-                  <hr class="border-gray-300">
                 <button type="button" class="flex items-center justify-between w-full px-4 py-3 text-sm font-medium text-gray-900 transition-all duration-200 rounded-lg hover:bg-gray-100">
                   <img class="flex-shrink-0 object-cover w-9 h-9 mr-3 rounded-full" :src="`${profile}`" alt="User Photo" />
                   {{ name }}
@@ -112,6 +115,7 @@
                     
                   </svg>
                 </button>
+              </div>
               </div>
             </div>
           </div>

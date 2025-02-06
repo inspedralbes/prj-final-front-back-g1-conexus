@@ -5,6 +5,7 @@ export default {
     extend: {
       colors: {
         buttomLight: 'var(--buttom-light)',
+        containersLight: 'var(--containers-light)',
       }
     },
   },
