@@ -131,6 +131,10 @@ app.post('/cards', async (req, res) => {
     }
 });
 
+app.delete('/cards', async (req, res) => {
+
+});
+
 
 
 app.listen(port, () => {

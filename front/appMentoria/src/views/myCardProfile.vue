@@ -1,24 +1,48 @@
 <template>
   <Header class="shadow-lg shadow-black/30"></Header>
   <div class="p-4">
-    <h2 class="text-2xl font-bold mb-6 text-center">Tarjeta de Visita</h2>
-    <div class="border p-6 rounded shadow-md bg-white max-w-lg mx-auto">
-      <!-- Formulario de opciones -->
-      <div class="mb-4 flex items-center justify-between">
-        <span class="text-lg">{{ user.name }}</span>
-        <input type="checkbox" v-model="visibleFields.name" class="w-6 h-6" />
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div>
+        <h2 class="text-2xl font-bold mb-6 text-center">Tarjeta de Visita</h2>
+        <div class="border p-6 rounded shadow-md bg-white max-w-lg mx-auto">
+          <!-- Formulario de opciones -->
+          <div class="mb-4 flex items-center justify-between">
+            <span class="text-lg">{{ user.name }}</span>
+            <input
+              type="checkbox"
+              v-model="visibleFields.name"
+              class="w-6 h-6"
+            />
+          </div>
+          <div class="mb-4 flex items-center justify-between">
+            <span class="text-lg">{{ user.email }}</span>
+            <input
+              type="checkbox"
+              v-model="visibleFields.email"
+              class="w-6 h-6"
+            />
+          </div>
+          <div class="mb-4 flex items-center justify-between">
+            Titol
+            <input
+              type="checkbox"
+              v-model="visibleFields.titol"
+              class="w-6 h-6"
+            />
+          </div>
+          <div class="mb-4 flex items-center justify-between">
+            QRcode
+            <input
+              type="checkbox"
+              v-model="visibleFields.qrCode"
+              class="w-6 h-6"
+            />
+          </div>
+        </div>
       </div>
-      <div class="mb-4 flex items-center justify-between">
-        <span class="text-lg">{{ user.email }}</span>
-        <input type="checkbox" v-model="visibleFields.email" class="w-6 h-6" />
-      </div>
-      <div class="mb-4 flex items-center justify-between">
-        Titol
-        <input type="checkbox" v-model="visibleFields.titol" class="w-6 h-6" />
-      </div>
-      <div class="mb-4 flex items-center justify-between">
-        QRcode
-        <input type="checkbox" v-model="visibleFields.qrCode" class="w-6 h-6" />
+      <div>
+        <h2 class="text-2xl font-bold mb-6 text-center">Dissenys</h2>
+        <DesignsCards></DesignsCards>
       </div>
     </div>
   </div>
@@ -134,6 +158,7 @@
   <script setup>
 import { onMounted, reactive, ref } from "vue";
 import Header from "@/components/Header.vue";
+import DesignsCards from "@/components/profileCards/desingsProfileCards.vue";
 import QRCode from "qrcode";
 import { useAppStore } from "@/stores/index";
 import { uploadCards } from "@/services/communicationManager";
