@@ -28,7 +28,7 @@
                      Principal
                   </a>
   
-                  <a href="#" @click="selectItem('ofertas')" :class="{'bg-buttomLight text-white': selectItem === 'ofertas', 'text-gray-900 hover:text-white hover:bg-buttomLight': selectItem !== 'ofertas'}" class="flex items-center px-4 py-2.5 text-sm font-medium transition-all duration-200 text-gray-900 hover:text-white rounded-lg hover:bg-buttomLight group">
+                  <a href="#" @click="selectItem('ofertas', $router.push('/requests'))" :class="{'bg-buttomLight text-white': selectItem === 'ofertas', 'text-gray-900 hover:text-white hover:bg-buttomLight': selectItem !== 'ofertas'}" class="flex items-center px-4 py-2.5 text-sm font-medium transition-all duration-200 text-gray-900 hover:text-white rounded-lg hover:bg-buttomLight group">
                     <svg class="w-5 h-5 mr-4 text-gray-800 dark:text-white group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2">
                       <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 0 0-2 2v4m5-6h8M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m0 0h3a2 2 0 0 1 2 2v4m0 0v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-6m18 0s-4 2-9 2-9-2-9-2m9-2h.01"/>
                     </svg>
@@ -57,7 +57,7 @@
                 <hr class="border-gray-300" />
   
                 <nav class="flex-1 space-y-2">
-                  <a href="#" @click="selectItem('chat')" :class="{'bg-buttomLight text-white': selectItem === 'chat', 'text-gray-900 hover:text-white hover:bg-buttomLight': selectItem !== 'chat'}" class="flex items-center px-4 py-2.5 text-sm font-medium transition-all duration-200 text-gray-900 hover:text-white rounded-lg hover:bg-buttomLight group">
+                  <a href="#" @click="selectItem('chat', router.push('/chatList'))" :class="{'bg-buttomLight text-white': selectItem === 'chat', 'text-gray-900 hover:text-white hover:bg-buttomLight': selectItem !== 'chat'}" class="flex items-center px-4 py-2.5 text-sm font-medium transition-all duration-200 text-gray-900 hover:text-white rounded-lg hover:bg-buttomLight group">
                     <svg class="w-5 h-5  mr-4 text-gray-800 dark:text-white group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2">
                       <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17h6l3 3v-3h2V9h-2M4 4h11v8H9l-3 3v-3H4V4Z"/>
                     </svg>
@@ -124,6 +124,7 @@
   import { ref, onMounted, reactive } from 'vue';
   import SubMenu from '../SubMenu.vue';
   import { useAppStore } from '@/stores/index';
+import router from '@/router';
 
 
   const appStore = useAppStore();
