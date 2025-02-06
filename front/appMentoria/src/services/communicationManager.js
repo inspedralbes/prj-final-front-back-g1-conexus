@@ -1130,44 +1130,64 @@ export const getMyPeticions = async (userID) => {
 
 export const reportChat = async (message_id, user_id, content, report) => {
     try {
-      const response = await fetch(`${BACK_URL}/reports/chats`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ message_id, user_id, content, report }),
-      });
-  
-      if (!response.ok) {
-        return { error: `HTTP error! status: ${response.status}` };
-      }
-  
-      return await response.json();
+        const response = await fetch(`${BACK_URL}/reports/chats`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ message_id, user_id, content, report }),
+        });
+
+        if (!response.ok) {
+            return { error: `HTTP error! status: ${response.status}` };
+        }
+
+        return await response.json();
     } catch (error) {
-      console.error('Error reporting chat:', error);
-      return { error: 'Network error. Please try again later.' };
+        console.error('Error reporting chat:', error);
+        return { error: 'Network error. Please try again later.' };
     }
-  };
+};
 
 
-  export const reportChatMongo = async (chatId, messageId) => {
+export const reportChatMongo = async (chatId, messageId) => {
     try {
-      const response = await fetch(`${CHAT_URL}/reportMessage`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ chatId, messageId }),
-      });
-  
-      if (!response.ok) {
-        return { error: `HTTP error! status: ${response.status}` };
-      }
-  
-      return await response.json();
+        const response = await fetch(`${CHAT_URL}/reportMessage`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ chatId, messageId }),
+        });
+
+        if (!response.ok) {
+            return { error: `HTTP error! status: ${response.status}` };
+        }
+
+        return await response.json();
     } catch (error) {
-      console.error('Error reporting chat:', error);
-      return { error: 'Network error. Please try again later.' };
+        console.error('Error reporting chat:', error);
+        return { error: 'Network error. Please try again later.' };
     }
-  };
-  
+};
+
+
+export const uploadCards = async (userId, cardFrontBase64, cardBackBase64) => {
+    try {
+        const response = await fetch(`${import.meta.env.VITE_URL_BACK_CARDS}/cards`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ user_id: userId, cardFront: cardFrontBase64, cardBack: cardBackBase64 }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to upload the card');
+        }
+
+    } catch (error) {
+        console.error('Error al subir la tarjeta:', error);
+        throw new Error('No se pudo subir la tarjeta');
+    }
+};

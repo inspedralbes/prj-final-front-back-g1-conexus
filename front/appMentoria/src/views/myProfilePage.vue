@@ -1,21 +1,31 @@
 <template>
   <Header class="shadow-lg shadow-black/30"></Header>
 
-  <div v-if="user.value" class="dark:bg-gray-900 p-4 text-gray-900 dark:text-gray-100">
+  <div
+    v-if="user.value"
+    class="dark:bg-gray-900 p-4 text-gray-900 dark:text-gray-100"
+  >
     <!-- User - Banner & Profile Image -->
-    <BannerProfile :banner="banner" :profile="profile" :user="user"/>
+    <BannerProfile :banner="banner" :profile="profile" :user="user" />
 
     <!-- User - Personal Info -->
+    <PersonalCards :user="user" />
     <PersonalInfo :user="user" />
 
     <!-- User - Availibility -->
-    <div v-if="user.value.availibility" class="dark:bg-gray-800 bg-white p-6 rounded-xl shadow-lg shadow-black/30 my-4">
+    <div
+      v-if="user.value.availibility"
+      class="dark:bg-gray-800 bg-white p-6 rounded-xl shadow-lg shadow-black/30 my-4"
+    >
       <Calendar :availibilityJson="JSON.stringify(user.value.availibility)" />
     </div>
   </div>
 
   <!-- If !users -->
-  <div v-else class="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
+  <div
+    v-else
+    class="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900"
+  >
     <Loading />
   </div>
 </template>
@@ -28,6 +38,7 @@ import Loading from "@/components/Loading.vue";
 import Calendar from "@/components/profile/Calendar.vue";
 import BannerProfile from "@/components/profile/BannerProfile.vue";
 import PersonalInfo from "@/components/profile/PersonalInfo.vue";
+import PersonalCards from "@/components/profileCards/allProfileCards.vue";
 
 const appStore = useAppStore();
 

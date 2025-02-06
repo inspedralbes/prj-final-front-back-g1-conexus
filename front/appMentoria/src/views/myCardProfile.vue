@@ -1,120 +1,220 @@
 <template>
   <Header class="shadow-lg shadow-black/30"></Header>
-  <div>
-    <h3>AAAAAAAAAAAAAAAAAAAAAA</h3>
-    <h2>BBBBBBBBBBBBBBBBBBBBBB</h2>
+  <div class="p-4">
+    <h2 class="text-2xl font-bold mb-6 text-center">Tarjeta de Visita</h2>
+    <div class="border p-6 rounded shadow-md bg-white max-w-lg mx-auto">
+      <!-- Formulario de opciones -->
+      <div class="mb-4 flex items-center justify-between">
+        <span class="text-lg">{{ user.name }}</span>
+        <input type="checkbox" v-model="visibleFields.name" class="w-6 h-6" />
+      </div>
+      <div class="mb-4 flex items-center justify-between">
+        <span class="text-lg">{{ user.email }}</span>
+        <input type="checkbox" v-model="visibleFields.email" class="w-6 h-6" />
+      </div>
+      <div class="mb-4 flex items-center justify-between">
+        Titol
+        <input type="checkbox" v-model="visibleFields.titol" class="w-6 h-6" />
+      </div>
+      <div class="mb-4 flex items-center justify-between">
+        QRcode
+        <input type="checkbox" v-model="visibleFields.qrCode" class="w-6 h-6" />
+      </div>
+      <div class="mb-4 flex items-center justify-between">
+        Favicon Icon
+        <input
+          type="checkbox"
+          v-model="visibleFields.icon_favicon"
+          class="w-6 h-6"
+        />
+      </div>
+    </div>
   </div>
-  <!-- <div class="p-4">
-    <h2 class="text-xl font-bold mb-4">Editar Tarjeta de Visita</h2>
-    <input
-      v-model="user.name"
-      placeholder="Nombre"
-      class="border p-2 mb-2 w-full rounded"
-    />
-    <input
-      v-model="user.email"
-      placeholder="Email"
-      class="border p-2 mb-2 w-full rounded"
-    />
-    <input
-      type="file"
-      @change="handleProfilePicture"
-      class="border p-2 mb-2 w-full rounded"
-    />
-    <input
-      type="file"
-      @change="handleBannerImage"
-      class="border p-2 mb-4 w-full rounded"
-    /> -->
-  <!-- <DesignsProfileCards @select-design="setDesign" /> -->
 
-  <!-- <h3 class="text-lg font-semibold mt-6">Previsualización</h3>
-    <div class="flex justify-center items-center mt-4">
+  <h3 class="text-xl font-semibold mt-8 text-center">Previsualització</h3>
+  <div class="flex justify-center items-center mt-6 relative p-4">
+    <!-- Tarjetas de visita (frontal y trasera al lado) -->
+    <div class="flex">
+      <!-- Tarjeta frontal -->
+      <svg
+        width="500"
+        height="280"
+        class="shadow-lg rounded-lg bg-black"
+        ref="cardFront"
+      >
+        <defs>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="3.5" result="coloredBlur" />
+            <feMerge>
+              <feMergeNode in="coloredBlur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
 
-      <svg width="300" height="180" class="shadow-lg rounded-lg">
-
-        <rect width="100%" height="100%" :fill="selectedDesign.color" />
-        <image
-          :x="10"
-          :y="10"
-          :width="50"
-          :height="50"
-          :href="profilePicture"
-          class="rounded-full"
-        />
-        <image
-          :x="70"
-          :y="10"
-          :width="220"
-          :height="50"
-          :href="bannerImage"
-          class="rounded-lg"
-        />
-        <text x="20" y="80" font-size="20" class="font-semibold text-white">
+        <rect width="100%" height="100%" fill="black" />
+        <text
+          v-if="visibleFields.name"
+          x="50"
+          y="120"
+          font-size="32"
+          font-weight="bold"
+          fill="gold"
+          filter="url(#glow)"
+          class="font-serif italic"
+        >
           {{ user.name }}
         </text>
-        <text x="20" y="110" font-size="14" class="text-white">
+        <text
+          v-if="visibleFields.titol"
+          x="180"
+          y="160"
+          font-size="16"
+          font-weight="bold"
+          fill="gold"
+          filter="url(#glow)"
+          class="font-serif italic"
+        >
+          Web developer
+        </text>
+        <image
+          v-if="visibleFields.icon_favicon"
+          x="450"
+          y="230"
+          width="50"
+          height="50"
+          href="/favicon.ico"
+          class="rounded-md"
+        />
+      </svg>
+
+      <!-- Tarjeta posterior -->
+      <svg
+        width="500"
+        height="280"
+        class="shadow-lg rounded-lg bg-black"
+        ref="cardBack"
+      >
+        <defs>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="3.5" result="coloredBlur" />
+            <feMerge>
+              <feMergeNode in="coloredBlur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+
+        <rect width="100%" height="100%" fill="black" />
+        <text
+          v-if="visibleFields.email"
+          x="50"
+          y="120"
+          font-size="16"
+          font-weight="bold"
+          fill="gold"
+          filter="url(#glow)"
+          class="font-serif italic"
+        >
           {{ user.email }}
         </text>
-
-        <g v-if="showBack">
-          <rect width="100%" height="100%" :fill="selectedDesign.color" />
-          <text x="20" y="50" font-size="14" class="font-semibold text-white">
-            Código QR
-          </text>
-          <image
-            x="70"
-            y="50"
-            width="100"
-            height="100"
-            :href="qrCodeUrl"
-            class="rounded-md"
-          />
-        </g>
+        <image
+          v-if="visibleFields.qrCode"
+          x="400"
+          y="180"
+          width="80"
+          height="80"
+          :href="qrCodeUrl"
+          class="rounded-md"
+        />
       </svg>
-    </div> -->
+    </div>
+
+    <!-- Botón para guardar los cambios -->
+    <button
+      class="absolute bottom-4 right-4 bg-gray-700 text-white p-2 rounded-full"
+      @click="saveChanges"
+    >
+      Save Changes
+    </button>
+  </div>
 </template>
   <script setup>
-import { ref, watch } from "vue";
-import Header from "@/components/Header.vue";
-import QRCode from "qrcode";
-import { useUserStore } from "@/stores/user";
+import { onMounted, reactive, ref } from "vue";
+import { useAppStore } from "@/stores/index";
+import { uploadCards } from "@/services/communicationManager";
 
-// const user = useUserStore();
-// const selectedDesign = ref({ color: "#e0e0e0" });
-// const showBack = ref(false);
-// const qrCodeUrl = ref("");
+const appStore = useAppStore();
+const user = reactive({});
+const visibleFields = reactive({
+  name: true,
+  title: true,
+  email: true,
+  titol: true,
+  location: true,
+  phone: false,
+  skills: true,
+  qrCode: true,
+  icon_favicon: true,
+});
 
-// // Generar el QR dinámicamente cuando cambian los datos
-// const generateQRCode = () => {
-//   const url = `https://www.ejemplo.com/perfil/${user.name}`;
-//   QRCode.toDataURL(url)
-//     .then((url) => {
-//       qrCodeUrl.value = url;
-//     })
-//     .catch((err) => console.error(err));
-// };
+const cardFront = ref(null);
+const cardBack = ref(null);
+const generateQRCode = () => {
+  const url = `https://www.ejemplo.com/perfil/${user.name}`;
+  QRCode.toDataURL(url)
+    .then((url) => {
+      qrCodeUrl.value = url;
+    })
+    .catch((err) => console.error(err));
+};
 
-// // Verificar cambios en los datos del usuario
-// watch([user.name, user.email], () => {
-//   generateQRCode();
-// });
+onMounted(() => {
+  Object.assign(user, appStore.getUser());
+  generateQRCode();
+});
 
-// // Manejar cambios de imagen
-// const handleProfilePicture = (event) => {
-//   const file = event.target.files[0];
-//   user.setProfilePicture(URL.createObjectURL(file));
-// };
+async function svgToBase64(svgElement) {
+  const svgString = new XMLSerializer().serializeToString(svgElement);
+  const blob = new Blob([svgString], { type: "image/svg+xml" });
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result.split(",")[1]);
+    reader.readAsDataURL(blob);
+  });
+}
 
-// const handleBannerImage = (event) => {
-//   const file = event.target.files[0];
-//   user.setBannerImage(URL.createObjectURL(file));
-// };
+async function saveChanges() {
+  try {
+    if (!cardFront.value || !cardBack.value) {
+      console.error("No se encontraron los elementos SVG de las tarjetas");
+      return;
+    }
 
-// // Cambiar el diseño de la tarjeta
-// const setDesign = (design) => {
-//   selectedDesign.value = design;
-// };
+    const cardFrontBase64 = await svgToBase64(cardFront.value);
+    console.log("Front SVG base64:", cardFrontBase64);
+    const cardBackBase64 = await svgToBase64(cardBack.value);
+
+    console.log("Back SVG base64:", cardBackBase64);
+
+    console.log("user id", user.id);
+
+    const response = await uploadCards(
+      user.id,
+      cardFrontBase64,
+      cardBackBase64
+    );
+    console.log("targeta guardada correctamente", response);
+    // appStore.setCardImages(frontImageUrl, backImageUrl);
+    // console.log(
+    //   "targeta guardad en pinia",
+    //   appStore.getUser().cardFrontImage,
+    //   appStore.getUser().cardBackImage
+    // );
+  } catch (error) {
+    console.error("Error al guardar los cambios:", error);
+  }
+}
 </script>
   <style scoped>
 /* .business-card-container {

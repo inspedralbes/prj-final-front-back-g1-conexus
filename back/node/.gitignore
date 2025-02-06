@@ -24,3 +24,6 @@
 
 /services/push-notifications/node_modules
 /services/push-notifications/.env
+
+/services/cards/node_modules
+/services/cards/.env
