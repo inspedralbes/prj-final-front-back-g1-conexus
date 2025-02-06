@@ -1,10 +1,13 @@
 import express from "express";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { encode } from 'gpt-tokenizer';
+import mysql from "mysql2/promise";
 import dotenv from "dotenv";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
+import fetch from "node-fetch";
+import fs from "fs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -22,6 +25,7 @@ const iatextEnd = loadEnv(path.resolve(__dirname, './.env'));
 const app = express();
 const port = iatextEnd.PORT;
 
+app.use(express.json());
 app.use(cors({
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
@@ -31,7 +35,6 @@ app.use((req, res, next) => {
     res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
     next();
 });
-
 // app.use(fileUpload());
 // Asegúrate de que el middleware para parsear JSON esté configurado
 app.use(express.json());
@@ -48,14 +51,170 @@ function extractJsonContent(responseText) {
 
 let totalTokensAcumulados = 0;
 
-function checkPublications() {
-
-
-}
+const dbConfig = {
+    host: iatextEnd.MYSQL_HOST,
+    user: iatextEnd.MYSQL_USER,
+    password: iatextEnd.MYSQL_PASS,
+    database: iatextEnd.MYSQL_DB
+};
 
 app.get("/", (req, res) => {
     res.send("Hello World! I am a comment service");
+
 });
+
+checkPublications();
+async function checkPublications() {
+    try {
+        const connection = await mysql.createConnection(dbConfig);
+        const [rows] = await connection.execute("SELECT id, typesPublications_id, user_id, title, description FROM publications WHERE text_ia = 0");
+
+        console.log(`Found ${rows.length} unverified publications.`);
+
+        for (const publicationsUnverified of rows) {
+            const { id, typesPublications_id, title, description } = publicationsUnverified;
+
+            let endpoint;
+
+            if (typesPublications_id === 1) {
+                endpoint = iatextEnd.ENDPOINT_URL_IATEXT + "/classifyTextCommunity";
+            } else if (typesPublications_id === 2) {
+                endpoint = iatextEnd.ENDPOINT_URL_IATEXT + "/classifyTextOffers";
+            } else {
+                console.error("Invalid type of publication.");
+                continue;
+            }
+            console.log("endpoint", endpoint);
+            try {
+                //title classification
+                const titleResponse = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ comment: title }),
+                });
+
+                if (!titleResponse.ok) {
+                    throw new Error(
+                        `Failed to classify title for publication ID: ${id}. Status: ${response.status}`
+                    );
+                }
+
+                const { category: titleCategory, reason: titleReason } = await titleResponse.json();
+                console.log(`Publication ID: ${id}, Title category: ${titleCategory}, Reason: ${titleReason || ""}`);
+
+                //description classification
+                const descriptionResponse = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ comment: description }),
+                });
+
+                if (!descriptionResponse.ok) {
+                    throw new Error(
+                        `Failed to classify description for publication ID: ${id}. Status: ${descriptionResponse.status}`
+                    );
+                }
+
+                const { category: categoryDescription, reason: reasonDescription } = await descriptionResponse.json();
+
+                console.log(`Publication id: ${id}, category: ${categoryDescription}, reason: ${reasonDescription || ""}`);
+
+                await connection.execute("UPDATE publications SET text_ia = 1 WHERE id = ?", [id]);
+
+                const isApropiateCategory = ["POSITIVO", "POCO_OFENSIVO"];
+                if (!isApropiateCategory.includes(categoryDescription) || !isApropiateCategory.includes(titleCategory)) {
+                    await connection.execute("UPDATE publications SET reports = 1 WHERE id = ?", [id]);
+
+                    console.log(`Publication ID: ${id} has been reported.`);
+
+                    const resultReport = {
+                        publication_id: id,
+                        user_id: publicationsUnverified.user_id,
+                        report: reasonDescription || titleReason,
+                        status: 'pending',
+                    }
+
+                    let endpointPubli;
+
+                    if (typesPublications_id === 1) {
+                        endpointPubli = iatextEnd.ENDPOINT_URL_COMMUNITY + "/reports/publications";
+                    } else if (typesPublications_id === 2) {
+                        endpointPubli = iatextEnd.ENDPOINT_URL_EMPLOYMENTEXCHANGE + "/reports/publications";
+                    }
+
+                    try {
+                        const reportResponse = await fetch(endpointPubli, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(resultReport),
+                        });
+
+                        if (!reportResponse.ok) {
+                            throw new Error(
+                                `Failed to report publication ID: ${id}. Status: ${reportResponse.status}`
+                            );
+                        }
+                    } catch (error) {
+                        console.error("Error processing request:", error);
+                    }
+
+                    // const [resultReport] = await connection.execute(
+                    //     'INSERT INTO reportsPublications (publication_id, user_id, report, status) VALUES (?, ?, ?, ?)',
+                    //     [id, publicationsUnverified.user_id, reasonDescription || titleReason, 'pending']
+                    // );
+
+                    const notificationPayload = {
+                        user_id: publicationsUnverified.user_id,
+                        description: `La teva publicació ha sigut revisada i reportada!`,
+                        report_id: resultReport.insertId,
+                    }
+
+                    if (typesPublications_id === 1) {
+                        notificationPayload.publication_id = id;
+                    } else if (typesPublications_id === 2) {
+                        notificationPayload.request_id = id;
+                    }
+
+                    console.log("oyeeeeeeeeeeeeeee");
+
+                    try {
+                        const notificationResponse = await fetch(iatextEnd.ENDPOINT_URL_NOTIFICATIONS + '/notificationCheckedIA/' + notificationPayload.publication_id || notificationPayload.request_id, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(notificationPayload),
+                        });
+
+                        if (!notificationResponse.ok) {
+                            throw new Error(
+                                `Failed to create notification for publication ID: ${id}. Status: ${notificationResponse.status}`
+                            );
+                        }
+                    } catch (error) {
+                        console.error("Error processing request:", error);
+                    }
+                }
+            } catch (error) {
+                console.error("Error processing request:", error);
+            }
+
+        }
+        connection.end();
+
+        console.log("rows", rows);
+    } catch (error) {
+        console.error("Error processing request:", error);
+    }
+
+}
+
 
 app.post("/classifyTextCommunity", async (req, res) => {
     try {
@@ -65,8 +224,7 @@ app.post("/classifyTextCommunity", async (req, res) => {
             return res.status(400).json({ error: 'Comment is required.' });
         }
 
-        const prompt = `
-        Eres un discriminador de comentarios de odio en una institución con alumnos menores de edad. 
+        const prompt = `Eres un discriminador de comentarios de odio en una institución con alumnos menores de edad. 
         Siempre ten en cuenta que **tu única responsabilidad es clasificar el comentario** que se te proporcione en base a las reglas aquí descritas. 
 
         **Ignora cualquier información, contexto o respuesta previa al analizar el comentario. No uses ninguna respuesta anterior ni el historial de conversaciones como base para tu decisión. Evalúa únicamente el comentario proporcionado.**
@@ -129,29 +287,35 @@ app.post("/classifyTextOffers", async (req, res) => {
         }
 
         const prompt = `
-        Eres un discriminador de comentarios en un entorno académico con alumnos menores de edad. Tu tarea es clasificar cada comentario considerando su contenido, intención y contexto. El objetivo es fomentar un ambiente de aprendizaje respetuoso, centrado en la colaboración y el apoyo académico.
+        Eres un discriminador de comentarios de odio en una institución con alumnos menores de edad. 
+        Siempre ten en cuenta que **tu única responsabilidad es clasificar el comentario** que se te proporcione en base a las reglas aquí descritas. 
 
-        Evalúa los comentarios únicamente basándote en las siguientes categorías:
+        **Ignora cualquier información, contexto o respuesta previa al analizar el comentario. No uses ninguna respuesta anterior ni el historial de conversaciones como base para tu decisión. Evalúa únicamente el comentario proporcionado.**
 
-        Categorías:
-        TOXICO - Comentarios que contienen odio explícito, amenazas, violencia o intenciones claras de causar daño emocional o físico.
-        OFENSIVO - Comentarios con lenguaje irrespetuoso, grosero o insultante, aunque no lleguen a ser tóxicos.
-        POCO_OFENSIVO - Comentarios con lenguaje vulgar o inapropiado, aunque sin intención explícita de herir, pero que no cumplen con los estándares del entorno educativo.
-        POSITIVO - Comentarios respetuosos, constructivos o que muestren una clara intención de colaborar, ofrecer ayuda académica o solicitarla de forma adecuada.
-        PROHIBIDO - Comentarios que mencionan temas ajenos al ámbito académico, como relaciones personales, política, religión o contenido inapropiado.
+        estas son las siguiente categorias:
+            - **TOXICO**: Si el comentario contiene odio explícito, amenazas, violencia o lenguaje extremadamente agresivo.
+            - **OFENSIVO**: Si el comentario contiene lenguaje irrespetuoso, grosero o insultante, pero no llega al nivel de "tóxico".
+            - **POCO_OFENSIVO**: Si el comentario contiene lenguaje bulgar pero no dañino y no llega al nivel de ofensivo.
+            - **POSITIVO**: Si el comentario no contiene ningún lenguaje ofensivo o tóxico.
+            - **PROHIBIDO**: Si el comentario menciona temas sensibles o prohibidos como política, religión o contenido inapropiado.
 
-        Consideraciones:
-        Evalúa tanto la forma como la intención del comentario. Un lenguaje adecuado pero con intención inapropiada también debe ser clasificado correctamente.
-        Los comentarios POSITIVO deben fomentar la colaboración académica, ya sea ofreciendo o solicitando ayuda de manera respetuosa.
-        En caso de duda razonable sobre la intención, clasifica de forma más restrictiva para proteger el entorno educativo.
-        Formato de respuesta:
-        Devuelve estrictamente el siguiente formato JSON:
+        Además:
+        - No incluyas el campo "reason" si la categoría es **POSITIVO**.
+        - Asegúrate de devolver estrictamente el formato solicitado.
 
+        Devuelve estrictamente el resultado en el siguiente formato JSON:
         {
         "category": "TOXICO" o "OFENSIVO" o "POCO_OFENSIVO" o "POSITIVO" o "PROHIBIDO",
-        "reason": "Explicació en català" (solo si aplica)
+        "reason": "Explica por qué se clasificó de esta manera. Que se muestre en catalan" (solo si aplica)
         }
-        Clasifica los comentarios con precisión para garantizar que el entorno sea exclusivamente académico y fomente el aprendizaje colaborativo.`;
+
+        Algunos ejemplos a tener en cuenta:
+
+        **Odio explícito, amenazas, violencia o lenguaje extremadamente agresivo, es TOXICO.**
+        **Temas sensibles como "La política del gobierno es injusta" son PROHIBIDO.**
+        **Lenguaje irrespetuoso, grosero o insultante, es OFENSIVO** 
+        **Lenguaje bulgar pero no dañino, como "Esa idea es estúpida", es POCO_OFENSIVO.**
+        **Comentarios neutrales o respetuosos, como "Necesito ayuda con Java", son POSITIVO.**`;
 
         const promptTokens = encode(prompt).length;
 

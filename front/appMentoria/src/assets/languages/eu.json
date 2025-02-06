@@ -1,4 +1,10 @@
 {
+    "mainPage": {
+        "allow": "Jakinarazpenak baimendu",
+        "questionPermission": "Gertaerak edo eguneratzeak jakiteko jakinarazpenak jaso nahi dituzu?",
+        "acceptedPermission": "Baimendu",
+        "rejectedPermission": "Blokeatu"
+    },
     "editProfile": {
         "title": "Banner eta Profila Editatu",
         "fullName": "Izen osoa",
