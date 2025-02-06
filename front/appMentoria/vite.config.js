@@ -33,5 +33,8 @@ export default defineConfig({
       host: 'www.conexushub.cat',
       protocol: 'wss',
     }
+  },
+  build: {
+    chunkSizeWarningLimit: 1000, 
   }
 })

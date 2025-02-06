@@ -1,11 +1,11 @@
 cd ./Dockers/Portainer
 
-docker compose up -d
+docker compose -f docker-compose.prod.yml up -d
 
 cd ../Nginx
 
-docker compose up -d
+docker compose -f docker-compose.prod.yml up -d
 
 cd ..
 
-docker compose up -d
+docker compose -f docker-compose.prod.yml up -d
