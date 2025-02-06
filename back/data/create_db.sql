@@ -176,7 +176,7 @@ CREATE TABLE IF NOT EXISTS newDataUsers (
     tags JSON DEFAULT NULL,
     discord_link VARCHAR(255),
     github_link VARCHAR(255),    
-    availibility JSON DEFAULT NULL,
+    availability JSON DEFAULT NULL,
     status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
     class_id INT,
     qualification_id INT,

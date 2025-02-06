@@ -1089,3 +1089,37 @@ export const editGeneralInfo = async (userData, bannerPicture, profilePicture) =
         throw error;
     }
 }
+
+export const updateAvailability = async (id, availability) => {
+try {
+    const response = await fetch(`${BACK_URL}/updateAvailability/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+        body: JSON.stringify({ availability }),
+    });
+
+    if (response.status === 401) {
+        const refreshResult = await refreshToken();
+
+        if (refreshResult.error) {
+            return { error: 'No se pudo renovar el token. Inicia sesión nuevamente.' };
+        }
+
+        // Reintenta la petición después de renovar el token
+        return await updateAvailability(id, availability);
+    }
+
+    if (!response.ok) {
+        return { error: `HTTP error! status: ${response.status}` };
+    }
+    let toReturn=await response.json();
+    toReturn.status=200
+    return toReturn
+}catch (error) {
+    console.error('Error updating availability:', error);
+    throw error;
+}
+}

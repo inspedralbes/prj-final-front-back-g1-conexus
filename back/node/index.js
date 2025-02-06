@@ -250,7 +250,28 @@ app.put("/editData/:id",async (req,res)=>{
 })
 
 //Edit Availability
-app.put("/editAvailability",async (req,res)=>{
+app.put("/updateAvailability/:id",async (req,res)=>{
+    const { id } = req.params;
+    let { availability } = req.body;
+    const connection = await mysql.createConnection(dbConfig);
+    console.log("editAvailability")
+    if(availability.length == 0){
+        availability = null;
+    }
+    try {
+        const [result] = await connection.execute(
+            'UPDATE users SET availability = ? WHERE id = ?',
+            [availability,id]
+        );
+        const [updatedUser] = await connection.execute('SELECT * FROM users WHERE id = ?', [id]);
+        connection.end();
+        if (updatedUser.length == 0) return res.status(404).json({ error: 'User not found' });
+        console.log("Responding")
+        res.status(200).json(updatedUser);
+       
+    } catch (error) {
+        res.status(500).json({ "error": 'Database error', "errorText": error });
+    }
     
 })
 

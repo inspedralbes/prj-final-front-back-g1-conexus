@@ -24,7 +24,17 @@
     "formAvailability": {
         "title": "Editar Horari de Disponibilitat",
         "email": "Correu electrònic:",
-        "save": "Guardar canvis"
+        "save": "Guardar canvis",
+        "enable": "Habilitar",
+        "startTime": "Hora d'inici",
+        "endTime": "Hora de fi",
+        "monday": "Dilluns",
+        "tuesday": "Dimarts",
+        "wednesday": "Dimecres",
+        "thursday": "Dijous",
+        "friday": "Divendres",
+        "saturday": "Dissabte",
+        "sunday": "Diumenge"
     },
     "PersonalInfo":{
         "titlePage": "Informació personal",
@@ -318,7 +328,8 @@
         "friday": "Divendres",
         "saturday": "Dissabte",
         "sunday": "Diumenge",
-        "edit": "Editar"
+        "edit": "Editar",
+        "noAvailability":"Sense disponibilitat"
     },
     "menu": {
         "comunity": "Comunitat",

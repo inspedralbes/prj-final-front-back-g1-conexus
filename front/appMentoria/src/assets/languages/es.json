@@ -20,11 +20,22 @@
         "english":"Inglés"
 
     },
-"formAvailability":{
-    "title":"Editar Horari de Disponibilitat",
-    "email":"Correo electrónico:",
-    "save":"Guardar cambios"
-},
+    "formAvailability": {
+        "title": "Editar Horario de Disponibilidad",
+        "email": "Correo electrónico:",
+        "save": "Guardar cambios",
+        "enable": "Habilitar",
+        "startTime": "Hora de inicio",
+        "endTime": "Hora de fin",
+        "monday": "Lunes",
+        "tuesday": "Martes",
+        "wednesday": "Miércoles",
+        "thursday": "Jueves",
+        "friday": "Viernes",
+        "saturday": "Sábado",
+        "sunday": "Domingo",
+        "noAvailability": "Sin disponibilidad"
+    },
 "PersonalInfo":{
     "titlePage": "Información personal",
     "nameAndSurname": "Nombre y apellidos",

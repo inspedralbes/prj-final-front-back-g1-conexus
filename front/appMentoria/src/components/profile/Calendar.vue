@@ -1,11 +1,10 @@
 <template>
   <!-- Header -->
   <h2 class="text-xl font-semibold border-b border-gray-600 pb-4 mb-4">{{ $t("calendar.title") }}</h2>
-
   <!-- Table -->
   <div class="border-b border-gray-600 pb-6">
     <div class="bg-white dark:bg-gray-700 mt-6 rounded-md shadow-md overflow-hidden">
-      <table v-if="availibility" class="min-w-full border-collapse">
+      <table v-if="availability" class="min-w-full border-collapse">
         <thead>
           <tr class="bg-gray-200 dark:bg-gray-900">
             <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 dark:text-gray-300">
@@ -17,10 +16,10 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(hours, day) in availibility" :key="day" class="border-b last:border-none">
-            <td class="py-3 px-4 text-sm text-gray-800 dark:text-white">{{ formatDay(day) }}</td>
-            <td class="py-3 px-4 text-sm" :class="hours ? 'text-green-600' : 'text-red-500'">
-              {{ hours || 'No disponible' }}
+          <tr v-for="object in availability" :key="day" class="border-b last:border-none">
+            <td class="py-3 px-4 text-sm text-gray-800 dark:text-white">{{ formatDay(object.day) }}</td>
+            <td class="py-3 px-4 text-sm" :class="formatHours(object.startTime, object.endTime) ? 'text-green-600' : 'text-red-500'">
+              {{ formatHours(object.startTime, object.endTime) || 'No disponible' }}
             </td>
           </tr>
         </tbody>
@@ -45,36 +44,42 @@
     </svg>
     <span>{{ $t("calendar.edit") }}</span>
   </button>
+
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, onMounted, ref } from 'vue';
+import { useI18n } from "vue-i18n";
 
-const props = defineProps({
-  availibilityJson: String,
-});
+const { t } = useI18n();
 
-const availibility = computed(() => {
-  try {
-    return JSON.parse(props.availibilityJson);
-  } catch (error) {
-    console.error('Error parsing availibility JSON:', error);
-    return {};
-  }
-});
+const props = defineProps(['availabilityJson'])
+var availability = ref(props.availabilityJson);
 
-const formatDay = (day) => {
-  const daysMap = {
-    monday: $t("calendar.monday"),
-    tuesday: $t("calendar.tuesday"),
-    wednesday: $t("calendar.wednesday"),
-    thursday: $t("calendar.thursday"),
-    friday: $t("calendar.friday"),
-    saturday: $t("calendar.saturday"),
-    sunday: $t("calendar.sunday"),
-  };
-  return daysMap[day] || day;
+const formatHours = (startTime, endTime) => {
+  if (!startTime || !endTime) return null;
+  return `${startTime} - ${endTime}`;
 };
+const formatDay = (day) => {
+  switch(day){
+    case 'Dilluns':
+      return t("calendar.monday");
+    case 'Dimarts':
+      return t("calendar.tuesday");
+    case 'Dimecres':
+      return t("calendar.wednesday");
+    case 'Dijous':
+      return t("calendar.thursday");
+    case 'Divendres':
+      return t("calendar.friday");
+    case 'Dissabte':
+      return t("calendar.saturday");
+    case 'Diumenge':
+      return t("calendar.sunday");
+      
+  }
+};
+
 </script>
 
 <style scoped>

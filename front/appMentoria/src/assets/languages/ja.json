@@ -23,7 +23,17 @@
     "formAvailability": {
         "title": "利用可能時間を編集",
         "email": "メールアドレス:",
-        "save": "変更を保存"
+        "save": "変更を保存",
+        "enable": "有効にする",
+        "startTime": "開始時間",
+        "endTime": "終了時間",
+        "monday": "月曜日",
+        "tuesday": "火曜日",
+        "wednesday": "水曜日",
+        "thursday": "木曜日",
+        "friday": "金曜日",
+        "saturday": "土曜日",
+        "sunday": "日曜日"
     },
     "PersonalInfo": {
         "titlePage": "個人情報",
@@ -313,7 +323,8 @@
         "friday": "金曜日",
         "saturday": "土曜日",
         "sunday": "日曜日",
-        "edit": "編集"
+        "edit": "編集",
+        "noAvailability": "利用可能時間がありません"
     },
     "menu": {
         "comunity": "コミュニティ",

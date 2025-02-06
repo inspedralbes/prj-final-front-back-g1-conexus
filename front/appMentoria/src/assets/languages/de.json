@@ -20,9 +20,19 @@
         "english": "Englisch"
     },
     "formAvailability": {
-        "title": "Verfügbarkeitszeiten bearbeiten",
+        "title": "Verfügbarkeit bearbeiten",
         "email": "E-Mail:",
-        "save": "Änderungen speichern"
+        "save": "Änderungen speichern",
+        "enable": "Aktivieren",
+        "startTime": "Startzeit",
+        "endTime": "Endzeit",
+        "monday": "Montag",
+        "tuesday": "Dienstag",
+        "wednesday": "Mittwoch",
+        "thursday": "Donnerstag",
+        "friday": "Freitag",
+        "saturday": "Samstag",
+        "sunday": "Sonntag"
     },
     "PersonalInfo": {
         "titlePage": "Persönliche Informationen",
@@ -315,7 +325,8 @@
         "friday": "Freitag",
         "saturday": "Samstag",
         "sunday": "Sonntag",
-        "edit": "Bearbeiten"
+        "edit": "Bearbeiten",
+        "noAvailability": "Keine Verfügbarkeit"
     },
     "menu": {
         "comunity": "Gemeinschaft",

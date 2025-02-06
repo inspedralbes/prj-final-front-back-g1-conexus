@@ -71,6 +71,7 @@ import { useAppStore } from "@/stores/index";
 import { editGeneralInfo } from "@/services/communicationManager";
 import router from "@/router";
 
+
 const appStore = useAppStore();
 
 var user = ref({});

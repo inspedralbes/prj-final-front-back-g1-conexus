@@ -23,7 +23,17 @@
     "formAvailability": {
         "title": "编辑可用时间表",
         "email": "电子邮件:",
-        "save": "保存更改"
+        "save": "保存更改",
+        "enable": "启用",
+        "startTime": "开始时间",
+        "endTime": "结束时间",
+        "monday": "星期一",
+        "tuesday": "星期二",
+        "wednesday": "星期三",
+        "thursday": "星期四",
+        "friday": "星期五",
+        "saturday": "星期六",
+        "sunday": "星期日"
     },
     "PersonalInfo": {
         "titlePage": "个人信息",
@@ -312,7 +322,8 @@
         "friday": "星期五",
         "saturday": "星期六",
         "sunday": "星期日",
-        "edit": "编辑"
+        "edit": "编辑",
+        "noAvailability": "没有可用时间"
     },
     "menu": {
         "comunity": "社区",

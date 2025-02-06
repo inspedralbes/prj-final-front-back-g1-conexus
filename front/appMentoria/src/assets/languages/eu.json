@@ -21,9 +21,19 @@
 
     },
     "formAvailability": {
-        "title": "Eskuragarritasun Ordutegia Editatu",
+        "title": "Eskuragarritasun ordutegia editatu",
         "email": "Posta elektronikoa:",
-        "save": "Aldaketak gorde"
+        "save": "Aldaketak gorde",
+        "enable": "Gaitu",
+        "startTime": "Hasiera ordua",
+        "endTime": "Amaiera ordua",
+        "monday": "Astelehena",
+        "tuesday": "Asteartea",
+        "wednesday": "Asteazkena",
+        "thursday": "Osteguna",
+        "friday": "Ostirala",
+        "saturday": "Larunbata",
+        "sunday": "Igandea"
     },
     "PersonalInfo":{
         "titlePage": "Informazio pertsonala",
@@ -313,7 +323,8 @@
         "friday": "Ostirala",
         "saturday": "Larunbata",
         "sunday": "Igandea",
-        "edit": "Editatu"
+        "edit": "Editatu",
+        "noAvailability": "Eskuragarritasunik ez"
     },
     "menu": {
         "comunity": "Komunitatea",

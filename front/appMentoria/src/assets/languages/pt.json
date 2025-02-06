@@ -23,7 +23,17 @@
     "formAvailability": {
         "title": "Editar Horário de Disponibilidade",
         "email": "Email:",
-        "save": "Guardar mudanças"
+        "save": "Guardar mudanças",
+        "enable": "Habilitar",
+        "startTime": "Hora de início",
+        "endTime": "Hora de término",
+        "monday": "Segunda-feira",
+        "tuesday": "Terça-feira",
+        "wednesday": "Quarta-feira",
+        "thursday": "Quinta-feira",
+        "friday": "Sexta-feira",
+        "saturday": "Sábado",
+        "sunday": "Domingo"
     },
     "PersonalInfo": {
         "titlePage": "Informação pessoal",
@@ -313,7 +323,8 @@
         "friday": "Sexta-feira",
         "saturday": "Sábado",
         "sunday": "Domingo",
-        "edit": "Editar"
+        "edit": "Editar",
+        "noAvailability": "Sem disponibilidade"
     },
     "menu": {
         "comunity": "Comunidade",

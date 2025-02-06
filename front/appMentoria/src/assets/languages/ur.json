@@ -20,9 +20,19 @@
         "english":"انگریزی"
     },
     "formAvailability": {
-        "title": "دستیابی کے شیڈول میں ترمیم کریں",
+        "title": "دستیابی کا شیڈول ایڈٹ کریں",
         "email": "ای میل:",
-        "save": "تبدیلیاں محفوظ کریں"
+        "save": "تبدیلیاں محفوظ کریں",
+        "enable": "فعال کریں",
+        "startTime": "شروع ہونے کا وقت",
+        "endTime": "ختم ہونے کا وقت",
+        "monday": "پیر",
+        "tuesday": "منگل",
+        "wednesday": "بدھ",
+        "thursday": "جمعرات",
+        "friday": "جمعہ",
+        "saturday": "ہفتہ",
+        "sunday": "اتوار"
     },
     "PersonalInfo":{
         "titlePage": "ذاتی معلومات",
@@ -311,7 +321,8 @@
         "friday": "جمعہ",
         "saturday": "ہفتہ",
         "sunday": "اتوار",
-        "edit": "ترتیب دیں"
+        "edit": "ترتیب دیں",
+        "noAvailability": "دستیابی نہیں ہے"
     },
     "menu": {
         "comunity": "کمیونٹی",

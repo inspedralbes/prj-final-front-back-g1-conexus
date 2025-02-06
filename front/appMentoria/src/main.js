@@ -1,6 +1,5 @@
 // import './assets/m</div>ain.css'
 // import './assets/main.css'
-import 'vue-double-slider/dist/style.css'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 
@@ -8,7 +7,6 @@ import App from './App.vue'
 import router from './router'
 import './assets/tailwind.css'
 import "../node_modules/flag-icons/css/flag-icons.min.css";
-import vueDoubleSlider from 'vue-double-slider'
 
 import { createI18n } from 'vue-i18n'
 import es from './assets/languages/es.json'
@@ -45,7 +43,7 @@ const i18n = createI18n({
     },
     
 })
-app.use(vueDoubleSlider)
+
 app.use(i18n)
 app.use(createPinia())
 app.use(router)

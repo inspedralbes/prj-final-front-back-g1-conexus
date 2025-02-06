@@ -2,108 +2,28 @@
     <div class="dark:bg-gray-800 bg-white p-6 rounded-xl shadow-lg shadow-black/30 my-4">
         <h2 class="text-2xl font-semibold border-b border-gray-600 pb-4 mb-4">{{ $t("formAvailability.title") }}</h2>
         <form class="border-b border-gray-600 pb-4 mb-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label for="availabilityRange" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t("formAvailability.rangeLabel") }}</label>
-                    <div>
-                        <label for="monday">{{ $t("formAvailability.monday") }}</label>
-                        <input type="checkbox" id="monday" name="monday" v-model="availability.monday.available"/>
-                        <double-range-slider
-                        :min="availability.monday.start"
-                        :max="availability.monday.end"
-                        :min-threshold="0"
-                        :max-threshold="24"
-                        @update:min="value => availability.monday.start = +value"
-                        @update:max="value => availability.monday.end = +value"
-                        ></double-range-slider>
-                        <p>{{ $t("formAvailability.from") }}: {{ availability.monday.start }}</p>
-                        <p>{{ $t("formAvailability.to") }}: {{ availability.monday.end }}</p>
-                    </div>
-                    <div>
-                        <label for="tuesday">{{ $t("formAvailability.tuesday") }}</label>
-                        <input type="checkbox" id="tuesday" name="tuesday" v-model="availability.tuesday.available"/>
-                        <double-range-slider
-                        :min="availability.tuesday.start"
-                        :max="availability.tuesday.end"
-                        :min-threshold="0"
-                        :max-threshold="24"
-                        @update:min="value => availability.tuesday.start = +value"
-                        @update:max="value => availability.tuesday.end = +value"
-                        ></double-range-slider>
-                        <p>{{ $t("formAvailability.from") }}: {{ availability.tuesday.start }}</p>
-                        <p>{{ $t("formAvailability.to") }}: {{ availability.tuesday.end }}</p>
-                    </div>
-                    <div>
-                        <label for="wednesday">{{ $t("formAvailability.wednesday") }}</label>
-                        <input type="checkbox" id="wednesday" name="wednesday" v-model="availability.wednesday.available"/>
-                        <double-range-slider
-                        :min="availability.wednesday.start"
-                        :max="availability.wednesday.end"
-                        :min-threshold="0"
-                        :max-threshold="24"
-                        @update:min="value => availability.wednesday.start = +value"
-                        @update:max="value => availability.wednesday.end = +value"
-                        ></double-range-slider>
-                        <p>{{ $t("formAvailability.from") }}: {{ availability.wednesday.start }}</p>
-                        <p>{{ $t("formAvailability.to") }}: {{ availability.wednesday.end }}</p>
-                    </div>
-                    <div>
-                        <label for="thursday">{{ $t("formAvailability.thursday") }}</label>
-                        <input type="checkbox" id="thursday" name="thursday" v-model="availability.thursday.available"/>
-                        <double-range-slider
-                        :min="availability.thursday.start"
-                        :max="availability.thursday.end"
-                        :min-threshold="0"
-                        :max-threshold="24"
-                        @update:min="value => availability.thursday.start = +value"
-                        @update:max="value => availability.thursday.end = +value"
-                        ></double-range-slider>
-                        <p>{{ $t("formAvailability.from") }}: {{ availability.thursday.start }}</p>
-                        <p>{{ $t("formAvailability.to") }}: {{ availability.thursday.end }}</p>
-                    </div>
-                    <div>
-                        <label for="friday">{{ $t("formAvailability.friday") }}</label>
-                        <input type="checkbox" id="friday" name="friday" v-model="availability.friday.available"/>
-                        <double-range-slider
-                        :min="availability.friday.start"
-                        :max="availability.friday.end"
-                        :min-threshold="0"
-                        :max-threshold="24"
-                        @update:min="value => availability.friday.start = +value"
-                        @update:max="value => availability.friday.end = +value"
-                        ></double-range-slider>
-                        <p>{{ $t("formAvailability.from") }}: {{ availability.friday.start }}</p>
-                        <p>{{ $t("formAvailability.to") }}: {{ availability.friday.end }}</p>
-                    </div>
-                    <div>
-                        <label for="saturday">{{ $t("formAvailability.saturday") }}</label>
-                        <input type="checkbox" id="saturday" name="saturday" v-model="availability.saturday.available"/>
-                        <double-range-slider
-                        :min="availability.saturday.start"
-                        :max="availability.saturday.end"
-                        :min-threshold="0"
-                        :max-threshold="24"
-                        @update:min="value => availability.saturday.start = +value"
-                        @update:max="value => availability.saturday.end = +value"
-                        ></double-range-slider>
-                        <p>{{ $t("formAvailability.from") }}: {{ availability.saturday.start }}</p>
-                        <p>{{ $t("formAvailability.to") }}: {{ availability.saturday.end }}</p>
-                    </div>
-                    <div>
-                        <label for="sunday">{{ $t("formAvailability.sunday") }}</label>
-                        <input type="checkbox" id="sunday" name="sunday" v-model="availability.sunday.available"/>
-                        <double-range-slider
-                        :min="availability.sunday.start"
-                        :max="availability.sunday.end"
-                        :min-threshold="0"
-                        :max-threshold="24"
-                        @update:min="value => availability.sunday.start = +value"
-                        @update:max="value => availability.sunday.end = +value"
-                        ></double-range-slider>
-                        <p>{{ $t("formAvailability.from") }}: {{ availability.sunday.start }}</p>
-                        <p>{{ $t("formAvailability.to") }}: {{ availability.sunday.end }}</p>
-                    </div>
-                    </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div v-for="day in availabilities" :key="day.day" class="flex flex-col items-start p-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-md">
+                <h3 class="text-lg font-medium mb-2">{{ day.day }}</h3>
+                <label class="flex items-center mb-2">
+                <input type="checkbox" v-model="day.enabled" class="mr-2" />
+                <span>{{ $t("formAvailability.enable") }}</span>
+                </label>
+                <div v-if="day.enabled" class="flex flex-col space-y-2">
+                <label class="flex flex-col">
+                    <span class="text-sm">{{ $t("formAvailability.startTime") }}</span>
+                    <select v-model="day.startTime" class="mt-1 p-2 border rounded-lg">
+                    <option v-for="hour in filteredStartTimes(day.endTime)" :value="hour">{{ hour }}</option>
+                    </select>
+                </label>
+                <label class="flex flex-col">
+                    <span class="text-sm">{{ $t("formAvailability.endTime") }}</span>
+                    <select v-model="day.endTime" class="mt-1 p-2 border rounded-lg">
+                    <option v-for="hour in filteredEndTimes(day.startTime)" :value="hour">{{ hour }}</option>
+                    </select>
+                </label>
+                </div>
+            </div>
             </div>
         </form>
         <button @click="saveChanges()" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
@@ -115,122 +35,173 @@
 <script setup>
 import { ref, onMounted, reactive } from "vue";
 import { useAppStore } from "@/stores/index";
+import { updateAvailability } from "@/services/communicationManager";
+import { useI18n } from "vue-i18n";
+import router from "@/router";
+
 
 const appStore = useAppStore();
+const hours = ref([
+    "00:00", "00:15", "00:30", "00:45",
+    "01:00", "01:15", "01:30", "01:45",
+    "02:00", "02:15", "02:30", "02:45",
+    "03:00", "03:15", "03:30", "03:45",
+    "04:00", "04:15", "04:30", "04:45",
+    "05:00", "05:15", "05:30", "05:45",
+    "06:00", "06:15", "06:30", "06:45",
+    "07:00", "07:15", "07:30", "07:45",
+    "08:00", "08:15", "08:30", "08:45",
+    "09:00", "09:15", "09:30", "09:45",
+    "10:00", "10:15", "10:30", "10:45",
+    "11:00", "11:15", "11:30", "11:45",
+    "12:00", "12:15", "12:30", "12:45",
+    "13:00", "13:15", "13:30", "13:45",
+    "14:00", "14:15", "14:30", "14:45",
+    "15:00", "15:15", "15:30", "15:45",
+    "16:00", "16:15", "16:30", "16:45",
+    "17:00", "17:15", "17:30", "17:45",
+    "18:00", "18:15", "18:30", "18:45",
+    "19:00", "19:15", "19:30", "19:45",
+    "20:00", "20:15", "20:30", "20:45",
+    "21:00", "21:15", "21:30", "21:45",
+    "22:00", "22:15", "22:30", "22:45",
+    "23:00", "23:15", "23:30", "23:45"
+]);
 
-var user = ref({});
+const { t } = useI18n();
 
-var availability = reactive({
-    monday: {
-        available: false,
-        start: "",
-        end: "",
-    },
-    tuesday: {
-        available: false,
-        start: "",
-        end: "",
-    },
-    wednesday: {
-        available: false,
-        start: "",
-        end: "",
-    },
-    thursday: {
-        available: false,
-        start: "",
-        end: "",
-    },
-    friday: {
-        available: false,
-        start: "",
-        end: "",
-    },
-    saturday: {
-        available: false,
-        start: "",
-        end: "",
-    },
-    sunday: {
-        available: false,
-        start: "",
-        end: "",
-    },
-});
+const week = ref([
+t("formAvailability.monday"),
+t("formAvailability.tuesday"),
+t("formAvailability.wednesday"),
+t("formAvailability.thursday"),
+t("formAvailability.friday"),
+t("formAvailability.saturday"),
+t("formAvailability.sunday"),
+]);
 
-function saveChanges(){
-    let availabilityArray = [];
-    if(availability.monday.available){
-        availabilityArray.push({day: "Monday", "start": availability.monday.start, "end": availability.monday.end});
-    }
-    if(availability.tuesday.available){
-        availabilityArray.push({day: "Tuesday", "start": availability.tuesday.start, "end": availability.tuesday.end});
-    }
-    if(availability.wednesday.available){
-        availabilityArray.push({day: "Wednesday", "start": availability.wednesday.start, "end": availability.wednesday.end});
-    }
-    if(availability.thursday.available){
-        availabilityArray.push({day: "Thursday", "start": availability.thursday.start, "end": availability.thursday.end});
-    }
-    if(availability.friday.available){
-        availabilityArray.push({day: "Friday", "start": availability.friday.start, "end": availability.friday.end});
-    }
-    if(availability.saturday.available){
-        availabilityArray.push({day: "Saturday", "start": availability.saturday.start, "end": availability.saturday.end});
-    }
-    if(availability.sunday.available){
-        availabilityArray.push({day: "Sunday", "start": availability.sunday.start, "end": availability.sunday.end});
-    }
-    user.value.availability = availabilityArray;
-    appStore.setUser(user.value);
-}
+const user = ref({});
+const availabilities = ref([]);
 
-onMounted(() => {
-    user.value = appStore.getUser();
-    console.log("pepepeppee"+user.value)
-    if (typeof user.value.tags == "string") {
-        try {
-            user.value.tags = JSON.parse(user.value.tags);
-        } catch (error) {
-            console.error("Error al parsear tags:", error);
-        }
-    }
-    user.value.availability.forEach(element => {
-        if(element.day == "Monday"){
-            availability.monday.available = true;
-            availability.monday.start = element.start;
-            availability.monday.end = element.end;
-        }
-        if(element.day == "Tuesday"){
-            availability.tuesday.available = true;
-            availability.tuesday.start = element.start;
-            availability.tuesday.end = element.end;
-        }
-        if(element.day == "Wednesday"){
-            availability.wednesday.available = true;
-            availability.wednesday.start = element.start;
-            availability.wednesday.end = element.end;
-        }
-        if(element.day == "Thursday"){
-            availability.thursday.available = true;
-            availability.thursday.start = element.start;
-            availability.thursday.end = element.end;
-        }
-        if(element.day == "Friday"){
-            availability.friday.available = true;
-            availability.friday.start = element.start;
-            availability.friday.end = element.end;
-        }
-        if(element.day == "Saturday"){
-            availability.saturday.available = true;
-            availability.saturday.start = element.start;
-            availability.saturday.end = element.end;
-        }
-        if(element.day == "Sunday"){
-            availability.sunday.available = true;
-            availability.sunday.start = element.start;
-            availability.sunday.end = element.end;
+
+async function saveChanges() {
+    let auxAvailability = [];
+    availabilities.value.forEach((availability, index) => {
+        if (availability.enabled) {
+            let auxday=translateDay(availability.day);
+            auxAvailability.push({
+                
+                day: auxday,
+                startTime: availability.startTime,
+                endTime: availability.endTime,
+            });
         }
     });
+    let res=await updateAvailability(user.value.id, auxAvailability);
+    console.log(res[0]);
+    res=res[0]
+    if(res.id!=undefined&&res.id==user.value.id){
+        console.log("User updated");
+        console.log(res);
+        appStore.setUser(res);
+        router.push({ name: "myprofile" });
+    }
+    else{
+        console.log("Error updating availability");
+    }
+    
+}
+
+function translateDay(day){
+    switch(day){
+        case t("formAvailability.monday"):
+            return "Dilluns";
+        case t("formAvailability.tuesday"):
+            return "Dimarts";
+        case t("formAvailability.wednesday"):
+            return "Dimecres";
+        case t("formAvailability.thursday"):
+            return "Dijous";
+        case t("formAvailability.friday"):
+            return "Divendres";
+        case t("formAvailability.saturday"):
+            return "Dissabte";
+        case t("formAvailability.sunday"):
+            return "Diumenge";
+    }
+}
+
+
+function filteredStartTimes(endTime) {
+    return hours.value.filter((hour) => hour < endTime);
+}
+
+function filteredEndTimes(startTime) {
+    return hours.value.filter((hour) => hour > startTime);
+}
+function formatDay(day){
+    switch(day){
+    case 'Dilluns':
+      return t("formAvailability.monday");
+    case 'Dimarts':
+      return t("formAvailability.tuesday");
+    case 'Dimecres':
+      return t("formAvailability.wednesday");
+    case 'Dijous':
+      return t("formAvailability.thursday");
+    case 'Divendres':
+      return t("formAvailability.friday");
+    case 'Dissabte':
+      return t("formAvailability.saturday");
+    case 'Diumenge':
+      return t("formAvailability.sunday");
+  }
+};
+onMounted(() => {
+    user.value = appStore.getUser();
+
+    console.log(user.value.availability);
+    if(user.value.availability === undefined || user.value.availability === null) {
+        user.value.availability = [];
+    }
+    if(user.value.availability.length === 0) {
+        week.value.forEach((day, index) => {
+            availabilities.value.push({
+                day: day,
+                enabled: false,
+                startTime: "00:00",
+                endTime: "23:00",
+            });
+        });
+    } else {
+      
+        // user.value.availability.forEach((availability, index) => {
+        //     availabilities.value.push({
+        //         day: formatDay(availability.day),
+        //         enabled: true,
+        //         startTime: availability.startTime,
+        //         endTime: availability.endTime,
+        //     });
+        // });
+        week.value.forEach((day) => {
+            const availability = user.value.availability.find((availability) => formatDay(availability.day) === day);
+            if (availability) {
+            availabilities.value.push({
+                day: formatDay(availability.day),
+                enabled: true,
+                startTime: availability.startTime,
+                endTime: availability.endTime,
+            });
+            } else {
+            availabilities.value.push({
+                day: day,
+                enabled: false,
+                startTime: "00:00",
+                endTime: "23:00",
+            });
+            }
+        });
+    }
+   
 });
 </script>

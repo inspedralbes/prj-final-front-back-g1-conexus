@@ -18,13 +18,24 @@
         "SocialMedia":"Social Media",
         "languages":"Languages",
         "softwareSkills":"Software Skills",
-        "english":"English"
+        "english":"English",
+        "noAvailability": "No Availability"
 
     },
     "formAvailability": {
         "title": "Edit Availability Schedule",
         "email": "Email:",
-        "save": "Save Changes"
+        "save": "Save changes",
+        "enable": "Enable",
+        "startTime": "Start Time",
+        "endTime": "End Time",
+        "monday": "Monday",
+        "tuesday": "Tuesday",
+        "wednesday": "Wednesday",
+        "thursday": "Thursday",
+        "friday": "Friday",
+        "saturday": "Saturday",
+        "sunday": "Sunday"
     },
     "PersonalInfo": {
         "titlePage": "Personal Information",
