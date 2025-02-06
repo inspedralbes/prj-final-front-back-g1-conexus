@@ -1,4 +1,8 @@
 {
+    "cardsProfile": {
+        "title": "کارڈز پروفائل",
+        "generarCard": "پیش فرض بنائیں"
+    },
     "chatContent": {
         "writeMessage": "پیغام لکھیں..."
     },

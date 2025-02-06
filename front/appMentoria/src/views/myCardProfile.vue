@@ -193,12 +193,9 @@ async function saveChanges() {
 
     console.log("user id", user.id);
 
-    const response = await uploadCards(
-      user.id,
-      cardFrontBase64,
-      cardBackBase64
-    );
-    console.log("targeta guardada correctamente", response);
+    await uploadCards(user.id, cardFrontBase64, cardBackBase64);
+    console.log("targeta guardada correctamente");
+    router.push("/myprofile");
     // appStore.setCardImages(frontImageUrl, backImageUrl);
     // console.log(
     //   "targeta guardad en pinia",

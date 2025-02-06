@@ -1,4 +1,8 @@
 {
+    "cardsProfile": {
+        "title": "Bisitakartak",
+        "generarCard": "Lehenetsia sortu"
+    },
     "chatContent": {
         "writeMessage": "Idatzi mezua..."
     },

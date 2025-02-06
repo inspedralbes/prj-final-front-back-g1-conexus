@@ -1,4 +1,8 @@
 {
+    "cardsProfile": {
+        "title": "名片",
+        "generarCard": "生成默认"
+    },
     "chatContent": {
         "writeMessage": "写信息..."
     },

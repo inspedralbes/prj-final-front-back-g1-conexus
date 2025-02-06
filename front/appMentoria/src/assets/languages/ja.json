@@ -1,4 +1,8 @@
 {
+    "cardsProfile": {
+        "title": "名刺",
+        "generarCard": "デフォルトを生成"
+    },
     "chatContent": {
         "writeMessage": "メッセージを書く..."
     },

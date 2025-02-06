@@ -104,6 +104,11 @@ app.post('/cards', async (req, res) => {
             currentCards = []; // Si no existen tarjetas, inicializamos como un array vacío
         }
 
+        // Verificamos si ya hay 3 tarjetas
+        if (currentCards.length >= 3) {
+            return res.status(400).json({ error: 'No se pueden agregar más de 3 tarjetas' });
+        }
+
         // Crear un nuevo objeto de tarjeta con las rutas de las imágenes
         const newCard = { front: frontPath, back: backPath };
 

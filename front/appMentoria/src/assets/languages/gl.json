@@ -1,4 +1,8 @@
 {
+    "cardsProfile": {
+        "title": "Tarxetas de visita",
+        "generarCard": "Xerar predeterminada"
+    },
     "chatContent": {
         "writeMessage": "Escribe un mensaje..."
     },

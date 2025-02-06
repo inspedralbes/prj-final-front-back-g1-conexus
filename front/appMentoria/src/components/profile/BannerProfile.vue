@@ -51,14 +51,6 @@
         </button>
       </div>
     </div>
-    <div class="mt-4 sm:mt-0 sm:mr-4">
-      <button
-        @click="$router.push('/myCard')"
-        class="py-1 px-2 sm:py-2 sm:px-3 rounded bg-indigo-950 text-white shadow-lg shadow-black/20 hover:bg-indigo-800 transition"
-      >
-        Generar Tarjeta de Visita
-      </button>
-    </div>
   </div>
 </template>
 
