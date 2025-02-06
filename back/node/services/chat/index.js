@@ -6,8 +6,7 @@ const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
 const dotenv = require('dotenv');
-// const { verifyToken } = require('../../middlewares/auth.js');
-const { verifyToken, refreshTokensDB } = require('/usr/src/app/middlewares/auth.js');
+const { verifyToken, refreshTokensDB } = require('../../middlewares/auth.js');
 
 function loadEnv(envPath) {
   const result = dotenv.config({ path: envPath });
