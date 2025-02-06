@@ -29,7 +29,7 @@
         "pendant": "割り当て待ち"
     },
     "LoginRegisterPage": {
-        "subTitle": "@inspedralbes.cat メール",
+        "subTitle": "{'@'}inspedralbes.cat メール",
         "accessGoogle": "Googleでログイン",
         "accessGithub": "Githubでログイン",
         "logIn": "またはログイン",
@@ -245,7 +245,7 @@
         "tags": "タグ (JSON)",
         "tagsExample": "例の形式: [\"JavaScript\", \"Python\", \"React\"]",
         "availability": "可用性 (JSON)",
-        "availabilityExample": "例の形式: {\"monday\":\"9:00-12:00\", \"friday\":\"9:00-12:00\"}"
+        "availabilityExample": "例の形式: {'{\"monday\":\"9:00-12:00\", \"friday\":\"9:00-12:00\"}'}"
     },
     "post": {
         "title": "投稿を追加",

@@ -29,7 +29,7 @@
         "pendant": "تفویض کرنے کے لئے زیر التواء"
     },
     "LoginRegisterPage": {
-        "subTitle": "@inspedralbes.cat ای میل",
+        "subTitle": "{'@'}inspedralbes.cat ای میل",
         "accessGoogle": "گوگل کے ساتھ رسائی حاصل کریں",
         "accessGithub": "گٹ ہب کے ساتھ رسائی حاصل کریں",
         "logIn": "یا لاگ ان کریں",
@@ -244,7 +244,7 @@
         "tags": "ٹیگز (JSON)",
         "tagsExample": "مثال فارمیٹ: [\"JavaScript\", \"Python\", \"React\"]",
         "availability": "دستیابی (JSON)",
-        "availabilityExample": "مثال فارمیٹ: {\"monday\":\"9:00-12:00\", \"friday\":\"9:00-12:00\"}"
+        "availabilityExample": "مثال فارمیٹ: {'{\"monday\":\"9:00-12:00\", \"friday\":\"9:00-12:00\"}'}"
     },
     "post": {
         "title": "ایک پوسٹ شامل کریں",

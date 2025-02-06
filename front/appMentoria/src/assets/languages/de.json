@@ -29,7 +29,7 @@
         "pendant": "Noch zugewiesen"
     },
     "LoginRegisterPage": {
-        "subTitle": "@inspedralbes.cat E-Mail",
+        "subTitle": "{'@'}inspedralbes.cat E-Mail",
         "accessGoogle": "Mit Google anmelden",
         "accessGithub": "Mit Github anmelden",
         "logIn": "Oder einloggen",
@@ -247,7 +247,7 @@
         "tags": "Tags (JSON)",
         "tagsExample": "Beispielformat: [\"JavaScript\", \"Python\", \"React\"]",
         "availability": "Verfügbarkeit (JSON)",
-        "availabilityExample": "Beispielformat: {\"monday\":\"9:00-12:00\", \"friday\":\"9:00-12:00\"}"
+        "availabilityExample": "Beispielformat: {'{\"monday\":\"9:00-12:00\", \"friday\":\"9:00-12:00\"}'}"
     },
     "post": {
         "title": "Einen Beitrag hinzufügen",

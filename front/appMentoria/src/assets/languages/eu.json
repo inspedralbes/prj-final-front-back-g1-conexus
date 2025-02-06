@@ -29,7 +29,7 @@
         "pendant": "Esleitzeko zain"
     },
     "LoginRegisterPage": {
-        "subTitle": "@inspedralbes.cat posta",
+        "subTitle": "{'@'}inspedralbes.cat posta",
         "accessGoogle": "Google-rekin sartu",
         "accessGithub": "Github-rekin sartu",
         "logIn": "Edo saioa hasi",
@@ -245,7 +245,7 @@
         "tags": "Etiketak (JSON)",
         "tagsExample": "Adibide formatua: [\"JavaScript\", \"Python\", \"React\"]",
         "availability": "Eskuragarritasuna (JSON)",
-        "availabilityExample": "Adibide formatua: {\"monday\":\"9:00-12:00\", \"friday\":\"9:00-12:00\"}"
+        "availabilityExample": "Adibide formatua: {'{\"monday\":\"9:00-12:00\", \"friday\":\"9:00-12:00\"}'}"
     },
     "post": {
         "title": "Post bat gehitu",

@@ -1,0 +1,340 @@
+{
+    
+    "editProfile": {
+        "title": "Edit Banner and Profile",
+        "fullName": "Full Name",
+        "city": "City",
+        "bannerimg": "Banner Image",
+        "profileimg": "Profile Image",
+        "save": "Save Changes"
+    },
+    "formPersonal": {
+        "title": "Edit Personal Information",
+        "email": "Email:",
+        "phone": "Phone:",
+        "save": "Save changes",
+        "description":"Description:",
+        "academicTitle":"Academic Title:",
+        "SocialMedia":"Social Media",
+        "languages":"Languages",
+        "softwareSkills":"Software Skills",
+        "english":"English",
+        "noAvailability": "No Availability"
+
+    },
+    "formAvailability": {
+        "title": "Edit Availability Schedule",
+        "email": "Email:",
+        "save": "Save changes",
+        "enable": "Enable",
+        "startTime": "Start Time",
+        "endTime": "End Time",
+        "monday": "Monday",
+        "tuesday": "Tuesday",
+        "wednesday": "Wednesday",
+        "thursday": "Thursday",
+        "friday": "Friday",
+        "saturday": "Saturday",
+        "sunday": "Sunday"
+    },
+    "PersonalInfo": {
+        "titlePage": "Personal Information",
+        "nameAndSurname": "Name and Surname",
+        "desc": "Description",
+        "noDesc": "This user has not added any description.",
+        "socialMedia": "Social Media",
+        "githubProfile": "Github Profile",
+        "LinkedinProfile": "Linkedin Profile",
+        "TwitterProfile": "Twitter Profile",
+        "InstagramProfile": "Instagram Profile",
+        "FacebookProfile": "Facebook Profile",
+        "location": "Location",
+        "title": "Title",
+        "studying": "Studying...",
+        "contact": "Contact",
+        "email": "Email:",
+        "phone": "Phone:",
+        "softwareSkills": "Software Skills",
+        "languages": "Languages",
+        "noLanguages": "No languages yet...",
+        "edit": "Edit"
+    },
+    "chatContent": {
+        "writeMessage": "Write a message..."
+    },
+    "languageSelector": {
+        "spanish": "Spanish",
+        "english": "English",
+        "catalan": "Catalan",
+        "chinese": "Chinese",
+        "urdu": "Urdu",
+        "german": "German",
+        "portuguese": "Portuguese",
+        "japanese": "Japanese",
+        "euskera": "Basque",
+        "gallego": "Galician"
+    },
+    "StadisticsPage": {
+        "title": "Statistics",
+        "userGraph": "User Graphs",
+        "commentsGraph": "Comments Graphs",
+        "postGraph": "Post Graphs"
+    },
+    "serviceListPage": {
+        "title": "Services",
+        "noDescription": "No description available"
+    },
+    "profilePage": {
+        "placeWhereYouLive": "Place where you live...",
+        "pendant": "Pending assignment"
+    },
+    "LoginRegisterPage": {
+        "subTitle": "{'@'}inspedralbes.cat Email",
+        "accessGoogle": "Access with Google",
+        "accessGithub": "Access with Github",
+        "logIn": "Or log in",
+        "mailPlaceholder": "Email",
+        "passwordPlaceholder": "Password",
+        "loginButton": "Log In",
+        "projectBy": "Project by the team of",
+        "withTheHelpOf": ", with the help of",
+        "error": "An error occurred while logging in",
+        "errorFields": "Login error, check the entered data",
+        "invalidMail": "Login error, the email is not valid"
+    },
+    "AddComunityPost": {
+        "create": "Create a post",
+        "title": "Title:",
+        "titlePlaceholder": "Enter the post title",
+        "description": "Description:",
+        "descriptionPlaceholder": "Enter the post description",
+        "postImage": "Upload Image:",
+        "preview": "Preview:",
+        "publish": "Publish",
+        "publishing": "Publishing...",
+        "notAllFields": "Please complete all fields and upload an image.",
+        "error": "An error occurred while publishing the post:"
+    },
+    "viewValidationUser": {
+        "title": "Validate Users",
+        "user": "User Nº ",
+        "userType": "User Type: ",
+        "student": "Student",
+        "teacher": "Teacher",
+        "admin": "Administrator",
+        "class": "Class: ",
+        "banner": "Banner: ",
+        "profile": "Profile: ",
+        "validate": "Validate",
+        "delete": "Delete",
+        "unknown": "Unknown"
+    },
+    "ViewValidationUpdate": {
+        "title": "Validate/Update Users",
+        "user": "User Nº: ",
+        "userType": "User Type: ",
+        "student": "Student",
+        "teacher": "Teacher",
+        "admin": "Administrator",
+        "class": "Class: ",
+        "banner": "Banner: ",
+        "profile": "Profile: ",
+        "validate": "Validate",
+        "delete": "Delete",
+        "unknown": "Unknown"
+    },
+    "viewRequest": {
+        "comments": "Comments",
+        "commentPlaceholder": "Write a comment!",
+        "seeMore": "See more",
+        "seeLess": "See less",
+        "availability": "Availability",
+        "from": "From",
+        "to": "to"
+    },
+    "ViewReportUser": {
+        "title": "Reported Users",
+        "reportN": "Report Nº",
+        "status": "Status:",
+        "pending": "Pending",
+        "reviewing": "Reviewing",
+        "reviewed": "Reviewed",
+        "date": "Date:",
+        "userReporting": "Reporting User:",
+        "userReported": "Reported User:",
+        "report": "Report:",
+        "delete": "Delete"
+    },
+    "ViewReportPublication": {
+        "title": "Reported Publications",
+        "reportN": "Report Nº",
+        "status": "Status:",
+        "pending": "Pending",
+        "reviewing": "Reviewing",
+        "reviewed": "Reviewed",
+        "date": "Date:",
+        "userReporting": "Reporting User:",
+        "userPost": "User of the Publication:",
+        "postTitle": "Publication Title:",
+        "postDescription": "Publication Description:",
+        "report": "Report:",
+        "reportedImage": "Reported Image:",
+        "viewImage": "View Image",
+        "delete": "Delete"
+    },
+    "ViewMyPublicationItem": {
+        "availability": "Availability: ",
+        "reports": "Reports: ",
+        "date": "Date: ",
+        "pending": "Pending Review",
+        "reported": "Reported",
+        "published": "Published",
+        "textNotVerified": "Text not verified by AI",
+        "textVerified": "Text verified by AI",
+        "imgNotVerified": "Image not verified by AI",
+        "imgVerified": "Image verified by AI",
+        "available": "Available",
+        "notAvailable": "Not Available"
+    },
+    "ViewReportComments": {
+        "title": "Reported Comments",
+        "reportN": "Report Nº",
+        "status": "Status:",
+        "pending": "Pending",
+        "reviewing": "Reviewing",
+        "reviewed": "Reviewed",
+        "date": "Date:",
+        "comment": "Comment:",
+        "reportingUser": "Reporting User:",
+        "commentUser": "Comment User:",
+        "report": "Report:",
+        "delete": "Delete"
+    },
+    "viewPost": {
+        "comments": "Comments"
+    },
+    "viewPeopleMentoria": {
+        "chat": "Chat"
+    },
+    "myRequests": {
+        "title": "My Requests",
+        "noRequests": "You have no requests",
+        "textNotVerified": "Text not verified by AI",
+        "textVerified": "Text verified by AI",
+        "imgNotVerified": "Image not verified by AI",
+        "imgVerified": "Image verified by AI"
+    },
+    "myRequest": {
+        "availability": "Availability:",
+        "reports": "Reports:",
+        "date": "Dates:",
+        "processing": "Pending Review",
+        "reported": "Reported",
+        "posted": "Posted",
+        "textNotVerified": "Text not verified by AI",
+        "textVerified": "Text verified by AI",
+        "imgNotVerified": "Image not verified by AI",
+        "imgVerified": "Image verified by AI"
+    },
+    "myPublications": {
+        "title": "My Publications",
+        "noPublications": "You have no publications"
+    },
+    "subMenu": {
+        "hi": "Hi,",
+        "profile": "Profile",
+        "publications": "My Publications",
+        "request": "My Requests",
+        "admin": "Admin",
+        "statistics": "Statistics"
+    },
+    "requestPost": {
+        "title": "Add a Request:",
+        "uploadImage": "Upload an Image:",    
+        "availability": "Available:",
+        "addAvailability": "+ Add Availability",
+        "selectDay": "Select a Day",
+        "startTime": "Start Time",
+        "endTime": "End Time",
+        "publishing": "Publishing...",
+        "titlePlaceholder": "Title",
+        "DescriptionPlaceholder": "What are you thinking?"
+    },
+    "notificationList": {
+        "title": "Notifications",
+        "all": "All",
+        "comments": "Comments",
+        "publications": "Publications",
+        "noNotifications": "No notifications to show"
+    },
+    "navBar": {
+        "home": "Home",
+        "search": "Search",
+        "upload": "Upload",
+        "chat": "Chat"
+    },
+    "loading": {
+        "title": "Loading..."
+    },
+    "headerVerification": {
+        "title": "Report Page",
+        "validationUser": "User Validation",
+        "validationPost": "Post Validation"
+    },
+    "headerReport": {
+        "title": "Report Page",
+        "reportUser": "View User Report",
+        "reportPost": "View Post Report",
+        "reportComment": "View Comment Report"
+    },
+    "header": {
+        "report": "Report",
+        "validation": "Validation",
+        "services": "Services",
+        "comunity": "Community",
+        "mentors": "Mentors",
+        "request": "Requests"
+    },
+    "formNewDataUsers": {
+        "title": "User Form",
+        "showForm": "Show Form",
+        "hideForm": "Hide Form",
+        "name": "Name",
+        "profilePicture": "Profile Picture",
+        "banner": "Banner",
+        "city": "City",
+        "linkDiscord": "Discord Link",
+        "linkGithub": "Github Link",
+        "submit": "Save User",
+        "tags": "Tags (JSON)",
+        "tagsExample": "Example format: [\"JavaScript\", \"Python\", \"React\"]",
+        "availability": "Availability (JSON)",
+        "availabilityExample": "Example format: {'{\"monday\":\"9:00-12:00\", \"friday\":\"9:00-12:00\"}'}"
+    },
+    "post": {
+        "title": "Add a Post",
+        "titlePlaceholder": "Title",
+        "postDescriptionPlaceholder": "What are you thinking?",
+        "maxChar": "Maximum 230 characters",
+        "publish": "Publish"
+    },
+    "calendar": {
+        "title": "Availability Schedule",
+        "day": "Day",
+        "availability": "Available Hours",
+        "monday": "Monday",
+        "tuesday": "Tuesday",
+        "wednesday": "Wednesday",
+        "thursday": "Thursday",
+        "friday": "Friday",
+        "saturday": "Saturday",
+        "sunday": "Sunday",
+        "edit": "Edit"
+    },
+    "menu": {
+        "comunity": "Community",
+        "mentors": "Mentors",
+        "request": "Requests",
+        "share": "Share"
+    }
+}

@@ -29,7 +29,7 @@
         "pendant":"Pendiente de asignar"
     },
     "LoginRegisterPage":{
-        "subTitle":"Correo @inspedralbes.cat",
+        "subTitle":"Correo {'@'}inspedralbes.cat",
         "accessGoogle":"Acceder con Google",
         "accessGithub":"Acceder con Github",
         "logIn":"O inicia sesión",
@@ -245,7 +245,7 @@
         "tags": "Etiquetas (JSON)",
         "tagsExample": "Ejemplo de formato: [\"JavaScript\", \"Python\", \"React\"]",
         "availability": "Disponibilidad (JSON)",
-        "availabilityExample": "Ejemplo de formato: {\"monday\":\"9:00-12:00\", \"friday\":\"9:00-12:00\"}"
+        "availabilityExample": "Ejemplo de formato: {'{\"monday\":\"9:00-12:00\", \"friday\":\"9:00-12:00\"}'}"
     },
     "post": {
         "title": "Añade una publicación",
