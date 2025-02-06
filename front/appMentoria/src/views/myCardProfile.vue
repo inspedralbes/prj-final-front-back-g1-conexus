@@ -20,14 +20,6 @@
         QRcode
         <input type="checkbox" v-model="visibleFields.qrCode" class="w-6 h-6" />
       </div>
-      <div class="mb-4 flex items-center justify-between">
-        Favicon Icon
-        <input
-          type="checkbox"
-          v-model="visibleFields.icon_favicon"
-          class="w-6 h-6"
-        />
-      </div>
     </div>
   </div>
 
@@ -141,6 +133,8 @@
 </template>
   <script setup>
 import { onMounted, reactive, ref } from "vue";
+import Header from "@/components/Header.vue";
+import QRCode from "qrcode";
 import { useAppStore } from "@/stores/index";
 import { uploadCards } from "@/services/communicationManager";
 
@@ -155,11 +149,11 @@ const visibleFields = reactive({
   phone: false,
   skills: true,
   qrCode: true,
-  icon_favicon: true,
 });
-
+const qrCodeUrl = ref("");
 const cardFront = ref(null);
 const cardBack = ref(null);
+
 const generateQRCode = () => {
   const url = `https://www.ejemplo.com/perfil/${user.name}`;
   QRCode.toDataURL(url)

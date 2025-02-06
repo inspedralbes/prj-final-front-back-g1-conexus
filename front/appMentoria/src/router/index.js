@@ -21,7 +21,7 @@ import servicePage from '../views/servicesListPage.vue'
 import stadisticsPage from '@/views/stadisticsPage.vue';
 import requestsPage from '../views/mainRequests.vue'
 import editProfilePage from '@/views/editProfilePage.vue';
-import profileCard from '@/views/myProfilePage.vue';
+import profileCard from '@/views/myCardProfile.vue';
 
 const routes = [
   {
