@@ -1,20 +1,10 @@
 services:
-  # tr2g2-front:
-  #   image: node:23-bookworm-slim
-  #   command: sh -c "cp .env.prod .env && npm install && npm run dev && npm run build"
-  #   volumes:
-  #     - ./front/appMentoria:/usr/src/app
-  #   working_dir: /usr/src/app
-  #   ports:
-  #     - 3009:5173
-  #   links:
-  #     - tr2g2-back
 
   tr2g2-back:
     build:
       dockerfile: ./back/node/dev.Dockerfile
       context: .
-    command: sh -c "cp .env.prod .env && npm install -g pnpm && pnpm -v && pnpm install && pnpm run dev"
+    command: sh -c "cp .env.prod .env && pnpm install && pnpm run dev"
     volumes:
       - ./back/node:/usr/src/app
     working_dir: /usr/src/app
@@ -23,9 +13,9 @@ services:
 
   microprocesos_api:
     build:
-      dockerfile: ./back/microprocesos_api/.dev.Dockerfile
+      dockerfile: ./back/node/dev.Dockerfile
       context: .
-    command: sh -c "cp .env.prod .env && npm install -g pnpm && pnpm -v && pnpm install && chmod 777 .script.prod.sh && ./.script.prod.sh && node server.js"
+    command: sh -c "cp .env.prod .env && pnpm install && chmod 777 .script.prod.sh && ./.script.prod.sh && node server.js"
     volumes:
       - ./back/microprocessos_api:/usr/src/app
       - ./back/node/services:/usr/src/node/services

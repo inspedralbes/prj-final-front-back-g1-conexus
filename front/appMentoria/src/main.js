@@ -1,13 +1,5 @@
-// import './assets/m</div>ain.css'
-
 import { createApp } from 'vue'
-import { createPinia } from 'pinia'
-
 import App from './App.vue'
-import router from './router'
-import './assets/tailwind.css'
-import "../node_modules/flag-icons/css/flag-icons.min.css";
-
 import { createI18n } from 'vue-i18n'
 import es from './assets/languages/es.json'
 import ca from './assets/languages/ca.json'
@@ -19,36 +11,24 @@ import ja from './assets/languages/ja.json'
 import eu from './assets/languages/eu.json'
 import gl from './assets/languages/gl.json'
 
-
-
-
-
-
-const app = createApp(App)
+const messages = {
+  es,
+  ca,
+  zh,
+  de,
+  ur,
+  pt,
+  ja,
+  eu,
+  gl
+}
 
 const i18n = createI18n({
-    locale: 'ca',
-    messages: {
-        "es": es,
-        "ca": ca,
-        "zh": zh,
-        "de": de,
-        "ur": ur,
-        "pt": pt,
-        "ja": ja,
-        "eu": eu,
-        "gl": gl 
-        
-    },
-    
+  locale: 'ca', // idioma por defecto
+  fallbackLocale: 'es',
+  messages,
 })
 
+const app = createApp(App)
 app.use(i18n)
-app.use(createPinia())
-app.use(router)
-
 app.mount('#app')
-
-export function changeLocale(locale) {
-    i18n.global.locale = locale
-}

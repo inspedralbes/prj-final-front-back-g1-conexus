@@ -1,5 +1,4 @@
 import { fileURLToPath, URL } from 'node:url'
-
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
@@ -35,6 +34,14 @@ export default defineConfig({
     }
   },
   build: {
-    chunkSizeWarningLimit: 1000, 
+    chunkSizeWarningLimit: 1000,
+    outDir: 'dist',
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vue: ['vue']
+        }
+      }
+    }
   }
 })
