@@ -22,7 +22,7 @@
     "vue": "^3.5.13",
     "vue-double-slider": "^0.2.1",
     "vue-hour-range-picker": "^1.0.1",
-    "vue-i18n": "^10.0.5",
+    "vue-i18n": "^11.1.0",
     "vue-router": "^4.4.5"
   },
   "devDependencies": {

@@ -1,8 +1,8 @@
 services:
 
-  tr2g2-back:
+  tr-final-back:
     build:
-      dockerfile: ./back/node/dev.Dockerfile
+      dockerfile: ./back/node/prod.Dockerfile
       context: .
     command: sh -c "cp .env.prod .env && pnpm install && pnpm run dev"
     volumes:
@@ -13,7 +13,7 @@ services:
 
   microprocesos_api:
     build:
-      dockerfile: ./back/node/dev.Dockerfile
+      dockerfile: ./back/node/prod.Dockerfile
       context: .
     command: sh -c "cp .env.prod .env && pnpm install && chmod 777 .script.prod.sh && ./.script.prod.sh && node server.js"
     volumes:
@@ -31,16 +31,16 @@ services:
       - 3008:3008
       - 3013:24848
     links:
-     - tr2g2-mysql
-     - tr2g2-mongodb
-  tr2g2-mongodb:
+     - tr-final-mysql
+     - tr-final-mongodb
+  tr-final-mongodb:
     image: mongo
     restart: always
     ports:
       - 27017:27017
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_ROOT_PASSWORD: 0qBqYEid2MN8Qd
     volumes:
       - mongo-db:/data/db
 
@@ -52,16 +52,16 @@ services:
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
-      ME_CONFIG_MONGODB_URL: mongodb://root:example@tr2g2-mongodb:27017/
+      ME_CONFIG_MONGODB_URL: mongodb://root:0qBqYEid2MN8Qd@tr-final-mongodb:27017/
       ME_CONFIG_BASICAUTH: false
     depends_on:
-      - tr2g2-mongodb
+      - tr-final-mongodb
 
-  tr2g2-mysql:
+  tr-final-mysql:
     image: mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: P2zjRkH5OqohFI
       MYSQL_DATABASE: mentories
     volumes:
       - mysql-db:/var/lib/mysql:rw
@@ -76,9 +76,9 @@ services:
     ports:
       - 3009:8080
     environment:
-      ADMINER_DEFAULT_SERVER: tr2g2-mysql
+      ADMINER_DEFAULT_SERVER: tr-final-mysql
     depends_on:
-      - tr2g2-mysql
+      - tr-final-mysql
 
 volumes:
   mysql-db:
