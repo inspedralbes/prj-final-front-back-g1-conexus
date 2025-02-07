@@ -25,10 +25,10 @@
           <div class="flex flex-col flex-1 px-3 mt-6">
             <div class="space-y-4">
               <nav class="flex-1 space-y-2">
-                <a @click="selectItem('principal', $router.push('/'))"
-                  :class="{ 'bg-buttomLight dark:bg-buttomDark dark:text-white text-white': selectItem === 'principal', 'text-gray-900 hover:text-white dark:hover:text-white dark:hover:bg-buttomDark hover:bg-buttomLight': selectItem !== 'principal' }"
+                <a @click="selectItem('principal', () => $router.push('/'))"
+                  :class="{ 'bg-buttomLight dark:bg-buttomDark dark:text-white text-white': selectedItem === 'principal', 'text-gray-900 hover:text-white dark:hover:text-white dark:hover:bg-buttomDark hover:bg-buttomLight': selectedItem !== 'principal' }"
                   title=""
-                  class="flex items-center px-4 py-2.5 text-sm font-medium text-white transition-all duration-200 dark:bg-buttomDark bg-buttomLight rounded-lg group">
+                  class="flex items-center px-4 py-2.5 text-sm font-medium text-white transition-all duration-200 rounded-lg group">
                   <svg class="flex-shrink-0 w-5 h-5 mr-4 text-white dark:text-white group-hover:text-white"
                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
                     stroke-width="2">
@@ -38,8 +38,8 @@
                   {{ $t("navBarWeb.main") }}
                 </a>
 
-                <a href="#" @click="selectItem('ofertas', $router.push('/requests'))"
-                  :class="{ 'bg-buttomLight dark:bg-buttomDark dark:text-white text-white': selectItem === 'ofertas', ' dark:text-gray-900 text-gray-900 dark:hover:text-white hover:text-white dark:hover:bg-buttomDark hover:bg-buttomLight': selectItem !== 'ofertas' }"
+                <a href="#" @click="selectItem('requests', () => $router.push('/requests'))"
+                  :class="{ 'bg-buttomLight dark:bg-buttomDark dark:text-white text-white': selectedItem === 'requests', ' dark:text-gray-900 text-gray-900 dark:hover:text-white hover:text-white dark:hover:bg-buttomDark hover:bg-buttomLight': selectedItem !== 'requests' }"
                   class="flex items-center px-4 py-2.5 text-sm font-medium transition-all duration-200 dark:text-white text-gray-900 dark:hover:text-white hover:text-white rounded-lg dark:hover:bg-buttomDark hover:bg-buttomLight group">
                   <svg class="w-5 h-5 mr-4 text-gray-800 dark:text-white group-hover:text-white" aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2">
@@ -49,8 +49,8 @@
                   {{ $t("navBarWeb.oferts") }}
                 </a>
 
-                <a href="#" @click="selectItem('perfiles', $router.push('/profiles'))"
-                  :class="{ 'bg-buttomLight dark:bg-buttomDark dark:text-white text-white': selectItem === 'perfiles', ' dark:text-gray-900 text-gray-900 dark:hover:text-white hover:text-white dark:hover:bg-buttomDark hover:bg-buttomLight': selectItem !== 'perfiles' }"
+                <a href="#" @click="selectItem('perfiles', () => $router.push('/profiles'))"
+                  :class="{ 'bg-buttomLight dark:bg-buttomDark dark:text-white text-white': selectedItem === 'perfiles', ' dark:text-gray-900 text-gray-900 dark:hover:text-white hover:text-white dark:hover:bg-buttomDark hover:bg-buttomLight': selectedItem !== 'perfiles' }"
                   class="flex items-center px-4 py-2.5 text-sm font-medium transition-all duration-200 dark:text-white text-gray-900 dark:hover:text-white hover:text-white rounded-lg dark:hover:bg-buttomDark hover:bg-buttomLight group">
                   <svg class="flex-shrink-0 w-5 h-5 mr-4 dark:text-white group-hover:text-white" aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
@@ -61,8 +61,8 @@
                   {{ $t("navBarWeb.profiles") }}
                 </a>
 
-                <a href="#" @click="selectItem('notificacines', $router.push('/notifications'))"
-                  :class="{ 'bg-buttomLight dark:bg-buttomDark dark:text-white text-white': selectItem === 'notificaciones', ' dark:text-gray-900 text-gray-900 dark:hover:text-white hover:text-white dark:hover:bg-buttomDark hover:bg-buttomLight': selectItem !== 'notificaciones' }"
+                <a href="#" @click="selectItem('notificacines', () => $router.push('/notifications'))"
+                  :class="{ 'bg-buttomLight dark:bg-buttomDark dark:text-white text-white': selectedItem === 'notificaciones', ' dark:text-gray-900 text-gray-900 dark:hover:text-white hover:text-white dark:hover:bg-buttomDark hover:bg-buttomLight': selectedItem !== 'notificaciones' }"
                   class="flex items-center px-4 py-2.5 text-sm font-medium transition-all duration-200 dark:text-white text-gray-900 dark:hover:text-white hover:text-white rounded-lg dark:hover:bg-buttomDark hover:bg-buttomLight group">
                   <svg class="w-5 h-5 mr-4 text-gray-800 dark:text-white group-hover:text-white" aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
@@ -83,8 +83,8 @@
               <hr class="border-gray-300" />
 
               <nav class="flex-1 space-y-2">
-                <a href="#" @click="selectItem('chat', router.push('/chatList'))"
-                  :class="{ 'bg-buttomLight dark:bg-buttomDark dark:text-white text-white': selectItem === 'chat', ' dark:text-gray-900 text-gray-900 dark:hover:text-white hover:text-white dark:hover:bg-buttomDark hover:bg-buttomLight': selectItem !== 'chat' }"
+                <a href="#" @click="selectItem('chat', () => router.push('/chatList'))"
+                  :class="{ 'bg-buttomLight dark:bg-buttomDark dark:text-white text-white': selectedItem === 'chat', ' dark:text-gray-900 text-gray-900 dark:hover:text-white hover:text-white dark:hover:bg-buttomDark hover:bg-buttomLight': selectedItem !== 'chat' }"
                   class="flex items-center px-4 py-2.5 text-sm font-medium transition-all duration-200 dark:text-white text-gray-900 dark:hover:text-white hover:text-white rounded-lg dark:hover:bg-buttomDark hover:bg-buttomLight group">
                   <svg class="w-5 h-5  mr-4 text-gray-800 dark:text-white group-hover:text-white" aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2">
@@ -96,7 +96,7 @@
                 </a>
 
                 <a href="#" @click="selectItem('gacha')"
-                  :class="{ 'bg-buttomLight dark:bg-buttomDark dark:text-white text-white' : selectItem === 'gacha', ' dark:text-gray-900 text-gray-900 dark:hover:text-white hover:text-white dark:hover:bg-buttomDark hover:bg-buttomLight': selectItem !== 'gacha' }"
+                  :class="{ 'bg-buttomLight dark:bg-buttomDark dark:text-white text-white' : selectedItem === 'gacha', ' dark:text-gray-900 text-gray-900 dark:hover:text-white hover:text-white dark:hover:bg-buttomDark hover:bg-buttomLight': selectedItem !== 'gacha' }"
                   class="flex items-center px-4 py-2.5 text-sm font-medium transition-all duration-200 dark:text-white text-gray-900 dark:hover:text-white hover:text-white rounded-lg dark:hover:bg-buttomDark hover:bg-buttomLight group">
                   <svg class="w-5 h-5 mr-4 text-gray-800 dark:text-white group-hover:text-white" aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2">
@@ -108,7 +108,7 @@
                 </a>
 
                 <a href="#" @click="selectItem('Game')"
-                  :class="{ 'bg-buttomLight dark:bg-buttomDark dark:text-white text-white': selectItem === 'game', ' dark:text-gray-900 text-gray-900 dark:hover:text-white hover:text-white dark:hover:bg-buttomDark hover:bg-buttomLight': selectItem !== 'game' }"
+                  :class="{ 'bg-buttomLight dark:bg-buttomDark dark:text-white text-white': selectedItem === 'game', ' dark:text-gray-900 text-gray-900 dark:hover:text-white hover:text-white dark:hover:bg-buttomDark hover:bg-buttomLight': selectedItem !== 'game' }"
                   class="flex items-center px-4 py-2.5 text-sm font-medium transition-all duration-200 dark:text-white text-gray-900 dark:hover:text-white hover:text-white rounded-lg dark:hover:bg-buttomDark hover:bg-buttomLight group">
                   <svg class="w-5 h-5 mr-6 text-gray-800 dark:text-white group-hover:text-white" aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2">
@@ -162,18 +162,20 @@
 </template>
 
 <script setup>
-import { ref, onMounted, reactive } from 'vue';
+import { ref, onMounted, reactive, watch } from 'vue';
 import SubMenu from '../SubMenu.vue';
 import { useAppStore } from '@/stores/index';
-import { useRouter } from 'vue-router';
+import { useRoute } from "vue-router";
 
 const appStore = useAppStore();
-const router = useRouter();
+const route = useRoute();
+const selectedItem = ref(null);
+
 
 var user = reactive({});
 var profile = ref(null);
 var name = ref(null);
-var selectedItem = ref(null);
+
 
 onMounted(() => {
   user.value = appStore.getUser();
@@ -181,9 +183,26 @@ onMounted(() => {
   name.value = user.value.name;
 });
 
-const selectItem = (item) => {
+const selectItem = (item, action) => {
   selectedItem.value = item;
-}
+  if (action) action();
+};
+
+watch(route, (newRoute) => {
+  if (newRoute.path === '/') {
+    selectedItem.value = 'principal';
+  } else if (newRoute.path.startsWith('/requests')) {
+    selectedItem.value = 'requests';
+  } else if (newRoute.path.startsWith('/profiles')) {
+    selectedItem.value = 'perfiles';
+  } else if (newRoute.path.startsWith('/notifications')) {
+    selectedItem.value = 'notificaciones';
+  } else if (newRoute.path.startsWith('/chatList')) {
+    selectedItem.value = 'chat';
+  } else {
+    selectedItem.value = null;
+  }
+}, { immediate: true });
 
 const handleClick = () => {
   if (router.currentRoute.value.path === '/') {
