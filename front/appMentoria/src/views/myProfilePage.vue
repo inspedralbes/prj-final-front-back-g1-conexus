@@ -9,8 +9,8 @@
     <PersonalInfo :user="user" />
 
     <!-- User - Availibility -->
-    <div v-if="user.value.availibility" class="dark:bg-gray-800 bg-white p-6 rounded-xl shadow-lg shadow-black/30 my-4">
-      <Calendar :availibilityJson="JSON.stringify(user.value.availibility)" />
+    <div class="dark:bg-gray-800 bg-white p-6 rounded-xl shadow-lg shadow-black/30 my-4">
+      <Calendar :availabilityJson="user.value.availability" />
     </div>
   </div>
 
@@ -36,10 +36,11 @@ var profile = ref(null);
 var banner = ref(null);
 
 onMounted(() => {
+  console.log("awjdfoiqawjdfeioqajwefio");
   user.value = appStore.getUser();
   profile.value = user.value.profile;
   banner.value = user.value.banner;
-
+console.log("object");
   if (typeof user.value.tags == "string") {
     try {
       user.value.tags = JSON.parse(user.value.tags);
@@ -47,10 +48,11 @@ onMounted(() => {
       console.error("Error al parsear tags:", error);
     }
   }
-
-  if (typeof user.value.availibility == "string") {
+  console.log("MECAGO EN TODO"+typeof user.value.availability);
+  if (typeof user.value.availability == "string") {
     try {
-      user.value.availibility = JSON.parse(user.value.availibility);
+      user.value.availability = JSON.parse(user.value.availability);
+      console.log("MECAGO EN TODO"+typeof user.value.availability);
     } catch (error) {
       console.error("Error al parsear availibility:", error);
     }

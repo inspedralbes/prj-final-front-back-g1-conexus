@@ -10,12 +10,12 @@
                         {{ user.value.name }}
                     </h3>
                     <p class="text-sm sm:text-base text-gray-500 dark:text-gray-300">
-                        {{ user.value.city || `Lloc on vius...` }}
+                        {{ user.value.city || $t("profilePage.placeWhereYouLive") }}
                     </p>
                 </div>
             </div>
             <div class="mt-4 sm:mt-0 sm:mr-4">
-                <button @click="$router.push('/editProfile')"
+                <button @click="$router.push('/editProfile/banner')"
                     class="py-3 px-3 sm:py-4 sm:px-4 rounded-full bg-indigo-600 text-white shadow-lg shadow-black/30 hover:bg-indigo-700 transition">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="w-5 h-5 sm:w-6 sm:h-6">

@@ -53,3 +53,4 @@ app.mount('#app')
 export function changeLocale(locale) {
     i18n.global.locale = locale
 }
+

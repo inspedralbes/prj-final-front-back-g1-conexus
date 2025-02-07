@@ -1,8 +1,73 @@
-{
-    "chatContent":{
-        "writeMessage":"Escribe un mensaje..."
+{ 
+    "mainPage": {
+        "allow": "Permitir Notificaciones",
+        "questionPermission": "¿Quieres recibir notificaciones para enterarte de eventos o actualizaciones?",
+        "acceptedPermission": "Permitir",
+        "rejectedPermission": "Bloquear"
     },
-    "languageSelector":{
+"editProfile":{
+    "title": "Editar Banner y Perfil",
+    "fullName":"Nombre completo",
+    "city":"Ciudad",
+    "bannerimg":"Imaagen de banner",
+    "profileimg":"Imagen de perfil",
+    "save":"Guardar cambios"
+},   
+"formPersonal": {
+        "title": "Editar Información Personal",
+        "email": "Correo electrónico:",
+        "phone": "Teléfono:",
+        "save": "Guardar cambios",
+        "description":"Descripción:",
+        "academicTitle":"Título académico:",
+        "SocialMedia":"Redes sociales",
+        "languages":"Idiomas",
+        "softwareSkills":"Habilidades en software",
+        "english":"Inglés"
+
+    },
+    "formAvailability": {
+        "title": "Editar Horario de Disponibilidad",
+        "email": "Correo electrónico:",
+        "save": "Guardar cambios",
+        "enable": "Habilitar",
+        "startTime": "Hora de inicio",
+        "endTime": "Hora de fin",
+        "monday": "Lunes",
+        "tuesday": "Martes",
+        "wednesday": "Miércoles",
+        "thursday": "Jueves",
+        "friday": "Viernes",
+        "saturday": "Sábado",
+        "sunday": "Domingo",
+        "noAvailability": "Sin disponibilidad"
+    },
+"PersonalInfo":{
+    "titlePage": "Información personal",
+    "nameAndSurname": "Nombre y apellidos",
+    "desc": "Descripción",
+    "noDesc": "Este usuario no ha añadido ninguna descripción.",
+    "socialMedia": "Redes sociales",
+    "githubProfile": "Perfil de Github",
+    "LinkedinProfile": "Perfil de Linkedin",
+    "TwitterProfile": "Perfil de Twitter",
+    "InstagramProfile": "Perfil de Instagram",
+    "FacebookProfile": "Perfil de Facebook",
+    "location": "Ubicación",
+    "title": "Título",
+    "studying": "Estudiando...",
+    "contact": "Contacto",
+    "email": "Correo electrónico:",
+    "phone": "Teléfono:",
+    "softwareSkills": "Habilidades en software",
+    "languages": "Idiomas",
+    "noLanguages": "Aún no hay...",
+    "edit": "Editar"
+},
+    "chatContent": {
+        "writeMessage": "Escribe un mensaje..."
+    },
+    "languageSelector": {
         "spanish": "Español",
         "english": "Inglés",
         "catalan": "Catalán",
@@ -14,19 +79,19 @@
         "euskera": "Euskera",
         "gallego": "Gallego"
     },
-    "StadisticsPage":{
+    "StadisticsPage": {
         "title": "Estadísticas",
         "userGraph": "Graficos de usuarios",
         "commentsGraph": "Graficos de comentarios",
-        "postGraph": "Graficos de publicaciones"  
+        "postGraph": "Graficos de publicaciones"
     },
-    "serviceListPage":{
+    "serviceListPage": {
         "title": "Servicios",
         "noDescription": "No hay descripción disponible"
     },
-    "profilePage":{
-        "placeWhereYouLive":"Lugar donde vives...",
-        "pendant":"Pendiente de asignar"
+    "profilePage": {
+        "placeWhereYouLive": "Lugar donde vives...",
+        "pendant": "Pendiente de asignar"
     },
     "LoginRegisterPage":{
         "subTitle":"Correo {'@'}inspedralbes.cat",
@@ -128,15 +193,15 @@
         "date": "Fecha: ",
         "pending": "Pendiente de revisar",
         "reported": "Reportado",
-        "published": "Publicado", 
+        "published": "Publicado",
         "textNotVerified": "Texto no verificado por IA",
         "textVerified": "Texto verificado por IA",
-        "imgNotVerified": "Imagen no verificada por IA",  
+        "imgNotVerified": "Imagen no verificada por IA",
         "imgVerified": "Imagen verificada por IA",
         "available": "Disponible",
         "notAvailable": "No disponible"
     },
-    "ViewReportComments":{
+    "ViewReportComments": {
         "title": "Comentarios reportados",
         "reportN": "Informe Nº",
         "status": "Estado:",
@@ -150,17 +215,17 @@
         "report": "Informe:",
         "delete": "Eliminar"
     },
-    "viewPost":{
+    "viewPost": {
         "comentaris": "Comentarios"
     },
-    "viewPeopleMentoria":{
+    "viewPeopleMentoria": {
         "chat": "Chat"
     },
-    "myRequests":{
+    "myRequests": {
         "title": "Mis peticiones",
         "noRequests": "No tienes peticiones"
     },
-    "myRequest":{
+    "myRequest": {
         "availability": "Disponibilitat:",
         "reports": "Reportes:",
         "date": "Fechas:",
@@ -172,7 +237,7 @@
         "imgNotVerified": "Imagen no verificada por IA",
         "imgVerified": "Imagen verificada por IA"
     },
-    "myPublications":{
+    "myPublications": {
         "title": "Mis publicaciones",
         "noPublications": "No tienes publicaciones"
     },
@@ -264,7 +329,8 @@
         "thursday": "Jueves",
         "friday": "Viernes",
         "saturday": "Sábado",
-        "sunday": "Domingo"
+        "sunday": "Domingo",
+        "edit": "Editar"
     },
     "menu": {
         "comunity": "Comunidad",

@@ -39,18 +39,25 @@ CREATE TABLE IF NOT EXISTS users (
     password VARCHAR(255) NOT NULL,
     banner VARCHAR(255),
     profile VARCHAR(255),
-    description TEXT,
     city VARCHAR(255),
-    tags JSON DEFAULT NULL,
-    discord_link VARCHAR(255),
-    github_link VARCHAR(255),    
+    tags JSON DEFAULT NULL,  
     availibility JSON DEFAULT NULL,
     verified BOOLEAN DEFAULT 0,
     status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
     review DECIMAL(2,1) DEFAULT 0,
     class_id INT,
     qualification_id INT,
+    Linkedin VARCHAR(255) DEFAULT NULL,
+    Instagram VARCHAR(255) DEFAULT NULL,
+    Twitter VARCHAR(255) DEFAULT NULL,
+    Github VARCHAR(255) DEFAULT NULL,
+    Facebook VARCHAR(255) DEFAULT NULL,
+    title VARCHAR(255) DEFAULT NULL,
+    phone VARCHAR(14)DEFAULT NULL,
+    softwareSkills VARCHAR(510) DEFAULT NULL,
+    languages VARCHAR(510) DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    description VARCHAR(600) DEFAULT NULL,
     FOREIGN KEY (typesUsers_id) REFERENCES typesUsers(id),
     FOREIGN KEY (class_id) REFERENCES classes(id),
     FOREIGN KEY (qualification_id) REFERENCES qualifications(id)
@@ -155,7 +162,19 @@ CREATE TABLE IF NOT EXISTS reportsUsers (
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
--- Table 14: newDataUsers (depends on users, typesUsers and classes)
+-- Table 14: reportsChats (depends on users)
+CREATE TABLE IF NOT EXISTS reportsChats (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    message_id VARCHAR(24) NOT NULL,
+    user_id INT NOT NULL,
+    content TEXT NOT NULL,
+    report TEXT NOT NULL,
+    status ENUM('pending', 'revising', 'revised') DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+-- Table 15: newDataUsers (depends on users, typesUsers and classes)
 CREATE TABLE IF NOT EXISTS newDataUsers (
     id INT AUTO_INCREMENT PRIMARY KEY,
     typesUsers_id INT NOT NULL DEFAULT 1,
@@ -169,7 +188,7 @@ CREATE TABLE IF NOT EXISTS newDataUsers (
     tags JSON DEFAULT NULL,
     discord_link VARCHAR(255),
     github_link VARCHAR(255),    
-    availibility JSON DEFAULT NULL,
+    availability JSON DEFAULT NULL,
     status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
     class_id INT,
     qualification_id INT,
@@ -179,7 +198,7 @@ CREATE TABLE IF NOT EXISTS newDataUsers (
     FOREIGN KEY (qualification_id) REFERENCES qualifications(id)
 );
 
--- Table 15: notifications (depends on users)
+-- Table 16: notifications (depends on users)
 CREATE TABLE IF NOT EXISTS notifications (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,

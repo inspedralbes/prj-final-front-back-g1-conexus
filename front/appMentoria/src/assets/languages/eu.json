@@ -1,4 +1,68 @@
 {
+    "mainPage": {
+        "allow": "Jakinarazpenak baimendu",
+        "questionPermission": "Gertaerak edo eguneratzeak jakiteko jakinarazpenak jaso nahi dituzu?",
+        "acceptedPermission": "Baimendu",
+        "rejectedPermission": "Blokeatu"
+    },
+    "editProfile": {
+        "title": "Banner eta Profila Editatu",
+        "fullName": "Izen osoa",
+        "city": "Hiria",
+        "bannerimg": "Banner irudia",
+        "profileimg": "Profil irudia",
+        "save": "Aldaketak gorde"
+    },
+    "formPersonal": {
+        "title": "Informazio Pertsonala Editatu",
+        "email": "Posta elektronikoa:",
+        "phone": "Telefonoa:",
+        "save": "Aldaketak gorde",
+        "description":"Deskribapena:",
+        "academicTitle":"Titulazio akademikoa:",
+        "SocialMedia":"Sare sozialak",
+        "languages":"Hizkuntzak",
+        "softwareSkills":"Software trebetasunak",
+        "english":"Ingelesa"
+
+    },
+    "formAvailability": {
+        "title": "Eskuragarritasun ordutegia editatu",
+        "email": "Posta elektronikoa:",
+        "save": "Aldaketak gorde",
+        "enable": "Gaitu",
+        "startTime": "Hasiera ordua",
+        "endTime": "Amaiera ordua",
+        "monday": "Astelehena",
+        "tuesday": "Asteartea",
+        "wednesday": "Asteazkena",
+        "thursday": "Osteguna",
+        "friday": "Ostirala",
+        "saturday": "Larunbata",
+        "sunday": "Igandea"
+    },
+    "PersonalInfo":{
+        "titlePage": "Informazio pertsonala",
+        "nameAndSurname": "Izena eta abizenak",
+        "desc": "Deskribapena",
+        "noDesc": "Erabiltzaile honek ez du deskribapenik gehitu.",
+        "socialMedia": "Sare sozialak",
+        "githubProfile": "Github profila",
+        "LinkedinProfile": "Linkedin profila",
+        "TwitterProfile": "Twitter profila",
+        "InstagramProfile": "Instagram profila",
+        "FacebookProfile": "Facebook profila",
+        "location": "Kokapena",
+        "title": "Izenburua",
+        "studying": "Ikasten...",
+        "contact": "Kontaktua",
+        "email": "Posta elektronikoa:",
+        "phone": "Telefonoa:",
+        "softwareSkills": "Software trebetasunak",
+        "languages": "Hizkuntzak",
+        "noLanguages": "Oraindik ez dago hizkuntzarik...",
+        "edit": "Editatu"
+    },
     "chatContent": {
         "writeMessage": "Idatzi mezua..."
     },
@@ -264,7 +328,9 @@
         "thursday": "Osteguna",
         "friday": "Ostirala",
         "saturday": "Larunbata",
-        "sunday": "Igandea"
+        "sunday": "Igandea",
+        "edit": "Editatu",
+        "noAvailability": "Eskuragarritasunik ez"
     },
     "menu": {
         "comunity": "Komunitatea",

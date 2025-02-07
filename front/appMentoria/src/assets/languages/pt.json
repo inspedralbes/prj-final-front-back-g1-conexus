@@ -1,4 +1,68 @@
 {
+    "mainPage": {
+        "allow": "Permitir Notificações",
+        "questionPermission": "Você quer receber notificações para saber sobre eventos ou atualizações?",
+        "acceptedPermission": "Permitir",
+        "rejectedPermission": "Bloquear"
+    },
+    "editProfile": {
+        "title": "Editar Banner e Perfil",
+        "fullName": "Nome completo",
+        "city": "Cidade",
+        "bannerimg": "Imagem de banner",
+        "profileimg": "Imagem de perfil",
+        "save": "Guardar mudanças"
+    },
+    "formPersonal": {
+        "title": "Editar Informações Pessoais",
+        "email": "Email:",
+        "phone": "Telefone:",
+        "save": "Guardar mudanças",
+        "description":"Descrição:",
+        "academicTitle":"Título acadêmico:",
+        "SocialMedia":"Redes sociais",
+        "languages":"Idiomas",
+        "softwareSkills":"Habilidades em software",
+        "english":"Inglês"
+
+    },
+    "formAvailability": {
+        "title": "Editar Horário de Disponibilidade",
+        "email": "Email:",
+        "save": "Guardar mudanças",
+        "enable": "Habilitar",
+        "startTime": "Hora de início",
+        "endTime": "Hora de término",
+        "monday": "Segunda-feira",
+        "tuesday": "Terça-feira",
+        "wednesday": "Quarta-feira",
+        "thursday": "Quinta-feira",
+        "friday": "Sexta-feira",
+        "saturday": "Sábado",
+        "sunday": "Domingo"
+    },
+    "PersonalInfo": {
+        "titlePage": "Informação pessoal",
+        "nameAndSurname": "Nome e sobrenome",
+        "desc": "Descrição",
+        "noDesc": "Este usuário não adicionou nenhuma descrição.",
+        "socialMedia": "Redes sociais",
+        "githubProfile": "Perfil do Github",
+        "LinkedinProfile": "Perfil do Linkedin",
+        "TwitterProfile": "Perfil do Twitter",
+        "InstagramProfile": "Perfil do Instagram",
+        "FacebookProfile": "Perfil do Facebook",
+        "location": "Localização",
+        "title": "Título",
+        "studying": "Estudando...",
+        "contact": "Contato",
+        "email": "Email:",
+        "phone": "Telefone:",
+        "softwareSkills": "Habilidades em software",
+        "languages": "Idiomas",
+        "noLanguages": "Ainda não há...",
+        "edit": "Editar"
+    },
     "chatContent": {
         "writeMessage": "Escreva uma mensagem..."
     },
@@ -264,7 +328,9 @@
         "thursday": "Quinta-feira",
         "friday": "Sexta-feira",
         "saturday": "Sábado",
-        "sunday": "Domingo"
+        "sunday": "Domingo",
+        "edit": "Editar",
+        "noAvailability": "Sem disponibilidade"
     },
     "menu": {
         "comunity": "Comunidade",

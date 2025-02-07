@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
-import fileUpload from 'express-fileupload';
+import fileUpload from "express-fileupload";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -180,6 +180,7 @@ app.post("/classify-imageOffers", async (req, res) => {
 
 app.post("/classify-imageCommunity", async (req, res) => {
     try {
+        console.log("estoy dentro");
         if (!req.files || Object.keys(req.files).length === 0) {
             return res.status(400).json({ error: "No se recibió ningún archivo." });
         }

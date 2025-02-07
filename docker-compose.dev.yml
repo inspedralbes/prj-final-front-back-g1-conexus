@@ -76,7 +76,7 @@ services:
       - 3004:3004
 
   ia-text:
-    build: 
+    build:
       context: ./back/node/services/iatext
       dockerfile: ../../dev.Dockerfile
     command: sh -c "cp .env.DEV .env && npm install && npm run dev"
@@ -98,7 +98,7 @@ services:
       - 3006:3006
 
   statistics:
-    build: 
+    build:
       context: ./back/node/services/statistics
       dockerfile: ../../dev.Dockerfile
     command: sh -c "cp .env.DEV .env && npm install && npm run dev"
@@ -108,7 +108,18 @@ services:
     ports:
       - 3007:3007
 
-  tr2g2-mongodb:
+  push-notifications:
+    build:
+      context: ./back/node/services/push-notifications
+      dockerfile: ../../dev.Dockerfile
+    command: sh -c "cp .env.DEV .env && npm install && npm run dev"
+    volumes:
+      - ./back/node/services/push-notifications:/usr/src/app
+    working_dir: /usr/src/app
+    ports:
+      - 3008:3008
+
+  tr-final-mongodb:
     image: mongo
     restart: always
     ports:

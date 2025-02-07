@@ -1,4 +1,68 @@
 {
+    "mainPage": {
+        "allow": "Permitir notificacións",
+        "questionPermission": "Queres recibir notificacións para estar ao tanto de eventos ou actualizacións?",
+        "acceptedPermission": "Permitir",
+        "rejectedPermission": "Bloquear"
+    },
+    "editProfile": {
+        "title": "Editar Banner e Perfil",
+        "fullName": "Nome completo",
+        "city": "Cidade",
+        "bannerimg": "Imaxe de banner",
+        "profileimg": "Imaxe de perfil",
+        "save": "Gardar cambios"
+    },
+    "formPersonal": {
+        "title": "Editar Información Persoal",
+        "email": "Correo electrónico:",
+        "phone": "Teléfono:",
+        "save": "Gardar cambios",
+        "description":"Descrición:",
+        "academicTitle":"Título académico:",
+        "SocialMedia":"Redes sociais",
+        "languages":"Idiomas",
+        "softwareSkills":"Habilidades en software",
+        "english":"Inglés"
+
+    },
+    "formAvailability": {
+        "title": "Editar Horario de Dispoñibilidade",
+        "email": "Correo electrónico:",
+        "save": "Gardar cambios",
+        "enable": "Habilitar",
+        "startTime": "Hora de inicio",
+        "endTime": "Hora de fin",
+        "monday": "Luns",
+        "tuesday": "Martes",
+        "wednesday": "Mércores",
+        "thursday": "Xoves",
+        "friday": "Venres",
+        "saturday": "Sábado",
+        "sunday": "Domingo"
+    },
+    "PersonalInfo": {
+        "titlePage": "Información persoal",
+        "nameAndSurname": "Nome e apelidos",
+        "desc": "Descrición",
+        "noDesc": "Este usuario non engadiu ningunha descrición.",
+        "socialMedia": "Redes sociais",
+        "githubProfile": "Perfil de Github",
+        "LinkedinProfile": "Perfil de Linkedin",
+        "TwitterProfile": "Perfil de Twitter",
+        "InstagramProfile": "Perfil de Instagram",
+        "FacebookProfile": "Perfil de Facebook",
+        "location": "Localización",
+        "title": "Título",
+        "studying": "Estudando...",
+        "contact": "Contacto",
+        "email": "Correo electrónico:",
+        "phone": "Teléfono:",
+        "softwareSkills": "Habilidades en software",
+        "languages": "Idiomas",
+        "noLanguages": "Aínda non hai...",
+        "edit": "Editar"
+    },
     "chatContent": {
         "writeMessage": "Escribe un mensaje..."
     },
@@ -265,7 +329,9 @@
         "thursday": "Xoves",
         "friday": "Venres",
         "saturday": "Sábado",
-        "sunday": "Domingo"
+        "sunday": "Domingo",
+        "edit": "Editar",
+        "noAvailability":"Sense disponibilitat"
     },
     "menu": {
         "comunity": "Comunidade",
