@@ -1,7 +1,0 @@
-{"message":"listening on *:3001\n","timestamp":"07/02/2025 08:58:05"}
-{"message":"Conexión exitosa a MongoDB\n","timestamp":"07/02/2025 08:58:06"}
-{"message":"a user connected\n","timestamp":"07/02/2025 09:01:10"}
-{"message":"user disconnected\n","timestamp":"07/02/2025 09:03:13"}
-{"message":"a user connected\n","timestamp":"07/02/2025 09:03:14"}
-{"message":"bd: [Set Iterator] {  }\n","timestamp":"07/02/2025 09:03:45"}
-{"message":"bd: [Set Iterator] {  }\n","timestamp":"07/02/2025 09:04:41"}

@@ -172,16 +172,16 @@ app.get('/startAllServices/dev', (req, res) => {
         if (!fs.existsSync(logDir)) {
             fs.mkdirSync(logDir, { recursive: true });
         }
-        
+
         const logFilePath = path.join(logDir, 'logs.log');
         const logErrorFilePath = path.join(logDir, 'error_logs.log');
         const messageFilePath = path.join(logDir, 'messages.log');
 
         // Spawn del proceso
-        const processData = spawn('nodemon -L', [path.join(servicePath, executable)], {
+        const processData = spawn('npm', ['run', 'dev'], {
             cwd: servicePath,
             env: {
-                ...process.env, // Incluye las variables de entorno actuales
+            ...process.env, // Incluye las variables de entorno actuales
                 PORT: process.env.PORT, // Ejemplo de puerto configurado
             },
         });

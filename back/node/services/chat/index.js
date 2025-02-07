@@ -60,7 +60,7 @@ app.get('/', (req, res) => {
   res.send('Hello World! I am a chat service');
 });
 
-app.get('/getChats/:id',  async (req, res) => {
+app.get('/getChats/:id', verifyToken, async (req, res) => {
   console.log('Refresh tokens:', refreshTokensDB.values());
   const id = req.params.id;
   try {

@@ -7,6 +7,7 @@
 /services/chat/node_modules
 /services/chat/.env
 
+
 /services/community/node_modules
 /services/community/.env
 
