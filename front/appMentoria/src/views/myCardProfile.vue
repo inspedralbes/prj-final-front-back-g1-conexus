@@ -1,11 +1,10 @@
 <template>
   <Header class="shadow-lg shadow-black/30"></Header>
-  <div class="p-4">
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <div>
+  <div class="">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- <div>
         <h2 class="text-2xl font-bold mb-6 text-center">Tarjeta de Visita</h2>
         <div class="border p-6 rounded shadow-md bg-white max-w-lg mx-auto">
-          <!-- Formulario de opciones -->
           <div class="mb-4 flex items-center justify-between">
             <span class="text-lg">{{ user.name }}</span>
             <input
@@ -39,19 +38,17 @@
             />
           </div>
         </div>
-      </div>
+      </div> -->
       <div>
-        <h2 class="text-2xl font-bold mb-6 text-center">Dissenys</h2>
+        <!-- <h2 class="text-2xl font-bold mb-6 text-center">Dissenys</h2> -->
         <DesignsCards></DesignsCards>
       </div>
     </div>
   </div>
 
-  <h3 class="text-xl font-semibold mt-8 text-center">Previsualització</h3>
+  <!-- <h3 class="text-xl font-semibold mt-8 text-center">Previsualització</h3>
   <div class="flex justify-center items-center mt-6 relative p-4">
-    <!-- Tarjetas de visita (frontal y trasera al lado) -->
     <div class="flex">
-      <!-- Tarjeta frontal -->
       <svg
         width="500"
         height="280"
@@ -103,8 +100,6 @@
           class="rounded-md"
         />
       </svg>
-
-      <!-- Tarjeta posterior -->
       <svg
         width="500"
         height="280"
@@ -146,14 +141,13 @@
       </svg>
     </div>
 
-    <!-- Botón para guardar los cambios -->
     <button
       class="absolute bottom-4 right-4 bg-gray-700 text-white p-2 rounded-full"
       @click="saveChanges"
     >
       Save Changes
     </button>
-  </div>
+  </div> -->
 </template>
   <script setup>
 import { onMounted, reactive, ref } from "vue";

@@ -1,38 +1,271 @@
 <template>
-  <div
-    class="dark:bg-gray-800 bg-white p-6 rounded-xl shadow-lg shadow-black/30 my-4"
-  >
-    <!-- Contenedor principal con grid -->
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-6">
-      <!-- Grid 1 -->
-      <div class="border p-4 rounded-lg shadow-md">
-        <h3 class="text-xl font-semibold"></h3>
-      </div>
+  <div class="flex flex-col space-y-8 p-6 min-h-screen">
+    <h1 class="text-2xl font-bold text-center">
+      Diseños de Tarjetas de Visita
+    </h1>
 
-      <!-- Grid 2 -->
-      <div class="border p-4 rounded-lg shadow-md">
-        <h3 class="text-xl font-semibold"></h3>
-      </div>
+    <div class="grid grid-cols-1 gap-8">
+      <div v-for="design in designs" :key="design.id" class="space-y-6">
+        <h2 class="text-xl font-semibold text-center">
+          Diseño {{ design.id }}
+        </h2>
 
-      <!-- Grid 3 -->
-      <div class="border p-4 rounded-lg shadow-md">
-        <h3 class="text-xl font-semibold"></h3>
-      </div>
+        <!-- Contenedor de las tarjetas, responsivo -->
+        <div
+          class="flex flex-col md:flex-row justify-center md:justify-evenly gap-6"
+        >
+          <!-- Frontal -->
+          <div
+            class="border rounded-lg p-6 w-full md:w-72 h-40 grid shadow-lg bg-white"
+            :class="design.front.classes"
+          >
+            <template
+              v-for="(element, index) in design.front.elements"
+              :key="index"
+            >
+              <div class="bg-gray-300" :class="element.classes"></div>
+            </template>
+          </div>
 
-      <!-- Grid 4 -->
-      <div class="border p-4 rounded-lg shadow-md">
-        <h3 class="text-xl font-semibold"></h3>
-      </div>
-
-      <!-- Grid 5 -->
-      <div class="border p-4 rounded-lg shadow-md">
-        <h3 class="text-xl font-semibold"></h3>
-      </div>
-
-      <!-- Grid 6 -->
-      <div class="border p-4 rounded-lg shadow-md">
-        <h3 class="text-xl font-semibold"></h3>
+          <!-- Trasera -->
+          <div
+            class="border rounded-lg p-6 w-full md:w-72 h-40 grid gap-2 shadow-lg bg-white"
+            :class="design.back.classes"
+          >
+            <template
+              v-for="(element, index) in design.back.elements"
+              :key="index"
+            >
+              <div class="bg-gray-300" :class="element.classes"></div>
+            </template>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
+
+<script setup>
+const designs = [
+  {
+    id: 1,
+    front: {
+      classes: "grid-cols-6 gap-4",
+      elements: [
+        // { classes: "col-span-2 row-span-1 w-full h-5 rounded" },
+        { classes: "row-span-2 col-start-1 col-end-3 w-16 h-16 rounded-full" },
+        { classes: "col-span-4 w-full h-5 rounded" },
+        { classes: "col-start-4 col-span-3 w-full h-5 rounded" },
+        { classes: "col-start-4 col-end-5 w-full h-6 rounded" },
+        { classes: "col-start-5 col-end-6 w-full h-6 rounded" },
+        { classes: "w-full h-6 rounded" },
+        // { classes: "col-span-1 row-span-2 w-24 h-5 rounded" },
+      ],
+    },
+    back: {
+      classes: "grid-cols-6 grid-rows-6 gap-4",
+      elements: [
+        {
+          classes:
+            "row-start-2 row-span-4 col-start-1 col-end-3 w-full h-16 rounded",
+        },
+        { classes: "row-start-2 col-start-3 col-span-4 w-full h-5 rounded" },
+        { classes: "row-start-4 col-start-4 col-span-3 w-full h-5 rounded" },
+      ],
+    },
+  },
+  {
+    id: 2,
+    front: {
+      classes: "grid-cols-6 gap-4 ",
+      elements: [
+        // { classes: "col-span-2 row-span-1 w-full h-5 rounded" },
+        {
+          classes:
+            "col-start-3 justify-center w-16 h-16 col-span-3 rounded-full",
+        },
+        { classes: "col-start-2 col-span-4 w-full h-5 rounded" },
+        // { classes: "col-span-1 row-span-1 w-full h-5 rounded" },
+      ],
+    },
+    back: {
+      classes: "grid-cols-6 grid-rows-6 gap-4",
+      elements: [
+        // { classes: "col-span-1 row-span-2 w-16 h-16" },
+        { classes: "row-start-1 col-span-3 row-span-2 w-full h-5 rounded" },
+        { classes: "row-start-3 col-span-3 row-span-2 w-full h-5 rounded" },
+        {
+          classes:
+            "row-start-5 col-start-1 row-end-5 col-span-1 w-full h-6 rounded",
+        },
+        {
+          classes:
+            "row-start-5 col-start-2 row-end-5 col-span-1 w-full h-6 rounded",
+        },
+        {
+          classes:
+            "row-start-5 col-start-3 row-end-5 col-span-1 w-full h-6 rounded",
+        },
+        { classes: "row-start-2 col-start-5 w-16 h-16 rounded" },
+        // { classes: "row-start-3 col-span-3 row-span-2 w-full h-5 rounded" },
+      ],
+    },
+  },
+  {
+    id: 3,
+    front: {
+      classes: "grid-cols-6 grid-rows-6 gap-4",
+      elements: [
+        {
+          classes:
+            "row-start-2 row-span-4 col-start-1 col-end-3 w-full h-16 rounded",
+        },
+
+        {
+          classes: "row-start-1 col-start-4 col-span-3 w-full h-5 rounded",
+        },
+        {
+          classes: "row-start-3 col-start-4 col-span-3 w-full h-5 rounded",
+        },
+        {
+          classes: "row-start-5 col-start-4 col-span-1 w-full h-6 rounded",
+        },
+        {
+          classes: "row-start-5 col-start-5 col-span-1 w-full h-6 rounded",
+        },
+        {
+          classes: "row-start-5 col-start-6 col-span-1 w-full h-6 rounded",
+        },
+      ],
+    },
+    back: {
+      classes: "grid-cols-6 grid-rows-6 gap-4",
+      elements: [
+        { classes: "row-start-2 col-span-3 w-full h-5 rounded" },
+        { classes: "row-start-4 col-span-3 w-full h-5 rounded" },
+        { classes: "row-start-2 col-start-5 w-16 h-16 rounded-full" },
+      ],
+      // elements: [{ classes: " col-span-3 w-full h-5 rounded" }],
+    },
+  },
+  {
+    id: 4,
+    front: {
+      classes: "grid-cols-6 grid-rows-6 gap-4",
+      elements: [
+        // { classes: "col-span-2 row-span-1 w-full h-5 rounded" },
+        // { classes: "col-span-1 row-span-2 w-12 h-12 rounded-full" },
+        {
+          classes: "row-start-1 col-span-4 w-full h-5 rounded",
+        },
+        {
+          classes: "row-start-3 col-span-3 w-full h-5 rounded",
+        },
+        {
+          classes: "row-start-3 col-start-5 col-span-2 w-full h-5 rounded",
+        },
+        {
+          classes: "row-start-5 col-start-4 col-span-1 w-full h-6 rounded",
+        },
+        {
+          classes: "row-start-5 col-start-5 col-span-1 w-full h-6 rounded",
+        },
+        {
+          classes: "row-start-5 col-start-6 col-span-1 w-full h-6 rounded",
+        },
+      ],
+    },
+    back: {
+      classes: "grid-cols-6 grid-rows-6 gap-4",
+      elements: [
+        {
+          classes:
+            "row-start-2 row-span-4 col-start-1 col-end-3 w-full h-16 rounded",
+        },
+        { classes: "row-start-2 col-start-4 col-span-3 w-full h-5 rounded" },
+        { classes: "row-start-4 col-span-4 w-full h-5 rounded" },
+        // { classes: "col-span-1 row-span-2 w-full h-5 rounded" },
+      ],
+    },
+  },
+  {
+    id: 5,
+    front: {
+      classes: "grid-cols-6 grid-rows-6 gap-4",
+      elements: [
+        {
+          classes:
+            "row-start-1 row-span-4 col-start-1 col-end-3 w-full h-16 rounded",
+        },
+        {
+          classes: "row-start-5 col-span-1 w-full h-6 rounded",
+        },
+        {
+          classes: "row-start-5 col-span-1 w-full h-6 rounded",
+        },
+        {
+          classes: "row-start-5 col-span-1 w-full h-6 rounded",
+        },
+        { classes: "row-start-1 col-start-3 col-span-4 w-full h-5 rounded" },
+        { classes: "row-start-3 col-start-4 col-span-3 w-full h-5 rounded" },
+      ],
+    },
+    back: {
+      classes: "grid-cols-6 grid-rows-6 grap-4",
+      elements: [
+        {
+          classes:
+            "row-start-2 row-span-2 col-start-1 col-end-3 w-16 h-16 rounded-full",
+        },
+        { classes: "row-start-2 col-start-4 col-span-3 w-full h-5 rounded" },
+        { classes: "row-start-4 col-start-3 col-span-4 w-full h-5 rounded" },
+      ],
+    },
+  },
+  {
+    id: 6,
+    front: {
+      classes: "grid-cols-6 grid-rows-6 grap-4",
+      elements: [
+        {
+          classes: "row-start-1 col-span-1 w-full h-6 rounded",
+        },
+        {
+          classes: "row-start-3 row-span-1 w-full h-6 rounded",
+        },
+        {
+          classes: "row-start-5 row-span-1 w-full h-6 rounded",
+        },
+        {
+          classes: "row-start-1 row-span-2 col-start-5 w-16 h-16 rounded-full",
+        },
+        { classes: "row-start-5 col-start-4 col-span-3 w-full h-5 rounded" },
+        // { classes: "col-span-1 row-span-2 w-12 h-12 rounded-full" },
+        // { classes: "col-span-1 row-span-2 w-full h-5 rounded" },
+      ],
+    },
+    back: {
+      classes: "grid-cols-6 grid-rows-6 grap-4",
+      elements: [
+        { classes: "row-start-1 col-span-3 row-span-2 w-full h-5 rounded" },
+        { classes: "col-span-2 col-start-5 row-span-2 w-full h-5 rounded" },
+        { classes: "row-start-3 col-span-4 row-span-2 w-full h-5 rounded" },
+        {
+          classes:
+            "row-start-5 row-span-4 col-span-3 row-span-2 w-full h-12 rounded",
+        },
+        {
+          classes: "col-start-5 row-start-4 w-full col-span-2 h-16 rounded",
+        },
+      ],
+    },
+  },
+  // Agregar los otros 4 diseños basados en la imagen
+];
+</script>
+
+<style scoped>
+.shadow-lg {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+</style>
