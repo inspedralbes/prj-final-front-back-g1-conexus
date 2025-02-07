@@ -23,14 +23,15 @@ services:
     links:
       - tr-final-mysql
 
-  tr-final-microprocesos:
+  tr-final-microprocessos-api:
     build:
-      dockerfile: ./back/microprocessos_api/dev.Dockerfile
+      dockerfile: ./back/node/dev.Dockerfile
       context: .
-    command: sh -c "cp .env.dev .env && npm install && chmod 777 .script.dev.sh && ./.script.dev.sh && npm run dev"
+    command: sh -c "cp .env.dev .env && npm install && chmod +x .script.dev.sh && ./.script.dev.sh && npm run dev "
     volumes:
       - ./back/microprocessos_api:/usr/src/app
       - ./back/node/services:/usr/src/node/services
+      - ./back/node/middleware:/usr/src/node/middleware
     working_dir: /usr/src/app
     ports:
       - 3001:3001

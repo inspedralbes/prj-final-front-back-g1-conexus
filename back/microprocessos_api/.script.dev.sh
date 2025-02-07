@@ -7,7 +7,7 @@ for service in /usr/src/node/services/*; do
         for subdir in "$service"/*; do
             if [ -d "$subdir" ]; then
                 echo "Installing subdir: $subdir"
-                npm install --frozen-lockfile
+                npm install
             fi
         done
     fi

@@ -5,7 +5,8 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
 const dotenv = require('dotenv');
-const { verifyToken, refreshTokensDB } = require('../../middlewares/auth.js');
+// const { verifyToken, refreshTokensDB } = require('../../middleware/auth.js');
+const { verifyToken, refreshTokensDB } = require('/usr/src/node/middleware/auth.js');
 
 function loadEnv(envPath) {
   const result = dotenv.config({ path: envPath });
@@ -59,7 +60,7 @@ app.get('/', (req, res) => {
   res.send('Hello World! I am a chat service');
 });
 
-app.get('/getChats/:id', verifyToken, async (req, res) => {
+app.get('/getChats/:id',  async (req, res) => {
   console.log('Refresh tokens:', refreshTokensDB.values());
   const id = req.params.id;
   try {

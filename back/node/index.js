@@ -9,7 +9,7 @@ const path = require('path');
 const cors = require('cors');
 require('dotenv').config();
 
-const { createTokens, verifyToken, refreshToken, refreshTokensDB } = require('/usr/src/app/middlewares/auth.js');
+const { createTokens, verifyToken, refreshToken, refreshTokensDB } = require('/usr/src/app/middleware/auth.js');
 
 const app = express();
 const port = process.env.PORT;
