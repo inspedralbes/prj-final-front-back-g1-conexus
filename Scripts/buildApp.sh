@@ -2,6 +2,8 @@ cd ../front/appMentoria
 
 rm -rf dist
 
+cp .env.prod .env
+
 pnpm install
 
 pnpm run build
