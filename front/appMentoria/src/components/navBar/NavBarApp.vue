@@ -5,12 +5,12 @@
     >
       <button
         aria-current="page"
-        @click="selectItem('home', $router.push('/'))"
-        :class="{'dark:text-white text-white': selectedItem === 'home', 'dark:text-orange-300 text-orange-300': selectedItem !== 'home'}"
-        class="inline-flex flex-col items-center text-xs font-medium py-3 px-4 flex-grow group dark:text-orange-300  text-orange-300"     
+        @click="selectItem('home', () => $router.push('/'))"
+        :class="{'text-white': selectedItem === 'home', 'text-orange-300': selectedItem !== 'home'}"
+        class="inline-flex flex-col items-center text-xs font-medium py-3 px-4 flex-grow group"
       >
         <svg
-          class="w-7 h-7 text-white dark:text-white group-hover:text-white dark:group-hover:text-white"
+          class="w-7 h-7 group-hover:text-white"
           fill="currentColor"
           viewBox="0 0 20 20"
           xmlns="http://www.w3.org/2000/svg"
@@ -22,12 +22,13 @@
         <span class="sr-only">{{ $t("navBar.home") }}</span>
       </button>
       <a
-        :class="{'dark:text-white text-white': selectItem === 'search', 'dark:text-orange-300 text-orange-300': selectItem !== 'search'}"
-        class="inline-flex flex-col items-center text-xs font-medium text-orange-300 dark:text-white py-3 px-4 flex-grow"
+        @click="selectItem('search')"
+        :class="{'text-white': selectedItem === 'search', 'text-orange-300': selectedItem !== 'search'}"
+        class="inline-flex flex-col items-center text-xs font-medium py-3 px-4 flex-grow group"
         href="#"
       >
         <svg
-          class="w-7 h-7"
+          class="w-7 h-7 group-hover:text-white"
           fill="currentColor"
           viewBox="0 0 20 20"
           xmlns="http://www.w3.org/2000/svg"
@@ -65,12 +66,12 @@
         <button-add-post v-if="showButtonAddPost"></button-add-post>
       </button>
       <button
-        :class="{'dark:text-white text-white': selectItem === 'notifications', 'dark:text-orange-300 text-orange-300': selectItem !== 'notifications'}"
-        class="inline-flex flex-col items-center text-xs font-medium py-3 px-4 flex-grow group-hover:text-white dark:group-hover:text-white"
-        @click="$router.push('/notifications')"
+        @click="selectItem('notifications', () => $router.push('/notifications'))"
+        :class="{'text-white': selectedItem === 'notifications', 'text-orange-300': selectedItem !== 'notifications'}"
+        class="inline-flex flex-col items-center text-xs font-medium py-3 px-4 flex-grow group"
       >
         <svg
-          class="w-7 h-7"
+          class="w-7 h-7 group-hover:text-white"
           viewBox="0 0 24 24"
           aria-hidden="true"
           fill="currentColor"
@@ -80,12 +81,12 @@
           ></path>
         </svg>
       </button>
-      <button @click="$router.push('/chatList')"
-        :class="{'dark:text-white text-white': selectItem === 'chatList', 'dark:text-orange-300 text-orange-300': selectItem !== 'chatList'}"
-        class="inline-flex flex-col items-center text-xs font-medium py-3 px-4 flex-grow group-hover:text-white dark:group-hover:text-white"
+      <button @click="selectItem('chatList', () => $router.push('/chatList'))"
+        :class="{'text-white': selectedItem === 'chatList', 'text-orange-300': selectedItem !== 'chatList'}"
+        class="inline-flex flex-col items-center text-xs font-medium py-3 px-4 flex-grow group"
       >
         <svg
-          class="w-8 h-8"
+          class="w-8 h-8 group-hover:text-white"
           fill="currentColor"
           viewBox="0 0 20 20"
           xmlns="http://www.w3.org/2000/svg"
@@ -103,18 +104,39 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
+import { useRoute } from "vue-router";
 import ButtonAddPost from "../buttonAddPost.vue";
 
 const showButtonAddPost = ref(false);
 var selectedItem = ref(null);
+const route = useRoute();
 
 function toggleButtonAddPost() {
   showButtonAddPost.value = !showButtonAddPost.value;
 }
 
-
-const selectItem = (item) => {
+const selectItem = (item, action) => {
   selectedItem.value = item;
+  if (action) action();
 }
+
+watch(route, (newRoute) => {
+  switch (newRoute.path) {
+    case '/':
+      selectedItem.value = 'home';
+      break;
+    case '/search':
+      selectedItem.value = 'search';
+      break;
+    case '/notifications':
+      selectedItem.value = 'notifications';
+      break;
+    case '/chatList':
+      selectedItem.value = 'chatList';
+      break;
+    default:
+      selectedItem.value = null;
+  }
+}, { immediate: true });
 </script>
