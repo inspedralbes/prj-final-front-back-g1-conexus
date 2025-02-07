@@ -8,6 +8,7 @@ const { v4: uuidv4 } = require('uuid');
 const path = require('path');
 const { spawn } = require('child_process');
 const { DateTime } = require('luxon');
+const rimraf = require('rimraf');
 
 dotenv.config();
 
@@ -51,6 +52,14 @@ function findExecutable(servicePath) {
     return null;
 }
 
+// Función para eliminar los logs de un servicio
+function deleteLogs(servicePath) {
+    const logDir = path.join(servicePath, 'logs');
+    if (fs.existsSync(logDir)) {
+        rimraf.sync(logDir);
+    }
+}
+
 // Cargar los servicios
 fs.readdirSync(path.join(route, 'services')).forEach(file => {
     services.push({
@@ -92,6 +101,7 @@ app.get('/startService/:id', (req, res) => {
         if (!fs.existsSync(logDir)) {
             fs.mkdirSync(logDir, { recursive: true });
         }
+
         const logFilePath = path.join(logDir, 'logs.log');
         const logErrorFilePath = path.join(logDir, 'error_logs.log');
         const messageFilePath = path.join(logDir, 'messages.log');
@@ -162,6 +172,9 @@ app.get('/startAllServices/dev', (req, res) => {
             return res.status(404).send('No se encontró un archivo ejecutable válido');
         }
 
+        // Eliminar la carpeta de logs
+        deleteLogs(servicePath);
+
         // Cargar el archivo .env del servicio si existe
         const envPath = path.join(servicePath, '.env');
         if (fs.existsSync(envPath)) {
@@ -181,7 +194,7 @@ app.get('/startAllServices/dev', (req, res) => {
         const processData = spawn('npm', ['run', 'dev'], {
             cwd: servicePath,
             env: {
-            ...process.env, // Incluye las variables de entorno actuales
+                ...process.env, // Incluye las variables de entorno actuales
                 PORT: process.env.PORT, // Ejemplo de puerto configurado
             },
         });
@@ -343,13 +356,22 @@ app.get('/stopService/:id', (req, res) => {
 
 app.get('/stopAllServices', (req, res) => {
     services.forEach(service => {
-        service.status = 'stopped';
-        service.enabled = 'disabled';
-        service.log.push({
-            message: `${service.name} is stopped`,
-            timestamp: DateTime.now().setZone('Europe/Paris').toFormat('dd/MM/yyyy HH:mm:ss')
-        });
-        service.process.kill();
+        try {
+            service.process.kill()
+            service.status = 'stopped';
+            service.enabled = 'disabled';
+            service.log.push({
+                message: `${service.name} is stopped`,
+                timestamp: DateTime.now().setZone('Europe/Paris').toFormat('dd/MM/yyyy HH:mm:ss')
+            });
+            service.process = null; // Asegúrate de limpiar el proceso
+        } catch (error) {
+            console.error(`Error stopping service ${service.name}:`, error);
+            service.log.push({
+                message: `Error stopping service ${service.name}: ${error.message}`,
+                timestamp: DateTime.now().setZone('Europe/Paris').toFormat('dd/MM/yyyy HH:mm:ss')
+            });
+        }
     });
     res.send(services);
 });

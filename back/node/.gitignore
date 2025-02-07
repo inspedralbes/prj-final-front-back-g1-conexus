@@ -6,22 +6,28 @@
 
 /services/chat/node_modules
 /services/chat/.env
-
+/services/chat/logs
 
 /services/community/node_modules
 /services/community/.env
+/services/community/logs
 
 /services/employmentexchange/node_modules
 /services/employmentexchange/.env
+/services/employmentexchange/logs
 
 /services/iaimage/node_modules
 /services/iaimage/.env
+/services/iaimage/logs
 
 /services/iatext/node_modules
 /services/iatext/.env
+/services/iatext/logs
 
 /services/notifications/node_modules
 /services/notifications/.env
+/services/notifications/logs
 
 /services/statistics/node_modules
 /services/statistics/.env
+/services/statistics/logs
