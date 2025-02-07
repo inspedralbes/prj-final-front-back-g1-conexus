@@ -9,7 +9,7 @@ const path = require('path');
 const cors = require('cors');
 require('dotenv').config();
 
-const { createTokens, verifyToken, refreshToken, refreshTokensDB } = require('/usr/src/app/middleware/auth.js');
+const { createTokens, verifyToken, refreshToken } = require('/usr/src/app/middleware/auth.js');
 
 const app = express();
 const port = process.env.PORT;
@@ -834,7 +834,6 @@ app.post('/reviews', async (req, res) => {
     }
 });
 
-
 app.get('/pendingUsers', async (req, res) => {
     try {
 
@@ -868,7 +867,6 @@ app.delete('/verified/users/:id', async (req, res) => {
         res.status(500).json({ error: "Error en la base de datos" });
     }
 });
-
 
 app.put('/verified/users/:id', async (req, res) => {
 
