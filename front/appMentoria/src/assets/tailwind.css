@@ -5,9 +5,12 @@
 
 :root {
     --buttom-light: #da811b;
-    --buttom-darck: #b16a18;
+    --buttom-dark: #b16a18;
     --containers-light: #fff9ee;
-    --containers-darck: #2d2d2e;
+    --containers-dark: #2d2d2e;
     --background-light: #fef2e1;
-    --background-darck: #262627;
+    --background-dark: #262627;
+    --font-familyTitle: "Poppins", sans-serif;
+    --font-familyText: "Open Sans", sans-serif;
+    --box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.1);
   }

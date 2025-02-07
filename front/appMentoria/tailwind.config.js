@@ -5,10 +5,18 @@ export default {
     extend: {
       colors: {
         buttomLight: 'var(--buttom-light)',
+        buttomDark: 'var(--buttom-dark)',
         containersLight: 'var(--containers-light)',
-      }
+        containersDark: 'var(--containers-dark)',
+        backgroundLight: 'var(--background-light)',
+        backgroundDark: 'var(--background-dark)',    
+      },
+      boxShadow: {
+        custom: 'var(--box-shadow)',
     },
   },
+  },
+  
   plugins: [],
   content: [
     "./index.html",

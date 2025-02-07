@@ -1,7 +1,7 @@
 <template>
   <div>
     <div
-      class="fixed bottom-4 left-1/2 transform -translate-x-1/2 inline-flex left-0 mx-auto justify-between bg-blue-600 w-11/12 rounded-3xl"
+      class="fixed bottom-0 left-1/2 transform -translate-x-1/2 inline-flex left-0 mx-auto justify-between bg-buttomLight dark:bg-buttomDark w-full"
     >
       <button
         aria-current="page"
@@ -21,7 +21,7 @@
         <span class="sr-only">{{ $t("navBar.home") }}</span>
       </button>
       <a
-        class="inline-flex flex-col items-center text-xs font-medium text-blue-400 py-3 px-4 flex-grow"
+        class="inline-flex flex-col items-center text-xs font-medium text-orange-300 py-3 px-4 flex-grow"
         href="#"
       >
         <svg
@@ -44,7 +44,7 @@
         class="relative inline-flex flex-col items-center text-xs font-medium text-white py-3 px-6 flex-grow"
       >
         <div
-          class="absolute bottom-5 p-3 rounded-full border-4 border-white bg-blue-600"
+          class="absolute bottom-5 p-3 rounded-full border-4 border-white bg-buttomLight dark:bg-buttomDark"
         >
           <svg
             class="w-7 h-7"
@@ -63,7 +63,7 @@
         <button-add-post v-if="showButtonAddPost"></button-add-post>
       </button>
       <button
-        class="inline-flex flex-col items-center text-xs font-medium text-blue-400 py-3 px-4 flex-grow"
+        class="inline-flex flex-col items-center text-xs font-medium text-orange-300 py-3 px-4 flex-grow"
         @click="$router.push('/notifications')"
       >
         <svg
@@ -78,7 +78,7 @@
         </svg>
       </button>
       <router-link
-        class="inline-flex flex-col items-center text-xs font-medium text-blue-400 py-3 px-4 flex-grow"
+        class="inline-flex flex-col items-center text-xs font-medium text-orange-300 py-3 px-4 flex-grow"
         to="/chatList"
       >
         <svg
