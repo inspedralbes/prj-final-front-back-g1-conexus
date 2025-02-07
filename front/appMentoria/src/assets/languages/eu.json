@@ -271,5 +271,14 @@
         "mentors": "Mentoreak",
         "request": "Eskaerak",
         "share": "Partekatu"
+    },
+    "navBarWeb": {
+        "main": "Nagusia",
+        "oferts": "Eskaintzak",
+        "profiles": "Profila",
+        "notifications": "Jakinarazpenak",
+        "chat": "Txata",
+        "gacha": "Gacha",
+        "games": "Jokoak"
     }
 }

@@ -271,5 +271,14 @@
         "mentors": "メンター",
         "request": "リクエスト",
         "share": "共有"
+    },
+    "navBarWeb": {
+        "main": "メイン",
+        "oferts": "オファー",
+        "profiles": "プロフィール",
+        "notifications": "通知",
+        "chat": "チャット",
+        "gacha": "ガチャ",
+        "games": "ゲーム"
     }
 }
