@@ -1,15 +1,16 @@
 <template>
   <div>
     <div
-      class="fixed bottom-0 left-1/2 transform -translate-x-1/2 inline-flex left-0 mx-auto justify-between bg-buttomLight dark:bg-buttomDark w-full"
+      class="fixed bottom-0 left-1/2 transform -translate-x-1/2 inline-flex left-0 mx-auto justify-between bg-containersLight dark:bg-containersDark w-full shadow-custom"
     >
       <button
         aria-current="page"
-        class="inline-flex flex-col items-center text-xs font-medium py-3 px-4 text-white flex-grow"
-        @click="$router.push('/')"
+        @click="selectItem('home', $router.push('/'))"
+        :class="{'dark:text-white text-white': selectedItem === 'home', 'dark:text-orange-300 text-orange-300': selectedItem !== 'home'}"
+        class="inline-flex flex-col items-center text-xs font-medium py-3 px-4 flex-grow group dark:text-orange-300  text-orange-300"     
       >
         <svg
-          class="w-7 h-7"
+          class="w-7 h-7 text-white dark:text-white group-hover:text-white dark:group-hover:text-white"
           fill="currentColor"
           viewBox="0 0 20 20"
           xmlns="http://www.w3.org/2000/svg"
@@ -21,7 +22,8 @@
         <span class="sr-only">{{ $t("navBar.home") }}</span>
       </button>
       <a
-        class="inline-flex flex-col items-center text-xs font-medium text-orange-300 py-3 px-4 flex-grow"
+        :class="{'dark:text-white text-white': selectItem === 'search', 'dark:text-orange-300 text-orange-300': selectItem !== 'search'}"
+        class="inline-flex flex-col items-center text-xs font-medium text-orange-300 dark:text-white py-3 px-4 flex-grow"
         href="#"
       >
         <svg
@@ -44,7 +46,7 @@
         class="relative inline-flex flex-col items-center text-xs font-medium text-white py-3 px-6 flex-grow"
       >
         <div
-          class="absolute bottom-5 p-3 rounded-full border-4 border-white bg-buttomLight dark:bg-buttomDark"
+          class="absolute bottom-5 p-3 rounded-full border-4 border-white bg-containersLight dark:bg-containersDark"
         >
           <svg
             class="w-7 h-7"
@@ -63,7 +65,8 @@
         <button-add-post v-if="showButtonAddPost"></button-add-post>
       </button>
       <button
-        class="inline-flex flex-col items-center text-xs font-medium text-orange-300 py-3 px-4 flex-grow"
+        :class="{'dark:text-white text-white': selectItem === 'notifications', 'dark:text-orange-300 text-orange-300': selectItem !== 'notifications'}"
+        class="inline-flex flex-col items-center text-xs font-medium py-3 px-4 flex-grow group-hover:text-white dark:group-hover:text-white"
         @click="$router.push('/notifications')"
       >
         <svg
@@ -77,9 +80,9 @@
           ></path>
         </svg>
       </button>
-      <router-link
-        class="inline-flex flex-col items-center text-xs font-medium text-orange-300 py-3 px-4 flex-grow"
-        to="/chatList"
+      <button @click="$router.push('/chatList')"
+        :class="{'dark:text-white text-white': selectItem === 'chatList', 'dark:text-orange-300 text-orange-300': selectItem !== 'chatList'}"
+        class="inline-flex flex-col items-center text-xs font-medium py-3 px-4 flex-grow group-hover:text-white dark:group-hover:text-white"
       >
         <svg
           class="w-8 h-8"
@@ -94,7 +97,7 @@
           ></path>
         </svg>
         <span class="sr-only">{{$t("navBar.chat")}}</span>
-      </router-link>
+      </button>
     </div>
   </div>
 </template>
@@ -104,8 +107,14 @@ import { ref } from "vue";
 import ButtonAddPost from "../buttonAddPost.vue";
 
 const showButtonAddPost = ref(false);
+var selectedItem = ref(null);
 
 function toggleButtonAddPost() {
   showButtonAddPost.value = !showButtonAddPost.value;
+}
+
+
+const selectItem = (item) => {
+  selectedItem.value = item;
 }
 </script>
