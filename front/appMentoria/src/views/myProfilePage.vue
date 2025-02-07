@@ -36,7 +36,6 @@ var profile = ref(null);
 var banner = ref(null);
 
 onMounted(() => {
-  console.log("awjdfoiqawjdfeioqajwefio");
   user.value = appStore.getUser();
   profile.value = user.value.profile;
   banner.value = user.value.banner;
@@ -48,11 +47,9 @@ console.log("object");
       console.error("Error al parsear tags:", error);
     }
   }
-  console.log("MECAGO EN TODO"+typeof user.value.availability);
   if (typeof user.value.availability == "string") {
     try {
       user.value.availability = JSON.parse(user.value.availability);
-      console.log("MECAGO EN TODO"+typeof user.value.availability);
     } catch (error) {
       console.error("Error al parsear availibility:", error);
     }

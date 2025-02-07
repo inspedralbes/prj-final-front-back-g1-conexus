@@ -1338,3 +1338,37 @@ try {
     throw error;
 }
 }
+
+export const getProfile = async (id) => {
+    try {
+        const response = await fetch(`${BACK_URL}/userProfile/${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+        });
+
+        if (response.status === 401) {
+            const refreshResult = await refreshToken();
+
+            if (refreshResult.error) {
+                return { error: 'No se pudo renovar el token. Inicia sesión nuevamente.' };
+            }
+
+            // Reintenta la petición después de renovar el token
+            return await getProfile(id);
+        }
+
+        if (!response.ok) {
+            return { error: `HTTP error! status: ${response.status}` };
+        }
+        let res=await response.json();
+        res.banner=BACK_URL+res.banner
+        res.profile=BACK_URL+res.profile
+        return res;
+    } catch (error) {
+        console.error('Network error:', error);
+        return { error: 'Network error. Please try again later.' };
+    }
+}

@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { useAppStore } from '@/stores/index';
 import mainPage from '../views/mainPage.vue'
 import profilePage from '@/views/myProfilePage.vue'
+import profile from '@/views/profilePage.vue'
 import profilesPage from '@/views/profilesPage.vue'
 import reportPage from '../views/reportPage.vue'
 import validationPage from '../views/validationPage.vue'
@@ -133,7 +134,14 @@ const routes = [
     name: 'editProfilePage',
     component: editProfilePage,
     props: true
+  },
+  {
+    path: '/profile/:id',
+    name: 'profilePage',
+    component: profile,
   }
+ 
+
 ];
 
 const router = createRouter({

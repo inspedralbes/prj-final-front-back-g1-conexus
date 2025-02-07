@@ -188,7 +188,7 @@
                 </div>
 
                 <!-- Software Skills -->
-                <div class="space-y-1">
+                <div class="space-y-1" v-if="user.value.softwareSkills">
                     <h3 class="font-semibold">{{ $t("PersonalInfo.softwareSkills") }}</h3>
                     <div class="flex flex-wrap space-x-4 w-full overflow-hidden">
                         <span v-for="tag in user.value.softwareSkills.split(', ')" :key="tag"
@@ -198,7 +198,7 @@
                 </div>
 
                 <!-- Languages -->
-                <div class="space-y-1">
+                <div class="space-y-1" v-if="user.value.languages">
                     <h3 class="font-semibold">{{ $t("PersonalInfo.languages") }}</h3>
                     <p class="text-gray-500 dark:text-gray-400" v-if="!user.value.languages ">{{  $t("PersonalInfo.noLanguages") }}</p>
                     <div class="flex flex-wrap space-x-4 w-full overflow-hidden">
@@ -209,7 +209,7 @@
                 </div>
             </div>
         </div>
-        <button @click="$router.push('/editProfile/profile')"
+        <button @click="$router.push('/editProfile/profile')" v-if="user.value.id === userId"
             class="flex items-center space-x-1 mt-6 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg shadow">
             <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                 fill="currentColor" viewBox="0 0 24 24">
@@ -223,8 +223,10 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
-
+import { computed,ref  } from 'vue';
+import { useAppStore } from "@/stores/index";
+let appStore = useAppStore();
+const userId=ref(appStore.getUser().id)
 const props = defineProps({
     user: Object
 });
