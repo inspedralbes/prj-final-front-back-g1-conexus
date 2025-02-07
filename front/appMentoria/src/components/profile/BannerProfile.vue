@@ -14,7 +14,7 @@
                     </p>
                 </div>
             </div>
-            <div class="mt-4 sm:mt-0 sm:mr-4">
+            <div class="mt-4 sm:mt-0 sm:mr-4" v-if="user.value.id === userId">
                 <button @click="$router.push('/editProfile/banner')"
                     class="py-3 px-3 sm:py-4 sm:px-4 rounded-full bg-indigo-600 text-white shadow-lg shadow-black/30 hover:bg-indigo-700 transition">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -22,15 +22,19 @@
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                     </svg>
-                </button>
+                </button >
             </div>
+
         </div>
     </div>
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, onMounted, ref } from 'vue';
+import { useAppStore } from "@/stores/index";
 
+const appStore = useAppStore();
+const userId=ref(appStore.getUser().id)
 const props = defineProps({
     banner: String,
     profile: String,
@@ -40,4 +44,5 @@ const props = defineProps({
 const banner = computed(() => props.banner);
 const profile = computed(() => props.profile);
 const user = computed(() => props.user);
+
 </script>

@@ -3,7 +3,7 @@
     <div class="flex sm:items-center justify-between py-2 border-b-2 border-gray-200">
       <div class="relative flex items-center space-x-4">
         <div class="relative ps-5">
-          <img :src="updateProfile(userElla)" alt="" class="w-10 sm:w-16 h-10 sm:h-16 rounded-full" />
+          <img :src="updateProfile(userElla)" alt="" class="w-10 sm:w-16 h-10 sm:h-16 rounded-full" @click="toProfile(userElla)" />
         </div>
         <div class="flex flex-col leading-tight">
           <div class="text-2xl mt-1 flex items-center">
@@ -39,7 +39,7 @@
           </span>
         </div>
       </div>
-          <img :src="updateProfile(interaction.userId)" alt="Profile" class="w-6 h-6 rounded-full" :class="Number(interaction.userId) === currentUser ? 'order-2' : 'order-1'" />
+          <img :src="updateProfile(interaction.userId)" alt="Profile" class="w-6 h-6 rounded-full" :class="Number(interaction.userId) === currentUser ? 'order-2' : 'order-1'" @click="toProfile(interaction.userId)" />
         </div>
       </div>
     </div>
@@ -100,7 +100,9 @@
 import { ref, onMounted, defineProps, watch, nextTick } from "vue";
 import { fetchMessages, sendMessageInMongo, reportChat, reportChatMongo } from "@/services/communicationManager";
 import socketChat from "../services/socketChat";
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const props = defineProps({
   chatId: {
     type: String,
@@ -142,7 +144,9 @@ const scrollToBottom = async () => {
     messageContainer.value.scrollTop = messageContainer.value.scrollHeight;
   }
 };
-
+const toProfile = (id) => {
+  router.push(`/profile/${id}`);
+};
 const sendMessageInMongoNow = () => {
   const message = messageInput.value.value;
   if (message) {
@@ -152,8 +156,7 @@ const sendMessageInMongoNow = () => {
 };
 
 const updateProfile = (userId) => {
-  const user = users.value.find((user) => user.id === userId);
-
+  const user = users.value.find((user) => Number(user.id) === Number(userId));
   if (user && user.profile) {
     if (user.profile.startsWith("/")) {
       return `${BACK_URL}${user.profile}`;

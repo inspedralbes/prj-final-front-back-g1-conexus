@@ -101,6 +101,11 @@ app.post('/loginAPI', async (req, res) => {
                     let className = resultClassName[0].name;
                     userLogin = users[0];
                     userLogin.class_name = className;
+
+                    const [following]= await connection.execute('SELECT * FROM following WHERE user_id = ?', [userLogin.id]);
+                    const [followers]= await connection.execute('SELECT * FROM following WHERE following_id = ?', [userLogin.id]);
+                    userLogin.following = following;
+                    userLogin.followers = followers;
                 } else {
                     userLogin = users[0];
                 }
@@ -335,8 +340,7 @@ app.get('/users', async (req, res) => {
                 users.banner,
                 users.profile,
                 qualifications.name AS qualification,
-                users.discord_link,
-                users.github_link
+                users.Github
             FROM 
                 users
             LEFT JOIN 
@@ -351,7 +355,7 @@ app.get('/users', async (req, res) => {
         res.json(rows);
     } catch (error) {
         console.error('Database error:', error.message);
-        res.status(500).json({ error: 'Database error' });
+        res.status(500).json({ error: 'Database error:'+error.message });
     }
 });
 
@@ -364,6 +368,23 @@ app.get('/usersAll', async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: 'Database error' });
     }
+});
+
+app.get('/userProfile/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const connection = await mysql.createConnection(dbConfig);
+        const [rows] = await connection.execute('SELECT id,name, email, banner, profile, city, tags, availability, class_id, Linkedin, Instagram, Twitter, Github, Facebook, title, phone, softwareSkills, languages, description FROM users WHERE id = ?', [id]);
+        connection.end();
+
+        if (rows.length == 0) return res.status(404).json({ error: 'User not found' });
+
+        res.json(rows[0]);
+    } catch (error) {
+        res.status(500).json({ error: 'Database error' });
+    }
+
 });
 
 app.get('/users/:id', async (req, res) => {
@@ -1328,4 +1349,27 @@ async function comparePassword(password, hashedPassword) {
 // Start the server
 server.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
+});
+
+//User follows or unfollows someone
+app.post('/follow', verifyToken, async (req, res) => {
+    const { user_id, followed_id } = req.body;
+
+    try {
+        const connection = await mysql.createConnection(dbConfig);
+        const [result] = await connection.execute('SELECT * FROM follows WHERE user_id = ? AND followed_id = ?', [user_id, followed_id]);
+        if(result.length == 0){
+            const [result] = await connection.execute('INSERT INTO follows (user_id, followed_id) VALUES (?, ?)', [user_id, followed_id]);
+            connection.end();
+            res.status(201).json({ message: 'User followed successfully' });
+        }
+        else{
+            const connection = await mysql.createConnection(dbConfig);
+            const [result] = await connection.execute('DELETE FROM follows WHERE user_id = ? AND followed_id = ?', [user_id, followed_id]);
+            connection.end();
+            res.status(201).json({ message: 'User unfollowed successfully' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Database error' });
+    }
 });

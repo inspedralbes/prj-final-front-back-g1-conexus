@@ -7,7 +7,7 @@
       </div>
       <div
         class="absolute bottom-0 right-0 mb-4 sm:mb-6 mr-4 sm:mr-6 rounded-full h-14 sm:h-16 lg:h-20 w-14 sm:w-16 lg:w-20 flex items-center bg-green-400 justify-center text-2xl sm:text-4xl font-thin text-white shadow-2xl md:translate-y-3">
-        <img :src="profileSrc" alt="User Avatar" class="rounded-full h-full w-full object-cover">
+        <img :src="profileSrc" alt="User Avatar" class="rounded-full h-full w-full object-cover" @click="toProfile(user.id)">
       </div>
     </div>
     <div class="pt-2 sm:pt-3 pb-8 sm:pb-5 px-4 sm:px-5 flex flex-col items-center space-y-4 sm:space-y-0">
@@ -67,6 +67,9 @@ const profileSrc = computed(() => {
   }
 });
 
+const toProfile = (id) => {
+  router.push(`/profile/${id}`);
+};
 </script>
 
 <style scoped>
