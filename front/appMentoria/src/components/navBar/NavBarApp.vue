@@ -44,13 +44,13 @@
 
       <button
         @click="toggleButtonAddPost"
-        class="relative inline-flex flex-col items-center text-xs font-medium text-white py-3 px-6 flex-grow"
+        class="relative inline-flex flex-col items-center text-xs font-medium dark:text-buttomDark text-buttomLight py-3 px-6 flex-grow"
       >
         <div
-          class="absolute bottom-5 p-3 rounded-full border-4 border-white bg-containersLight dark:bg-containersDark"
+          class="absolute bottom-5 p-3 rounded-full border-4 border-buttomLight dark:border-buttomDark  bg-containersLight dark:bg-containersDark"
         >
           <svg
-            class="w-7 h-7"
+            class="w-7 h-7 b"
             fill="currentColor"
             viewBox="0 0 20 20"
             xmlns="http://www.w3.org/2000/svg"

@@ -1,5 +1,5 @@
 <template>
-    <div class="dark:bg-gray-800 bg-white p-6 rounded-xl shadow-lg shadow-black/30 my-4">
+    <div class="dark:bg-containersDark bg-containersLight p-6 rounded-xl shadow-lg shadow-custom my-4">
         <h2 class="text-xl font-semibold border-b border-gray-600 pb-4 mb-4">Informació Personal</h2>
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-20 border-b border-gray-600 pb-4">
             <div class="space-y-4">
@@ -205,7 +205,7 @@
             </div>
         </div>
         <button @click="$router.push('/editProfile')"
-            class="flex items-center space-x-1 mt-6 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg shadow">
+            class="flex items-center space-x-1 mt-6 bg-buttomLight hover:bg-orange-400 text-white py-2 px-4 rounded-lg shadow">
             <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                 fill="currentColor" viewBox="0 0 24 24">
                 <path fill-rule="evenodd"
