@@ -4,11 +4,20 @@ require('dotenv').config();
 
 const secretKey = process.env.SECRET_KEY;
 const refreshKey = process.env.REFRESH_KEY;
+const mongoUri = process.env.MONGO_URI;
+
+console.log('Secret key:', secretKey);
+console.log('Refresh key:', refreshKey);
+console.log('Mongo URI:', mongoUri);
 
 // Conexión a la base de datos
-mongoose.connect(process.env.MONGO_URI, { dbName: 'Tokens' })
-    .then(() => console.log('Conexión exitosa a MongoDB'))
-    .catch(err => console.error('Error de conexión a MongoDB:', err));
+mongoose.connect(mongoUri, { 
+    dbName: 'Tokens',
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
+.then(() => console.log('Conexión exitosa a MongoDB'))
+.catch(err => console.error('Error de conexión a MongoDB:', err));
 
 const tokenSchema = new mongoose.Schema({
     token: String,
@@ -18,7 +27,7 @@ const tokenSchema = new mongoose.Schema({
 const Token = mongoose.model('Token', tokenSchema);
 
 // Función para eliminar tokens antiguos
-scheduleDailyTokenCleanup();
+// scheduleDailyTokenCleanup();
 
 // Lógica para crear los tokens de acceso y refresco
 function createTokens(user) {
