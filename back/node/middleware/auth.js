@@ -62,7 +62,7 @@ function verifyToken(req, res, next) {
             }
             return res.status(403).json({ error: 'Fallo al autenticar el token' });
         }
-        req.user = decoded; 
+        req.user = decoded;
         next();
     });
 }
@@ -102,6 +102,16 @@ function refreshToken(req, res) {
     }
 }
 
+function deleteToken(refreshToken) {
+    Token.deleteOne({ token: refreshToken }, (err) => {
+        if (err) {
+            console.error('Error al eliminar el token:', err);
+        } else {
+            console.log('Token eliminado exitosamente');
+        }
+    });
+}
+
 // Refrescar los tokens almacenados en la base de datos
 async function deleteOldTokensMongo() {
     const sevenDaysAgo = new Date();
@@ -120,7 +130,7 @@ function scheduleDailyTokenCleanup() {
     const now = new Date();
     const millisTillMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0, 0) - now;
 
-    setTimeout(function() {
+    setTimeout(function () {
         deleteOldTokensMongo();
         setInterval(deleteOldTokensMongo, 24 * 60 * 60 * 1000);
     }, millisTillMidnight);
@@ -131,5 +141,5 @@ module.exports = {
     createTokens,
     verifyToken,
     refreshToken,
-    refreshTokensDB,
+    deleteToken
 };

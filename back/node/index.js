@@ -9,7 +9,7 @@ const path = require('path');
 const cors = require('cors');
 require('dotenv').config();
 
-const { createTokens, verifyToken, refreshToken } = require('/usr/src/app/middleware/auth.js');
+const { createTokens, verifyToken, refreshToken, deleteToken } = require('/usr/src/app/middleware/auth.js');
 
 const app = express();
 const port = process.env.PORT;
@@ -205,8 +205,7 @@ app.post('/logout', verifyToken, async (req, res) => {
     if (!accessToken) return res.status(401).send('Token is required');
     if (!refreshToken) return res.status(401).send('Token is required');
 
-    refreshTokensDB.delete(refreshToken);
-    console.log('HOLAAAAAAAAAAAAAAAA');
+    deleteToken(refreshToken);    
     res.status(200).send('User logout successfully');
 });
 
