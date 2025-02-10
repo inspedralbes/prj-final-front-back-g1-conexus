@@ -98,6 +98,7 @@
 <script setup>
 import { ref, onMounted, nextTick } from 'vue';
 import { sendMessageInMongo } from '@/services/communicationManager';
+import { useAppStore } from '@/stores/index';
 
 const messageInput = ref(null);
 const messageContainer = ref(null);
