@@ -504,7 +504,6 @@ app.post('/publications', async (req, res) => {
     }
 });
 
-
 app.get('/publications/:id', async (req, res) => {
     const { id } = req.params;
 
@@ -690,7 +689,6 @@ app.delete('/reports/publications/:id', async (req, res) => {
 });
 
 async function checkIA() {
-
     var running = true;
     const serverIAtext = IA_TEXT_URL + '/';
     const serverIAimage = IA_IMAGE_URL + '/';

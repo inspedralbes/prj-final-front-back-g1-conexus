@@ -34,7 +34,7 @@ const io = new Server(server, {
         origin: '*',
         methods: ['GET', 'POST', 'PUT', 'DELETE'],
         credentials: true,
-        allowedHeaders: ["Access-Control-Allow-Origin", "Content-Type"],
+        allowedHeaders: ["Access-Control-Allow-Origin", "Content-Type", "Authorization"],
     }
 });
 

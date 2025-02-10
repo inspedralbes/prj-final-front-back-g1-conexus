@@ -12,7 +12,7 @@ export const fetchMessages = async (chatId) => {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
             },
         });
 
@@ -61,7 +61,7 @@ export const sendMessageInMongo = async (chatData, currentUser, messageInput) =>
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
             },
             body: JSON.stringify(chatData._rawValue),
         });
@@ -99,13 +99,14 @@ export const fetchChats = async (userId) => {
     const chatsInfo = ref(false);
 
     console.log("fetchChats userId", userId);
+    console.log("fetchChats token", localStorage.getItem("accessToken"));
 
     try {
         const response = await fetch(`${CHAT_URL}/getChats/${userId}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
             },
         });
 
@@ -149,7 +150,7 @@ export const chatButton = async (userid2, router) => {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
             },
             body: JSON.stringify(newMessage),
         });

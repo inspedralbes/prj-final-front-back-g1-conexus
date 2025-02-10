@@ -28,7 +28,7 @@ const tokenSchema = new mongoose.Schema({
 const Token = mongoose.model('Token', tokenSchema);
 
 // Función para eliminar tokens antiguos
-// scheduleDailyTokenCleanup();
+scheduleDailyTokenCleanup();
 
 // Lógica para crear los tokens de acceso y refresco
 function createTokens(user) {
@@ -54,6 +54,7 @@ function createTokens(user) {
 
 // Middleware para verificar el token de acceso
 function verifyToken(req, res, next) {
+    console.log('Verify token:', req.headers);
 
     const authHeader = req.headers['authorization'];
     if (!authHeader) {
@@ -66,11 +67,13 @@ function verifyToken(req, res, next) {
     }
 
     jwt.verify(token, secretKey, (err, decoded) => {
+        console.log('Decoded:', decoded);
         if (err) {
             if (err.name === 'TokenExpiredError') {
                 return res.status(401).json({ error: 'Token expirado' });
             }
-            return res.status(403).json({ error: 'Fallo al autenticar el token' });
+            console.log('Error al autenticar el token verifyToken:', err);
+            return res.status(403).json({ error: 'Fallo al autenticar el token verifyToken'});
         }
         req.user = decoded;
         next();
@@ -78,23 +81,20 @@ function verifyToken(req, res, next) {
 }
 
 // Lógica para refrescar el token
-function refreshToken(req, res) {
+async function refreshToken(req, res) {
     console.log('Refresh token 0:', req.body);
     const { refreshToken } = req.body;
 
     console.log('Refresh token 1:', refreshToken);
 
     if (!refreshToken) return res.status(401).send('Token es requerido');
-    Token.findOne({ token: refreshToken }, (err, tokenDoc) => {
-        if (err) {
-            return res.status(500).json({ error: 'Error al buscar el token en la base de datos' });
-        }
+
+    try {
+        const tokenDoc = await Token.findOne({ token: refreshToken });
         if (!tokenDoc) {
             return res.status(403).json({ error: 'Token inválido' });
         }
-    });
 
-    try {
         console.log('Refresh token 2:', refreshToken);
         const decoded = jwt.verify(refreshToken, refreshKey);
         console.log('Decoded:', decoded);
@@ -107,7 +107,6 @@ function refreshToken(req, res) {
         res.json({ accessToken: newAccessToken });
     } catch (err) {
         console.log('Error al refrescar el token:', err);
-        refreshTokensDB.delete(refreshToken);
         res.status(403).json({ error: 'Token inválido o expirado' });
     }
 }
