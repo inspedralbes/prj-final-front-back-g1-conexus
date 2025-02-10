@@ -1,161 +1,94 @@
 <template>
   <Header class="shadow-lg shadow-black/30"></Header>
-  <div class="">
+  <div class="p-4">
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <!-- <div>
-        <h2 class="text-2xl font-bold mb-6 text-center">Tarjeta de Visita</h2>
-        <div class="border p-6 rounded shadow-md bg-white max-w-lg mx-auto">
-          <div class="mb-4 flex items-center justify-between">
-            <span class="text-lg">{{ user.name }}</span>
-            <input
-              type="checkbox"
-              v-model="visibleFields.name"
-              class="w-6 h-6"
-            />
+      <div>
+        <!-- Contenedor de dropdowns para evitar solapamiento -->
+        <div class="relative space-y-4">
+          <!-- Dropdown de Diseño -->
+          <div>
+            <button
+              @click="toggleDropdown('designs')"
+              class="w-full bg-gray-800 text-white py-2 px-4 rounded flex justify-between items-center"
+            >
+              Seleccionar Diseño
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M5.23 7.21a.75.75 0 011.06 0L10 10.94l3.71-3.73a.75.75 0 111.06 1.06l-4.24 4.25a.75.75 0 01-1.06 0L5.23 8.27a.75.75 0 010-1.06z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </button>
+            <div
+              v-if="openDropdown === 'designs'"
+              class="absolute left-0 w-full mt-2 bg-white border rounded shadow-lg p-4 z-10"
+            >
+              <DesignsCards
+                :selectedDesignFront="selectedDesignFront"
+                :selectedDesignBack="selectedDesignBack"
+                @selectDesign="selectDesign"
+              />
+            </div>
           </div>
-          <div class="mb-4 flex items-center justify-between">
-            <span class="text-lg">{{ user.email }}</span>
-            <input
-              type="checkbox"
-              v-model="visibleFields.email"
-              class="w-6 h-6"
-            />
-          </div>
-          <div class="mb-4 flex items-center justify-between">
-            Titol
-            <input
-              type="checkbox"
-              v-model="visibleFields.titol"
-              class="w-6 h-6"
-            />
-          </div>
-          <div class="mb-4 flex items-center justify-between">
-            QRcode
-            <input
-              type="checkbox"
-              v-model="visibleFields.qrCode"
-              class="w-6 h-6"
-            />
+
+          <!-- Dropdown de Colores -->
+          <div>
+            <button
+              @click="toggleDropdown('colors')"
+              class="w-full bg-gray-800 text-white py-2 px-4 rounded flex justify-between items-center"
+            >
+              Seleccionar Color
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M5.23 7.21a.75.75 0 011.06 0L10 10.94l3.71-3.73a.75.75 0 111.06 1.06l-4.24 4.25a.75.75 0 01-1.06 0L5.23 8.27a.75.75 0 010-1.06z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </button>
+            <div
+              v-if="openDropdown === 'colors'"
+              class="absolute left-0 w-full mt-2 bg-white border rounded shadow-lg p-4 z-10"
+            >
+              <ColorsProfileCards
+                :selectedColor="selectedColor"
+                @selectColor="selectColor"
+              />
+            </div>
           </div>
         </div>
-      </div> -->
+      </div>
       <div>
-        <!-- <h2 class="text-2xl font-bold mb-6 text-center">Dissenys</h2> -->
-        <DesignsCards></DesignsCards>
+        <PreviewCard
+          :selectedDesignFront="selectedDesignFront"
+          :selectedDesignBack="selectedDesignBack"
+          :selectedColor="selectedColor"
+        ></PreviewCard>
       </div>
     </div>
   </div>
-
-  <!-- <h3 class="text-xl font-semibold mt-8 text-center">Previsualització</h3>
-  <div class="flex justify-center items-center mt-6 relative p-4">
-    <div class="flex">
-      <svg
-        width="500"
-        height="280"
-        class="shadow-lg rounded-lg bg-black"
-        ref="cardFront"
-      >
-        <defs>
-          <filter id="glow">
-            <feGaussianBlur stdDeviation="3.5" result="coloredBlur" />
-            <feMerge>
-              <feMergeNode in="coloredBlur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-        </defs>
-
-        <rect width="100%" height="100%" fill="black" />
-        <text
-          v-if="visibleFields.name"
-          x="50"
-          y="120"
-          font-size="32"
-          font-weight="bold"
-          fill="gold"
-          filter="url(#glow)"
-          class="font-serif italic"
-        >
-          {{ user.name }}
-        </text>
-        <text
-          v-if="visibleFields.titol"
-          x="180"
-          y="160"
-          font-size="16"
-          font-weight="bold"
-          fill="gold"
-          filter="url(#glow)"
-          class="font-serif italic"
-        >
-          Web developer
-        </text>
-        <image
-          v-if="visibleFields.icon_favicon"
-          x="450"
-          y="230"
-          width="50"
-          height="50"
-          href="/favicon.ico"
-          class="rounded-md"
-        />
-      </svg>
-      <svg
-        width="500"
-        height="280"
-        class="shadow-lg rounded-lg bg-black"
-        ref="cardBack"
-      >
-        <defs>
-          <filter id="glow">
-            <feGaussianBlur stdDeviation="3.5" result="coloredBlur" />
-            <feMerge>
-              <feMergeNode in="coloredBlur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-        </defs>
-
-        <rect width="100%" height="100%" fill="black" />
-        <text
-          v-if="visibleFields.email"
-          x="50"
-          y="120"
-          font-size="16"
-          font-weight="bold"
-          fill="gold"
-          filter="url(#glow)"
-          class="font-serif italic"
-        >
-          {{ user.email }}
-        </text>
-        <image
-          v-if="visibleFields.qrCode"
-          x="400"
-          y="180"
-          width="80"
-          height="80"
-          :href="qrCodeUrl"
-          class="rounded-md"
-        />
-      </svg>
-    </div>
-
-    <button
-      class="absolute bottom-4 right-4 bg-gray-700 text-white p-2 rounded-full"
-      @click="saveChanges"
-    >
-      Save Changes
-    </button>
-  </div> -->
 </template>
-  <script setup>
+
+<script setup>
 import { onMounted, reactive, ref } from "vue";
 import Header from "@/components/Header.vue";
 import DesignsCards from "@/components/profileCards/desingsProfileCards.vue";
 import QRCode from "qrcode";
 import { useAppStore } from "@/stores/index";
 import { uploadCards } from "@/services/communicationManager";
+import ColorsProfileCards from "@/components/profileCards/colorsProfileCards.vue";
+import PreviewCard from "@/components/profileCards/previewCard.vue";
 
 const appStore = useAppStore();
 const user = reactive({});
@@ -172,6 +105,30 @@ const visibleFields = reactive({
 const qrCodeUrl = ref("");
 const cardFront = ref(null);
 const cardBack = ref(null);
+
+const openDropdown = ref(null);
+
+const toggleDropdown = (dropdown) => {
+  openDropdown.value = openDropdown.value === dropdown ? null : dropdown;
+};
+
+const selectedColor = ref(null);
+
+const selectColor = (color) => {
+  selectedColor.value = color;
+  // openDropdown.value = null;
+};
+
+const selectedDesignFront = ref(null);
+const selectedDesignBack = ref(null);
+
+const selectDesign = ({ type, id }) => {
+  if (type === "front") {
+    selectedDesignFront.value = id;
+  } else if (type === "back") {
+    selectedDesignBack.value = id;
+  }
+};
 
 const generateQRCode = () => {
   const url = `https://www.ejemplo.com/perfil/${user.name}`;
@@ -226,7 +183,8 @@ async function saveChanges() {
   }
 }
 </script>
-  <style scoped>
+
+<style scoped>
 /* .business-card-container {
   display: flex;
   justify-content: center;
