@@ -1,7 +1,7 @@
 <template>
   <Header class="shadow-lg shadow-black/30"></Header>
-  <NavBarWeb class="hidden lg:fixed lg:top-0 lg:left-0 lg:h-screen lg:w-60 lg:block"></NavBarWeb>
-  <div v-if="user.value" class="bg-backgroundLight dark:bg-backgroundDark p-4 text-gray-900 dark:text-gray-100 lg:ml-60">
+
+  <div v-if="user.value" class="dark:bg-gray-900 p-4 text-gray-900 dark:text-gray-100">
     <!-- User - Banner & Profile Image -->
     <BannerProfile :banner="banner" :profile="profile" :user="user"/>
 
@@ -9,17 +9,15 @@
     <PersonalInfo :user="user" />
 
     <!-- User - Availibility -->
-    <div v-if="user.value.availibility" class=" dark:bg-gray-800 bg-white p-6 rounded-xl shadow-lg shadow-black/30 my-4">
-      <Calendar :availibilityJson="JSON.stringify(user.value.availibility)" />
+    <div class="dark:bg-gray-800 bg-white p-6 rounded-xl shadow-lg shadow-black/30 my-4">
+      <Calendar :availabilityJson="user.value.availability" :id="user.value.id"  />
     </div>
   </div>
-  
+
   <!-- If !users -->
   <div v-else class="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
     <Loading />
   </div>
-  <NavBarApp class="fixed bottom-0 left-0 right-0 w-full lg:hidden ">
-  </NavBarApp>
 </template>
 
 <script setup>
@@ -30,21 +28,21 @@ import Loading from "@/components/Loading.vue";
 import Calendar from "@/components/profile/Calendar.vue";
 import BannerProfile from "@/components/profile/BannerProfile.vue";
 import PersonalInfo from "@/components/profile/PersonalInfo.vue";
-import NavBarWeb from "@/components/navBar/NavBarWeb.vue";
-import NavBarApp from "@/components/navBar/NavBarApp.vue";
+import { useRoute } from 'vue-router';
+import { getProfile } from "@/services/communicationManager";
 
-const appStore = useAppStore();
+const user = reactive({});
+const profile = ref(null);
+const banner = ref(null);
 
-var user = reactive({});
-var profile = ref(null);
-var banner = ref(null);
 
-onMounted(() => {
-  console.log("awjdfoiqawjdfeioqajwefio");
-  user.value = appStore.getUser();
+const route = useRoute();
+const userId = ref(route.params.id);
+
+onMounted(async () => {
+  user.value = useAppStore().getUser();
   profile.value = user.value.profile;
   banner.value = user.value.banner;
-console.log("object");
   if (typeof user.value.tags == "string") {
     try {
       user.value.tags = JSON.parse(user.value.tags);
@@ -52,11 +50,11 @@ console.log("object");
       console.error("Error al parsear tags:", error);
     }
   }
-  console.log("MECAGO EN TODO"+typeof user.value.availability);
+
   if (typeof user.value.availability == "string") {
     try {
       user.value.availability = JSON.parse(user.value.availability);
-      console.log("MECAGO EN TODO"+typeof user.value.availability);
+
     } catch (error) {
       console.error("Error al parsear availibility:", error);
     }
