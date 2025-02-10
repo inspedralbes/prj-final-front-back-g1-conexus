@@ -1338,3 +1338,24 @@ try {
     throw error;
 }
 }
+
+export const getProfile = async (userId) => {
+    try {
+        const response = await fetch(`${BACK_URL}/profile/${userId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+        });
+
+        if (!response.ok) {
+            return { error: `HTTP error! status: ${response.status}` };
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Network error:', error);
+        return { error: 'Network error. Please try again later.' };
+    }
+};

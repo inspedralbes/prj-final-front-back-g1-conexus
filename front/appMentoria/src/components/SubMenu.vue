@@ -3,19 +3,24 @@
     <div class="flex items-center justify-center px-0">
       <div class="relative inline-block text-left dropdown">
         <span class="rounded-md shadow-sm">
-          <button class="flex items-center focus:outline-none">
+          <button class="flex items-center justify-between w-full px-4 py-3 text-sm font-medium dark:text-white text-gray-900 transition-all duration-200 rounded-lg dark:hover:bg-buttomDark hover:bg-gray-100 shadow-custom dark:shadow-customDark">
             <img
-              class="w-10 h-10 rounded-full"
+              class="flex-shrink-0 object-cover w-9 h-9 mr-3 rounded-full"
               :src="`${profile}`"
               alt="User Photo"
             />
+            {{ name }}
+            <svg class="w-5 h-5 ml-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
+            </svg>
           </button>
         </span>
         <div
-          class="opacity-0 invisible dropdown-menu transition-all duration-300 transform origin-top-right -translate-y-2 scale-95"
+          class="opacity-0 invisible dropdown-menu transition-all duration-300 transform origin-bottom-right translate-y-2 scale-95"
         >
           <div
-            class="absolute right-0 w-56 mt-2 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none"
+            class="absolute -right-90 bottom-full mb-12 w-56 origin-bottom-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none"
             aria-labelledby="headlessui-menu-button-1"
             id="headlessui-menu-items-117"
             role="menu"
@@ -147,10 +152,11 @@ const handleLogout = async () => {
 };
 </script>
 
-<style>
+<style scoped>
 .dropdown:focus-within .dropdown-menu {
   opacity: 1;
   transform: translate(0) scale(1);
   visibility: visible;
 }
+
 </style>
