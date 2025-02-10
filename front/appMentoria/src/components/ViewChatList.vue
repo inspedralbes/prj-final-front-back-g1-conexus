@@ -32,11 +32,13 @@ const userId = myUser.id;
 
 const fetchChatsNow = async (userId) => {
   try {
+
     const result = await fetchChats(userId);
     chats.value = result.chats;
     chatsInfo.value = result.chatsInfo;
     chats.value = chats.value.filter(chat => {
-      if (chat.user_two_id === userId && (!chat.interactions || chat.interactions.length === 0)) {
+      console.log("chat", chat.users[0], chat.users[1]);
+      if (chat.users[1] === userId && (!chat.interactions || chat.interactions.length === 0)) {
         return false;
       }
       return true;
@@ -45,6 +47,7 @@ const fetchChatsNow = async (userId) => {
 };
 
 onMounted(async () => {
+  console.log("ViewChatList mounted");
   users.value = await getUsers();
   socketChat.on("receiveMessage", async (newMessage) => {
     await fetchChatsNow(userId);

@@ -6,38 +6,38 @@
       :key="chat.id"
       class="chat-item overflow-y-auto"
     >
-      <div
-        style="display: flex; align-items: center"
-        @click="selectChat(chat._id), updateUserIdLaOtra(chat)"
-      >
-        <img
-          v-if="chat.user_one_id === userId"
-          :src="getAuthorProfile(chat.user_two_id)"
-          alt=""
-          class="w-10 sm:w-16 h-10 sm:h-16 rounded-full"
-        />
-        <img
-          v-if="chat.user_two_id === userId"
-          :src="getAuthorProfile(chat.user_one_id)"
-          alt=""
-          class="w-10 sm:w-16 h-10 sm:h-16 rounded-full"
-        />
-        <div style="margin-left: 1rem">
-          <h3 v-if="chat.user_one_id === userId">
-            {{ getAuthorName(chat.user_two_id) }}
-          </h3>
-          <h3 v-if="chat.user_two_id === userId">
-            {{ getAuthorName(chat.user_one_id) }}
-          </h3>
-          <p
-            v-if="
-              chat.interactions &&
-              chat.interactions.length > 0 &&
-              chat.interactions[chat.interactions.length - 1].message !== null
-            "
-          >
-            {{ chat.interactions[chat.interactions.length - 1].message }}
-          </p>
+        <div
+          style="display: flex; align-items: center"
+          @click="selectChat(chat.id), updateUserIdLaOtra(chat)"
+        >
+          <img
+            v-if="chat.users[0].value === userId.value"
+            :src="getAuthorProfile(chat.users[1])"
+            alt=""
+            class="w-10 sm:w-16 h-10 sm:h-16 rounded-full"
+          />
+          <img
+            v-if="chat.users[1].value === userId.value"
+            :src="getAuthorProfile(chat.users[0])"
+            alt=""
+            class="w-10 sm:w-16 h-10 sm:h-16 rounded-full"
+          />
+          <div style="margin-left: 1rem">
+            <h3 v-if="chat.users[0].value === userId.value">
+              {{ getAuthorName(chat.users[1]) }}
+            </h3>
+            <h3 v-if="chat.users[1].value === userId.value">
+              {{ getAuthorName(chat.users[0]) }}
+            </h3>
+            <p
+              v-if="
+                chat.interactions &&
+                chat.interactions.length > 0 &&
+                chat.interactions[chat.interactions.length - 1].message !== null
+              "
+            >
+              {{ chat.interactions[chat.interactions.length - 1].message }}
+            </p>
         </div>
       </div>
     </div>
@@ -97,10 +97,11 @@ watch(
 const userIdLaOtra = ref(false);
 
 const updateUserIdLaOtra = (chat) => {
-  if (chat.user_one_id === userId.value) {
-    userIdLaOtra.value = chat.user_two_id;
+  console.log("un",chat.users[0], "dos",chat.users[1]);
+  if (chat.users[0] === userId.value) {
+    userIdLaOtra.value = chat.users[1];
   } else {
-    userIdLaOtra.value = chat.user_one_id;
+    userIdLaOtra.value = chat.users[0];
   }
 };
 
@@ -111,11 +112,13 @@ const selectChat = (chatId) => {
 };
 
 const getAuthorName = (userId) => {
+  console.log("getAuthorName", userId);
   const user = users.value.find((user) => user.id === userId);
   return user.name;
 };
 
 const getAuthorProfile = (userId) => {
+  console.log("getAuthorProfile", userId);
   try {
     const user = users.value.find((user) => user.id === userId);
     let profileimage;
@@ -132,6 +135,7 @@ const getAuthorProfile = (userId) => {
 
 onMounted(() => {
   selectedChatId.value = false;
+  console.log("ViewChatList mounted");
 });
 </script>
 
