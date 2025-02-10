@@ -455,12 +455,7 @@ export const fetchMessages = async (chatId) => {
 };
 
 // Send message
-export const sendMessageInMongo = async (
-    chatData,
-    currentUser,
-    messageInput
-) => {
-
+export const sendMessageInMongo = async (chatData, currentUser, messageInput) => {
     const newMessage = {
         message: messageInput,
         userId: currentUser,
@@ -473,15 +468,11 @@ export const sendMessageInMongo = async (
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(chatData._rawValue),
-        });
-        if (typeof messageInput === "object" && messageInput !== null) {
-            messageInput.value = "";
-        }
-        socketChat.emit("sendMessage", {
-            chatId: chatData._rawValue._id,
-            userId: currentUser,
-            message: newMessage.message,
+            body: JSON.stringify({
+                _id: chatData._id,
+                users: chatData.users,
+                interactions: [...chatData.interactions, newMessage],
+            }),
         });
     } catch (error) {
         console.error("Error sending message:", error);
@@ -510,10 +501,9 @@ export const chatButton = async (userid2, router) => {
     const appStore = useAppStore();
     const userid1 = appStore.getUser().id;
     const newMessage = {
-        user_one_id: userid1,
-        user_two_id: userid2,
+        users: [userid1, userid2],
         interactions: [],
-        __v: 0,
+        reports: 0,
     };
     try {
         const response = await fetch(`${CHAT_URL}/newChat`, {

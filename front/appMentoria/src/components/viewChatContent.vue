@@ -96,44 +96,14 @@
 </style>
 
 <script setup>
-import { ref, onMounted, defineProps, watch, nextTick } from "vue";
-import { fetchMessages, sendMessageInMongo, reportChat, reportChatMongo } from "@/services/communicationManager";
-import socketChat from "../services/socketChat";
+import { ref, onMounted, nextTick } from 'vue';
+import { sendMessageInMongo } from '@/services/communicationManager';
 
-const props = defineProps({
-  chatId: {
-    type: String,
-    required: true,
-  },
-  users: {
-    type: Array,
-    required: true,
-  },
-  userMio: {
-    type: String,
-    required: true,
-  },
-  userElla: {
-    type: String,
-    required: true,
-  },
-  BACK_URL: {
-    type: String,
-    required: true,
-  },
-});
-
-const currentUser = props.userMio;
-const userElla = props.userElla;
-const users = ref(props.users);
-const BACK_URL = props.BACK_URL;
-
-const chatData = ref({});
-const interactions = ref([]);
-const isChatReported = ref(false);
-
-const messageContainer = ref(null);
 const messageInput = ref(null);
+const messageContainer = ref(null);
+const interactions = ref([]);
+const chatData = ref({});
+const currentUser = useAppStore().getUser().id;
 
 const scrollToBottom = async () => {
   await nextTick();
@@ -170,43 +140,5 @@ onMounted(async () => {
     interactions.value.push(newMessage);
     scrollToBottom();
   });
-  chatData.value = await fetchMessages(props.chatId);
-  interactions.value = chatData.value._rawValue.interactions;
-  scrollToBottom();
-
-  if (chatData.value._rawValue.reports === 1) {
-    isChatReported.value = true;
-  }
 });
-watch(interactions, () => {
-  scrollToBottom();
-});
-
-const confirmReport = async (interaction) => {
-  console.log('Interaction object:', interaction); // Verifica que interaction tenga el campo _id
-
-  const reason = prompt(`Estàs segur que vols reportar aquest missatge: "${interaction.message}"? Si és així, indica el motiu:`);
-
-  console.log('Reporting message with the following details:', {
-    message_id: interaction._id, 
-    user_id: interaction.userId, 
-    message: interaction.message,
-    reason: reason
-  });
-
-  if (reason) {
-    try {
-      const response = await reportChat(interaction._id, interaction.userId, interaction.message, reason);
-      const result = await reportChatMongo(props.chatId, interaction._id);
-      if (result.error || response.error) {
-        console.error('Error reporting message:', result.error || response.error);
-      } else {
-        console.log("Message reported successfully!");
-        isChatReported.value = true;
-      }
-    } catch (error) {
-      console.error('Error reporting message:', error);
-    }
-  }
-};
 </script>

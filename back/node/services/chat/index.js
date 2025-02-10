@@ -3,7 +3,6 @@ const { createServer } = require("http");
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const fs = require("fs");
 const path = require("path");
 const dotenv = require("dotenv");
 
@@ -45,8 +44,7 @@ mongoose
   .catch((err) => console.error("Error de conexión a MongoDB:", err));
 
 const messageSchema = new mongoose.Schema({
-  user_one_id: Number,
-  user_two_id: Number,
+  users: [Number],
   reports: { type: Number, default: 0 },
   interactions: [
     {
@@ -80,10 +78,9 @@ app.get("/getChats/:id", async (req, res) => {
   const id = req.params.id;
   try {
     const messages = await Message.find();
-    const filteredMessages = messages.filter(
-      (message) => message.user_one_id == id || message.user_two_id == id
+    const filteredMessages = messages.filter((message) =>
+      message.users.includes(Number(id))
     );
-    "ID:", id;
     console.log("Messages:", filteredMessages);
     res.json(filteredMessages);
   } catch (err) {
@@ -103,22 +100,20 @@ app.get("/getChat/:id", async (req, res) => {
 
 app.post("/addChat", async (req, res) => {
   console.log("addChat");
-  const { _id, user_one_id, user_two_id, reports, interactions } = req.body;
+  const { _id, users, reports, interactions } = req.body;
   console.log("req.body:", req.body);
   try {
     let message;
-    let isFirstInteraction = false;
     if (_id) {
       message = await Message.findByIdAndUpdate(
         _id,
-        { user_one_id, user_two_id, interactions },
+        { users, reports, interactions },
         { new: true, upsert: true }
       );
     } else {
-      message = new Message({ user_one_id, user_two_id, reports, interactions });
+      message = new Message({ users, reports, interactions });
       await message.save();
     }
-
     // if (isFirstInteraction) {
     //   console.log("eyyyyyyyyyyy estoy dentro");
     //   const notificationPayload = {
@@ -135,23 +130,19 @@ app.post("/addChat", async (req, res) => {
     //     body: JSON.stringify(notificationPayload)
     //   });
     // }
-
-    res.json(message);
+    res.status(200).json(message);
   } catch (err) {
-    console.error('Error en /addChat:', err);
+    console.error("Error adding chat:", err);
     res.status(500).send(err);
   }
 });
 
 app.post("/newChat", async (req, res) => {
   console.log("newChat");
-  const { user_one_id, user_two_id, interactions } = req.body;
+  const { users, interactions } = req.body;
 
   const existingChat = await Message.findOne({
-    $or: [
-      { user_one_id: user_one_id, user_two_id: user_two_id },
-      { user_one_id: user_two_id, user_two_id: user_one_id },
-    ],
+    users: { $all: users },
   });
 
   if (existingChat) {
@@ -159,8 +150,7 @@ app.post("/newChat", async (req, res) => {
   }
   try {
     const message = new Message({
-      user_one_id,
-      user_two_id,
+      users,
       reports: 0,
       interactions,
     });
@@ -189,7 +179,6 @@ app.post("/reportMessage", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
 
 const TWENTY_FOUR_HOURS_IN_MS = 24 * 60 * 60 * 1000;
 
@@ -232,27 +221,25 @@ io.on("connection", (socket) => {
         const isFirstInteraction = chat.interactions.length === 0;
         chat.interactions.push(newMessage);
         await chat.save();
-        io.emit('receiveMessage', newMessage);
-        console.log('Message saved:', newMessage);
+        io.emit("receiveMessage", newMessage);
+        console.log("Message saved:", newMessage);
 
         if (isFirstInteraction) {
           const notificationPayload = {
-            user_id: userId === chat.user_one_id ? chat.user_two_id : chat.user_one_id,
-            title: 'Nou chat obert',
-            message: `Tens un nou missatge de ${userId}!`
+            user_id: userId === chat.users[0] ? chat.users[1] : chat.users[0],
+            title: "Nou chat obert",
+            message: `Tens un nou missatge de ${userId}!`,
           };
 
-          console.log("toy dentro perras");
-
-          const response = await fetch(chatEnv.ENDPOINT_URL_PUSH_NOTIFICATIONS + '/sendNotification', {
-            method: 'POST',
+          const response = await fetch(chatEnv.ENDPOINT_URL_PUSH_NOTIFICATIONS + "/sendNotification", {
+            method: "POST",
             headers: {
-              'Content-Type': 'application/json'
+              "Content-Type": "application/json",
             },
-            body: JSON.stringify(notificationPayload)
+            body: JSON.stringify(notificationPayload),
           });
 
-          console.log("response", response.json());
+          console.log("response", await response.json());
         }
       }
     } catch (err) {
