@@ -58,9 +58,10 @@ import { ref, watch } from "vue";
 const props = defineProps({
   selectedDesignFront: Number,
   selectedDesignBack: Number,
+  selectedColor: Object,
 });
 
-const emit = defineEmits(["selectDesign"]);
+const emit = defineEmits(["selectDesign", "updateDesigns"]);
 
 const selectedFront = ref(props.selectedDesignFront);
 const selectedBack = ref(props.selectedDesignBack);
@@ -68,9 +69,9 @@ const selectedBack = ref(props.selectedDesignBack);
 watch(
   () => props.selectedDesignBack,
   props.selectedDesignFront,
-  (newValue) => {
-    selectedFront.value = newValue;
-    selectedBack.value = newValue;
+  ([newFront, newBack]) => {
+    selectedFront.value = newFront;
+    selectedBack.value = newBack;
   }
 );
 
@@ -86,7 +87,7 @@ const selectBack = (id) => {
   emit("selectDesign", { type: "back", id });
 };
 
-const designs = [
+const designs = ref([
   {
     id: 1,
     front: {
@@ -111,6 +112,7 @@ const designs = [
         { classes: "row-start-4 col-start-4 col-span-3 w-full h-5 rounded" },
       ],
     },
+    color: props.selectedColor,
   },
   {
     id: 2,
@@ -144,6 +146,7 @@ const designs = [
         { classes: "row-start-2 col-start-5 w-16 h-16 rounded" },
       ],
     },
+    color: props.selectedColor,
   },
   {
     id: 3,
@@ -169,6 +172,7 @@ const designs = [
         { classes: "row-start-2 col-start-5 w-16 h-16 rounded-full" },
       ],
     },
+    color: props.selectedColor,
   },
   {
     id: 4,
@@ -194,6 +198,7 @@ const designs = [
         { classes: "row-start-4 col-span-4 w-full h-5 rounded" },
       ],
     },
+    color: props.selectedColor,
   },
   {
     id: 5,
@@ -222,6 +227,7 @@ const designs = [
         { classes: "row-start-4 col-start-3 col-span-4 w-full h-5 rounded" },
       ],
     },
+    color: props.selectedColor,
   },
   {
     id: 6,
@@ -250,8 +256,25 @@ const designs = [
         { classes: "col-start-5 row-start-4 w-full col-span-2 h-16 rounded" },
       ],
     },
+    color: props.selectedColor,
   },
-];
+]);
+
+// watch(
+//   () => props.selectedColor,
+//   (newColor) => {
+//     if (!designs.value || designs.value.length === 0) return; // Evitar errores si está vacío
+//     console.log("desings", designs.value);
+//     const selectedDesign = designs.value.find(
+//       (design) => design.id === selectedFront.value
+//     );
+
+//     if (selectedDesign) {
+//       selectedDesign.color = newColor;
+//     }
+//   }
+// );
+emit("updateDesigns", designs.value);
 </script>
 
 <style scoped>

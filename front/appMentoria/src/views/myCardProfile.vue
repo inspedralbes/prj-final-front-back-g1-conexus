@@ -33,6 +33,7 @@
                 :selectedDesignFront="selectedDesignFront"
                 :selectedDesignBack="selectedDesignBack"
                 @selectDesign="selectDesign"
+                @updateDesigns="updateDesigns"
               />
             </div>
           </div>
@@ -74,6 +75,7 @@
           :selectedDesignFront="selectedDesignFront"
           :selectedDesignBack="selectedDesignBack"
           :selectedColor="selectedColor"
+          :designs="designs"
         ></PreviewCard>
       </div>
     </div>
@@ -128,6 +130,12 @@ const selectDesign = ({ type, id }) => {
   } else if (type === "back") {
     selectedDesignBack.value = id;
   }
+};
+
+const designs = ref([]);
+
+const updateDesigns = (newDesigns) => {
+  designs.value = newDesigns;
 };
 
 const generateQRCode = () => {
