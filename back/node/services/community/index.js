@@ -7,13 +7,15 @@ const fs = require('fs');
 const FormData = require('form-data');
 const path = require('path');
 const dotenv = require('dotenv');
+// const { verifyToken } = require('../../middleware/auth.js');
+const { verifyToken } = require('/usr/src/node/middleware/auth.js');
 
 function loadEnv(envPath) {
-  const result = dotenv.config({ path: envPath });
-  if (result.error) {
-      throw result.error;
-  }
-  return result.parsed; 
+    const result = dotenv.config({ path: envPath });
+    if (result.error) {
+        throw result.error;
+    }
+    return result.parsed;
 }
 
 const comEnd = loadEnv(path.resolve(__dirname, './.env'));
@@ -54,7 +56,7 @@ app.get('/', (req, res) => {
 app.use('/upload', express.static(path.join(__dirname, 'upload')));
 
 // CRUD operations for comments
-app.get('/comments', async (req, res) => {
+app.get('/comments', verifyToken, async (req, res) => {
     try {
         const connection = await mysql.createConnection(dbConfig);
         const [rows] = await connection.execute('SELECT * FROM comments WHERE text_ia = 1');
@@ -65,7 +67,7 @@ app.get('/comments', async (req, res) => {
     }
 });
 
-app.get('/comments/:id', async (req, res) => {
+app.get('/comments/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -81,7 +83,7 @@ app.get('/comments/:id', async (req, res) => {
     }
 });
 
-app.post('/comments', async (req, res) => {
+app.post('/comments', verifyToken, async (req, res) => {
     const { publication_id, user_id, commentReply_id, comment } = req.body;
     var notificationIAnoResponse;
     var report;
@@ -238,7 +240,7 @@ app.post('/comments', async (req, res) => {
     }
 });
 
-app.put('/comments/:id', async (req, res) => {
+app.put('/comments/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
     const { publication_id, user_id, commentReply_id, comment } = req.body;
 
@@ -258,7 +260,7 @@ app.put('/comments/:id', async (req, res) => {
     }
 });
 
-app.delete('/comments/:id', async (req, res) => {
+app.delete('/comments/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -275,7 +277,7 @@ app.delete('/comments/:id', async (req, res) => {
 });
 
 // CRUD operations for publications
-app.get('/publications', async (req, res) => {
+app.get('/publications', verifyToken, async (req, res) => {
     try {
         const connection = await mysql.createConnection(dbConfig);
         const [rows] = await connection.execute('SELECT * FROM publications WHERE typesPublications_id = 1 AND text_ia = 1 AND image_ia = 1');
@@ -286,7 +288,7 @@ app.get('/publications', async (req, res) => {
     }
 });
 
-app.post('/publications', async (req, res) => {
+app.post('/publications', verifyToken, async (req, res) => {
     const { title, description, user_id, expired_at } = req.body;
     var notificationIAnoResponse;
 
@@ -504,7 +506,7 @@ app.post('/publications', async (req, res) => {
     }
 });
 
-app.get('/publications/:id', async (req, res) => {
+app.get('/publications/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -520,7 +522,7 @@ app.get('/publications/:id', async (req, res) => {
     }
 });
 
-app.get('/getMyPublications', async (req, res) => {
+app.get('/getMyPublications', verifyToken, async (req, res) => {
     console.log("user_id recibido:", req.query.user_id); // Confirma el valor
     const { user_id } = req.query;
 
@@ -537,7 +539,7 @@ app.get('/getMyPublications', async (req, res) => {
     }
 });
 
-app.post('/publications', async (req, res) => {
+app.post('/publications', verifyToken, async (req, res) => {
     const { title, description, user_id } = req.body;
 
     try {
@@ -553,7 +555,7 @@ app.post('/publications', async (req, res) => {
     }
 });
 
-app.put('/publications/:id', async (req, res) => {
+app.put('/publications/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
     const { typesPublications_id, title, description, user_id, reports } = req.body;
 
@@ -573,7 +575,7 @@ app.put('/publications/:id', async (req, res) => {
     }
 });
 
-app.delete('/publications/:id', async (req, res) => {
+app.delete('/publications/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -590,7 +592,7 @@ app.delete('/publications/:id', async (req, res) => {
 });
 
 // CRUD operations for reportsPublications
-app.get('/reports/publications', async (req, res) => {
+app.get('/reports/publications', verifyToken, async (req, res) => {
     try {
         const connection = await mysql.createConnection(dbConfig);
         const [rows] = await connection.execute(`
@@ -620,7 +622,7 @@ app.get('/reports/publications', async (req, res) => {
     }
 });
 
-app.get('/reports/publications/:id', async (req, res) => {
+app.get('/reports/publications/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -636,7 +638,7 @@ app.get('/reports/publications/:id', async (req, res) => {
     }
 });
 
-app.post('/reports/publications', async (req, res) => {
+app.post('/reports/publications', verifyToken, async (req, res) => {
     const { publication_id, user_id, report, status } = req.body;
 
     try {
@@ -652,7 +654,7 @@ app.post('/reports/publications', async (req, res) => {
     }
 });
 
-app.put('/reports/publications/:id', async (req, res) => {
+app.put('/reports/publications/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
 
@@ -660,7 +662,7 @@ app.put('/reports/publications/:id', async (req, res) => {
         const connection = await mysql.createConnection(dbConfig);
         const [result] = await connection.execute(
             'UPDATE reportsPublications SET status = ? WHERE id = ?',
-            [ status, id]
+            [status, id]
         );
         connection.end();
 
@@ -672,7 +674,7 @@ app.put('/reports/publications/:id', async (req, res) => {
     }
 });
 
-app.delete('/reports/publications/:id', async (req, res) => {
+app.delete('/reports/publications/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
 
     try {

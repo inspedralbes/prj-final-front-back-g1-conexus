@@ -12,17 +12,15 @@ export const fetchMessages = async (chatId) => {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
             },
         });
 
-        if (response.status === 401) {
+        if (response.status == 401) {
             const refreshResult = await refreshToken();
-
             if (refreshResult.error) {
                 return { error: 'No se pudo renovar el token. Inicia sesión nuevamente.'};
             }
-
             return fetchMessages(chatId);
         }
 
@@ -61,7 +59,7 @@ export const sendMessageInMongo = async (chatData, currentUser, messageInput) =>
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
             },
             body: JSON.stringify(chatData._rawValue),
         });
@@ -106,7 +104,7 @@ export const fetchChats = async (userId) => {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
             },
         });
 
@@ -150,7 +148,7 @@ export const chatButton = async (userid2, router) => {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
             },
             body: JSON.stringify(newMessage),
         });

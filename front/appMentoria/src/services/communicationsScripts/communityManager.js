@@ -1,4 +1,5 @@
 const COMMUNITY_URL = import.meta.env.VITE_URL_BACK_COMMUNITY;
+import { refreshToken } from "@/services/communicationsScripts/mainManager";
 
 // Get Community Publications
 export const getCommunityPublication = async () => {
@@ -7,8 +8,22 @@ export const getCommunityPublication = async () => {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
             },
         });
+
+        if (response.status == 401) {
+            const refreshResult = await refreshToken();
+            if (refreshResult.error) {
+                return { error: 'No se pudo renovar el token. Inicia sesión nuevamente.' };
+            }
+            return getCommunityPublication();
+        }
+
+        if (!response.ok) {
+            return { error: `HTTP error! status: ${response.status}` };
+        }
+
         const data = await response.json();
         return data;
     } catch (error) {
@@ -22,8 +37,23 @@ export const postCommunityPublication = async (formdata) => {
     try {
         const response = await fetch(`${COMMUNITY_URL}/publications`, {
             method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            },
             body: formdata,
         });
+
+        if (response.status == 401) {
+            const refreshResult = await refreshToken();
+            if (refreshResult.error) {
+                return { error: 'No se pudo renovar el token. Inicia sesión nuevamente.' };
+            }
+            return postCommunityPublication(formdata);
+        }
+
+        if (!response.ok) {
+            return { error: `HTTP error! status: ${response.status}` };
+        }
 
         return response;
     } catch (error) {
@@ -38,9 +68,22 @@ export const getCommunityComments = async () => {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
             },
         });
+
+        if (response.status == 401) {
+            const refreshResult = await refreshToken();
+            if (refreshResult.error) {
+                return { error: 'No se pudo renovar el token. Inicia sesión nuevamente.' };
+            }
+            return getCommunityComments();
+        }
+
+        if (!response.ok) {
+            return { error: `HTTP error! status: ${response.status}` };
+        }
+
         const data = await response.json();
         return data;
     } catch (error) {
@@ -56,10 +99,23 @@ export const postCommunityComments = async (comment) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
             },
             body: JSON.stringify(comment),
         });
+
+        if (response.status == 401) {
+            const refreshResult = await refreshToken();
+            if (refreshResult.error) {
+                return { error: 'No se pudo renovar el token. Inicia sesión nuevamente.' };
+            }
+            return postCommunityComments(comment);
+        }
+
+        if (!response.ok) {
+            return { error: `HTTP error! status: ${response.status}` };
+        }
+
         return response.json();
     } catch (error) {
         console.error(error);
@@ -73,8 +129,17 @@ export const fetchAllReportsPublications = async () => {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
             },
         });
+
+        if (response.status == 401) {
+            const refreshResult = await refreshToken();
+            if (refreshResult.error) {
+                return { error: 'No se pudo renovar el token. Inicia sesión nuevamente.' };
+            }
+            return fetchAllReportsPublications();
+        }
 
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
@@ -96,9 +161,18 @@ export const fetchReportPublicationById = async (id) => {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
+                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
                 },
             }
         );
+
+        if (response.status == 401) {
+            const refreshResult = await refreshToken();
+            if (refreshResult.error) {
+                return { error: 'No se pudo renovar el token. Inicia sesión nuevamente.' };
+            }
+            return fetchReportPublicationById(id);
+        }
 
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
@@ -123,9 +197,18 @@ export const createReportPublication = async (
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
             },
             body: JSON.stringify({ publication_id, user_id, report, status }),
         });
+
+        if (response.status == 401) {
+            const refreshResult = await refreshToken();
+            if (refreshResult.error) {
+                return { error: 'No se pudo renovar el token. Inicia sesión nuevamente.' };
+            }
+            return createReportPublication(publication_id, user_id, report, status);
+        }
 
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
@@ -145,9 +228,18 @@ export const updateReportPublication = async (id, status) => {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
             },
             body: JSON.stringify({ status }),
         });
+
+        if (response.status == 401) {
+            const refreshResult = await refreshToken();
+            if (refreshResult.error) {
+                return { error: 'No se pudo renovar el token. Inicia sesión nuevamente.' };
+            }
+            return updateReportPublication(id, status);
+        }
 
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
@@ -169,9 +261,18 @@ export const deleteReportPublication = async (id) => {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
+                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
                 },
             }
         );
+
+        if (response.status == 401) {
+            const refreshResult = await refreshToken();
+            if (refreshResult.error) {
+                return { error: 'No se pudo renovar el token. Inicia sesión nuevamente.' };
+            }
+            return deleteReportPublication(id);
+        }
 
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
@@ -191,8 +292,22 @@ export const getMyPublicationsInCommunity = async (userID) => {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
             },
         });
+
+        if (response.status == 401) {
+            const refreshResult = await refreshToken();
+            if (refreshResult.error) {
+                return { error: 'No se pudo renovar el token. Inicia sesión nuevamente.' };
+            }
+            return getMyPublicationsInCommunity(userID);
+        }
+
+        if (!response.ok) {
+            return { error: `HTTP error! status: ${response.status}` };
+        }
+
         const data = await response.json();
         return data;
     } catch (error) {

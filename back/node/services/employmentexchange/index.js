@@ -9,6 +9,8 @@ const { request } = require('http');
 const { text } = require('stream/consumers');
 const path = require('path');
 const dotenv = require('dotenv');
+// const { verifyToken } = require('../../middleware/auth.js');
+const { verifyToken } = require('/usr/src/node/middleware/auth.js');
 
 function loadEnv(envPath) {
   const result = dotenv.config({ path: envPath });

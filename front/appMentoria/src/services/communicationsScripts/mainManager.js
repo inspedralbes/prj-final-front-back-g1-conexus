@@ -169,10 +169,25 @@ export const getUsersForOther = async () => {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
             },
         });
-        const data = await response;
+
+        if (response.status == 401) {
+            const refreshResult = await refreshToken();
+
+            if (refreshResult.error) {
+                return { error: "No se pudo renovar el token. Inicia sesión nuevamente." };
+            }
+
+            return getUsersForOther();
+        }
+
+        if (!response.ok) {
+            return { error: `HTTP error! status: ${response.status}` };
+        }
+
+        const data = response;
         return data;
     } catch (error) {
         console.error("Network error:", error);
@@ -187,9 +202,22 @@ export const getUsers = async () => {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
             },
         });
+
+        if (response.status == 401) {
+            const refreshResult = await refreshToken();
+            if (refreshResult.error) {
+                return { error: "No se pudo renovar el token. Inicia sesión nuevamente." };
+            }
+            return getUsers();
+        }
+
+        if (!response.ok) {
+            return { error: `HTTP error! status: ${response.status}` };
+        }
+
         const data = await response.json();
         return data;
     } catch (error) {
@@ -203,7 +231,19 @@ export const fetchAllUserReports = async () => {
     try {
         const response = await fetch(`${BACK_URL}/reports/users`, {
             method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
         });
+
+        if (response.status == 401) {
+            const refreshResult = await refreshToken();
+            if (refreshResult.error) {
+                return { error: "No se pudo renovar el token. Inicia sesión nuevamente." };
+            }
+            return fetchAllUserReports();
+        }
 
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
@@ -223,8 +263,17 @@ export const fetchReportUserById = async (id) => {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
             },
         });
+
+        if (response.status == 401) {
+            const refreshResult = await refreshToken();
+            if (refreshResult.error) {
+                return { error: "No se pudo renovar el token. Inicia sesión nuevamente." };
+            }
+            return fetchReportUserById(id);
+        }
 
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
@@ -244,9 +293,18 @@ export const createReportUser = async (reported_user_id, user_id, report) => {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
             },
             body: JSON.stringify({ reported_user_id, user_id, report }),
         });
+
+        if (response.status == 401) {
+            const refreshResult = await refreshToken();
+            if (refreshResult.error) {
+                return { error: "No se pudo renovar el token. Inicia sesión nuevamente." };
+            }
+            return createReportUser(reported_user_id, user_id, report);
+        }
 
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
@@ -266,9 +324,18 @@ export const updateReportUser = async (id, status) => {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
             },
             body: JSON.stringify({ status }),
         });
+
+        if (response.status == 401) {
+            const refreshResult = await refreshToken();
+            if (refreshResult.error) {
+                return { error: "No se pudo renovar el token. Inicia sesión nuevamente." };
+            }
+            return updateReportUser(id, status);
+        }
 
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
@@ -288,8 +355,17 @@ export const deleteReportUser = async (id) => {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
             },
         });
+
+        if (response.status == 401) {
+            const refreshResult = await refreshToken();
+            if (refreshResult.error) {
+                return { error: "No se pudo renovar el token. Inicia sesión nuevamente." };
+            }
+            return deleteReportUser(id);
+        }
 
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
@@ -309,8 +385,17 @@ export const fetchAllReportsComments = async () => {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
             },
         });
+
+        if (response.status == 401) {
+            const refreshResult = await refreshToken();
+            if (refreshResult.error) {
+                return { error: "No se pudo renovar el token. Inicia sesión nuevamente." };
+            }
+            return fetchAllReportsComments();
+        }
 
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
@@ -330,8 +415,17 @@ export const fetchReportCommentById = async (id) => {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
             },
         });
+
+        if (response.status == 401) {
+            const refreshResult = await refreshToken();
+            if (refreshResult.error) {
+                return { error: "No se pudo renovar el token. Inicia sesión nuevamente." };
+            }
+            return fetchReportCommentById(id);
+        }
 
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
@@ -351,9 +445,18 @@ export const createReportComment = async (comment_id, user_id, report) => {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
             },
             body: JSON.stringify({ comment_id, user_id, report }),
         });
+
+        if (response.status == 401) {
+            const refreshResult = await refreshToken();
+            if (refreshResult.error) {
+                return { error: "No se pudo renovar el token. Inicia sesión nuevamente." };
+            }
+            return createReportComment(comment_id, user_id, report);
+        }
 
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
@@ -373,9 +476,18 @@ export const updateReportComment = async (id, status) => {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
             },
             body: JSON.stringify({ status }),
         });
+
+        if (response.status == 401) {
+            const refreshResult = await refreshToken();
+            if (refreshResult.error) {
+                return { error: "No se pudo renovar el token. Inicia sesión nuevamente." };
+            }
+            return updateReportComment(id, status);
+        }
 
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
@@ -395,8 +507,17 @@ export const deleteReportComment = async (id) => {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
             },
         });
+
+        if (response.status == 401) {
+            const refreshResult = await refreshToken();
+            if (refreshResult.error) {
+                return { error: "No se pudo renovar el token. Inicia sesión nuevamente." };
+            }
+            return deleteReportComment(id);
+        }
 
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
@@ -416,9 +537,18 @@ export const fetchUserValidation = async () => {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
             },
         });
+
+        if (response.status == 401) {
+            const refreshResult = await refreshToken();
+            if (refreshResult.error) {
+                return { error: "No se pudo renovar el token. Inicia sesión nuevamente." };
+            }
+            return fetchUserValidation();
+        }
+
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -437,9 +567,22 @@ export const getNewUsers = async () => {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
             },
         });
+
+        if (response.status == 401) {
+            const refreshResult = await refreshToken();
+            if (refreshResult.error) {
+                return { error: "No se pudo renovar el token. Inicia sesión nuevamente." };
+            }
+            return getNewUsers();
+        }
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const data = await response.json();
         return data;
     } catch (error) {
@@ -455,9 +598,22 @@ export const fetchAllClasses = async () => {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
             },
         });
+
+        if (response.status == 401) {
+            const refreshResult = await refreshToken();
+            if (refreshResult.error) {
+                return { error: "No se pudo renovar el token. Inicia sesión nuevamente." };
+            }
+            return fetchAllClasses();
+        }
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const data = await response.json();
         return data;
     } catch (error) {
@@ -473,8 +629,17 @@ export const deleteUserInDb = async (id) => {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
             },
         });
+
+        if (response.status == 401) {
+            const refreshResult = await refreshToken();
+            if (refreshResult.error) {
+                return { error: "No se pudo renovar el token. Inicia sesión nuevamente." };
+            }
+            return deleteUserInDb(id);
+        }
 
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
@@ -493,8 +658,17 @@ export const deleteUserValidation = async (id) => {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
             },
         });
+
+        if (response.status == 401) {
+            const refreshResult = await refreshToken();
+            if (refreshResult.error) {
+                return { error: "No se pudo renovar el token. Inicia sesión nuevamente." };
+            }
+            return deleteUserValidation(id);
+        }
 
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
@@ -513,8 +687,17 @@ export const updateUserValidation = async (id) => {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
             },
         });
+
+        if (response.status == 401) {
+            const refreshResult = await refreshToken();
+            if (refreshResult.error) {
+                return { error: "No se pudo renovar el token. Inicia sesión nuevamente." };
+            }
+            return updateUserValidation(id);
+        }
 
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
