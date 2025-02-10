@@ -2,7 +2,7 @@
   <div>
     <div
       v-if="loading"
-      class="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-800"
+      class="flex items-center justify-center min-h-screen bg-backgroundLight dark:bg-backgroundDark"
     >
       <Loading />
     </div>

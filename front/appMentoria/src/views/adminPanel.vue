@@ -6,5 +6,5 @@
 
 <script setup>
 import Header from '@/components/Header.vue';
-import NavBar from '@/components/NavBar.vue';
+import NavBar from '@/components/navBar/NavBarApp.vue';
 </script>

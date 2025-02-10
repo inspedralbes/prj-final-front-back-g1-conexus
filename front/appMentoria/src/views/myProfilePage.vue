@@ -1,7 +1,7 @@
 <template>
   <Header class="shadow-lg shadow-black/30"></Header>
-
-  <div v-if="user.value" class="dark:bg-gray-900 p-4 text-gray-900 dark:text-gray-100">
+  <NavBarWeb class="hidden lg:fixed lg:top-0 lg:left-0 lg:h-screen lg:w-60 lg:block"></NavBarWeb>
+  <div v-if="user.value" class="bg-backgroundLight dark:bg-backgroundDark p-4 text-gray-900 dark:text-gray-100 lg:ml-60">
     <!-- User - Banner & Profile Image -->
     <BannerProfile :banner="banner" :profile="profile" :user="user"/>
 
@@ -9,15 +9,17 @@
     <PersonalInfo :user="user" />
 
     <!-- User - Availibility -->
-    <div class="dark:bg-gray-800 bg-white p-6 rounded-xl shadow-lg shadow-black/30 my-4">
-      <Calendar :availabilityJson="user.value.availability" />
+    <div v-if="user.value.availibility" class=" dark:bg-gray-800 bg-white p-6 rounded-xl shadow-lg shadow-black/30 my-4">
+      <Calendar :availibilityJson="JSON.stringify(user.value.availibility)" />
     </div>
   </div>
-
+  
   <!-- If !users -->
   <div v-else class="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
     <Loading />
   </div>
+  <NavBarApp class="fixed bottom-0 left-0 right-0 w-full lg:hidden ">
+  </NavBarApp>
 </template>
 
 <script setup>
@@ -28,6 +30,8 @@ import Loading from "@/components/Loading.vue";
 import Calendar from "@/components/profile/Calendar.vue";
 import BannerProfile from "@/components/profile/BannerProfile.vue";
 import PersonalInfo from "@/components/profile/PersonalInfo.vue";
+import NavBarWeb from "@/components/navBar/NavBarWeb.vue";
+import NavBarApp from "@/components/navBar/NavBarApp.vue";
 
 const appStore = useAppStore();
 

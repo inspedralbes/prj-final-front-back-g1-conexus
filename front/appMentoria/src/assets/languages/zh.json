@@ -336,5 +336,14 @@
         "mentors": "导师",
         "request": "请求",
         "share": "分享"
+    },
+    "navBarWeb": {
+        "main": "主页",
+        "oferts": "优惠",
+        "profiles": "简介",
+        "notifications": "通知",
+        "chat": "聊天",
+        "gacha": "扭蛋",
+        "games": "游戏"
     }
 }

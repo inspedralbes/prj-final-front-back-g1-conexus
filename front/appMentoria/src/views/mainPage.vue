@@ -1,10 +1,14 @@
 <template>
   <div class="flex flex-col min-h-screen">
     <Header class="fixed top-0 left-0 right-0 z-10"></Header>
-    <main class="flex-grow mt-16 mb-60">
+    <NavBarWeb class="hidden lg:fixed lg:top-0 lg:left-0 lg:h-screen lg:w-60 lg:block"></NavBarWeb>
+    <NavBarApp 
+      class="fixed bottom-0 left-0 right-0 w-full lg:hidden ">
+    </NavBarApp>
+    <main class="flex-grow mt-16 mb-60"> 
       <ViewPostList></ViewPostList>
     </main>
-    <NavBar></NavBar>
+
     <div
       v-if="showModal"
       class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
@@ -30,11 +34,14 @@
   </div>
 </template>
 
+
 <script setup>
+import NavBarApp from "@/components/navBar/NavBarApp.vue";
 import { ref, onMounted } from "vue";
-import NavBar from "@/components/NavBar.vue";
+
 import Header from "@/components/Header.vue";
 import ViewPostList from "@/components/ViewPostList.vue";
+import NavBarWeb from "@/components/navBar/NavBarWeb.vue";
 import { subscribeToPushNotifications } from "@/services/communicationManager";
 import { useAppStore } from "@/stores/index";
 

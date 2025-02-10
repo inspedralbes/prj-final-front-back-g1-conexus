@@ -335,5 +335,14 @@
         "mentors": "سرپرست",
         "request": "درخواستیں",
         "share": "شیئر کریں"
+    },
+    "navBarWeb": {
+        "main": "اہم",
+        "oferts": "پیشکشیں",
+        "profiles": "پروفائل",
+        "notifications": "اطلاعات",
+        "chat": "چیٹ",
+        "gacha": "گاچا",
+        "games": "کھیل"
     }
 }

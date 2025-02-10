@@ -90,11 +90,11 @@ onMounted(async () => {
   <LanguageSelector />
     <RouterView
       v-if="!isLoading || userAPP.name"
-      class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100"
+      class="bg-backgroundLight text-gray-900 dark:bg-backgroundDark dark:text-gray-100"
     />
     <div
       v-else
-      class="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900"
+      class="flex items-center justify-center min-h-screen bg-backgroundLight dark:bg-backgroundDark"
     >
       <Loading />
     </div>

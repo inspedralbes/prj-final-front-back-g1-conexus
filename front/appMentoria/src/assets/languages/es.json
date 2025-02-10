@@ -337,5 +337,15 @@
         "mentors": "Mentores",
         "request": "Peticiones",
         "share": "Compartir"
+    },
+
+    "navBarWeb": {
+        "main": "Principal",
+        "oferts": "Ofertas",
+        "profiles": "Perfiles",
+        "notifications": "Notificaciones",
+        "chat": "Chat",
+        "gacha": "Gacha",
+        "games": "Juegos"
     }
 }
