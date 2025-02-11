@@ -94,32 +94,56 @@ const designs = ref([
       classes: "grid-cols-6 gap-4",
       elements: [
         {
-          dataField: props.user.profile,
+          dataField: [props.user.profile],
           classes: "row-span-2 col-start-1 col-end-3 w-16 h-16 rounded-full",
           fixed: true, //imagen fija
         },
         {
-          dataField: props.user.name,
+          dataField: [
+            props.user.name,
+            props.user.city,
+            props.user.email,
+            props.user.phone,
+            props.user.availibility,
+          ],
           classes: "col-span-4 w-full h-5 rounded",
           fixed: false, //editable
         },
         {
-          dataField: props.user.city,
+          dataField: [
+            props.user.name,
+            props.user.city,
+            props.user.email,
+            props.user.phone,
+            props.user.availibility,
+          ],
           classes: "col-start-4 col-span-3 w-full h-5 rounded",
           fixed: false, //editable
         },
         {
-          dataField: props.user.Linkedin,
+          dataField: [
+            props.user.linkedin_link,
+            props.user.github_link,
+            props.user.discord_link,
+          ],
           classes: "col-start-4 col-end-5 w-full h-6 rounded",
           fixed: false, //editable
         },
         {
-          dataField: props.user.Github,
+          dataField: [
+            props.user.linkedin_link,
+            props.user.github_link,
+            props.user.discord_link,
+          ],
           classes: "col-start-5 col-end-6 w-full h-6 rounded",
           fixed: false, //editable
         },
         {
-          dataField: props.user.Instagram,
+          dataField: [
+            props.user.linkedin_link,
+            props.user.github_link,
+            props.user.discord_link,
+          ],
           classes: "w-full h-6 rounded",
           fixed: false, //editable
         },
@@ -129,18 +153,30 @@ const designs = ref([
       classes: "grid-cols-6 grid-rows-6 gap-4",
       elements: [
         {
-          dataField: props.user.qrCode,
+          dataField: [props.user.qrCode],
           classes:
             "row-start-2 row-span-4 col-start-1 col-end-3 w-full h-16 rounded",
           fixed: true, //qr fija
         },
         {
-          dataField: props.user.email,
+          dataField: [
+            props.user.name,
+            props.user.city,
+            props.user.email,
+            props.user.phone,
+            props.user.availibility,
+          ],
           classes: "row-start-2 col-start-3 col-span-4 w-full h-5 rounded",
           fixed: false, //editable
         },
         {
-          dataField: props.user.phone,
+          dataField: [
+            props.user.name,
+            props.user.city,
+            props.user.email,
+            props.user.phone,
+            props.user.availibility,
+          ],
           classes: "row-start-4 col-start-4 col-span-3 w-full h-5 rounded",
           fixed: false, //editable
         },
@@ -154,30 +190,84 @@ const designs = ref([
       classes: "grid-cols-6 gap-4",
       elements: [
         {
+          dataField: [props.user.profile],
           classes:
             "col-start-3 justify-center w-16 h-16 col-span-3 rounded-full",
+          fixed: true,
         },
-        { classes: "col-start-2 col-span-4 w-full h-5 rounded" },
+        {
+          dataField: [
+            props.user.name,
+            props.user.city,
+            props.user.email,
+            props.user.phone,
+            props.user.availibility,
+          ],
+          classes: "col-start-2 col-span-4 w-full h-5 rounded",
+          fixed: false,
+        },
       ],
     },
     back: {
       classes: "grid-cols-6 grid-rows-6 gap-4",
       elements: [
-        { classes: "row-start-1 col-span-3 row-span-2 w-full h-5 rounded" },
-        { classes: "row-start-3 col-span-3 row-span-2 w-full h-5 rounded" },
         {
+          dataField: [
+            props.user.name,
+            props.user.city,
+            props.user.email,
+            props.user.phone,
+            props.user.availibility,
+          ],
+          classes: "row-start-1 col-span-3 row-span-2 w-full h-5 rounded",
+          fixed: false,
+        },
+        {
+          dataField: [
+            props.user.name,
+            props.user.city,
+            props.user.email,
+            props.user.phone,
+            props.user.availibility,
+          ],
+          classes: "row-start-3 col-span-3 row-span-2 w-full h-5 rounded",
+          fixed: false,
+        },
+        {
+          dataField: [
+            props.user.linkedin_link,
+            props.user.github_link,
+            props.user.discord_link,
+          ],
           classes:
             "row-start-5 col-start-1 row-end-5 col-span-1 w-full h-6 rounded",
+          fixed: false,
         },
         {
+          dataField: [
+            props.user.linkedin_link,
+            props.user.github_link,
+            props.user.discord_link,
+          ],
           classes:
             "row-start-5 col-start-2 row-end-5 col-span-1 w-full h-6 rounded",
+          fixed: false,
         },
         {
+          dataField: [
+            props.user.linkedin_link,
+            props.user.github_link,
+            props.user.discord_link,
+          ],
           classes:
             "row-start-5 col-start-3 row-end-5 col-span-1 w-full h-6 rounded",
+          fixed: false,
         },
-        { classes: "row-start-2 col-start-5 w-16 h-16 rounded" },
+        {
+          dataField: [props.user.qrCode],
+          classes: "row-start-2 col-start-5 w-16 h-16 rounded",
+          fixed: true,
+        },
       ],
     },
     color: props.selectedColor,
@@ -188,22 +278,92 @@ const designs = ref([
       classes: "grid-cols-6 grid-rows-6 gap-4",
       elements: [
         {
+          dataField: [props.user.qrCode],
           classes:
             "row-start-2 row-span-4 col-start-1 col-end-3 w-full h-16 rounded",
+          fixed: true,
         },
-        { classes: "row-start-1 col-start-4 col-span-3 w-full h-5 rounded" },
-        { classes: "row-start-3 col-start-4 col-span-3 w-full h-5 rounded" },
-        { classes: "row-start-5 col-start-4 col-span-1 w-full h-6 rounded" },
-        { classes: "row-start-5 col-start-5 col-span-1 w-full h-6 rounded" },
-        { classes: "row-start-5 col-start-6 col-span-1 w-full h-6 rounded" },
+        {
+          dataField: [
+            props.user.name,
+            props.user.city,
+            props.user.email,
+            props.user.phone,
+            props.user.availibility,
+          ],
+          classes: "row-start-1 col-start-4 col-span-3 w-full h-5 rounded",
+          fixed: false,
+        },
+        {
+          dataField: [
+            props.user.name,
+            props.user.city,
+            props.user.email,
+            props.user.phone,
+            props.user.availibility,
+          ],
+          classes: "row-start-3 col-start-4 col-span-3 w-full h-5 rounded",
+          fixed: false,
+        },
+        {
+          dataField: [
+            props.user.linkedin_link,
+            props.user.github_link,
+            props.user.discord_link,
+          ],
+          classes: "row-start-5 col-start-4 col-span-1 w-full h-6 rounded",
+          fixed: false,
+        },
+        {
+          dataField: [
+            props.user.linkedin_link,
+            props.user.github_link,
+            props.user.discord_link,
+          ],
+          classes: "row-start-5 col-start-5 col-span-1 w-full h-6 rounded",
+          fixed: false,
+        },
+        {
+          dataField: [
+            props.user.linkedin_link,
+            props.user.github_link,
+            props.user.discord_link,
+          ],
+          classes: "row-start-5 col-start-6 col-span-1 w-full h-6 rounded",
+          fixed: false,
+        },
       ],
     },
     back: {
       classes: "grid-cols-6 grid-rows-6 gap-4",
       elements: [
-        { classes: "row-start-2 col-span-3 w-full h-5 rounded" },
-        { classes: "row-start-4 col-span-3 w-full h-5 rounded" },
-        { classes: "row-start-2 col-start-5 w-16 h-16 rounded-full" },
+        {
+          dataField: [
+            props.user.name,
+            props.user.city,
+            props.user.email,
+            props.user.phone,
+            props.user.availibility,
+          ],
+          classes: "row-start-2 col-span-3 w-full h-5 rounded",
+          fixed: false,
+        },
+        {
+          dataField: [
+            props.user.name,
+            props.user.city,
+            props.user.email,
+            props.user.phone,
+            props.user.availibility,
+          ],
+          classes: "row-start-4 col-span-3 w-full h-5 rounded",
+          fixed: false,
+        },
+        {
+          dataField: [props.user.profile],
+          classes: "row-start-2 col-start-5 w-16 h-16 rounded-full",
+          fixed: true,
+        },
       ],
     },
     color: props.selectedColor,
@@ -213,23 +373,93 @@ const designs = ref([
     front: {
       classes: "grid-cols-6 grid-rows-6 gap-4",
       elements: [
-        { classes: "row-start-1 col-span-4 w-full h-5 rounded" },
-        { classes: "row-start-3 col-span-3 w-full h-5 rounded" },
-        { classes: "row-start-3 col-start-5 col-span-2 w-full h-5 rounded" },
-        { classes: "row-start-5 col-start-4 col-span-1 w-full h-6 rounded" },
-        { classes: "row-start-5 col-start-5 col-span-1 w-full h-6 rounded" },
-        { classes: "row-start-5 col-start-6 col-span-1 w-full h-6 rounded" },
+        {
+          dataField: [
+            props.user.name,
+            props.user.city,
+            props.user.email,
+            props.user.phone,
+            props.user.availibility,
+          ],
+          classes: "row-start-1 col-span-4 w-full h-5 rounded",
+          fixed: false,
+        },
+        {
+          dataField: [
+            props.user.name,
+            props.user.city,
+            props.user.email,
+            props.user.phone,
+            props.user.availibility,
+          ],
+          classes: "row-start-3 col-span-3 w-full h-5 rounded",
+          fixed: false,
+        },
+        {
+          dataField: [props.user.phone],
+          classes: "row-start-3 col-start-5 col-span-2 w-full h-5 rounded",
+          fixed: true,
+        },
+        {
+          dataField: [
+            props.user.linkedin_link,
+            props.user.github_link,
+            props.user.discord_link,
+          ],
+          classes: "row-start-5 col-start-4 col-span-1 w-full h-6 rounded",
+          fixed: false,
+        },
+        {
+          dataField: [
+            props.user.linkedin_link,
+            props.user.github_link,
+            props.user.discord_link,
+          ],
+          classes: "row-start-5 col-start-5 col-span-1 w-full h-6 rounded",
+          fixed: false,
+        },
+        {
+          dataField: [
+            props.user.linkedin_link,
+            props.user.github_link,
+            props.user.discord_link,
+          ],
+          classes: "row-start-5 col-start-6 col-span-1 w-full h-6 rounded",
+          fixed: false,
+        },
       ],
     },
     back: {
       classes: "grid-cols-6 grid-rows-6 gap-4",
       elements: [
         {
+          dataField: [props.user.qrCode],
           classes:
             "row-start-2 row-span-4 col-start-1 col-end-3 w-full h-16 rounded",
+          fixed: true,
         },
-        { classes: "row-start-2 col-start-4 col-span-3 w-full h-5 rounded" },
-        { classes: "row-start-4 col-span-4 w-full h-5 rounded" },
+        {
+          dataField: [
+            props.user.name,
+            props.user.city,
+            props.user.email,
+            props.user.phone,
+            props.user.availibility,
+          ],
+          classes: "row-start-2 col-start-4 col-span-3 w-full h-5 rounded",
+          fixed: false,
+        },
+        {
+          dataField: [
+            props.user.name,
+            props.user.city,
+            props.user.email,
+            props.user.phone,
+            props.user.availibility,
+          ],
+          classes: "row-start-4 col-span-4 w-full h-5 rounded",
+          fixed: false,
+        },
       ],
     },
     color: props.selectedColor,
@@ -240,25 +470,93 @@ const designs = ref([
       classes: "grid-cols-6 grid-rows-6 gap-4",
       elements: [
         {
+          dataField: [props.user.qrCode],
           classes:
             "row-start-1 row-span-4 col-start-1 col-end-3 w-full h-16 rounded",
+          fixed: true,
         },
-        { classes: "row-start-5 col-span-1 w-full h-6 rounded" },
-        { classes: "row-start-5 col-span-1 w-full h-6 rounded" },
-        { classes: "row-start-5 col-span-1 w-full h-6 rounded" },
-        { classes: "row-start-1 col-start-3 col-span-4 w-full h-5 rounded" },
-        { classes: "row-start-3 col-start-4 col-span-3 w-full h-5 rounded" },
+        {
+          dataField: [
+            props.user.linkedin_link,
+            props.user.github_link,
+            props.user.discord_link,
+          ],
+          classes: "row-start-5 col-span-1 w-full h-6 rounded",
+          fixed: false,
+        },
+        {
+          dataField: [
+            props.user.linkedin_link,
+            props.user.github_link,
+            props.user.discord_link,
+          ],
+          classes: "row-start-5 col-span-1 w-full h-6 rounded",
+          fixed: false,
+        },
+        {
+          dataField: [
+            props.user.linkedin_link,
+            props.user.github_link,
+            props.user.discord_link,
+          ],
+          classes: "row-start-5 col-span-1 w-full h-6 rounded",
+          fixed: false,
+        },
+        {
+          dataField: [
+            props.user.name,
+            props.user.city,
+            props.user.email,
+            props.user.phone,
+            props.user.availibility,
+          ],
+          classes: "row-start-1 col-start-3 col-span-4 w-full h-5 rounded",
+          fixed: false,
+        },
+        {
+          dataField: [
+            props.user.name,
+            props.user.city,
+            props.user.email,
+            props.user.phone,
+            props.user.availibility,
+          ],
+          classes: "row-start-3 col-start-4 col-span-3 w-full h-5 rounded",
+          fixed: false,
+        },
       ],
     },
     back: {
       classes: "grid-cols-6 grid-rows-6 gap-4",
       elements: [
         {
+          dataField: [props.user.profile],
           classes:
             "row-start-2 row-span-2 col-start-1 col-end-3 w-16 h-16 rounded-full",
+          fixed: true,
         },
-        { classes: "row-start-2 col-start-4 col-span-3 w-full h-5 rounded" },
-        { classes: "row-start-4 col-start-3 col-span-4 w-full h-5 rounded" },
+        {
+          dataField: [
+            props.user.name,
+            props.user.city,
+            props.user.email,
+            props.user.phone,
+            props.user.availibility,
+          ],
+          classes: "row-start-2 col-start-4 col-span-3 w-full h-5 rounded",
+          fixed: false,
+        },
+        {
+          dataField: [
+            props.user.name,
+            props.user.city,
+            props.user.email,
+            props.user.phone,
+            props.user.availibility,
+          ],
+          classes: "row-start-4 col-start-3 col-span-4 w-full h-5 rounded",
+          fixed: false,
+        },
       ],
     },
     color: props.selectedColor,
@@ -268,26 +566,98 @@ const designs = ref([
     front: {
       classes: "grid-cols-6 grid-rows-6 gap-4",
       elements: [
-        { classes: "row-start-1 col-span-1 w-full h-6 rounded" },
-        { classes: "row-start-3 row-span-1 w-full h-6 rounded" },
-        { classes: "row-start-5 row-span-1 w-full h-6 rounded" },
         {
-          classes: "row-start-1 row-span-2 col-start-5 w-16 h-16 rounded-full",
+          dataField: [
+            props.user.linkedin_link,
+            props.user.github_link,
+            props.user.discord_link,
+          ],
+          classes: "row-start-1 col-span-1 w-full h-6 rounded",
+          fixed: false,
         },
-        { classes: "row-start-5 col-start-4 col-span-3 w-full h-5 rounded" },
+        {
+          dataField: [
+            props.user.linkedin_link,
+            props.user.github_link,
+            props.user.discord_link,
+          ],
+          classes: "row-start-3 row-span-1 w-full h-6 rounded",
+          fixed: false,
+        },
+        {
+          dataField: [
+            props.user.linkedin_link,
+            props.user.github_link,
+            props.user.discord_link,
+          ],
+          classes: "row-start-5 row-span-1 w-full h-6 rounded",
+          fixed: false,
+        },
+        {
+          dataField: [props.user.profile],
+          classes: "row-start-1 row-span-2 col-start-5 w-16 h-16 rounded-full",
+          fixed: true,
+        },
+        {
+          dataField: [
+            props.user.name,
+            props.user.city,
+            props.user.email,
+            props.user.phone,
+            props.user.availibility,
+          ],
+          classes: "row-start-5 col-start-4 col-span-3 w-full h-5 rounded",
+          fixed: false,
+        },
       ],
     },
     back: {
       classes: "grid-cols-6 grid-rows-6 gap-4",
       elements: [
-        { classes: "row-start-1 col-span-3 row-span-2 w-full h-5 rounded" },
-        { classes: "col-span-2 col-start-5 row-span-2 w-full h-5 rounded" },
-        { classes: "row-start-3 col-span-4 row-span-2 w-full h-5 rounded" },
         {
+          dataField: [
+            props.user.name,
+            props.user.city,
+            props.user.email,
+            props.user.phone,
+            props.user.availibility,
+          ],
+          classes: "row-start-1 col-span-3 row-span-2 w-full h-5 rounded",
+          fixed: false,
+        },
+        {
+          dataField: [
+            props.user.name,
+            props.user.city,
+            props.user.email,
+            props.user.phone,
+            props.user.availibility,
+          ],
+          classes: "col-span-2 col-start-5 row-span-2 w-full h-5 rounded",
+          fixed: false,
+        },
+        {
+          dataField: [
+            props.user.name,
+            props.user.city,
+            props.user.email,
+            props.user.phone,
+            props.user.availibility,
+          ],
+          classes: "row-start-3 col-span-4 row-span-2 w-full h-5 rounded",
+          fixed: false,
+        },
+        {
+          dataField: [props.user.city, props.user.phone],
           classes:
             "row-start-5 row-span-4 col-span-3 row-span-2 w-full h-12 rounded",
+          fixed: false,
         },
-        { classes: "col-start-5 row-start-4 w-full col-span-2 h-16 rounded" },
+        {
+          dataField: [props.user.qrCode],
+          classes: "col-start-5 row-start-4 w-full col-span-2 h-16 rounded",
+          fixed: true,
+        },
       ],
     },
     color: props.selectedColor,

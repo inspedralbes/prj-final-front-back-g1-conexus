@@ -77,6 +77,7 @@
           :selectedDesignBack="selectedDesignBack"
           :selectedColor="selectedColor"
           :designs="designs"
+          :user="user"
         ></PreviewCard>
       </div>
       <div>
@@ -86,6 +87,7 @@
           :selectedColor="selectedColor"
           :user="user"
           :designs="designs"
+          @updateUserFields="updateUserFields"
         ></SelectDataToShowUserCard>
       </div>
     </div>
@@ -147,6 +149,11 @@ const designs = ref([]);
 
 const updateDesigns = (newDesigns) => {
   designs.value = newDesigns;
+};
+
+const updateUserFields = (newFields) => {
+  // Actualiza los campos de usuario seleccionados
+  console.log("Campos de usuario actualizados:", newFields);
 };
 
 const generateQRCode = () => {

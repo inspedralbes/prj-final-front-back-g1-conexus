@@ -14,7 +14,7 @@
           <div
             v-for="(element, index) in frontDesign.elements"
             :key="index"
-            :class="[element.classes, 'shadow']"
+            :class="[element.classes, 'shadow cursor-pointer']"
             :style="{ backgroundColor: selectedColor?.hex }"
           ></div>
         </div>
@@ -24,12 +24,14 @@
       <div
         v-if="backDesign"
         class="p-8 border rounded-lg shadow-lg h-[200px] flex items-center justify-center"
+        @dragover.prevent
+        @drop="onDrop('back', $event)"
       >
         <div class="grid gap-2 w-full h-full" :class="backDesign.classes">
           <div
             v-for="(element, index) in backDesign.elements"
             :key="index"
-            :class="[element.classes, 'shadow']"
+            :class="[element.classes, 'shadow cursor-pointer']"
             :style="{ backgroundColor: selectedColor?.hex }"
           ></div>
         </div>
@@ -45,6 +47,7 @@ const props = defineProps({
   selectedDesignBack: Number,
   selectedColor: Object,
   designs: Array,
+  user: Object,
 });
 
 const frontDesign = computed(
@@ -93,3 +96,21 @@ watch(
   { immediate: true } // Se ejecutará al inicio si hay valores asignados
 );
 </script>
+<style scoped>
+.draggable {
+  cursor: move;
+}
+
+.drag-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #aaa;
+  border: 2px dashed #ccc;
+}
+
+.drag-over {
+  border-color: #000;
+}
+</style>
