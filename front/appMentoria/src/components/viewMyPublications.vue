@@ -58,7 +58,7 @@ const fetchPublications = async () => {
       return;
     }
 
-    const data = await getMyPublications(user_id);
+    const data = await getMyPublicationsInCommunity(user_id);
     if (!Array.isArray(data)) {
       console.error(
         "Error: La respuesta del servidor no es una lista válida.",

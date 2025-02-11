@@ -319,7 +319,7 @@ async function submitPostPeticio() {
       return;
     }
 
-    const responseData = await response.json();
+    // const responseData = await response.json();
     router.push("/requests"); // Redirigir después de completar
   } catch (error) {
     alert("Error al enviar la publicación: " + error.message);
