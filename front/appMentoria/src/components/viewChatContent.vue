@@ -3,13 +3,13 @@
     <div class="flex sm:items-center justify-between py-2 border-b-2 border-gray-200">
       <div class="relative flex items-center space-x-4">
         <div class="relative ps-5">
-          <img :src="updateProfile(userElla)" alt="" class="w-10 sm:w-16 h-10 sm:h-16 rounded-full" />
+          <img :src="updateProfile(otherUser)" alt="" class="w-10 sm:w-16 h-10 sm:h-16 rounded-full" />
         </div>
         <div class="flex flex-col leading-tight">
           <div class="text-2xl mt-1 flex items-center">
-            <span class="text-gray-700 mr-3 dark:text-white">{{ users.find((user) => user.id === userElla)?.name }}</span>
+          <span class="text-gray-700 mr-3 dark:text-white">{{ otherUser.name }}</span>
           </div>
-          <span class="text-lg text-gray-600 dark:text-white">{{ users.find((user) => user.id === userElla)?.email.split("@")[0] }}</span>
+          <span class="text-lg text-gray-600 dark:text-white">{{ otherUser.email.split("@")[0] }}</span>
         </div>
       </div>
       <div class="flex items-center space-x-2 pr-4">
@@ -29,6 +29,7 @@
           <span :class="Number(interaction.userId) === currentUser ? 'px-4 py-2 rounded-lg inline-block rounded-br-none bg-blue-600 text-white' : 'px-4 py-2 rounded-lg inline-block rounded-bl-none bg-gray-300 text-gray-600'">
             <p>{{ interaction.message }}</p>
             <p><small>{{ new Date(interaction.timestamp).toLocaleString() }}</small></p>
+            <p><small>ID: {{ interaction._id }}</small></p>
             <button v-if="Number(interaction.userId) !== currentUser" @click="confirmReport(interaction)" class="flex items-center space-x-1">
               <svg fill="#4b5562" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke="#4b5562" class="w-4 h-4">
                 <path fill-rule="evenodd" d="M3.25 4a.25.25 0 00-.25.25v12.5c0 .138.112.25.25.25h2.5a.75.75 0 01.75.75v3.19l3.427-3.427A1.75 1.75 0 0111.164 17h9.586a.25.25 0 00.25-.25V4.25a.25.25 0 00-.25-.25H3.25zm-1.75.25c0-.966.784-1.75 1.75-1.75h17.5c.966 0 1.75.784 1.75 1.75v12.5a1.75 1.75 0 01-1.75 1.75h-9.586a.25.25 0 00-.177.073l-3.5 3.5A1.457 1.457 0 015 21.043V18.5H3.25a1.75 1.75 0 01-1.75-1.75V4.25zM12 6a.75.75 0 01.75.75v4a.75.75 0 01-1.5 0v-4A.75.75 0 0112 6zm0 9a1 1 0 100-2 1 1 0 000 2z"></path>
@@ -96,15 +97,49 @@
 </style>
 
 <script setup>
-import { ref, onMounted, nextTick } from 'vue';
-import { sendMessageInMongo } from '@/services/communicationManager';
-import { useAppStore } from '@/stores/index';
+import { ref, onMounted, defineProps, watch, nextTick } from "vue";
+import { fetchMessages, sendMessageInMongo, reportChat, reportChatMongo } from "@/services/communicationManager";
+import socketChat from "../services/socketChat";
+import { useAppStore } from "@/stores/index";
 
-const messageInput = ref(null);
-const messageContainer = ref(null);
+const props = defineProps({
+  chatData: {
+    type: Object,
+    required: true,
+  },
+  users: {
+    type: Array,
+    required: true,
+  },
+  BACK_URL: {
+    type: String,
+    required: true,
+  },
+});
+
+const appStore = useAppStore();
+const myUser = appStore.getUser();
+const currentUser = ref(myUser.id);
+
+const users = ref(props.users);
+
+const BACK_URL = props.BACK_URL;
+
+const chatData = ref(props.chatData);
+
 const interactions = ref([]);
-const chatData = ref({});
-const currentUser = useAppStore().getUser().id;
+const isChatReported = ref(false);
+
+const messageContainer = ref(null);
+const messageInput = ref(null);
+
+console.log("chatData", chatData.value);
+
+const otherUserid = ref(chatData.value.users.find((user) => user.id !== currentUser.value));
+
+const otherUser = ref(users.value.find((user) => user.id === otherUserid.value));
+
+console.log("otherUser", otherUser.value);
 
 const scrollToBottom = async () => {
   await nextTick();
@@ -141,5 +176,44 @@ onMounted(async () => {
     interactions.value.push(newMessage);
     scrollToBottom();
   });
+  console.log('Fetching chat data for chat ID:', chatData.value._id);
+  chatData.value = await fetchMessages(chatData.value._id);
+  interactions.value = chatData.value._rawValue.interactions;
+  scrollToBottom();
+
+  if (chatData.value._rawValue.reports === 1) {
+    isChatReported.value = true;
+  }
 });
+watch(interactions, () => {
+  scrollToBottom();
+});
+
+const confirmReport = async (interaction) => {
+  console.log('Interaction object:', interaction); // Verifica que interaction tenga el campo _id
+
+  const reason = prompt(`Estàs segur que vols reportar aquest missatge: "${interaction.message}"? Si és així, indica el motiu:`);
+
+  console.log('Reporting message with the following details:', {
+    message_id: interaction._id, 
+    user_id: interaction.userId, 
+    message: interaction.message,
+    reason: reason
+  });
+
+  if (reason) {
+    try {
+      const response = await reportChat(interaction._id, interaction.userId, interaction.message, reason);
+      const result = await reportChatMongo(props.chatId, interaction._id);
+      if (result.error || response.error) {
+        console.error('Error reporting message:', result.error || response.error);
+      } else {
+        console.log("Message reported successfully!");
+        isChatReported.value = true;
+      }
+    } catch (error) {
+      console.error('Error reporting message:', error);
+    }
+  }
+};
 </script>

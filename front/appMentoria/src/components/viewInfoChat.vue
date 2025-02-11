@@ -3,12 +3,12 @@
     <div
       v-if="selectedChatId === false"
       v-for="chat in chats"
-      :key="chat.id"
+      :key="chat._id"
       class="chat-item overflow-y-auto"
     >
         <div
           style="display: flex; align-items: center"
-          @click="selectChat(chat.id), updateUserIdLaOtra(chat)"
+          @click="selectChat(chat._id)"
         >
           <img
             v-if="chat.users[0].value === userId.value"
@@ -43,10 +43,8 @@
     </div>
     <viewChatContent
       v-if="selectedChatId !== false"
-      :chatId="selectedChatId"
+      :chatData="chats.find((chat) => chat._id === selectedChatId)"
       :users="users"
-      :userMio="userId"
-      :userElla="userIdLaOtra"
       :BACK_URL="BACK_URL"
       @closeChat="selectedChatId = false"
       class="overlay"
@@ -94,21 +92,12 @@ watch(
   }
 );
 
-const userIdLaOtra = ref(false);
-
-const updateUserIdLaOtra = (chat) => {
-  console.log("un",chat.users[0], "dos",chat.users[1]);
-  if (chat.users[0] === userId.value) {
-    userIdLaOtra.value = chat.users[1];
-  } else {
-    userIdLaOtra.value = chat.users[0];
-  }
-};
-
 const selectedChatId = ref(false);
 
 const selectChat = (chatId) => {
   selectedChatId.value = chatId;
+  console.log("adasdasd",chatId);
+  console.log("sali", selectedChatId.value);
 };
 
 const getAuthorName = (userId) => {

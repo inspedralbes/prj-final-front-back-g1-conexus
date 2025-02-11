@@ -144,12 +144,15 @@ import {
 } from "firebase/auth";
 import ToggleDarkMode from "@/components/ToggleDarkMode.vue";
 import { loginAPI, loginDB } from "@/services/communicationManager";
-import { useAppStore } from "@/stores/index";
+import { useAppStore } from '@/stores/index';
 import router from "@/router";
+
+const apikey = import.meta.env.VITE_FIREBASE_API_KEY;
+console.log(apikey);
 
 // Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyAC-O_e7tx6EzkuNiW1j7RBjqVr-iNirBM",
+  apiKey: apikey,
   authDomain: "tr2-dam-mentories.firebaseapp.com",
   projectId: "tr2-dam-mentories",
   storageBucket: "tr2-dam-mentories.firebaseapp.com",
