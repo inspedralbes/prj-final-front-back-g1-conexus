@@ -1,4 +1,5 @@
 const NOTIFICATIONS_URL = import.meta.env.VITE_URL_BACK_NOTIFICATIONS;
+import { refreshToken } from "@/services/communicationsScripts/mainManager";
 
 // Get all notifications for a user
 export const getNotifications = async (userID) => {
@@ -7,9 +8,22 @@ export const getNotifications = async (userID) => {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
-
         });
+
+        if (response.status == 401) {
+            const refreshResult = await refreshToken();
+            if (refreshResult.error) {
+                return { error: 'No se pudo renovar el token. Inicia sesión nuevamente.' };
+            }
+            return getNotifications(userID);
+        }
+
+        if (!response.ok) {
+            return { error: `HTTP error! status: ${response.status}` };
+        }
+
         const data = await response.json();
         return data;
     } catch (error) {
@@ -24,8 +38,18 @@ export const updateNotificationRevision = async (id) => {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
+
+        if (response.status == 401) {
+            const refreshResult = await refreshToken();
+            if (refreshResult.error) {
+                return { error: 'No se pudo renovar el token. Inicia sesión nuevamente.' };
+            }
+            return updateNotificationRevision(id);
+        }
+
         if (!response.ok) {
             throw new Error('Failed to update notification');
         }
