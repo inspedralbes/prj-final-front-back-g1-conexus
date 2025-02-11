@@ -1,4 +1,68 @@
 {
+    "mainPage": {
+        "allow": "允许通知",
+        "questionPermission": "你想接收通知以了解事件或更新吗？",
+        "acceptedPermission": "允许",
+        "rejectedPermission": "阻止"
+    },
+    "editProfile": {
+        "title": "编辑横幅和个人资料",
+        "fullName": "全名",
+        "city": "城市",
+        "bannerimg": "横幅图片",
+        "profileimg": "个人资料图片",
+        "save": "保存更改"
+    },
+    "formPersonal": {
+        "title": "编辑个人信息",
+        "email": "电子邮件:",
+        "phone": "电话:",
+        "save": "保存更改",
+        "description":"描述:",
+        "academicTitle":"学术头衔:",
+        "SocialMedia":"社交媒体",
+        "languages":"语言",
+        "softwareSkills":"软件技能",
+        "english":"英语"
+
+    },
+    "formAvailability": {
+        "title": "编辑可用时间表",
+        "email": "电子邮件:",
+        "save": "保存更改",
+        "enable": "启用",
+        "startTime": "开始时间",
+        "endTime": "结束时间",
+        "monday": "星期一",
+        "tuesday": "星期二",
+        "wednesday": "星期三",
+        "thursday": "星期四",
+        "friday": "星期五",
+        "saturday": "星期六",
+        "sunday": "星期日"
+    },
+    "PersonalInfo": {
+        "titlePage": "个人信息",
+        "nameAndSurname": "姓名",
+        "desc": "描述",
+        "noDesc": "该用户未添加任何描述。",
+        "socialMedia": "社交媒体",
+        "githubProfile": "Github 个人资料",
+        "LinkedinProfile": "Linkedin 个人资料",
+        "TwitterProfile": "Twitter 个人资料",
+        "InstagramProfile": "Instagram 个人资料",
+        "FacebookProfile": "Facebook 个人资料",
+        "location": "位置",
+        "title": "标题",
+        "studying": "学习中...",
+        "contact": "联系",
+        "email": "电子邮件:",
+        "phone": "电话:",
+        "softwareSkills": "软件技能",
+        "languages": "语言",
+        "noLanguages": "还没有...",
+        "edit": "编辑"
+    },
     "chatContent": {
         "writeMessage": "写信息..."
     },
@@ -29,7 +93,7 @@
         "pendant": "待分配"
     },
     "LoginRegisterPage": {
-        "subTitle": "@inspedralbes.cat 邮箱",
+        "subTitle": "{'@'}inspedralbes.cat 邮箱",
         "accessGoogle": "使用 Google 登录",
         "accessGithub": "使用 Github 登录",
         "logIn": "或登录",
@@ -244,7 +308,7 @@
         "tags": "标签 (JSON)",
         "tagsExample": "示例格式: [\"JavaScript\", \"Python\", \"React\"]",
         "availability": "可用性 (JSON)",
-        "availabilityExample": "示例格式: {\"monday\":\"9:00-12:00\", \"friday\":\"9:00-12:00\"}"
+        "availabilityExample": "示例格式: {'{\"monday\":\"9:00-12:00\", \"friday\":\"9:00-12:00\"}'}"
     },
     "post": {
         "title": "添加帖子",
@@ -263,12 +327,23 @@
         "thursday": "星期四",
         "friday": "星期五",
         "saturday": "星期六",
-        "sunday": "星期日"
+        "sunday": "星期日",
+        "edit": "编辑",
+        "noAvailability": "没有可用时间"
     },
     "menu": {
         "comunity": "社区",
         "mentors": "导师",
         "request": "请求",
         "share": "分享"
+    },
+    "navBarWeb": {
+        "main": "主页",
+        "oferts": "优惠",
+        "profiles": "简介",
+        "notifications": "通知",
+        "chat": "聊天",
+        "gacha": "扭蛋",
+        "games": "游戏"
     }
 }

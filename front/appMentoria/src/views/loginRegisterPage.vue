@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
     <div
-      class="max-w-screen-xl m-0 sm:m-10 bg-white dark:bg-neutral-600 shadow sm:rounded-lg flex justify-center flex-1"
+      class="max-w-screen-xl m-0 sm:m-10 bg-containersLight dark:bg-containersDark shadow sm:rounded-lg flex justify-center flex-1"
     >
       <div class="lg:w-1/2 xl:w-5/12 p-6 sm:p-12">
         <ToggleDarkMode />
@@ -25,7 +25,7 @@
             <div class="flex flex-col items-center">
               <button
                 @click="signInWithGoogle"
-                class="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-indigo-100 dark:bg-indigo-400 text-gray-800 dark:text-white flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline"
+                class="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-orange-100 dark:bg-orange-300 text-gray-800 dark:text-white flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline"
               >
                 <div class="bg-white p-2 rounded-full">
                   <svg class="w-4" viewBox="0 0 533.5 544.3">
@@ -52,7 +52,7 @@
 
               <button
                 @click="signInWithGithub"
-                class="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-indigo-100 dark:bg-indigo-400 text-gray-800 dark:text-white flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline mt-5"
+                class="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-orange-100 dark:bg-orange-300 text-gray-800 dark:text-white flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline mt-5"
               >
                 <div class="bg-white p-1 rounded-full">
                   <svg class="w-6" viewBox="0 0 32 32">
@@ -76,20 +76,20 @@
 
             <div class="mx-auto max-w-xs">
               <input
-                class="w-full px-8 py-4 rounded-lg font-medium dark:bg-gray-900 dark:text-white border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
+                class="w-full px-8 py-4 rounded-lg font-medium dark:bg-backgroundDark dark:text-white border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
                 type="email"
                 :placeholder="$t('LoginRegisterPage.mailPlaceholder')"
                 v-model="userLogin.email"
               />
               <input
-                class="w-full px-8 py-4 rounded-lg font-medium dark:bg-gray-900 dark:text-white border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
+                class="w-full px-8 py-4 rounded-lg font-medium dark:bg-backgroundDark dark:text-white border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
                 type="password"
                 :placeholder="$t('LoginRegisterPage.passwordPlaceholder')"
                 v-model="userLogin.password"
               />
               <button
                 @click="signInWithApp"
-                class="mt-5 tracking-wide font-semibold bg-indigo-500 dark:bg-indigo-700 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
+                class="mt-5 tracking-wide font-semibold bg-buttomLight dark:bg-buttomDark text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
               >
                 <svg
                   class="w-6 h-6 -ml-2"

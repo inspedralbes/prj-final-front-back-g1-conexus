@@ -1,5 +1,5 @@
 <template>
-    <div class="dark:bg-gray-800 bg-white p-6 rounded-xl shadow-lg shadow-black/30 my-4">
+    <div class="dark:bg-containersDark bg-containersLight p-6 rounded-xl shadow-lg shadow-custom my-4">
         <img :src="banner" alt="banner-image" class="h-32 sm:h-48 w-full rounded-xl object-cover" />
         <div class="flex flex-col items-center sm:flex-row sm:justify-between -translate-y-10 sm:-translate-y-16">
             <div class="flex flex-col sm:flex-row items-center sm:items-end">
@@ -10,13 +10,13 @@
                         {{ user.value.name }}
                     </h3>
                     <p class="text-sm sm:text-base text-gray-500 dark:text-gray-300">
-                        {{ user.value.city || `Lloc on vius...` }}
+                        {{ user.value.city || $t("profilePage.placeWhereYouLive") }}
                     </p>
                 </div>
             </div>
             <div class="mt-4 sm:mt-0 sm:mr-4">
-                <button @click="$router.push('/editProfile')"
-                    class="py-3 px-3 sm:py-4 sm:px-4 rounded-full bg-indigo-600 text-white shadow-lg shadow-black/30 hover:bg-indigo-700 transition">
+                <button @click="$router.push('/editProfile/banner')"
+                    class="py-3 px-3 sm:py-4 sm:px-4 rounded-full bg-buttomLight text-white shadow-lg shadow-custom hover:bg-orange-400 transition">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="w-5 h-5 sm:w-6 sm:h-6">
                         <path stroke-linecap="round" stroke-linejoin="round"

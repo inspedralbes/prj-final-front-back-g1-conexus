@@ -288,7 +288,7 @@ app.post('/publications', verifyToken, async (req, res) => {
     var notificationIAnoResponse;
 
     console.log("file", req.files);
-    console.log("body", req.body);
+    console.log("body response front", req.body);
 
     if (!title || !description || !req.files || !req.files.image) {
         return res.status(400).json({ error: 'Faltan datos obligatorios (título, descripción, imagen).' });
@@ -345,17 +345,24 @@ app.post('/publications', verifyToken, async (req, res) => {
         try {
             const fetchPromise = await import('node-fetch');
             const fetch = fetchPromise.default;
+            console.log("formData antes de hacer fetch", formData);
+            console.log("Headers:", formData.getHeaders());
             const response = await fetch(serverMjsUrl, {
                 method: 'POST',
                 body: formData,
                 headers: formData.getHeaders(),
             });
-
-            if (!response.ok)
+            console.log("b")
+            if (!response.ok) {
+                console.log("response", response);
+                console.log("formData");
                 throw new Error(`Error IA imagen: ${response.statusText}`);
-
+            }
+            console.log("c")
             imageAnalysis = await response.json();
+            console.log("d")
             imageIA = 1;
+            console.log("e")
         } catch (fetchError) {
             console.error("Error al llamar a la IA:", fetchError);
 
@@ -620,6 +627,9 @@ async function checkIA() {
     var running = true;
     const serverIAtext = IA_TEXT_URL + '/';
     const serverIAimage = IA_IMAGE_URL + '/';
+
+    console.log("serverIAtext", serverIAtext);
+    console.log("serverIAimage", serverIAimage);
 
     try {
         const responseText = await fetch(serverIAtext);

@@ -1,4 +1,67 @@
 {
+    "mainPage": {
+        "allow": "اطلاعات کی اجازت دیں",
+        "questionPermission": "کیا آپ واقعات یا اپ ڈیٹس کے بارے میں جاننے کے لئے اطلاعات وصول کرنا چاہتے ہیں؟",
+        "acceptedPermission": "اجازت دیں",
+        "rejectedPermission": "روکیں"
+    },
+    "editProfile": {
+        "title": "بینر اور پروفائل میں ترمیم کریں",
+        "fullName": "پورا نام",
+        "city": "شہر",
+        "bannerimg": "بینر کی تصویر",
+        "profileimg": "پروفائل کی تصویر",
+        "save": "تبدیلیاں محفوظ کریں"
+    },
+    "formPersonal": {
+        "title": "ذاتی معلومات میں ترمیم کریں",
+        "email": "ای میل:",
+        "phone": "فون:",
+        "save": "تبدیلیاں محفوظ کریں",
+        "description":"تفصیل:",
+        "academicTitle":"اکیڈمک عنوان:",
+        "SocialMedia":"سوشل میڈیا",
+        "languages":"زبانیں",
+        "softwareSkills":"سافٹ ویئر کی مہارتیں",
+        "english":"انگریزی"
+    },
+    "formAvailability": {
+        "title": "دستیابی کا شیڈول ایڈٹ کریں",
+        "email": "ای میل:",
+        "save": "تبدیلیاں محفوظ کریں",
+        "enable": "فعال کریں",
+        "startTime": "شروع ہونے کا وقت",
+        "endTime": "ختم ہونے کا وقت",
+        "monday": "پیر",
+        "tuesday": "منگل",
+        "wednesday": "بدھ",
+        "thursday": "جمعرات",
+        "friday": "جمعہ",
+        "saturday": "ہفتہ",
+        "sunday": "اتوار"
+    },
+    "PersonalInfo":{
+        "titlePage": "ذاتی معلومات",
+        "nameAndSurname": "نام اور کنیت",
+        "desc": "تفصیل",
+        "noDesc": "اس صارف نے کوئی تفصیل شامل نہیں کی ہے۔",
+        "socialMedia": "سوشل میڈیا",
+        "githubProfile": "گٹ ہب پروفائل",
+        "LinkedinProfile": "لنکڈ ان پروفائل",
+        "TwitterProfile": "ٹوئٹر پروفائل",
+        "InstagramProfile": "انسٹاگرام پروفائل",
+        "FacebookProfile": "فیس بک پروفائل",
+        "location": "مقام",
+        "title": "عنوان",
+        "studying": "پڑھائی کر رہا ہے...",
+        "contact": "رابطہ",
+        "email": "ای میل:",
+        "phone": "فون:",
+        "softwareSkills": "سافٹ ویئر کی مہارتیں",
+        "languages": "زبانیں",
+        "noLanguages": "ابھی تک کوئی نہیں...",
+        "edit": "ترمیم کریں"
+    },
     "chatContent": {
         "writeMessage": "پیغام لکھیں..."
     },
@@ -29,7 +92,7 @@
         "pendant": "تفویض کرنے کے لئے زیر التواء"
     },
     "LoginRegisterPage": {
-        "subTitle": "@inspedralbes.cat ای میل",
+        "subTitle": "{'@'}inspedralbes.cat ای میل",
         "accessGoogle": "گوگل کے ساتھ رسائی حاصل کریں",
         "accessGithub": "گٹ ہب کے ساتھ رسائی حاصل کریں",
         "logIn": "یا لاگ ان کریں",
@@ -244,7 +307,7 @@
         "tags": "ٹیگز (JSON)",
         "tagsExample": "مثال فارمیٹ: [\"JavaScript\", \"Python\", \"React\"]",
         "availability": "دستیابی (JSON)",
-        "availabilityExample": "مثال فارمیٹ: {\"monday\":\"9:00-12:00\", \"friday\":\"9:00-12:00\"}"
+        "availabilityExample": "مثال فارمیٹ: {'{\"monday\":\"9:00-12:00\", \"friday\":\"9:00-12:00\"}'}"
     },
     "post": {
         "title": "ایک پوسٹ شامل کریں",
@@ -263,12 +326,23 @@
         "thursday": "جمعرات",
         "friday": "جمعہ",
         "saturday": "ہفتہ",
-        "sunday": "اتوار"
+        "sunday": "اتوار",
+        "edit": "ترتیب دیں",
+        "noAvailability": "دستیابی نہیں ہے"
     },
     "menu": {
         "comunity": "کمیونٹی",
         "mentors": "سرپرست",
         "request": "درخواستیں",
         "share": "شیئر کریں"
+    },
+    "navBarWeb": {
+        "main": "اہم",
+        "oferts": "پیشکشیں",
+        "profiles": "پروفائل",
+        "notifications": "اطلاعات",
+        "chat": "چیٹ",
+        "gacha": "گاچا",
+        "games": "کھیل"
     }
 }

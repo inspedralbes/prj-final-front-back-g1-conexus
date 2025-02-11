@@ -162,6 +162,107 @@ app.post('/login', async (req, res) => {
     }
 });
 
+//Edit generalInfo
+app.put("/editGeneralInfo/:id", async (req,res)=>{
+    const { id } = req.params;
+    const { name, city } = req.body;
+
+    let profilePicture = req.files ? req.files.profilePicture : null;
+    let bannerPicture = req.files ? req.files.bannerPicture : null;
+
+    console.log("bannerPicture", req.files);
+
+    if (profilePicture) {
+        const profilePath = path.join(__dirname, 'upload', profilePicture.name);
+        await profilePicture.mv(profilePath);
+        profilePicture = `/upload/${profilePicture.name}`;
+    }
+
+    if (bannerPicture) {
+        const bannerPath = path.join(__dirname, 'upload', bannerPicture.name);
+        await bannerPicture.mv(bannerPath);
+        bannerPicture = `/upload/${bannerPicture.name}`;
+    }
+    try {
+        const connection = await mysql.createConnection(dbConfig);
+        let query = 'UPDATE users SET name = ?, city = ?';
+        let values = [name, city];
+
+        if (bannerPicture) {
+            query += ', banner = ?';
+            values.push(bannerPicture);
+        }
+
+        if (profilePicture) {
+            query += ', profile = ?';
+            values.push(profilePicture);
+        }
+
+        query += ' WHERE id = ?';
+        values.push(id);
+
+        const [result] = await connection.execute(query, values);
+        
+
+        if (result.affectedRows == 0) return res.status(404).json({ error: 'User not found' });
+
+        const [updatedUser] = await connection.execute('SELECT * FROM users WHERE id = ?', [id]);
+        connection.end();
+        if (updatedUser.length == 0) return res.status(404).json({ error: 'User not found' });
+        console.log("Responding")
+        res.status(200).json(updatedUser);
+    } catch (error) {
+        res.status(500).json({ error: 'Database error' });
+    }
+})
+
+//Edit PersonalInfo
+app.put("/editData/:id",async (req,res)=>{
+    const { id } = req.params;
+    const { description,phone,tags,skills,Instagram,Twitter,Linkedin,Facebook,Github,title } = req.body;
+    const connection = await mysql.createConnection(dbConfig);
+    console.log("editDataTime")
+    try {
+        const [result] = await connection.execute(
+            'UPDATE users SET Linkedin = ?, Instagram = ?, description = ?, Twitter = ?, Github = ?, Facebook = ?, title=?, phone=?,softwareSkills=?, languages=? WHERE id = ?',
+            [Linkedin,Instagram,description,Twitter,Github,Facebook,title,phone,skills,tags,id]
+        );
+        connection.end();
+
+        if (result.affectedRows == 0) return res.status(404).json({ error: 'User not found' });
+
+        res.status(200).json({ message: 'User updated successfully' });
+    } catch (error) {
+        res.status(500).json({ "error": 'Database error', "errorText": error });
+    }
+})
+
+//Edit Availability
+app.put("/updateAvailability/:id",async (req,res)=>{
+    const { id } = req.params;
+    let { availability } = req.body;
+    const connection = await mysql.createConnection(dbConfig);
+    console.log("editAvailability")
+    if(availability.length == 0){
+        availability = null;
+    }
+    try {
+        const [result] = await connection.execute(
+            'UPDATE users SET availability = ? WHERE id = ?',
+            [availability,id]
+        );
+        const [updatedUser] = await connection.execute('SELECT * FROM users WHERE id = ?', [id]);
+        connection.end();
+        if (updatedUser.length == 0) return res.status(404).json({ error: 'User not found' });
+        console.log("Responding")
+        res.status(200).json(updatedUser);
+       
+    } catch (error) {
+        res.status(500).json({ "error": 'Database error', "errorText": error });
+    }
+    
+})
+
 // Access User for email
 app.get('/user', verifyToken, async (req, res) => {
     const email = req.query.email;
@@ -798,6 +899,103 @@ app.delete('/reports/users/:id', verifyToken, async (req, res) => {
     try {
         const connection = await mysql.createConnection(dbConfig);
         const [result] = await connection.execute('DELETE FROM reportsUsers WHERE id = ?', [id]);
+        connection.end();
+
+        if (result.affectedRows === 0) return res.status(404).send({ message: 'Report not found' });
+
+        res.status(204).send();
+    } catch (error) {
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
+// CRUD operations for chats reports
+app.get('/reports/chats', async (req, res) => {
+    try {
+        const connection = await mysql.createConnection(dbConfig);
+        const [results] = await connection.execute(`
+            SELECT 
+                reportsChats.id, 
+                reportsChats.chat_id, 
+                reportsChats.user_id AS reporting_user_id, 
+                reportsChats.report, 
+                reportsChats.status, 
+                reportsChats.created_at, 
+                chats.message, 
+                chats.user_id AS chat_user_id,
+                reporting_user.name AS reporting_user_name,
+                chat_user.name AS chat_user_name,
+                chat_user.email AS chat_user_email
+            FROM reportsChats 
+            JOIN chats ON reportsChats.chat_id = chats.id 
+            JOIN users AS reporting_user ON reportsChats.user_id = reporting_user.id
+            JOIN users AS chat_user ON chats.user_id = chat_user.id
+        `);
+        connection.end();
+
+        res.status(200).send(results);
+    } catch (error) {
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
+app.get('/reports/chats/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const connection = await mysql.createConnection(dbConfig);
+        const [result] = await connection.execute('SELECT * FROM reportsChats WHERE id = ?', [id]);
+        connection.end();
+
+        if (result.length === 0) return res.status(404).send({ message: 'Report not found' });
+
+        res.status(200).send(result[0]);
+    } catch (error) {
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
+app.post('/reports/chats', async (req, res) => {
+    const { message_id, user_id, content, report } = req.body;
+  
+    try {
+      const connection = await mysql.createConnection(dbConfig);
+      const [result] = await connection.execute(
+        'INSERT INTO reportsChats (message_id, user_id, content, report) VALUES (?, ?, ?, ?)',
+        [message_id, user_id, content, report]
+      );
+      connection.end();
+  
+      res.status(201).send({ id: result.insertId });
+    } catch (error) {
+      console.error('Error saving report:', error);
+      res.status(500).json({ error: 'Database error' });
+    }
+  });
+
+app.put('/reports/chats/:id', async (req, res) => {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    try {
+        const connection = await mysql.createConnection(dbConfig);
+        const [result] = await connection.execute('UPDATE reportsChats SET status = ? WHERE id = ?', [status, id]);
+        connection.end();
+
+        if (result.affectedRows === 0) return res.status(404).send({ message: 'Report not found' });
+
+        res.status(200).send({ message: 'Status updated successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
+app.delete('/reports/chats/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const connection = await mysql.createConnection(dbConfig);
+        const [result] = await connection.execute('DELETE FROM reportsChats WHERE id = ?', [id]);
         connection.end();
 
         if (result.affectedRows === 0) return res.status(404).send({ message: 'Report not found' });

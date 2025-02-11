@@ -1,6 +1,6 @@
 <template>
-  <div class="px-4 lg:px-40 py-8">
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-10">
+  <div class="px-4 lg:px-40 py-8 bg-backgroundLight dark:bg-backgroundDark">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-10 ">
       <view-people-mentoria v-for="user in users" :key="user.id" :user="user" />
     </div>
   </div>

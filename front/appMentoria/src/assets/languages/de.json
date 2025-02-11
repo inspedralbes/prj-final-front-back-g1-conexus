@@ -1,4 +1,67 @@
 {
+    "mainPage": {
+        "allow": "Benachrichtigungen erlauben",
+        "questionPermission": "Möchtest du Benachrichtigungen erhalten, um über Ereignisse oder Aktualisierungen informiert zu werden?",
+        "acceptedPermission": "Erlauben",
+        "rejectedPermission": "Blockieren"
+    },
+    "editProfile": {
+        "title": "Banner und Profil bearbeiten",
+        "fullName": "Vollständiger Name",
+        "city": "Stadt",
+        "bannerimg": "Bannerbild",
+        "profileimg": "Profilbild",
+        "save": "Änderungen speichern"
+    },
+    "formPersonal": {
+        "title": "Persönliche Informationen bearbeiten",
+        "email": "E-Mail:",
+        "phone": "Telefon:",
+        "save": "Änderungen speichern",
+        "description": "Beschreibung:",
+        "academicTitle": "Akademischer Titel:",
+        "SocialMedia": "Soziale Medien",
+        "languages": "Sprachen",
+        "softwareSkills": "Softwarekenntnisse",
+        "english": "Englisch"
+    },
+    "formAvailability": {
+        "title": "Verfügbarkeit bearbeiten",
+        "email": "E-Mail:",
+        "save": "Änderungen speichern",
+        "enable": "Aktivieren",
+        "startTime": "Startzeit",
+        "endTime": "Endzeit",
+        "monday": "Montag",
+        "tuesday": "Dienstag",
+        "wednesday": "Mittwoch",
+        "thursday": "Donnerstag",
+        "friday": "Freitag",
+        "saturday": "Samstag",
+        "sunday": "Sonntag"
+    },
+    "PersonalInfo": {
+        "titlePage": "Persönliche Informationen",
+        "nameAndSurname": "Name und Nachname",
+        "desc": "Beschreibung",
+        "noDesc": "Dieser Benutzer hat keine Beschreibung hinzugefügt.",
+        "socialMedia": "Soziale Medien",
+        "githubProfile": "Github-Profil",
+        "LinkedinProfile": "Linkedin-Profil",
+        "TwitterProfile": "Twitter-Profil",
+        "InstagramProfile": "Instagram-Profil",
+        "FacebookProfile": "Facebook-Profil",
+        "location": "Standort",
+        "title": "Titel",
+        "studying": "Studiert...",
+        "contact": "Kontakt",
+        "email": "E-Mail:",
+        "phone": "Telefon:",
+        "softwareSkills": "Softwarekenntnisse",
+        "languages": "Sprachen",
+        "noLanguages": "Noch keine...",
+        "edit": "Bearbeiten"
+    },
     "chatContent": {
         "writeMessage": "Schreibe eine Nachricht..."
     },
@@ -29,7 +92,7 @@
         "pendant": "Noch zugewiesen"
     },
     "LoginRegisterPage": {
-        "subTitle": "@inspedralbes.cat E-Mail",
+        "subTitle": "{'@'}inspedralbes.cat E-Mail",
         "accessGoogle": "Mit Google anmelden",
         "accessGithub": "Mit Github anmelden",
         "logIn": "Oder einloggen",
@@ -54,8 +117,8 @@
         "publishing": "Veröffentlichen...",
         "notAllFields": "Bitte fülle alle Felder aus und lade ein Bild hoch.",
         "error": "Beim Veröffentlichen des Beitrags ist ein Fehler aufgetreten:"
-        },
-        "viewValidationUser": {
+    },
+    "viewValidationUser": {
         "title": "Benutzer validieren",
         "userN": "Benutzer Nr.",
         "userType": "Benutzertyp:",
@@ -69,7 +132,7 @@
         "validate": "Validieren",
         "delete": "Löschen",
         "unknown": "Unbekannt"
-        },
+    },
     "ViewValidationUpdate": {
         "title": "Benutzer validieren/aktualisieren",
         "userN": "Benutzer Nr.:",
@@ -247,7 +310,7 @@
         "tags": "Tags (JSON)",
         "tagsExample": "Beispielformat: [\"JavaScript\", \"Python\", \"React\"]",
         "availability": "Verfügbarkeit (JSON)",
-        "availabilityExample": "Beispielformat: {\"monday\":\"9:00-12:00\", \"friday\":\"9:00-12:00\"}"
+        "availabilityExample": "Beispielformat: {'{\"monday\":\"9:00-12:00\", \"friday\":\"9:00-12:00\"}'}"
     },
     "post": {
         "title": "Einen Beitrag hinzufügen",
@@ -257,6 +320,7 @@
         "publish": "Veröffentlichen"
     },
     "calendar": {
+        
         "title": "Verfügbarkeitsplan",
         "day": "Tag",
         "availability": "Verfügbare Stunden",
@@ -266,12 +330,23 @@
         "thursday": "Donnerstag",
         "friday": "Freitag",
         "saturday": "Samstag",
-        "sunday": "Sonntag"
+        "sunday": "Sonntag",
+        "edit": "Bearbeiten",
+        "noAvailability": "Keine Verfügbarkeit"
     },
     "menu": {
         "comunity": "Gemeinschaft",
         "mentors": "Mentoren",
         "request": "Anfragen",
         "share": "Teilen"
+    },
+    "navBarWeb": {
+        "main": "Hauptseite",
+        "oferts": "Angebote",
+        "profiles": "Profile",
+        "notifications": "Benachrichtigungen",
+        "chat": "Chat",
+        "gacha": "Gacha",
+        "games": "Spiele"
     }
 }

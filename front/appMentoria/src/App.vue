@@ -6,6 +6,7 @@ import router from "@/router";
 import { getUserForRefreshLogin } from "./services/communicationsScripts/mainManager";
 import Loading from "./components/Loading.vue";
 import LanguageSelector from "./components/languageSelector.vue";
+import { subscribeToPushNotifications } from "./services/communicationsScripts/pushNotificationsManager";
 
 
 const userAPP = reactive({}); // Objeto reactivo para el usuario
@@ -58,7 +59,6 @@ async function validateLogin() {
     return null; // Retorna null si ocurre un error inesperado
   }
 }
-let language
 onMounted(async () => {
   
   const darkModePreference = localStorage.getItem("darkMode");
@@ -73,6 +73,7 @@ onMounted(async () => {
   const user = await validateLogin();
   if (user) {
     Object.assign(userAPP, user); // Asigna las propiedades al objeto reactivo
+    // await subscribeToPushNotifications(user);
   } else {
     router.push({ name: "login" });
   }
@@ -87,11 +88,11 @@ onMounted(async () => {
   <LanguageSelector />
     <RouterView
       v-if="!isLoading || userAPP.name"
-      class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100"
+      class="bg-backgroundLight text-gray-900 dark:bg-backgroundDark dark:text-gray-100"
     />
     <div
       v-else
-      class="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900"
+      class="flex items-center justify-center min-h-screen bg-backgroundLight dark:bg-backgroundDark"
     >
       <Loading />
     </div>

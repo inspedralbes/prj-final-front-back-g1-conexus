@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
-import fileUpload from 'express-fileupload';
+import fileUpload from "express-fileupload";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -44,6 +44,23 @@ function extractJsonContent(responseText) {
     const jsonStart = responseText.indexOf("{");
     const jsonEnd = responseText.lastIndexOf("}") + 1;
     return responseText.substring(jsonStart, jsonEnd);
+}
+
+async function generateContentWithRetry(model, prompt, imagePart, retries = 3, delay = 1000) {
+    for (let i = 0; i < retries; i++) {
+        try {
+            const result = await model.generateContent([prompt, imagePart]);
+            return result;
+        } catch (error) {
+            if (error.status === 503 && i < retries - 1) {
+                console.warn(`Service unavailable, retrying in ${delay}ms...`);
+                await new Promise(resolve => setTimeout(resolve, delay));
+                delay *= 2; // Exponential backoff
+            } else {
+                throw error;
+            }
+        }
+    }
 }
 
 let totalTokensAcumulados = 0;
@@ -151,7 +168,7 @@ app.post("/classify-imageOffers", async (req, res) => {
 
         const promptTokens = encode(prompt).length;
 
-        const result = await model.generateContent([prompt, imagePart]);
+        const result = await generateContentWithRetry(model, prompt, imagePart);
 
         const responseText = result.response.text();
 
@@ -180,6 +197,7 @@ app.post("/classify-imageOffers", async (req, res) => {
 
 app.post("/classify-imageCommunity", async (req, res) => {
     try {
+        console.log("estoy dentro");
         if (!req.files || Object.keys(req.files).length === 0) {
             return res.status(400).json({ error: "No se recibió ningún archivo." });
         }
@@ -244,7 +262,7 @@ app.post("/classify-imageCommunity", async (req, res) => {
 
         const promptTokens = encode(prompt).length;
 
-        const result = await model.generateContent([prompt, imagePart]);
+        const result = await generateContentWithRetry(model, prompt, imagePart);
 
         const responseText = result.response.text();
 

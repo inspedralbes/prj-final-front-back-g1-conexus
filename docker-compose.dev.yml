@@ -23,8 +23,6 @@ services:
     links:
       - tr-final-mysql
       - tr-final-mongodb
-    depends_on:
-      - tr-final-mongodb
 
   tr-final-microprocessos-api:
     build:
@@ -45,12 +43,14 @@ services:
       - 3006:3006
       - 3007:3007
       - 3008:3008
+      - 3009:3009
       - 4000:4000
     links:
       - tr-final-mysql
       - tr-final-mongodb
     depends_on:
       - tr-final-mongodb
+
 
   tr-final-mongodb:
     image: mongo

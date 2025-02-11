@@ -1,4 +1,68 @@
 {
+    "mainPage": {
+        "allow": "通知を許可する",
+        "questionPermission": "イベントや更新情報を受け取るために通知を受け取りたいですか？",
+        "acceptedPermission": "許可する",
+        "rejectedPermission": "ブロックする"
+    },
+    "editProfile": {
+        "title": "バナーとプロフィールを編集",
+        "fullName": "フルネーム",
+        "city": "都市",
+        "bannerimg": "バナー画像",
+        "profileimg": "プロフィール画像",
+        "save": "変更を保存"
+    },
+    "formPersonal": {
+        "title": "個人情報を編集",
+        "email": "メールアドレス:",
+        "phone": "電話:",
+        "save": "変更を保存",
+        "description":"説明:",
+        "academicTitle":"学位:",
+        "SocialMedia":"ソーシャルメディア",
+        "languages":"言語",
+        "softwareSkills":"ソフトウェアスキル",
+        "english":"英語"
+
+    },
+    "formAvailability": {
+        "title": "利用可能時間を編集",
+        "email": "メールアドレス:",
+        "save": "変更を保存",
+        "enable": "有効にする",
+        "startTime": "開始時間",
+        "endTime": "終了時間",
+        "monday": "月曜日",
+        "tuesday": "火曜日",
+        "wednesday": "水曜日",
+        "thursday": "木曜日",
+        "friday": "金曜日",
+        "saturday": "土曜日",
+        "sunday": "日曜日"
+    },
+    "PersonalInfo": {
+        "titlePage": "個人情報",
+        "nameAndSurname": "名前と姓",
+        "desc": "説明",
+        "noDesc": "このユーザーは説明を追加していません。",
+        "socialMedia": "ソーシャルメディア",
+        "githubProfile": "Githubプロフィール",
+        "LinkedinProfile": "Linkedinプロフィール",
+        "TwitterProfile": "Twitterプロフィール",
+        "InstagramProfile": "Instagramプロフィール",
+        "FacebookProfile": "Facebookプロフィール",
+        "location": "場所",
+        "title": "タイトル",
+        "studying": "勉強中...",
+        "contact": "連絡先",
+        "email": "メールアドレス:",
+        "phone": "電話:",
+        "softwareSkills": "ソフトウェアスキル",
+        "languages": "言語",
+        "noLanguages": "まだありません...",
+        "edit": "編集"
+    },
     "chatContent": {
         "writeMessage": "メッセージを書く..."
     },
@@ -29,7 +93,7 @@
         "pendant": "割り当て待ち"
     },
     "LoginRegisterPage": {
-        "subTitle": "@inspedralbes.cat メール",
+        "subTitle": "{'@'}inspedralbes.cat メール",
         "accessGoogle": "Googleでログイン",
         "accessGithub": "Githubでログイン",
         "logIn": "またはログイン",
@@ -245,7 +309,7 @@
         "tags": "タグ (JSON)",
         "tagsExample": "例の形式: [\"JavaScript\", \"Python\", \"React\"]",
         "availability": "可用性 (JSON)",
-        "availabilityExample": "例の形式: {\"monday\":\"9:00-12:00\", \"friday\":\"9:00-12:00\"}"
+        "availabilityExample": "例の形式: {'{\"monday\":\"9:00-12:00\", \"friday\":\"9:00-12:00\"}'}"
     },
     "post": {
         "title": "投稿を追加",
@@ -264,12 +328,23 @@
         "thursday": "木曜日",
         "friday": "金曜日",
         "saturday": "土曜日",
-        "sunday": "日曜日"
+        "sunday": "日曜日",
+        "edit": "編集",
+        "noAvailability": "利用可能時間がありません"
     },
     "menu": {
         "comunity": "コミュニティ",
         "mentors": "メンター",
         "request": "リクエスト",
         "share": "共有"
+    },
+    "navBarWeb": {
+        "main": "メイン",
+        "oferts": "オファー",
+        "profiles": "プロフィール",
+        "notifications": "通知",
+        "chat": "チャット",
+        "gacha": "ガチャ",
+        "games": "ゲーム"
     }
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-xs sm:max-w-sm rounded overflow-hidden shadow-lg mx-auto my-4">
+  <div class="max-w-xs sm:max-w-sm rounded overflow-hidden shadow-custom mx-auto my-4 bg-containersLight dark:bg-containersDark">
     <div class="relative">
       <img class="w-full h-48 object-cover clippy" :src="`${imageBanner}${user.banner}`" alt="User Image">
       <div
@@ -30,7 +30,7 @@
 
       <div class="lg:py-4">
         <a @click="chatButton(user.id, router)" href="#" rel="noopener noreferrer"
-          class="flex items-center py-3 px-6 bg-gray-800 text-white rounded-full shadow-lg shadow-black/30 transition-all duration-500 hover:shadow-gray-100 hover:bg-gray-900">
+          class="flex items-center py-3 px-6 bg-buttomLight dark:bg-buttomDark text-white rounded-full shadow-lg shadow-black/30 transition-all duration-500 hover:shadow-gray-100 hover:bg-buttomLight dark:hover:bg-orange-400 dark:hover:shadow-buttomLight">
           {{ $t('viewPeopleMentoria.chat') }}
 
         </a>

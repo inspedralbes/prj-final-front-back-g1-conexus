@@ -1,7 +1,7 @@
 <template>
-  <div class="flex flex-col p-6 bg-white dark:bg-gray-800">
+  <div class="flex flex-col p-6">
     <div
-      class="relative w-full max-w-3xl mx-auto bg-white dark:bg-gray-700 shadow-md rounded-lg"
+      class="relative w-full max-w-3xl mx-auto bg-containersLight dark:bg-containersDark shadow-custom rounded-lg"
     >
       <!-- Header con Filtros -->
       <div

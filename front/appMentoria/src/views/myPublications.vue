@@ -12,6 +12,6 @@
 
 <script setup>
 import Header from "@/components/Header.vue";
-import NavBar from "@/components/NavBar.vue";
+import NavBar from "@/components/navBar/NavBarApp.vue";
 import viewMyPublications from "@/components/viewMyPublications.vue";
 </script>

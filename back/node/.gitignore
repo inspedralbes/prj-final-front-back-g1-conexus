@@ -31,3 +31,7 @@
 /services/statistics/node_modules
 /services/statistics/.env
 /services/statistics/logs
+
+/services/push-notifications/node_modules
+/services/push-notifications/.env
+/services/push-notifications/logs
