@@ -132,6 +132,10 @@
         </li>
       </ul>
     </div>
+
+    <div v-if="$router.path === '/settingPage'">
+
+    </div>
   </div>
 </template>
 

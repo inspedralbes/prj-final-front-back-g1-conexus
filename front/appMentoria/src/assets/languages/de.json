@@ -247,7 +247,8 @@
         "publications": "Meine Veröffentlichungen",
         "request": "Meine Anfragen",
         "admin": "Admin",
-        "statistics": "Statistiken"
+        "statistics": "Statistiken",
+        "setting": "Einstellungen"
     },
     "requestPost": {
         "title": "Eine Anfrage hinzufügen:",

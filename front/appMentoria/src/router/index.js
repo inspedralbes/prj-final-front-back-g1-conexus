@@ -21,6 +21,7 @@ import servicePage from '../views/servicesListPage.vue'
 import stadisticsPage from '@/views/stadisticsPage.vue';
 import requestsPage from '../views/mainRequests.vue'
 import editProfilePage from '@/views/editProfilePage.vue';
+import settingPage from '@/views/settingPage.vue';
 
 const routes = [
   {
@@ -133,6 +134,11 @@ const routes = [
     name: 'editProfilePage',
     component: editProfilePage,
     props: true
+  },
+  {
+    path: '/settingPage',
+    name: 'settingPage',
+    component: settingPage,
   }
 ];
 

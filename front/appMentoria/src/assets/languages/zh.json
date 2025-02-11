@@ -245,7 +245,8 @@
         "publications": "我的发布",
         "request": "我的请求",
         "admin": "管理员",
-        "statistics": "统计"
+        "statistics": "统计",
+        "setting": "设置"
     },
     "requestPost": {
         "title": "添加请求:",

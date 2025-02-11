@@ -251,7 +251,8 @@
         "publications": "Les meves publicacions",
         "request": "Les meves peticions",
         "admin": "Admin",
-        "statistics": "Estadístiques"
+        "statistics": "Estadístiques",
+        "setting": "Configuració"
     },
     "requestPost": {
         "title": "Afegeix una petició:",

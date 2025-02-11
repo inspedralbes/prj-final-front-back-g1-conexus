@@ -247,7 +247,8 @@
         "publications": "As miñas publicacións",
         "request": "As miñas peticións",
         "admin": "Admin",
-        "statistics": "Estatísticas"
+        "statistics": "Estatísticas",
+        "setting": "Axustes"
     },
     "requestPost": {
         "title": "Engadir unha petición:",

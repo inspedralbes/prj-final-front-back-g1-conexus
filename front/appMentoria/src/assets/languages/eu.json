@@ -246,7 +246,8 @@
         "publications": "Nire argitalpenak",
         "request": "Nire eskaerak",
         "admin": "Admin",
-        "statistics": "Estatistikak"
+        "statistics": "Estatistikak",
+        "setting": "Ezarpenak"
     },
     "requestPost": {
         "title": "Eskaera bat gehitu:",

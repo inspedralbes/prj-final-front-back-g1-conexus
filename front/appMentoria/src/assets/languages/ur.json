@@ -244,7 +244,8 @@
         "publications": "میری اشاعتیں",
         "request": "میری درخواستیں",
         "admin": "ایڈمن",
-        "statistics": "اعداد و شمار"
+        "statistics": "اعداد و شمار",
+        "setting": "ترتیبات"
     },
     "requestPost": {
         "title": "ایک درخواست شامل کریں:",

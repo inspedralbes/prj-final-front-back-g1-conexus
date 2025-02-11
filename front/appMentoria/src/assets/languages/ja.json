@@ -246,7 +246,8 @@
         "publications": "私の投稿",
         "request": "私のリクエスト",
         "admin": "管理者",
-        "statistics": "統計"
+        "statistics": "統計",
+        "setting": "設定"
     },
     "requestPost": {
         "title": "リクエストを追加:",

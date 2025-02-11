@@ -246,7 +246,8 @@
         "publications": "My Publications",
         "request": "My Requests",
         "admin": "Admin",
-        "statistics": "Statistics"
+        "statistics": "Statistics",
+        "setting": "Settings"
     },
     "requestPost": {
         "title": "Add a Request:",
