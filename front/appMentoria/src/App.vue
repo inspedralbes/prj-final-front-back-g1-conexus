@@ -1,6 +1,6 @@
 <script setup>
 import { RouterView } from "vue-router";
-import { ref, onMounted, reactive } from "vue";
+import { ref, onMounted, reactive, watch, computed } from "vue";
 import { useAppStore } from "@/stores/index";
 import router from "@/router";
 import {
@@ -14,6 +14,9 @@ import LanguageSelector from "./components/languageSelector.vue";
 const userAPP = reactive({}); // Objeto reactivo para el usuario
 const isDarkMode = ref(false);
 const isLoading = ref(true); // Bandera para controlar el estado de carga
+const fontSizes = ref(localStorage.getItem("fontSize") || 16);
+const selectedColor = ref(localStorage.getItem("selectedColor") || "bg-buttomLight");
+const selectedBackground = ref(localStorage.getItem("selectedBackground") || "Predeterminado");
 
 
 async function validateLogin() {
@@ -82,11 +85,36 @@ onMounted(async () => {
 
   isLoading.value = false; 
 });
+
+watch([fontSizes, selectedColor, selectedBackground], () => {
+  localStorage.setItem("fontSize", fontSizes.value);
+  localStorage.setItem("selectedColor", selectedColor.value);
+  localStorage.setItem("selectedBackground", selectedBackground.value);
+});
+
+const buttomColor = computed(() => {
+  switch (selectedColor.value) {
+    case 'bg-yellow-400':
+      return '#f59e0b';
+    case 'bg-pink-500':
+      return '#ec4899';
+    case 'bg-purple-500':
+      return '#a855f7';
+    case 'bg-orange-500':
+      return '#f97316';
+    case 'bg-green-500':
+      return '#10b981';
+    default:
+      return '#ffffff';
+  }
+});
 </script>
 
 <template>
 
-  <div id="app" :class="isDarkMode ? 'dark' : ''">
+<div id="app" :class="[isDarkMode ? 'dark' : '', selectedColor]">
+
+    <NavBarWeb />
   <LanguageSelector />
     <RouterView
       v-if="!isLoading || userAPP.name"
