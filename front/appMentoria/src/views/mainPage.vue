@@ -42,7 +42,7 @@ import { ref, onMounted } from "vue";
 import Header from "@/components/Header.vue";
 import ViewPostList from "@/components/ViewPostList.vue";
 import NavBarWeb from "@/components/navBar/NavBarWeb.vue";
-import { subscribeToPushNotifications } from "@/services/communicationManager";
+import { subscribeToPushNotifications } from "@/services/communicationsScripts/pushNotificationsManager";
 import { useAppStore } from "@/stores/index";
 
 const showModal = ref(false);

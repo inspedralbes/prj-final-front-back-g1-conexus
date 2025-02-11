@@ -97,67 +97,6 @@ export const logout = async () => {
     }
 };
 
-export const subscribeToPushNotifications = async (user) => {
-    if ("serviceWorker" in navigator && "PushManager" in window) {
-        try {
-            const registration = await navigator.serviceWorker.register(
-                "./service-worker.js"
-            );
-            console.log("Service Worker registrado!", registration);
-
-            const permission = await Notification.requestPermission();
-            if (permission === "granted") {
-                console.log("Permiso para notificaciones concedido");
-
-                const subscription = await registration.pushManager.subscribe({
-                    userVisibleOnly: true,
-                    applicationServerKey: urlBase64ToUint8Array(
-                        import.meta.env.VITE_PUBLIC_VAPID_KEY
-                    ),
-                });
-
-                console.log("Suscripción a notificaciones push: ", subscription);
-
-
-                const response = await fetch(`${import.meta.env.VITE_URL_BACK_PUSH_NOTIFICATIONS}/subscribe`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ user_id: user.id, subscription })
-                });
-
-                if (!response.ok) {
-                    throw new Error("Failed to subscribe to push notifications");
-                }
-
-                return response.json();
-            } else {
-                console.log("Permiso para notificaciones denegado");
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    } else {
-        console.warn("Service Workers no soportados");
-    }
-}
-
-function urlBase64ToUint8Array(base64String) {
-    const padding = '='.repeat((4 - base64String.length % 4) % 4);
-    const base64 = (base64String + padding)
-        .replace(/-/g, '+')
-        .replace(/_/g, '/');
-
-    const rawData = window.atob(base64);
-    const outputArray = new Uint8Array(rawData.length);
-
-    for (let i = 0; i < rawData.length; ++i) {
-        outputArray[i] = rawData.charCodeAt(i);
-    }
-    return outputArray;
-}
-
 // Create new data user
 export const createNewDataUser = async (userData) => {
 
@@ -615,8 +554,17 @@ export const fetchAllReportsChats = async () => {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
             },
         });
+
+        if (response.status == 401) {
+            const refreshResult = await refreshToken();
+            if (refreshResult.error) {
+                return { error: "No se pudo renovar el token. Inicia sesión nuevamente." };
+            }
+            return fetchAllReportsChats();
+        }
 
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
@@ -636,8 +584,17 @@ export const fetchReportChatsById = async (id) => {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
             },
         });
+
+        if (response.status == 401) {
+            const refreshResult = await refreshToken();
+            if (refreshResult.error) {
+                return { error: "No se pudo renovar el token. Inicia sesión nuevamente." };
+            }
+            return fetchReportChatsById(id);
+        }
 
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
@@ -657,9 +614,18 @@ export const createReportChats = async (comment_id, user_id, report) => {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
             },
             body: JSON.stringify({ comment_id, user_id, report }),
         });
+
+        if (response.status == 401) {
+            const refreshResult = await refreshToken();
+            if (refreshResult.error) {
+                return { error: "No se pudo renovar el token. Inicia sesión nuevamente." };
+            }
+            return createReportChats(comment_id, user_id, report);
+        }
 
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
@@ -679,9 +645,18 @@ export const updateReportChats = async (id, status) => {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
             },
             body: JSON.stringify({ status }),
         });
+
+        if (response.status == 401) {
+            const refreshResult = await refreshToken();
+            if (refreshResult.error) {
+                return { error: "No se pudo renovar el token. Inicia sesión nuevamente." };
+            }
+            return updateReportChats(id, status);
+        }
 
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
@@ -701,29 +676,17 @@ export const deleteReportChats = async (id) => {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
             },
         });
 
-        if (!response.ok) {
-            return { error: `HTTP error! status: ${response.status}` };
+        if (response.status == 401) {
+            const refreshResult = await refreshToken();
+            if (refreshResult.error) {
+                return { error: "No se pudo renovar el token. Inicia sesión nuevamente." };
+            }
+            return deleteReportChats(id);
         }
-
-        return { message: "Report deleted successfully" };
-    } catch (error) {
-        console.error("Network error:", error);
-        return { error: "Network error. Please try again later." };
-    }
-};
-
-// Fetch all reports publications
-export const fetchAllReportsPublications = async () => {
-    try {
-        const response = await fetch(`${COMMUNITY_URL}/reports/publications`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
 
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
@@ -916,148 +879,36 @@ export const updateUserValidation = async (id) => {
     }
 };
 
-export const getServices = async () => {
-    try {
-        const response = await fetch(`${MICROOSERVICES_URL}/getProcess`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error("Network error:", error);
-        return { error: "Network error. Please try again later." };
-    }
-};
-
-export const changeServiceViewUsers = async (id, enabled) => {
-    try {
-        const response = await fetch(`${MICROOSERVICES_URL}/changeServiceViewUserFront/${id}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ enabled }),
-        });
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error("Network error:", error);
-        throw new Error("Failed to update the service state.");
-    }
-};
-
-export const getNotifications = async (userID) => {
-    try {
-        const response = await fetch(`${NOTIFICATIONS_URL}/getNotifications?user_id=${userID}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-
-        });
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error('Error fetching notifications:', error);
-    }
-};
-
-export const updateNotificationRevision = async (id) => {
-
-    try {
-        const response = await fetch(`${NOTIFICATIONS_URL}/notifications/${id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-        if (!response.ok) {
-            throw new Error('Failed to update notification');
-        }
-        return response;
-
-    } catch (error) {
-        console.error('Error updating notification:', error);
-        throw error;
-    }
-};
-
-export const getMyPublications = async (userID) => {
-    try {
-        const response = await fetch(`${COMMUNITY_URL}/getMyPublications?user_id=${userID}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error('Error fetching my publications:', error);
-    }
-}
-
-export const getMyPeticions = async (userID) => {
-    try {
-        const response = await fetch(`${EMPLOYMENTEXCHANGE_URL}/getMyPublications?user_id=${userID}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error('Error fetching my publications:', error);
-    }
-}
-
 export const reportChat = async (message_id, user_id, content, report) => {
     try {
-      const response = await fetch(`${BACK_URL}/reports/chats`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ message_id, user_id, content, report }),
-      });
-  
-      if (!response.ok) {
-        return { error: `HTTP error! status: ${response.status}` };
-      }
-  
-      return await response.json();
-    } catch (error) {
-      console.error('Error reporting chat:', error);
-      return { error: 'Network error. Please try again later.' };
-    }
-  };
+        const response = await fetch(`${BACK_URL}/reports/chats`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+            body: JSON.stringify({ message_id, user_id, content, report }),
+        });
 
+        if (response.status == 401) {
+            const refreshResult = await refreshToken();
+            if (refreshResult.error) {
+                return { error: 'No se pudo renovar el token. Inicia sesión nuevamente.' };
+            }
+            return reportChat(message_id, user_id, content, report);
+        }
 
-  export const reportChatMongo = async (chatId, messageId) => {
-    try {
-      const response = await fetch(`${CHAT_URL}/reportMessage`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ chatId, messageId }),
-      });
-  
-      if (!response.ok) {
-        return { error: `HTTP error! status: ${response.status}` };
-      }
-  
-      return await response.json();
+        if (!response.ok) {
+            return { error: `HTTP error! status: ${response.status}` };
+        }
+
+        return await response.json();
     } catch (error) {
-      console.error('Error reporting chat:', error);
-      return { error: 'Network error. Please try again later.' };
+        console.error('Error reporting chat:', error);
+        return { error: 'Network error. Please try again later.' };
     }
-  };
-  
+};
+
 export const editData = async (userData) => {
     console.log(userData);
     try {
@@ -1065,7 +916,7 @@ export const editData = async (userData) => {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
             body: JSON.stringify(userData),
         });
@@ -1084,9 +935,9 @@ export const editData = async (userData) => {
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
         }
-        let res=await response.json();
+        let res = await response.json();
         console.log(res)
-        res.status=200
+        res.status = 200
         return res;
     } catch (error) {
         console.error('Network error:', error);
@@ -1096,16 +947,16 @@ export const editData = async (userData) => {
 
 export const editGeneralInfo = async (userData, bannerPicture, profilePicture) => {
     try {
-        let dataToSend=new FormData();
-        dataToSend.append('profilePicture',profilePicture);
-        dataToSend.append('bannerPicture',bannerPicture);
-        dataToSend.append('name',userData.get('name'));
-        dataToSend.append('city',userData.get('city'));
-      
+        let dataToSend = new FormData();
+        dataToSend.append('profilePicture', profilePicture);
+        dataToSend.append('bannerPicture', bannerPicture);
+        dataToSend.append('name', userData.get('name'));
+        dataToSend.append('city', userData.get('city'));
+
         let res = await fetch(`${BACK_URL}/editGeneralInfo/${userData.get('id')}`, {
             method: 'PUT',
             headers: {
-                Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
             body: dataToSend,
         });
@@ -1120,9 +971,9 @@ export const editGeneralInfo = async (userData, bannerPicture, profilePicture) =
         if (!res.ok) {
             return { error: `HTTP error! status: ${res.status}` };
         }
-        let response=await res.json();
-        response[0].banner=BACK_URL+response[0].banner
-        response[0].profile=BACK_URL+response[0].profile
+        let response = await res.json();
+        response[0].banner = BACK_URL + response[0].banner
+        response[0].profile = BACK_URL + response[0].profile
         console.log(response[0])
         return response[0];
     } catch (error) {
@@ -1132,35 +983,35 @@ export const editGeneralInfo = async (userData, bannerPicture, profilePicture) =
 }
 
 export const updateAvailability = async (id, availability) => {
-try {
-    const response = await fetch(`${BACK_URL}/updateAvailability/${id}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-        },
-        body: JSON.stringify({ availability }),
-    });
+    try {
+        const response = await fetch(`${BACK_URL}/updateAvailability/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+            body: JSON.stringify({ availability }),
+        });
 
-    if (response.status === 401) {
-        const refreshResult = await refreshToken();
+        if (response.status === 401) {
+            const refreshResult = await refreshToken();
 
-        if (refreshResult.error) {
-            return { error: 'No se pudo renovar el token. Inicia sesión nuevamente.' };
+            if (refreshResult.error) {
+                return { error: 'No se pudo renovar el token. Inicia sesión nuevamente.' };
+            }
+
+            // Reintenta la petición después de renovar el token
+            return await updateAvailability(id, availability);
         }
 
-        // Reintenta la petición después de renovar el token
-        return await updateAvailability(id, availability);
+        if (!response.ok) {
+            return { error: `HTTP error! status: ${response.status}` };
+        }
+        let toReturn = await response.json();
+        toReturn.status = 200
+        return toReturn
+    } catch (error) {
+        console.error('Error updating availability:', error);
+        throw error;
     }
-
-    if (!response.ok) {
-        return { error: `HTTP error! status: ${response.status}` };
-    }
-    let toReturn=await response.json();
-    toReturn.status=200
-    return toReturn
-}catch (error) {
-    console.error('Error updating availability:', error);
-    throw error;
-}
 }

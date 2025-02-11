@@ -6,8 +6,6 @@ import router from "@/router";
 import { getUserForRefreshLogin } from "./services/communicationsScripts/mainManager";
 import Loading from "./components/Loading.vue";
 import LanguageSelector from "./components/languageSelector.vue";
-import { subscribeToPushNotifications } from "./services/communicationsScripts/pushNotificationsManager";
-
 
 const userAPP = reactive({}); // Objeto reactivo para el usuario
 const isDarkMode = ref(false);
@@ -73,7 +71,6 @@ onMounted(async () => {
   const user = await validateLogin();
   if (user) {
     Object.assign(userAPP, user); // Asigna las propiedades al objeto reactivo
-    // await subscribeToPushNotifications(user);
   } else {
     router.push({ name: "login" });
   }

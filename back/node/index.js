@@ -163,7 +163,7 @@ app.post('/login', async (req, res) => {
 });
 
 //Edit generalInfo
-app.put("/editGeneralInfo/:id", async (req,res)=>{
+app.put("/editGeneralInfo/:id", verifyToken, async (req,res)=>{
     const { id } = req.params;
     const { name, city } = req.body;
 
@@ -217,7 +217,7 @@ app.put("/editGeneralInfo/:id", async (req,res)=>{
 })
 
 //Edit PersonalInfo
-app.put("/editData/:id",async (req,res)=>{
+app.put("/editData/:id", verifyToken, async (req,res)=>{
     const { id } = req.params;
     const { description,phone,tags,skills,Instagram,Twitter,Linkedin,Facebook,Github,title } = req.body;
     const connection = await mysql.createConnection(dbConfig);
@@ -238,7 +238,7 @@ app.put("/editData/:id",async (req,res)=>{
 })
 
 //Edit Availability
-app.put("/updateAvailability/:id",async (req,res)=>{
+app.put("/updateAvailability/:id", verifyToken, async (req,res)=>{
     const { id } = req.params;
     let { availability } = req.body;
     const connection = await mysql.createConnection(dbConfig);
@@ -910,7 +910,7 @@ app.delete('/reports/users/:id', verifyToken, async (req, res) => {
 });
 
 // CRUD operations for chats reports
-app.get('/reports/chats', async (req, res) => {
+app.get('/reports/chats', verifyToken, async (req, res) => {
     try {
         const connection = await mysql.createConnection(dbConfig);
         const [results] = await connection.execute(`
@@ -939,7 +939,7 @@ app.get('/reports/chats', async (req, res) => {
     }
 });
 
-app.get('/reports/chats/:id', async (req, res) => {
+app.get('/reports/chats/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -955,7 +955,7 @@ app.get('/reports/chats/:id', async (req, res) => {
     }
 });
 
-app.post('/reports/chats', async (req, res) => {
+app.post('/reports/chats', verifyToken, async (req, res) => {
     const { message_id, user_id, content, report } = req.body;
   
     try {
@@ -973,7 +973,7 @@ app.post('/reports/chats', async (req, res) => {
     }
   });
 
-app.put('/reports/chats/:id', async (req, res) => {
+app.put('/reports/chats/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
 
@@ -990,7 +990,7 @@ app.put('/reports/chats/:id', async (req, res) => {
     }
 });
 
-app.delete('/reports/chats/:id', async (req, res) => {
+app.delete('/reports/chats/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
 
     try {

@@ -141,9 +141,7 @@ app.put('/notificationCheckedIA/:id', verifyToken, async (req, res) => {
     }
 });
 
-
 app.post('/notifications', verifyToken, async (req, res) => {
-
     const { user_id, description, chat_id, report_id, publication_id, request_id, comment_id, revised } = req.body;
     console.log("user_id notification", user_id);
     console.log("desciption", description);
