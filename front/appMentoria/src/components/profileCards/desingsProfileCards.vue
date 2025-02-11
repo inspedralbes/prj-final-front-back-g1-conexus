@@ -59,6 +59,7 @@ const props = defineProps({
   selectedDesignFront: Number,
   selectedDesignBack: Number,
   selectedColor: Object,
+  user: Object,
 });
 
 const emit = defineEmits(["selectDesign", "updateDesigns"]);
@@ -93,11 +94,26 @@ const designs = ref([
     front: {
       classes: "grid-cols-6 gap-4",
       elements: [
-        { classes: "row-span-2 col-start-1 col-end-3 w-16 h-16 rounded-full" },
-        { classes: "col-span-4 w-full h-5 rounded" },
-        { classes: "col-start-4 col-span-3 w-full h-5 rounded" },
-        { classes: "col-start-4 col-end-5 w-full h-6 rounded" },
-        { classes: "col-start-5 col-end-6 w-full h-6 rounded" },
+        {
+          dataField: props.user.profile,
+          classes: "row-span-2 col-start-1 col-end-3 w-16 h-16 rounded-full",
+        },
+        {
+          dataField: props.user.name,
+          classes: "col-span-4 w-full h-5 rounded",
+        },
+        {
+          dataField: props.user.city,
+          classes: "col-start-4 col-span-3 w-full h-5 rounded",
+        },
+        {
+          dataField: props.user.github_link,
+          classes: "col-start-4 col-end-5 w-full h-6 rounded",
+        },
+        {
+          dataField: props.user.discord_link,
+          classes: "col-start-5 col-end-6 w-full h-6 rounded",
+        },
         { classes: "w-full h-6 rounded" },
       ],
     },

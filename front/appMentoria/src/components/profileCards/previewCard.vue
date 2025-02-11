@@ -1,19 +1,21 @@
 <template>
-  <div>
-    <h2 class="text-xl font-bold">Previsualización de la Tarjeta</h2>
+  <div class="container mx-auto px-4">
+    <h2 class="text-xl font-bold text-center mb-6">
+      Previsualización de la Tarjeta
+    </h2>
 
     <div class="space-y-6">
       <!-- Diseño Frontal -->
       <div
         v-if="frontDesign"
-        class="p-4 border rounded-lg shadow-lg"
-        :class="selectedColor?.bg"
+        class="p-8 border rounded-lg shadow-lg h-[200px] flex items-center justify-center"
       >
-        <div class="grid" :class="frontDesign.classes">
+        <div class="grid gap-2 w-full h-full" :class="frontDesign.classes">
           <div
             v-for="(element, index) in frontDesign.elements"
             :key="index"
-            :class="[element.classes, selectedColor?.text]"
+            :class="[element.classes, 'shadow']"
+            :style="{ backgroundColor: selectedColor?.hex }"
           ></div>
         </div>
       </div>
@@ -21,14 +23,14 @@
       <!-- Diseño Trasero -->
       <div
         v-if="backDesign"
-        class="p-4 border rounded-lg shadow-lg"
-        :class="selectedColor?.bg"
+        class="p-8 border rounded-lg shadow-lg h-[200px] flex items-center justify-center"
       >
-        <div class="grid" :class="backDesign.classes">
+        <div class="grid gap-2 w-full h-full" :class="backDesign.classes">
           <div
             v-for="(element, index) in backDesign.elements"
             :key="index"
-            :class="[element.classes, selectedColor?.text]"
+            :class="[element.classes, 'shadow']"
+            :style="{ backgroundColor: selectedColor?.hex }"
           ></div>
         </div>
       </div>
@@ -45,13 +47,21 @@ const props = defineProps({
   designs: Array,
 });
 
-const frontDesign = computed(() =>
-  props.designs.find((design) => design.id === props.selectedDesignFront)
+const frontDesign = computed(
+  () =>
+    props.designs.find((design) => design.id === props.selectedDesignFront)
+      ?.front
 );
 
-const backDesign = computed(() =>
-  props.designs.find((design) => design.id === props.selectedDesignBack)
+const backDesign = computed(
+  () =>
+    props.designs.find((design) => design.id === props.selectedDesignBack)?.back
 );
+
+watch([frontDesign, backDesign], ([newFront, newBack]) => {
+  console.log("Front Design:", newFront);
+  console.log("Back Design:", newBack);
+});
 
 watch(
   [

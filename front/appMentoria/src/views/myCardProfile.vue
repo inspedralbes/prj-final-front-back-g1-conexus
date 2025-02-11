@@ -27,11 +27,12 @@
             </button>
             <div
               v-if="openDropdown === 'designs'"
-              class="absolute left-0 w-full mt-2 bg-white border rounded shadow-lg p-4 z-10"
+              class="w-full mt-2 bg-white border rounded shadow-lg p-4"
             >
               <DesignsCards
                 :selectedDesignFront="selectedDesignFront"
                 :selectedDesignBack="selectedDesignBack"
+                :user="user"
                 @selectDesign="selectDesign"
                 @updateDesigns="updateDesigns"
               />
@@ -60,7 +61,7 @@
             </button>
             <div
               v-if="openDropdown === 'colors'"
-              class="absolute left-0 w-full mt-2 bg-white border rounded shadow-lg p-4 z-10"
+              class="w-full mt-2 bg-white border rounded shadow-lg p-4"
             >
               <ColorsProfileCards
                 :selectedColor="selectedColor"
@@ -78,6 +79,15 @@
           :designs="designs"
         ></PreviewCard>
       </div>
+      <div>
+        <SelectDataToShowUserCard
+          :selectedDesignFront="selectedDesignFront"
+          :selectedDesignBack="selectedDesignBack"
+          :selectedColor="selectedColor"
+          :user="user"
+          :designs="designs"
+        ></SelectDataToShowUserCard>
+      </div>
     </div>
   </div>
 </template>
@@ -91,6 +101,7 @@ import { useAppStore } from "@/stores/index";
 import { uploadCards } from "@/services/communicationManager";
 import ColorsProfileCards from "@/components/profileCards/colorsProfileCards.vue";
 import PreviewCard from "@/components/profileCards/previewCard.vue";
+import SelectDataToShowUserCard from "@/components/profileCards/selectDataToShowUserCard.vue";
 
 const appStore = useAppStore();
 const user = reactive({});
@@ -149,6 +160,7 @@ const generateQRCode = () => {
 
 onMounted(() => {
   Object.assign(user, appStore.getUser());
+  console.log("user info", user);
   generateQRCode();
 });
 
