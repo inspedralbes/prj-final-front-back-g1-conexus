@@ -68,8 +68,7 @@ const selectedFront = ref(props.selectedDesignFront);
 const selectedBack = ref(props.selectedDesignBack);
 
 watch(
-  () => props.selectedDesignBack,
-  props.selectedDesignFront,
+  () => [props.selectedDesignFront, props.selectedDesignBack],
   ([newFront, newBack]) => {
     selectedFront.value = newFront;
     selectedBack.value = newBack;
@@ -97,35 +96,54 @@ const designs = ref([
         {
           dataField: props.user.profile,
           classes: "row-span-2 col-start-1 col-end-3 w-16 h-16 rounded-full",
+          fixed: true, //imagen fija
         },
         {
           dataField: props.user.name,
           classes: "col-span-4 w-full h-5 rounded",
+          fixed: false, //editable
         },
         {
           dataField: props.user.city,
           classes: "col-start-4 col-span-3 w-full h-5 rounded",
+          fixed: false, //editable
         },
         {
-          dataField: props.user.github_link,
+          dataField: props.user.Linkedin,
           classes: "col-start-4 col-end-5 w-full h-6 rounded",
+          fixed: false, //editable
         },
         {
-          dataField: props.user.discord_link,
+          dataField: props.user.Github,
           classes: "col-start-5 col-end-6 w-full h-6 rounded",
+          fixed: false, //editable
         },
-        { classes: "w-full h-6 rounded" },
+        {
+          dataField: props.user.Instagram,
+          classes: "w-full h-6 rounded",
+          fixed: false, //editable
+        },
       ],
     },
     back: {
       classes: "grid-cols-6 grid-rows-6 gap-4",
       elements: [
         {
+          dataField: props.user.qrCode,
           classes:
             "row-start-2 row-span-4 col-start-1 col-end-3 w-full h-16 rounded",
+          fixed: true, //qr fija
         },
-        { classes: "row-start-2 col-start-3 col-span-4 w-full h-5 rounded" },
-        { classes: "row-start-4 col-start-4 col-span-3 w-full h-5 rounded" },
+        {
+          dataField: props.user.email,
+          classes: "row-start-2 col-start-3 col-span-4 w-full h-5 rounded",
+          fixed: false, //editable
+        },
+        {
+          dataField: props.user.phone,
+          classes: "row-start-4 col-start-4 col-span-3 w-full h-5 rounded",
+          fixed: false, //editable
+        },
       ],
     },
     color: props.selectedColor,

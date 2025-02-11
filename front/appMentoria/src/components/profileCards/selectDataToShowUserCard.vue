@@ -1,15 +1,11 @@
 <template>
-  <div>{{ user.name }}</div>
-  <div>{{ user.email }}</div>
-  <div>{{ user.city }}</div>
-  <div>{{ user.github_link }}</div>
-  <div>{{ user.name }}</div>
-  <div>{{ user.name }}</div>
-  <div>{{ user.name }}</div>
+  <div>
+    <div>{{ user.name }}</div>
+    <div>{{ user.email }}</div>
+  </div>
 </template>
 <script setup>
 import { watch } from "vue";
-
 const props = defineProps({
   selectedDesignFront: Number,
   selectedDesignBack: Number,
