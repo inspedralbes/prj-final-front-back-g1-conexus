@@ -1,5 +1,5 @@
-const NOTIFICATIONS_URL = import.meta.env.VITE_URL_BACK_NOTIFICATIONS;
 import { refreshToken } from "@/services/communicationsScripts/mainManager";
+const NOTIFICATIONS_URL = import.meta.env.VITE_URL_BACK_NOTIFICATIONS;
 
 // Get all notifications for a user
 export const getNotifications = async (userID) => {

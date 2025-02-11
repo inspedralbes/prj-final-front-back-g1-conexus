@@ -69,7 +69,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useAppStore } from "@/stores/index";
-import {editData} from "@/services/communicationManager.js";
+import {editData} from "@/services/communicationsScripts/mainManager.js";
 import { useRouter } from 'vue-router';
 
 

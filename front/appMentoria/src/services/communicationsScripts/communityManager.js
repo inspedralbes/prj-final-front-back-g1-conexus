@@ -1,5 +1,5 @@
-const COMMUNITY_URL = import.meta.env.VITE_URL_BACK_COMMUNITY;
 import { refreshToken } from "@/services/communicationsScripts/mainManager";
+const COMMUNITY_URL = import.meta.env.VITE_URL_BACK_COMMUNITY;
 
 // Get Community Publications
 export const getCommunityPublication = async () => {

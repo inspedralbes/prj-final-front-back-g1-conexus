@@ -1,5 +1,5 @@
-const EMPLOYMENTEXCHANGE_URL = import.meta.env.VITE_URL_BACK_EMPLOYMENT_EXCHANGE;
 import { refreshToken } from "@/services/communicationsScripts/mainManager";
+const EMPLOYMENTEXCHANGE_URL = import.meta.env.VITE_URL_BACK_EMPLOYMENT_EXCHANGE;
 
 // Get all publications in employment exchange
 export const getEmploymentExchangePublication = async () => {

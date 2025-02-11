@@ -97,44 +97,6 @@ export const logout = async () => {
     }
 };
 
-// Create new data user
-export const createNewDataUser = async (userData) => {
-
-    let sendUserData = {
-        userPinia: useAppStore().user,
-        userData: userData,
-    };
-
-    try {
-        const response = await fetch(`${BACK_URL}/newDataUsers`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${localStorage.getItem('accessToken')}`, // Enviar token en los headers
-            },
-        });
-
-        if (response.status == 401) {
-            const refreshResult = await refreshToken();
-
-            if (refreshResult.error) {
-                return { error: 'No se pudo renovar el token. Inicia sesión nuevamente.' };
-            }
-
-            return getUserForRefreshLogin(user);
-        }
-
-        if (!response.ok) {
-            return { error: `HTTP error! status: ${response.status}` };
-        }
-
-        return await response.json();
-    } catch (error) {
-        console.error('Network error:', error);
-        return { error: 'Network error. Please try again later.' };
-    }
-};
-
 // Refresh acces token
 export const refreshToken = async () => {
     try {
