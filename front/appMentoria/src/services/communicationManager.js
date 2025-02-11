@@ -1372,3 +1372,63 @@ export const getProfile = async (id) => {
         return { error: 'Network error. Please try again later.' };
     }
 }
+
+export const checkIfFollows = async (id, user_id) => {
+    try {
+        console.log("asdfansijdfnasjd",id, user_id.value);
+
+        const response = await fetch(`${BACK_URL}/checkIfFollows/`+id+`/`+user_id, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+        });
+
+        if (response.status === 401) {
+            const refreshResult = await refreshToken();
+
+            if (refreshResult.error) {
+                return { error: 'No se pudo renovar el token. Inicia sesión nuevamente.' };
+            }
+
+            // Reintenta la petición después de renovar el token
+            return await checkIfFollows(id, user_id);
+        }
+
+        if (!response.ok) {
+            return { error: `HTTP error! status: ${response.status}` };
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Network error:', error);
+        return { error: 'Network error. Please try again later.' };
+    }
+}
+export const followUser = async (id, user_id) => {
+    try{
+        const response = await fetch(`${BACK_URL}/follow`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+            body: JSON.stringify({ "user_id":id,"followed_id":user_id }),
+        });
+        if(response.status === 401){
+            const refreshResult = await refreshToken();
+            if(refreshResult.error){
+                return { error: 'No se pudo renovar el token. Inicia sesión nuevamente.' };
+            }
+            return await followUser(id, user_id);
+        }
+        if(!response.ok){
+            return { error: `HTTP error! status: ${response.status}` };
+        }
+        return await response.json();
+    }catch(error){
+        console.error('Network error:', error);
+        return { error: 'Network error. Please try again later.' };
+    }
+}

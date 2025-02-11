@@ -1321,13 +1321,14 @@ function verifyToken(req, res, next) {
     console.log('Token:', token);
 
     jwt.verify(token, secretKey, (err, decoded) => {
-        console.log('Decoded:', decoded);
         if (err) {
+            console.log('Token verification error:', err);
             if (err.name === 'TokenExpiredError') {
                 return res.status(401).json({ error: 'Token expirado' });
             }
             return res.status(403).json({ error: 'Fallo al autenticar el token' });
         }
+        console.log('Decoded:', decoded);
         req.user = decoded;
         next();
     });
@@ -1357,19 +1358,37 @@ app.post('/follow', verifyToken, async (req, res) => {
 
     try {
         const connection = await mysql.createConnection(dbConfig);
-        const [result] = await connection.execute('SELECT * FROM follows WHERE user_id = ? AND followed_id = ?', [user_id, followed_id]);
+        const [result] = await connection.execute('SELECT * FROM following WHERE user_id = ? AND following_user_id = ?', [user_id, followed_id]);
         if(result.length == 0){
-            const [result] = await connection.execute('INSERT INTO follows (user_id, followed_id) VALUES (?, ?)', [user_id, followed_id]);
+            const [result] = await connection.execute('INSERT INTO following (user_id, following_user_id) VALUES (?, ?)', [user_id, followed_id]);
             connection.end();
-            res.status(201).json({ message: 'User followed successfully' });
+            res.status(200).json({ following:true });
         }
         else{
             const connection = await mysql.createConnection(dbConfig);
-            const [result] = await connection.execute('DELETE FROM follows WHERE user_id = ? AND followed_id = ?', [user_id, followed_id]);
+            const [result] = await connection.execute('DELETE FROM following WHERE user_id = ? AND following_user_id = ?', [user_id, followed_id]);
             connection.end();
-            res.status(201).json({ message: 'User unfollowed successfully' });
+            res.status(200).json({ following: false });
         }
     } catch (error) {
-        res.status(500).json({ error: 'Database error' });
+        res.status(500).json({ "error": 'Database error'+ error });
+    }
+});
+
+app.get('/checkIfFollows/:user_id/:followed_id', verifyToken, async (req, res) => {
+    const { user_id, followed_id } = req.params;
+
+    try {
+        console.log("user_id",user_id);
+        console.log("followed_id",followed_id);
+        const connection = await mysql.createConnection(dbConfig);
+        let result = await connection.execute('SELECT * FROM following WHERE user_id = ? AND following_user_id = ?', [user_id, followed_id]);
+        connection.end();
+        console.log("awanabunbunbun",result);
+        if (result.length == 0) return res.status(200).json({ following: false });
+
+        res.status(200).json({ following: true });
+    } catch (error) {
+        res.status(500).json({ "error": 'Database error'+ error });
     }
 });
