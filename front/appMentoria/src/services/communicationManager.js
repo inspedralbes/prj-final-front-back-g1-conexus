@@ -437,7 +437,7 @@ export const fetchMessages = async (chatId) => {
         const data = await response.json();
         const chatData = ref({});
         chatData.value = data[0];
-        chatData.value.userName = chatData.value.user_one_name;
+        chatData.value.userName = chatData.value.users[0].name;
         chatData.value.reported = data[0].reports;
         chatData.value.interactions = chatData.value.interactions.map(
             (interaction) => ({
@@ -455,10 +455,14 @@ export const fetchMessages = async (chatId) => {
 };
 
 // Send message
-export const sendMessageInMongo = async (chatData, currentUser, messageInput) => {
+export const sendMessageInMongo = async (
+    chatData,
+    currentUser,
+    messageInput
+) => {
     const newMessage = {
         message: messageInput,
-        userId: currentUser,
+        userId: currentUser.value, // Asegúrate de que userId sea una cadena
         timestamp: new Date().toISOString(),
     };
 
@@ -468,11 +472,15 @@ export const sendMessageInMongo = async (chatData, currentUser, messageInput) =>
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-                _id: chatData._id,
-                users: chatData.users,
-                interactions: [...chatData.interactions, newMessage],
-            }),
+            body: JSON.stringify({ ...chatData._rawValue, interactions: [...chatData._rawValue.interactions, newMessage] }),
+        });
+        if (typeof messageInput === "object" && messageInput !== null) {
+            messageInput.value = "";
+        }
+        socketChat.emit("sendMessage", {
+            chatId: chatData._rawValue._id,
+            userId: currentUser.value, // Asegúrate de que userId sea una cadena
+            message: newMessage.message,
         });
     } catch (error) {
         console.error("Error sending message:", error);
@@ -501,6 +509,7 @@ export const chatButton = async (userid2, router) => {
     const appStore = useAppStore();
     const userid1 = appStore.getUser().id;
     const newMessage = {
+        name: "",
         users: [userid1, userid2],
         interactions: [],
         reports: 0,
@@ -1186,7 +1195,7 @@ export const reportChat = async (message_id, user_id, content, report) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ message_id, user_id, content, report }),
+        body: JSON.stringify({ message_id: message_id, user_id: user_id, content, report }),
       });
   
       if (!response.ok) {

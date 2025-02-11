@@ -44,6 +44,7 @@ mongoose
   .catch((err) => console.error("Error de conexión a MongoDB:", err));
 
 const messageSchema = new mongoose.Schema({
+  name: String,
   users: [Number],
   reports: { type: Number, default: 0 },
   interactions: [
