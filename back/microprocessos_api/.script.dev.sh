@@ -1,4 +1,4 @@
-# Install all services with pnpm
+# Install all services with npm
 echo "Installing root services with npm..."
 
 for service in /usr/src/node/services/*; do
