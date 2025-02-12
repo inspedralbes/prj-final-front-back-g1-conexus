@@ -1,4 +1,4 @@
-import { refreshToken } from "@services/communicationsScripts/mainManager";
+import { refreshToken } from "@/services/communicationsScripts/mainManager";
 const PUSH_NOTIFICATIONS_URL = import.meta.env.VITE_URL_BACK_PUSH_NOTIFICATIONS;
 
 export const subscribeToPushNotifications = async (user) => {
