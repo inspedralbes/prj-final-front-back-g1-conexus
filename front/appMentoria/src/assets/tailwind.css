@@ -4,13 +4,64 @@
 
 
 :root {
-    --buttom-light: #da811b;
-    --buttom-dark: #b16a18;
-    --containers-light: #fff9ee;
-    --containers-dark: #2d2d2e;
-    --background-light: #fef2e1;
-    --background-dark: #262627;
-    --font-familyTitle: "Poppins", sans-serif;
-    --font-familyText: "Open Sans", sans-serif;
-    --box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.1);
-  }
+  --buttom-light: #da811b;
+  --buttom-dark: #b16a18;
+  --containers-light: #fff9ee;
+  --containers-dark: #2d2d2e;
+  --background-light: #fef2e1;
+  --background-dark: #262627;
+  --font-familyTitle: "Poppins", sans-serif;
+  --font-familyText: "Open Sans", sans-serif;
+  --box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.theme-light {
+  --buttom: var(--buttom-light);
+  --containers: var(--containers-light);
+  --background: var(--background-light);
+  --font-familyTitle: var(--font-familyTitle);
+  --font-familyText: var(--font-familyText);
+}
+
+.theme-dark {
+  --buttom: var(--buttom-dark);
+  --containers: var(--containers-dark);
+  --background: var(--background-dark);
+  --font-familyTitle: var(--font-familyTitle);
+  --font-familyText: var(--font-familyText);
+}
+
+.color-purple {
+  --bg-primary: #b500ea;
+  --text-purple: #b500ea;
+  --buttom-purple-hover: #bf54df;
+  --buttom-purple: #b500ea;
+}
+
+.color-pink {
+  --bg-primary: #ec4899;
+  --text-pink: #ec4899;
+  --buttom-pink-hover: #f06ab3;
+  --buttom-pink: #ec4899;
+}
+
+.color-yellow {
+  --bg-yellow: #f59e0b;
+  --text-yellow: #f59e0b;
+  --buttom-yellow-hover: #f5b90b;
+  --buttom-yellow: #f59e0b;
+}
+
+.color-green {
+  --bg-green: #00b341;
+  --text-green: #00b341;
+  --buttom-green-hover: #00d14d;
+  --buttom-green: #00b341;
+}
+
+.color-blue {
+  --bg-blue: #00a9e0;
+  --text-blue: #00a9e0;
+  --buttom-blue-hover: #00c2f0;
+  --buttom-blue: #00a9e0;
+}

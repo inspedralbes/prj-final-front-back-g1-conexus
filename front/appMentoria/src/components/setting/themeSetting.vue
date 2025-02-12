@@ -54,13 +54,7 @@
   const selectedColor = ref(localStorage.getItem("selectedColor") || "bg-purple-500");
   const selectedBackground = ref(localStorage.getItem("selectedBackground") || "Oscuro");
   
-  const colors = [
-    { bg: "bg-yellow-400" },
-    { bg: "bg-pink-500" },
-    { bg: "bg-purple-500" },
-    { bg: "bg-orange-500" },
-    { bg: "bg-green-500" }
-  ];
+  const colors = [ ""]
   
   const backgrounds = [
     { name: "Predeterminado", label: "Predet." },

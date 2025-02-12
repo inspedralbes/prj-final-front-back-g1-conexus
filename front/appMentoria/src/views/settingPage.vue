@@ -6,19 +6,16 @@
         <h1 class="border-b pb-4 text-3xl font-semibold text-gray-400">Configuración</h1>
         <div class="flex flex-col sm:flex-row sm:space-x-4 mt-6">
           <button @click="section = 'idioma'" 
-                  class="mt-2 sm:mt-0 cursor-pointer border-b-2 px-4 py-2 font-semibold w-full sm:w-auto text-left sm:text-center"
-                  :class="section === 'idioma' ? [selectedTextColor] : ''">
-            Idioma
+                  class="mt-2 sm:mt-0 cursor-pointer border-b-2 px-4 py-2 font-semibold w-full sm:w-auto text-left sm:text-center">
+            <h3 :class="section === 'idioma' ? selectedTextColor : ''">Idioma</h3>
           </button>
           <button @click="section = 'notificaciones'" 
-                  class="mt-2 sm:mt-0 cursor-pointer border-b-2 px-4 py-2 font-semibold w-full sm:w-auto text-left sm:text-center"
-                  :class="section === 'notificaciones' ? [selectedTextColor] : ''">
-            Notificaciones
+                  class="mt-2 sm:mt-0 cursor-pointer border-b-2 px-4 py-2 font-semibold w-full sm:w-auto text-left sm:text-center">
+            <h3 :class="section === 'notificaciones' ? selectedTextColor : ''">Notificaciones</h3>
           </button>
           <button @click="section = 'estilos'" 
-                  class="mt-2 sm:mt-0 cursor-pointer border-b-2 px-4 py-2 font-semibold w-full sm:w-auto text-left sm:text-center"
-                  :class="section === 'estilos' ? [selectedTextColor] : ''">
-            Estilos
+                  class="mt-2 sm:mt-0 cursor-pointer border-b-2 px-4 py-2 font-semibold w-full sm:w-auto text-left sm:text-center">
+            <h3 :class="section === 'estilos' ? selectedTextColor : ''">Estilos</h3>
           </button>
         </div>
         <div class="mt-6 bg-containersLight dark:bg-containersDark rounded-lg p-6 shadow-custom">
@@ -64,7 +61,7 @@ const fontSize = ref(localStorage.getItem("fontSize") || 16);
 const selectedColor = ref(localStorage.getItem("selectedColor") || "text-purple-500");
 const background = ref(localStorage.getItem("selectedBackground") || "Oscuro");
 
-const selectedTextColor = computed(() => selectedColor.value.replace("bg-", "text-"));
+const selectedTextColor = computed(() => selectedColor.value);
 
 const updateFontSize = (newFontSize) => {
   fontSize.value = newFontSize;
@@ -72,9 +69,11 @@ const updateFontSize = (newFontSize) => {
 
 const updateColor = (newColor) => {
   selectedColor.value = newColor.replace("bg-", "text-");
+  localStorage.setItem("selectedColor", selectedColor.value);
 };
 
 const updateBackground = (newBackground) => {
   background.value = newBackground;
+  localStorage.setItem("selectedBackground", background.value);
 };
 </script>
