@@ -5,7 +5,8 @@ export const useAppStore = defineStore( 'appStore', {
     user: {},
     accessToken: '',
     refreshToken: '',
-    language: ''
+    language: '',
+    selectedColor: ''
   }),
   actions: {
     setUser(user) {
@@ -23,6 +24,12 @@ export const useAppStore = defineStore( 'appStore', {
     setRefreshToken(refreshToken) {
       this.refreshToken = refreshToken
     },
+    setSelectedColor(color) {
+      this.selectedColor = color
+    },
+    getSelectedColor() {
+       return this.selectedColor
+    },        
     getRefreshToken() {
       return this.refreshToken
     },

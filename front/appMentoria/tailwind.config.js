@@ -10,15 +10,12 @@ export default {
         containersDark: 'var(--containers-dark)',
         backgroundLight: 'var(--background-light)',
         backgroundDark: 'var(--background-dark)',
-        backgroundPurple: 'var(--bg-purple)',
-        textPurple: 'var(--text-purple)',
-        buttomPurple: 'var(--buttom-purple)',
-        backgroundYellow: 'var(--bg-yellow)',
-        textYellow: 'var(--text-yellow)',
-        buttomYellow: 'var(--buttom-yellow)',
-        backgroundPink: 'var(--bg-pink)',
-        textPink: 'var(--text-pink)',
-        buttomPink: 'var(--buttom-pink)',
+        
+
+        bgPrimary: 'var(--bg-primary)',
+        textPrimary: 'var(--text-primary)',
+        buttonPrimary: 'var(--buttom-primary)',
+        buttonHoverPrimary: 'var(--buttom-hover-primary)',
       },
       boxShadow: {
         custom: 'var(--box-shadow)',

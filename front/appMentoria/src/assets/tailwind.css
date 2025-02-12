@@ -40,28 +40,28 @@
 
 .color-pink {
   --bg-primary: #ec4899;
-  --text-pink: #ec4899;
-  --buttom-pink-hover: #f06ab3;
-  --buttom-pink: #ec4899;
+  --text-primary: #ec4899;
+  --buttom-primary-hover: #f06ab3;
+  --buttom-primary: #ec4899;
 }
 
 .color-yellow {
-  --bg-yellow: #f59e0b;
-  --text-yellow: #f59e0b;
-  --buttom-yellow-hover: #f5b90b;
-  --buttom-yellow: #f59e0b;
+  --bg-primary: #f59e0b;
+  --text-primary: #f59e0b;
+  --buttom-primary-hover: #f5b90b;
+  --buttom-primary: #f59e0b;
 }
 
 .color-green {
-  --bg-green: #00b341;
-  --text-green: #00b341;
-  --buttom-green-hover: #00d14d;
-  --buttom-green: #00b341;
+  --bg-primary: #00b341;
+  --text-primary: #00b341;
+  --buttom-primary-hover: #00d14d;
+  --buttom-primary: #00b341;
 }
 
 .color-blue {
-  --bg-blue: #00a9e0;
-  --text-blue: #00a9e0;
-  --buttom-blue-hover: #00c2f0;
-  --buttom-blue: #00a9e0;
+  --bg-primary: #00a9e0;
+  --text-primary: #00a9e0;
+  --buttom-primary-hover: #00c2f0;
+  --buttom-primary: #00a9e0;
 }
