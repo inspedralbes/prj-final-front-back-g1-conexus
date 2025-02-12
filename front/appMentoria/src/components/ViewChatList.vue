@@ -32,7 +32,6 @@ const userId = myUser.id;
 
 const fetchChatsNow = async (userId) => {
   try {
-
     const result = await fetchChats(userId);
     chats.value = result.chats;
     chatsInfo.value = result.chatsInfo;
@@ -49,9 +48,14 @@ const fetchChatsNow = async (userId) => {
 onMounted(async () => {
   console.log("ViewChatList mounted");
   users.value = await getUsers();
-  socketChat.on("receiveMessage", async (newMessage) => {
-    await fetchChatsNow(userId);
+  
+  // Unirse a la room del usuario
+  socketChat.emit("joinRoom", userId);
+
+  socketChat.on("receiveMessage", (newMessage) => {
+    fetchChatsNow(userId);
   });
+  
   await fetchChatsNow(userId);
 });
 

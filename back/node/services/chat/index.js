@@ -204,52 +204,27 @@ setInterval(async () => {
   }
 }, 10000);
 
-io.on("connection", (socket) => {
-  console.log("a user connected");
+io.on('connection', (socket) => {
+  console.log('Nuevo cliente conectado:', socket.id);
 
-  socket.on("sendMessage", async (data) => {
-    console.log("sendMessage:", data);
-    const { chatId, userId, message } = data;
-    const newMessage = {
-      userId,
-      message,
-      timestamp: new Date(),
-    };
-
-    try {
-      const chat = await Message.findById(chatId);
-      if (chat) {
-        const isFirstInteraction = chat.interactions.length === 0;
-        chat.interactions.push(newMessage);
-        await chat.save();
-        io.emit("receiveMessage", newMessage);
-        console.log("Message saved:", newMessage);
-
-        if (isFirstInteraction) {
-          const notificationPayload = {
-            user_id: userId === chat.users[0] ? chat.users[1] : chat.users[0],
-            title: "Nou chat obert",
-            message: `Tens un nou missatge de ${userId}!`,
-          };
-
-          const response = await fetch(chatEnv.ENDPOINT_URL_PUSH_NOTIFICATIONS + "/sendNotification", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(notificationPayload),
-          });
-
-          console.log("response", await response.json());
-        }
-      }
-    } catch (err) {
-      console.error("Error saving message:", err);
-    }
+  socket.on('joinRoom', (roomId) => {
+    socket.join(roomId);
+    console.log(`User ${socket.id} In ${roomId}`);
   });
 
-  socket.on("disconnect", () => {
-    console.log("user disconnected");
+  socket.on('leaveRoom', (roomId) => {
+    socket.leave(roomId);
+    console.log(`User ${socket.id} Out ${roomId}`);
+  });
+
+  socket.on('sendMessage', (data) => {
+    const { roomId, message } = data;
+    io.to(roomId).emit('receiveMessage', message);
+    console.log(`Message from ${socket.id} in ${roomId}: ${message}`);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('User disconected:', socket.id);
   });
 });
 

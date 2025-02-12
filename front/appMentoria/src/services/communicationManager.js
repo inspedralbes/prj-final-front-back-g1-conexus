@@ -478,9 +478,8 @@ export const sendMessageInMongo = async (
             messageInput.value = "";
         }
         socketChat.emit("sendMessage", {
-            chatId: chatData._rawValue._id,
-            userId: currentUser.value, // Asegúrate de que userId sea una cadena
-            message: newMessage.message,
+            roomId: chatData._rawValue._id,
+            message: newMessage,
         });
     } catch (error) {
         console.error("Error sending message:", error);
@@ -1212,13 +1211,14 @@ export const reportChat = async (message_id, user_id, content, report) => {
 
   export const reportChatMongo = async (chatId, messageId) => {
     try {
-      const response = await fetch(`${CHAT_URL}/reportMessage`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ chatId, messageId }),
-      });
+        const response = await fetch(`${CHAT_URL}/reportMessage`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ chatId, messageId }),
+            mode: 'cors',
+        }); 
   
       if (!response.ok) {
         return { error: `HTTP error! status: ${response.status}` };

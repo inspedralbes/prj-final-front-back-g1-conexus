@@ -29,7 +29,7 @@
           <span :class="Number(interaction.userId) === currentUser ? 'px-4 py-2 rounded-lg inline-block rounded-br-none bg-blue-600 text-white' : 'px-4 py-2 rounded-lg inline-block rounded-bl-none bg-gray-300 text-gray-600'">
             <p>{{ interaction.message }}</p>
             <p><small>{{ new Date(interaction.timestamp).toLocaleString() }}</small></p>
-            <button v-if="Number(interaction.userId) !== currentUser" @click="confirmReport(interaction)" class="flex items-center space-x-1">
+            <button v-if="Number(interaction.userId) !== currentUser && !isChatReported" @click="confirmReport(interaction)" class="flex items-center space-x-1">
               <svg fill="#4b5562" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke="#4b5562" class="w-4 h-4">
                 <path fill-rule="evenodd" d="M3.25 4a.25.25 0 00-.25.25v12.5c0 .138.112.25.25.25h2.5a.75.75 0 01.75.75v3.19l3.427-3.427A1.75 1.75 0 0111.164 17h9.586a.25.25 0 00.25-.25V4.25a.25.25 0 00-.25-.25H3.25zm-1.75.25c0-.966.784-1.75 1.75-1.75h17.5c.966 0 1.75.784 1.75 1.75v12.5a1.75 1.75 0 01-1.75 1.75h-9.586a.25.25 0 00-.177.073l-3.5 3.5A1.457 1.457 0 015 21.043V18.5H3.25a1.75 1.75 0 01-1.75-1.75V4.25zM12 6a.75.75 0 01.75.75v4a.75.75 0 01-1.5 0v-4A.75.75 0 0112 6zm0 9a1 1 0 100-2 1 1 0 000 2z"></path>
               </svg>
@@ -96,7 +96,7 @@
 </style>
 
 <script setup>
-import { ref, onMounted, defineProps, watch, nextTick } from "vue";
+import { ref, onMounted, defineProps, onUnmounted, watch, nextTick } from "vue";
 import { fetchMessages, sendMessageInMongo, reportChat, reportChatMongo } from "@/services/communicationManager";
 import socketChat from "../services/socketChat";
 import { useAppStore } from "@/stores/index";
@@ -137,12 +137,19 @@ const otherUserId = ref(chatData.value.users.find((userId) => userId !== current
 const otherUser = ref(users.value.find((user) => user.id === otherUserId.value));
 
 
-
 const scrollToBottom = async () => {
   await nextTick();
   if (messageContainer.value) {
     messageContainer.value.scrollTop = messageContainer.value.scrollHeight;
   }
+};
+
+const joinRoom = (roomId) => {
+  socketChat.emit('joinRoom', roomId);
+};
+
+const leaveRoom = (roomId) => {
+  socketChat.emit('leaveRoom', roomId);
 };
 
 const sendMessageInMongoNow = () => {
@@ -151,9 +158,10 @@ const sendMessageInMongoNow = () => {
     sendMessageInMongo(chatData.value, currentUser, message);
     messageInput.value.value = "";
   }
-};
+}; 
 
 const updateProfile = (userId) => {
+  console.log("update profile", userId);
   const user = users.value.find((user) => user.id === userId);
 
   if (user && user.profile) {
@@ -169,10 +177,13 @@ const updateProfile = (userId) => {
 
 onMounted(async () => {
   scrollToBottom();
-  socketChat.on("receiveMessage", (newMessage) => {
-    interactions.value.push(newMessage);
+  joinRoom(chatData.value._id);
+  socketChat.on('receiveMessage', (message) => {
+    console.log('Received message:', message);
+    interactions.value.push(message);
     scrollToBottom();
   });
+
   console.log('Fetching chat data for chat ID:', chatData.value._id);
   chatData.value = await fetchMessages(chatData.value._id);
   interactions.value = chatData.value._rawValue.interactions;
@@ -184,6 +195,10 @@ onMounted(async () => {
 });
 watch(interactions, () => {
   scrollToBottom();
+});
+
+onUnmounted(() => {
+  leaveRoom(chatData.value._id);
 });
 
 const confirmReport = async (interaction) => {
