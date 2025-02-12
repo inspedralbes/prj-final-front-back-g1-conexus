@@ -13,9 +13,7 @@ console.log('Mongo URI:', mongoUri);
 
 // Conexión a la base de datos
 mongoose.connect(mongoUri, { 
-    dbName: 'Tokens',
-    useNewUrlParser: true,
-    useUnifiedTopology: true
+    dbName: 'Tokens'
 })
 .then(() => console.log('Conexión exitosa a MongoDB'))
 .catch(err => console.error('Error de conexión a MongoDB:', err));
