@@ -3,13 +3,14 @@
     <div class="flex sm:items-center justify-between py-2 border-b-2 border-gray-200">
       <div class="relative flex items-center space-x-4">
         <div class="relative ps-5">
-          <img :src="updateProfile(otherUser)" alt="" class="w-10 sm:w-16 h-10 sm:h-16 rounded-full" />
+            <img v-if="chatData.users.length === 2" :src="updateProfile(otherUser)" alt="" class="w-10 sm:w-16 h-10 sm:h-16 rounded-full" />
         </div>
         <div class="flex flex-col leading-tight">
           <div class="text-2xl mt-1 flex items-center">
-          <span class="text-gray-700 mr-3 dark:text-white">{{ otherUser.name }}</span>
+          <span v-if="chatData.users.length === 2" class="text-gray-700 mr-3 dark:text-white">{{ otherUser.name }}</span>
+          <span v-if="chatData.users.length > 2" class="text-gray-700 mr-3 dark:text-white">{{ chatData.name }}</span>
           </div>
-          <span class="text-lg text-gray-600 dark:text-white">{{ otherUser.email.split("@")[0] }}</span>
+          <span v-if="chatData.users.length === 2" class="text-lg text-gray-600 dark:text-white">{{ otherUser.email.split("@")[0] }}</span>
         </div>
       </div>
       <div class="flex items-center space-x-2 pr-4">

@@ -1,5 +1,7 @@
 <template>
   <div>
+    <button @click="$router.push({ path: '/newSingleChat'})" class="btn btn-primary">Crear Chat Privat</button>
+    <button @click="$router.push({ path: '/newGroupChat'})" class="btn btn-primary">Crear Chat Grupal</button>
     <div
       v-if="chats.length === 0 && chatsInfo"
       class="flex items-center justify-center h-full"

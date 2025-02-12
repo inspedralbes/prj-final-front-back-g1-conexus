@@ -504,12 +504,14 @@ export const fetchChats = async (userId) => {
 };
 
 // Create a new chat
-export const chatButton = async (userid2, router) => {
+export const chatButton = async (name, users, router) => {
     const appStore = useAppStore();
-    const userid1 = appStore.getUser().id;
+    if(users.length === 1) {
+        users = [appStore.user.id, users[0]];
+    }
     const newMessage = {
-        name: "",
-        users: [userid1, userid2],
+        name: name,
+        users: users,
         interactions: [],
         reports: 0,
     };

@@ -21,6 +21,8 @@ import servicePage from '../views/servicesListPage.vue'
 import stadisticsPage from '@/views/stadisticsPage.vue';
 import requestsPage from '../views/mainRequests.vue'
 import editProfilePage from '@/views/editProfilePage.vue';
+import newSingleChat from '@/views/newSingleChat.vue';
+import newGroupChat from '@/views/newGroupChat.vue';
 
 const routes = [
   {
@@ -133,6 +135,16 @@ const routes = [
     name: 'editProfilePage',
     component: editProfilePage,
     props: true
+  },
+  {
+    path: '/newSingleChat',
+    name: 'newSingleChat',
+    component: newSingleChat
+  },
+  {
+    path: '/newGroupChat',
+    name: 'newGroupChat',
+    component: newGroupChat
   }
 ];
 
