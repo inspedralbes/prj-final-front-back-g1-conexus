@@ -90,7 +90,9 @@
     },
     "profilePage": {
         "placeWhereYouLive": "あなたが住んでいる場所...",
-        "pendant": "割り当て待ち"
+        "pendant": "割り当て待ち",
+        "unfollow": "フォロー解除",
+        "follow": "フォロー"
     },
     "LoginRegisterPage": {
         "subTitle": "@inspedralbes.cat メール",
