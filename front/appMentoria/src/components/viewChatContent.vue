@@ -3,14 +3,15 @@
     <div class="flex sm:items-center justify-between py-2 border-b-2 border-gray-200">
       <div class="relative flex items-center space-x-4">
         <div class="relative ps-5">
-            <img v-if="chatData.users.length === 2" :src="updateProfile(otherUser)" alt="" class="w-10 sm:w-16 h-10 sm:h-16 rounded-full" />
+            <img v-if="chatPersons === 2" :src="updateProfile(otherUser)" alt="" class="w-10 sm:w-16 h-10 sm:h-16 rounded-full" />
         </div>
         <div class="flex flex-col leading-tight">
           <div class="text-2xl mt-1 flex items-center">
-          <span v-if="chatData.users.length === 2" class="text-gray-700 mr-3 dark:text-white">{{ otherUser.name }}</span>
-          <span v-if="chatData.users.length > 2" class="text-gray-700 mr-3 dark:text-white">{{ chatData.name }}</span>
+          <span v-if="chatPersons === 2" class="text-gray-700 mr-3 dark:text-white">{{ otherUser.name }}</span>
+          <span v-if="chatPersons > 2" class="text-gray-700 mr-3 dark:text-white">{{ chatName }}</span>
           </div>
-          <span v-if="chatData.users.length === 2" class="text-lg text-gray-600 dark:text-white">{{ otherUser.email.split("@")[0] }}</span>
+          <span v-if="chatPersons === 2" class="text-lg text-gray-600 dark:text-white">{{ otherUser.email.split("@")[0] }}</span>
+          <span v-if="chatPersons > 2" class="text-lg text-gray-600 dark:text-white">{{ nameUsersChat }}</span>
         </div>
       </div>
       <div class="flex items-center space-x-2 pr-4">
@@ -28,6 +29,7 @@
       <div :class="Number(interaction.userId) === currentUser ? 'flex flex-col space-y-2 text-xs max-w-xs mx-2 order-1 items-end' : 'flex flex-col space-y-2 text-xs max-w-xs mx-2 order-2 items-start'">
         <div>
           <span :class="Number(interaction.userId) === currentUser ? 'px-4 py-2 rounded-lg inline-block rounded-br-none bg-blue-600 text-white' : 'px-4 py-2 rounded-lg inline-block rounded-bl-none bg-gray-300 text-gray-600'">
+            <p v-if="Number(interaction.userId) !== currentUser && chatPersons > 2"><strong>{{ users.find(user => user.id === Number(interaction.userId)).name }}</strong></p>
             <p>{{ interaction.message }}</p>
             <p><small>{{ new Date(interaction.timestamp).toLocaleString() }}</small></p>
             <button v-if="Number(interaction.userId) !== currentUser && !isChatReported" @click="confirmReport(interaction)" class="flex items-center space-x-1">
@@ -123,9 +125,14 @@ const currentUser = ref(myUser.id);
 
 const users = ref(props.users);
 
+
 const BACK_URL = props.BACK_URL;
 
 const chatData = ref(props.chatData);
+const chatPersons = Number(chatData.value.users.length);
+const chatName = String(chatData.value.name);
+
+const nameUsersChat = chatData.value.users.length > 3 ? chatData.value.users.slice(0, 3).map(userId => users.value.find(user => user.id === userId).name).join(', ') + '...' : chatData.value.users.map(userId => users.value.find(user => user.id === userId).name).join(', ');
 
 const interactions = ref([]);
 const isChatReported = ref(false);
@@ -162,7 +169,6 @@ const sendMessageInMongoNow = () => {
 }; 
 
 const updateProfile = (userId) => {
-  console.log("update profile", userId);
   const user = users.value.find((user) => user.id === userId);
 
   if (user && user.profile) {
@@ -177,6 +183,7 @@ const updateProfile = (userId) => {
 };
 
 onMounted(async () => {
+  console.log('ViewChatContent mounted');
   scrollToBottom();
   joinRoom(chatData.value._id);
   socketChat.on('receiveMessage', (message) => {
@@ -189,7 +196,7 @@ onMounted(async () => {
   chatData.value = await fetchMessages(chatData.value._id);
   interactions.value = chatData.value._rawValue.interactions;
   scrollToBottom();
-
+  console.log("Chat data fetched:", users.value);
   if (chatData.value._rawValue.reports === 1) {
     isChatReported.value = true;
   }
@@ -203,7 +210,7 @@ onUnmounted(() => {
 });
 
 const confirmReport = async (interaction) => {
-  console.log('Interaction object:', interaction); // Verifica que interaction tenga el campo _id
+  console.log('Interaction object:', interaction);
 
   const reason = prompt(`Estàs segur que vols reportar aquest missatge: "${interaction.message}"? Si és així, indica el motiu:`);
 
@@ -217,7 +224,7 @@ const confirmReport = async (interaction) => {
   if (reason) {
     try {
       const response = await reportChat(interaction._id, interaction.userId, interaction.message, reason);
-      const result = await reportChatMongo(props.chatId, interaction._id);
+      const result = await reportChatMongo(props.chatData._id, interaction._id);
       if (result.error || response.error) {
         console.error('Error reporting message:', result.error || response.error);
       } else {

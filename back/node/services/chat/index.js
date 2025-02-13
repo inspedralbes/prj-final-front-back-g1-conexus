@@ -140,7 +140,7 @@ app.post("/addChat", async (req, res) => {
 
 app.post("/newChat", async (req, res) => {
   console.log("newChat");
-  const { users, interactions } = req.body;
+  const { name, users, interactions } = req.body;
 
   const existingChat = await Message.findOne({
     users: { $all: users },
@@ -151,6 +151,7 @@ app.post("/newChat", async (req, res) => {
   }
   try {
     const message = new Message({
+      name,
       users,
       reports: 0,
       interactions,

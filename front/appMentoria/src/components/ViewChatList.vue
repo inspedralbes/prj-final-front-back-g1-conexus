@@ -38,13 +38,15 @@ const fetchChatsNow = async (userId) => {
     chats.value = result.chats;
     chatsInfo.value = result.chatsInfo;
     chats.value = chats.value.filter(chat => {
-      console.log("chat", chat.users[0], chat.users[1]);
-      if (chat.users[1] === userId && (!chat.interactions || chat.interactions.length === 0)) {
-        return false;
-      }
+      console.log("chat", chat.users);
+      if (chat.users[0] === userId || (chat.users.includes(userId) && chat.interactions && chat.interactions.length > 0)) {
       return true;
+      }
+      return false;
     });
-  } catch (error) {}
+  } catch (error) {
+    console.error("Error fetching chats:", error);
+  }
 };
 
 onMounted(async () => {
