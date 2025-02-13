@@ -20,6 +20,9 @@
             @drop="onDropElement('front', index, $event)"
             @dragover.prevent
             @dragstart="onDragStart('front', index, $event)"
+            @touchstart="onTouchStart('front', index, $event)"
+            @touchmove="onTouchMove"
+            @touchend="onTouchEnd('front', index)"
             draggable="true"
           >
             {{ getElementContent("front", index, element.content) }}
@@ -42,6 +45,9 @@
             @drop="onDropElement('back', index, $event)"
             @dragover.prevent
             @dragstart="onDragStart('back', index, $event)"
+            @touchstart="onTouchStart('back', index, $event)"
+            @touchmove="onTouchMove"
+            @touchend="onTouchEnd('back', index)"
             draggable="true"
           >
             {{ getElementContent("back", index, element.content) }}
@@ -52,8 +58,9 @@
         class="mt-4 p-4 border border-red-500 rounded-lg shadow-lg bg-red-100 text-center text-red-700"
         @dragover.prevent
         @drop="onDropToDelete"
+        @touchstart="onTouchDelete"
       >
-        🚮 Arrastra aquí para eliminar un elemento
+        🚮 Arrossega aquí per eliminar un element
       </div>
     </div>
   </div>
@@ -67,6 +74,7 @@ import { storeToRefs } from "pinia";
 const store = useAppStore();
 const { availableElementsCard } = storeToRefs(store);
 const draggedElement = ref(null);
+const touchPosition = ref({ x: 0, y: 0 });
 
 const props = defineProps({
   selectedDesignFront: Number,
@@ -104,10 +112,46 @@ const onDragStart = (side, index, event) => {
   }
 };
 
+const onTouchStart = (side, index, event) => {
+  const element = availableElementsCard.value.find(
+    (item) => item.side === side && item.index === index
+  );
+  if (element) {
+    draggedElement.value = element;
+    touchPosition.value = {
+      x: event.touches[0].clientX,
+      y: event.touches[0].clientY,
+    };
+  }
+};
+
+const onTouchMove = (event) => {
+  touchPosition.value = {
+    x: event.touches[0].clientX,
+    y: event.touches[0].clientY,
+  };
+};
+
+const onTouchEnd = (event) => {
+  const dropTarget = document.elementFromPoint(
+    touchPosition.value.x,
+    touchPosition.value.y
+  );
+
+  if (dropTarget && dropTarget.dataset.dropTarget) {
+    const { side, index } = dropTarget.dataset;
+    onDropElement(side, index, event);
+  } else if (dropTarget && dropTarget.dataset.deleteTarget) {
+    onDropToDelete(event);
+  }
+
+  draggedElement.value = null;
+};
+
 const onDropElement = (side, index, event) => {
   event.preventDefault();
   const field = JSON.parse(event.dataTransfer.getData("field"));
-
+  console.log("field", field);
   if (draggedElement.value) {
     const targetElement = availableElementsCard.value.find(
       (item) => item.side === side && item.index === index
@@ -134,6 +178,13 @@ const onDropElement = (side, index, event) => {
   }
 
   draggedElement.value = null;
+};
+
+const onTouchDelete = () => {
+  if (draggedElement.value) {
+    store.removeElement(draggedElement.value.id);
+    draggedElement.value = null;
+  }
 };
 
 const onDropToDelete = (event) => {

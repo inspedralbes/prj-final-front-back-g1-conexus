@@ -1,7 +1,7 @@
 <template>
-  <div class="flex flex-col space-y-8 p-2 min-h-screen">
+  <div class="flex flex-col space-y-2 p-2 min-h-screen">
     <div class="self-end text-right"></div>
-    <div class="grid grid-cols-1 gap-8">
+    <div class="grid grid-cols-1 gap-4">
       <div v-for="design in designs" :key="design.id" class="space-y-6">
         <h2 class="text-xl font-semibold text-center">
           Diseño {{ design.id }}
@@ -9,11 +9,11 @@
 
         <!-- Contenedor de las tarjetas -->
         <div
-          class="flex flex-col md:flex-row justify-center md:justify-evenly gap-4"
+          class="flex flex-col md:flex-row justify-center md:justify-evenly gap-2"
         >
           <!-- Frontal -->
           <div
-            class="border-4 rounded-lg p-6 w-full md:w-72 h-40 grid shadow-lg bg-white cursor-pointer"
+            class="border-4 rounded-lg p-4 w-full md:w-72 h-40 grid shadow-lg bg-white cursor-pointer"
             :class="[
               design.front.classes,
               selectedFront === design.id
