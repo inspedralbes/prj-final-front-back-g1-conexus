@@ -9,6 +9,7 @@
       <div
         v-if="frontDesign"
         class="p-8 border rounded-lg shadow-lg h-[200px] flex items-center justify-center"
+        @dragover.prevent
       >
         <div class="grid gap-2 w-full h-full" :class="frontDesign.classes">
           <div
@@ -16,7 +17,13 @@
             :key="index"
             :class="[element.classes, 'shadow cursor-pointer']"
             :style="{ backgroundColor: selectedColor?.hex }"
-          ></div>
+            @drop="onDropElement('front', index, $event)"
+            @dragover.prevent
+            @dragstart="onDragStart('front', index, $event)"
+            draggable="true"
+          >
+            {{ getElementContent("front", index, element.content) }}
+          </div>
         </div>
       </div>
 
@@ -25,7 +32,6 @@
         v-if="backDesign"
         class="p-8 border rounded-lg shadow-lg h-[200px] flex items-center justify-center"
         @dragover.prevent
-        @drop="onDrop('back', $event)"
       >
         <div class="grid gap-2 w-full h-full" :class="backDesign.classes">
           <div
@@ -33,14 +39,34 @@
             :key="index"
             :class="[element.classes, 'shadow cursor-pointer']"
             :style="{ backgroundColor: selectedColor?.hex }"
-          ></div>
+            @drop="onDropElement('back', index, $event)"
+            @dragover.prevent
+            @dragstart="onDragStart('back', index, $event)"
+            draggable="true"
+          >
+            {{ getElementContent("back", index, element.content) }}
+          </div>
         </div>
+      </div>
+      <div
+        class="mt-4 p-4 border border-red-500 rounded-lg shadow-lg bg-red-100 text-center text-red-700"
+        @dragover.prevent
+        @drop="onDropToDelete"
+      >
+        🚮 Arrastra aquí para eliminar un elemento
       </div>
     </div>
   </div>
 </template>
-  <script setup>
-import { watch, computed } from "vue";
+
+<script setup>
+import { computed, ref } from "vue";
+import { useAppStore } from "@/stores/index";
+import { storeToRefs } from "pinia";
+
+const store = useAppStore();
+const { availableElementsCard } = storeToRefs(store);
+const draggedElement = ref(null);
 
 const props = defineProps({
   selectedDesignFront: Number,
@@ -61,56 +87,60 @@ const backDesign = computed(
     props.designs.find((design) => design.id === props.selectedDesignBack)?.back
 );
 
-watch([frontDesign, backDesign], ([newFront, newBack]) => {
-  console.log("Front Design:", newFront);
-  console.log("Back Design:", newBack);
-});
+const getElementContent = (side, index, defaultContent) => {
+  const storedElement = availableElementsCard.value.find(
+    (item) => item.side === side && item.index === index
+  );
+  return storedElement ? storedElement.content : defaultContent;
+};
 
-watch(
-  [
-    () => props.selectedDesignFront,
-    () => props.selectedDesignBack,
-    () => props.selectedColor,
-    () => props.designs,
-  ],
-  ([newFront, newBack, newColor, newDesigns]) => {
-    // Solo mostrar si todos los valores son válidos
-    if (
-      newFront !== null &&
-      newFront !== undefined &&
-      newBack !== null &&
-      newBack !== undefined &&
-      newColor !== null &&
-      newColor !== undefined &&
-      newDesigns !== null &&
-      newDesigns !== undefined
-    ) {
-      console.log("Valores actualizados en previewCard.vue:", {
-        selectedDesignFront: newFront,
-        selectedDesignBack: newBack,
-        selectedColor: newColor,
-        designs: newDesigns,
-      });
+const onDragStart = (side, index, event) => {
+  const element = availableElementsCard.value.find(
+    (item) => item.side === side && item.index === index
+  );
+  if (element) {
+    draggedElement.value = element;
+    event.dataTransfer.setData("field", JSON.stringify(element));
+  }
+};
+
+const onDropElement = (side, index, event) => {
+  event.preventDefault();
+  const field = JSON.parse(event.dataTransfer.getData("field"));
+
+  if (draggedElement.value) {
+    const targetElement = availableElementsCard.value.find(
+      (item) => item.side === side && item.index === index
+    );
+
+    if (targetElement) {
+      // Si ya hay un elemento en la posición, intercambiamos usando IDs
+      store.swapElements(draggedElement.value.id, targetElement.id);
+    } else {
+      // Si la posición está vacía, cambiamos de `side` y actualizamos
+      draggedElement.value.side = side;
+      draggedElement.value.index = index;
+      store.addOrUpdateElement(draggedElement.value);
     }
-  },
-  { immediate: true } // Se ejecutará al inicio si hay valores asignados
-);
+  } else {
+    // Si es un nuevo elemento desde la lista de disponibles
+    const newElement = {
+      id: `${side}-${index}`,
+      side,
+      index,
+      content: field.label,
+    };
+    store.addOrUpdateElement(newElement);
+  }
+
+  draggedElement.value = null;
+};
+
+const onDropToDelete = (event) => {
+  event.preventDefault();
+  if (draggedElement.value) {
+    store.removeElement(draggedElement.value.id);
+    draggedElement.value = null;
+  }
+};
 </script>
-<style scoped>
-.draggable {
-  cursor: move;
-}
-
-.drag-placeholder {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  color: #aaa;
-  border: 2px dashed #ccc;
-}
-
-.drag-over {
-  border-color: #000;
-}
-</style>

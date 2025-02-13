@@ -94,7 +94,7 @@ const designs = ref([
       classes: "grid-cols-6 gap-4",
       elements: [
         {
-          dataField: [props.user.profile],
+          dataField: props.user.profile,
           classes: "row-span-2 col-start-1 col-end-3 w-16 h-16 rounded-full",
           fixed: true, //imagen fija
         },
