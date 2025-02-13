@@ -6,7 +6,17 @@ export const useAppStore = defineStore( 'appStore', {
     accessToken: '',
     refreshToken: '',
     language: '',
-    selectedColor: ''
+    themes: [
+      'light',
+      'dark'
+    ],
+    colors: [
+      'purple',
+      'pink',
+      'yellow',
+      'green',
+      'blue'
+    ],
   }),
   actions: {
     setUser(user) {
@@ -24,12 +34,6 @@ export const useAppStore = defineStore( 'appStore', {
     setRefreshToken(refreshToken) {
       this.refreshToken = refreshToken
     },
-    setSelectedColor(color) {
-      this.selectedColor = color
-    },
-    getSelectedColor() {
-       return this.selectedColor
-    },        
     getRefreshToken() {
       return this.refreshToken
     },
@@ -41,6 +45,18 @@ export const useAppStore = defineStore( 'appStore', {
     },
     getLanguage() {
       return this.language
+    },
+    setThemes(themes) {
+      this.themes = themes
+    },
+    getThemes() {
+      return this.themes
+    },
+    setColors(colors) {
+      this.colors = colors
+    },
+    getColors() {
+      return this.colors
     }
   }
 });

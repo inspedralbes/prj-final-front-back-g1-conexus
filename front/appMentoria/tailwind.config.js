@@ -4,25 +4,22 @@ export default {
   theme: {
     extend: {
       colors: {
-        buttomLight: 'var(--buttom-light)',
-        buttomDark: 'var(--buttom-dark)',
+        buttonLight: 'var(--button-light)',
+        buttonDark: 'var(--button-dark)',
         containersLight: 'var(--containers-light)',
         containersDark: 'var(--containers-dark)',
         backgroundLight: 'var(--background-light)',
         backgroundDark: 'var(--background-dark)',
-        
-
         bgPrimary: 'var(--bg-primary)',
         textPrimary: 'var(--text-primary)',
-        buttonPrimary: 'var(--buttom-primary)',
-        buttonHoverPrimary: 'var(--buttom-hover-primary)',
+        buttonPrimary: 'var(--button-primary)',
+        buttonHoverPrimary: 'var(--button-hover-primary)',
       },
       boxShadow: {
         custom: 'var(--box-shadow)',
     },
   },
   },
-  
   plugins: [],
   content: [
     "./index.html",

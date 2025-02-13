@@ -1,42 +1,44 @@
 <template>
-  <div class="p-6 bg-backgroundLight dark:bg-backgroundDark text-white rounded-lg w-96">
+  <div class="p-6 rounded-lg w-96 bg-backgroundLight dark:bg-backgroundDark text-textPrimary">
+    <!-- Tamaño de la fuente -->
     <div>
       <label class="block text-lg font-semibold mb-2">Tamaño de la fuente</label>
       <div class="flex items-center justify-between">
-      <span class="text-sm mx-2">Aa</span>
-      <input 
-        type="range" 
-        min="12" 
-        max="24"
-        v-model="fontSize" 
-        @input="updateFontSize"
-        :style="{ background: `linear-gradient(to right, ${selectedColorClass} 0%, ${selectedColorClass} ${(fontSize - 12) / (24 - 12) * 100}%, #ccc ${(fontSize - 12) / (24 - 12) * 100}%, #ccc 100%)`, color: selectedColorClass }"
-        class="w-full accent-purpleCustom border-2 rounded-lg ring-2 appearance-none h-2 cursor-pointer" />
+        <span class="text-sm mx-2">Aa</span>
+        <input 
+          type="range" 
+          min="12" 
+          max="24"
+          v-model="fontSize"
+          @input="updateFontSize"
+          :style="{ background: `linear-gradient(to right, var(--bg-primary) 0%, var(--bg-primary) ${(fontSize - 12) / (24 - 12) * 100}%, #ccc ${(fontSize - 12) / (24 - 12) * 100}%, #ccc 100%)` }"
+          class="w-full accent-bgPrimary border-2 rounded-lg appearance-none h-2 cursor-pointer" />
         <span class="text-lg mx-2">Aa</span>
       </div>
     </div>
 
+    <!-- Selección de Color -->
     <div class="mt-4">
-    <label class="block text-lg font-semibold mb-2">Color</label>
-    <div class="flex gap-4">
-      <div 
-        v-for="color in themes" 
-        :key="color" 
-        :class="['w-8 h-8 rounded-full cursor-pointer', color.bg, selectedColor === color.bg ? 'ring-2 ring-white' : '']"
-        @click="updateColor(color.bg)">
+      <label class="block text-lg font-semibold mb-2">Color</label>
+      <div class="flex gap-4">
+        <div 
+          v-for="color in colors" 
+          :key="color"
+          :class="[`w-8 h-8 rounded-full cursor-pointer`, `color-${color}`, selectedColor === color ? 'ring-2 ring-white' : '']"
+          @click="setColor(color)">
+        </div>
       </div>
     </div>
-  </div>
 
+    <!-- Selección de Imagen de Fondo -->
     <div class="mt-4">
       <label class="block text-lg font-semibold mb-2">Imagen de fondo</label>
       <div class="flex gap-2">
         <button 
           v-for="(bg, index) in backgrounds" 
           :key="index" 
-          class="px-4 py-2 rounded border text-white" 
-          :class="selectedBackground === bg.name ? 'border-purpleCustom ring-2 ring-purpleCustom' : 'border-gray-400'"
-          :style="{ borderColor: selectedBackground === bg.name ? selectedColorClass : 'border-purple-400' }"
+          class="px-4 py-2 rounded border text-white"
+          :class="selectedBackground === bg.name ? 'border-bgPrimary ring-2 ring-bgPrimary' : 'border-gray-400'"
           @click="updateBackground(bg.name)">
           {{ bg.label }}
         </button>
@@ -46,18 +48,13 @@
 </template>
 
 <script setup>
-import { useAppStore } from '@/stores';
-import { ref, watch, defineEmits, computed } from 'vue';
-const appStore = useAppStore();
+import { ref, watchEffect } from 'vue';
+import { useAppStore } from '@/stores/index';
 
-const emit = defineEmits(['update:fontSize', 'update:color', 'update:background']);
-
-const fontSize = ref(localStorage.getItem("fontSize") || 16);
-const selectedColor = ref(appStore.getSelectedColor()|| "bg-purple-500");
-const selectedBackground = ref(localStorage.getItem("selectedBackground") || "Oscuro");
-
-const colors = ['purple', 'pink', 'yellow', 'green', 'blue'];
-const themes = ref(colors.map(color => ({ bg: `bg-${color}-500` })));
+const colors = useAppStore().getColors();
+const color = ref(localStorage.getItem("color"));
+const fontSize = ref(localStorage.getItem("fontSize"));
+const selectedBackground = ref(localStorage.getItem("selectedBackground"));
 
 const backgrounds = [
   { name: "Predeterminado", label: "Predet." },
@@ -65,31 +62,22 @@ const backgrounds = [
   { name: "Oscuro", label: "Oscuro" }
 ];
 
-const updateFontSize = () => {
-  emit('update:fontSize', fontSize.value);
+// Actualizar tema y aplicarlo a <html>
+const setColor = (newColor) => {
+  color.value = newColor;
+  document.documentElement.classList.remove(...colors.map(t => `color-${t}`));
+  document.documentElement.classList.add(`color-${newColor}`);
+  localStorage.setItem("color", newColor);
 };
 
-const updateColor = (color) => {
-  selectedColor.value = color;
-  appStore.setSelectedColor(color);
-  emit('update:color', color);
-};
-
+// Actualizar fondo y guardar en localStorage
 const updateBackground = (background) => {
   selectedBackground.value = background;
-  emit('update:background', background);
+  localStorage.setItem("selectedBackground", background);
 };
 
-const selectedColorClass = computed(() => {
-return selectedColor.value.replace('bg-', 'text-');
-});
-
-watch([fontSize, selectedColor, selectedBackground], ([newFontSize, newColor, newBackground]) => {
-  localStorage.setItem("fontSize", newFontSize);
-  localStorage.setItem("selectedColor", newColor);
-  localStorage.setItem("selectedBackground", newBackground);
+// Guardar cambios en localStorage
+watchEffect(() => {
+  localStorage.setItem("fontSize", fontSize.value);
 });
 </script>
-
-<style scoped>
-</style>
