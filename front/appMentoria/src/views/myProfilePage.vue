@@ -1,16 +1,17 @@
 <template>
   <Header class="shadow-lg shadow-black/30"></Header>
 
-  <div v-if="user" class="dark:bg-gray-900 p-4 text-gray-900 dark:text-gray-100">
+  <div v-if="user.value" class="dark:bg-gray-900 p-4 text-gray-900 dark:text-gray-100">
     <!-- User - Banner & Profile Image -->
-    <!-- <BannerProfile :banner="banner" :profile="profile" :user="user"/> -->
+    <BannerProfile :banner="banner" :profile="profile" :user="user"/>
 
     <!-- User - Personal Info -->
     <PersonalInfo :user="user" />
+
     <!-- User - Availibility -->
-    <!-- <div class="dark:bg-gray-800 bg-white p-6 rounded-xl shadow-lg shadow-black/30 my-4">
-      <Calendar :availabilityJson="user.availability" :id="user.id"  />
-    </div> -->
+    <div class="dark:bg-gray-800 bg-white p-6 rounded-xl shadow-lg shadow-black/30 my-4">
+      <Calendar :availabilityJson="user.value.availability" />
+    </div>
   </div>
 
   <!-- If !users -->
@@ -27,24 +28,19 @@ import Loading from "@/components/Loading.vue";
 import Calendar from "@/components/profile/Calendar.vue";
 import BannerProfile from "@/components/profile/BannerProfile.vue";
 import PersonalInfo from "@/components/profile/PersonalInfo.vue";
-import { useRoute } from 'vue-router';
 
-const user = ref({});
-const profile = ref(null);
-const banner = ref(null);
+const appStore = useAppStore();
 
+var user = reactive({});
+var profile = ref(null);
+var banner = ref(null);
 
-const route = useRoute();
-const userId = ref(route.params.id);
-
-onMounted(async () => {
-  user.value = await useAppStore().getUser();
-  console.log("User:", user.value.profile);
+onMounted(() => {
+  console.log("awjdfoiqawjdfeioqajwefio");
+  user.value = appStore.getUser();
   profile.value = user.value.profile;
   banner.value = user.value.banner;
-  console.log("Profile:", profile.value);
-  console.log("Banner:", banner.value);
-  console.log("User:", user);
+console.log("object");
   if (typeof user.value.tags == "string") {
     try {
       user.value.tags = JSON.parse(user.value.tags);
@@ -52,14 +48,20 @@ onMounted(async () => {
       console.error("Error al parsear tags:", error);
     }
   }
-
+  console.log("MECAGO EN TODO"+typeof user.value.availability);
   if (typeof user.value.availability == "string") {
     try {
       user.value.availability = JSON.parse(user.value.availability);
-
+      console.log("MECAGO EN TODO"+typeof user.value.availability);
     } catch (error) {
       console.error("Error al parsear availibility:", error);
     }
+  }
+  if(user.value.softwareSkills==null){
+    user.value.softwareSkills = [];
+  }
+  if(user.value.softSkills==null){
+    user.value.softSkills = [];
   }
 });
 </script>
