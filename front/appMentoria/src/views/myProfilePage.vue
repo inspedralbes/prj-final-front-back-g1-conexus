@@ -21,6 +21,8 @@
   >
     <Loading />
   </div>
+  
+
 </template>
 
 <script setup>
@@ -33,6 +35,7 @@ import BannerProfile from "@/components/profile/BannerProfile.vue";
 import PersonalInfo from "@/components/profile/PersonalInfo.vue";
 import { useRoute } from "vue-router";
 import { getProfile } from "@/services/communicationManager";
+import RecommendedProfiles from "@/components/recommendedProfiles.vue";
 
 const user = reactive({});
 const profile = ref(null);
