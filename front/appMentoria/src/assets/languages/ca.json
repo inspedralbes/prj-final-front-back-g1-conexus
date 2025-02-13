@@ -60,6 +60,7 @@
         "email": "Correu electrònic:",
         "phone": "Telèfon:",
         "softwareSkills":"Habilitats en programari",
+        "developingSoftwareSkills":"Aprenent habilitats...",
         "languages":"Idiomes",
         "noLanguages":"Encara no hi han...",
         "edit":"Editar"

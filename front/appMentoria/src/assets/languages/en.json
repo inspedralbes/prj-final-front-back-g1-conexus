@@ -55,6 +55,7 @@
         "email": "Email:",
         "phone": "Phone:",
         "softwareSkills": "Software Skills",
+        "developingSoftwareSkills": "Learning skills...", 
         "languages": "Languages",
         "noLanguages": "No languages yet...",
         "edit": "Edit"

@@ -59,6 +59,7 @@
         "email": "メールアドレス:",
         "phone": "電話:",
         "softwareSkills": "ソフトウェアスキル",
+        "developingSoftwareSkills": "新しいスキルを学んでいます...",
         "languages": "言語",
         "noLanguages": "まだありません...",
         "edit": "編集"

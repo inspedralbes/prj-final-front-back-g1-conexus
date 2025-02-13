@@ -58,6 +58,7 @@
         "email": "E-Mail:",
         "phone": "Telefon:",
         "softwareSkills": "Softwarekenntnisse",
+        "developingSoftwareSkills":"Fähigkeiten erlernen...",
         "languages": "Sprachen",
         "noLanguages": "Noch keine...",
         "edit": "Bearbeiten"
