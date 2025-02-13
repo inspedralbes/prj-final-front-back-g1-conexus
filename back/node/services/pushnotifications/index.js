@@ -27,7 +27,7 @@ app.use(morgan('dev'));
 app.use(cors({
     origin: '*',
     credentials: true,
-    allowedHeaders: ["Access-Control-Allow-Origin", "Content-Type"],
+    allowedHeaders: ["Access-Control-Allow-Origin", "Content-Type", "Authorization"],
 }));
 
 webpush.setVapidDetails('mailto:test@conexushub.com', pushNotificationsEnv.PUBLIC_VAPID_KEY, pushNotificationsEnv.PRIVATE_VAPID_KEY);

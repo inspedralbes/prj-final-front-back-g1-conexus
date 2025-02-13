@@ -186,19 +186,20 @@
                     <p class="text-gray-500 dark:text-gray-400">{{ $t("PersonalInfo.phone") }} {{ user.phone || 'No hi ha...' }}
                     </p>
                 </div>
-
+                
+                {{ user.softwareSkills }}
                 <!-- Software Skills -->
-                <div class="space-y-1">
+                <div class="space-y-1" v-if="user.softwareSkills">
                     <h3 class="font-semibold">{{ $t("PersonalInfo.softwareSkills") }}</h3>
                     <div class="flex flex-wrap space-x-4 w-full overflow-hidden">
-                        <span v-for="tag in user.value.softwareSkills.split(', ')" :key="tag"
+                        <span v-for="tag in user.value.softwareSkills.split(', ') || []" :key="tag"
                             class="p-2 rounded-lg text-gray-700 bg-gray-100 dark:text-gray-300 dark:bg-gray-700">{{ tag
                             }}</span>
                     </div>
                 </div>
 
                 <!-- Languages -->
-                <div class="space-y-1">
+                <!-- <div class="space-y-1" v-if="user.languages">
                     <h3 class="font-semibold">{{ $t("PersonalInfo.languages") }}</h3>
                     <p class="text-gray-500 dark:text-gray-400" v-if="!user.languages ">{{  $t("PersonalInfo.noLanguages") }}</p>
                     <div class="flex flex-wrap space-x-4 w-full overflow-hidden">
@@ -206,7 +207,7 @@
                         class="flex-inline items-center px-3 py-1 bg-gray-200 text-gray-700 rounded-full m-2">{{ lang
                             }}</span>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
         <button @click="$router.push('/editProfile/profile')"
@@ -223,15 +224,11 @@
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
-const props = defineProps({
-    user: Object
-});
-
-const user = computed(() => props.user);
+const props = defineProps(['user']);
 
 onMounted(() => {
-    console.log("PersonalInfo", user);
+    console.log("aisdjfioasjd", props.user);
 });
 </script>

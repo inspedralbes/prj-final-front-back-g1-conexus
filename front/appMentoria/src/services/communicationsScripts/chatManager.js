@@ -32,11 +32,14 @@ export const fetchMessages = async (chatId) => {
         const chatData = ref({});
         chatData.value = data[0];
         chatData.value.userName = chatData.value.user_one_name;
+        chatData.value.reported = data[0].reports;
         chatData.value.interactions = chatData.value.interactions.map(
             (interaction) => ({
+                _id: interaction._id,
                 message: interaction.message,
                 userId: interaction.userId,
                 timestamp: interaction.timestamp,
+                reports: interaction.reports,
             })
         );
 
@@ -66,11 +69,9 @@ export const sendMessageInMongo = async (chatData, currentUser, messageInput) =>
 
         if (response.status === 401) {
             const refreshResult = await refreshToken();
-
             if (refreshResult.error) {
                 return { error: 'No se pudo renovar el token. Inicia sesión nuevamente.'};
             }
-
             return sendMessageInMongo(chatData, currentUser, messageInput);
         }
 
@@ -95,9 +96,6 @@ export const sendMessageInMongo = async (chatData, currentUser, messageInput) =>
 export const fetchChats = async (userId) => {
     const chats = ref([]);
     const chatsInfo = ref(false);
-
-    console.log("fetchChats userId", userId);
-    console.log("fetchChats token", localStorage.getItem("accessToken"));
 
     try {
         const response = await fetch(`${CHAT_URL}/getChats/${userId}`, {
@@ -155,11 +153,9 @@ export const chatButton = async (userid2, router) => {
 
         if (response.status === 401) {
             const refreshResult = await refreshToken();
-
             if (refreshResult.error) {
                 return { error: 'No se pudo renovar el token. Inicia sesión nuevamente.'};
             }
-
             return chatButton(userid2, router);
         }
 

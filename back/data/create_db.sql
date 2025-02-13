@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS users (
     softwareSkills VARCHAR(510) DEFAULT NULL,
     languages VARCHAR(510) DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    description VARCHAR(600) DEFAULT NULL,
+    description VARCHAR(1000) DEFAULT NULL,
     FOREIGN KEY (typesUsers_id) REFERENCES typesUsers(id),
     FOREIGN KEY (class_id) REFERENCES classes(id),
     FOREIGN KEY (qualification_id) REFERENCES qualifications(id)

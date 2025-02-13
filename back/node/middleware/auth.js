@@ -109,14 +109,13 @@ async function refreshToken(req, res) {
     }
 }
 
-function deleteToken(refreshToken) {
-    Token.deleteOne({ token: refreshToken }, (err) => {
-        if (err) {
-            console.error('Error al eliminar el token:', err);
-        } else {
-            console.log('Token eliminado exitosamente');
-        }
-    });
+async function deleteToken(refreshToken) {
+    try {
+        await Token.deleteOne({ token: refreshToken });
+        console.log('Token eliminado exitosamente');
+    } catch (err) {
+        console.error('Error al eliminar el token:', err);
+    }
 }
 
 // Refrescar los tokens almacenados en la base de datos

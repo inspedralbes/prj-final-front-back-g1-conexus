@@ -1,4 +1,5 @@
 import { useAppStore } from '@/stores/index';
+import { ref } from 'vue';
 
 const BACK_URL = import.meta.env.VITE_URL_BACK;
 
@@ -162,6 +163,7 @@ export const refreshToken = async () => {
 
 // Get User Data
 export const getUsersForOther = async () => {
+    console.log("getUsersForOther")
     try {
         const response = await fetch(`${BACK_URL}/users`, {
             method: "GET",
@@ -185,7 +187,7 @@ export const getUsersForOther = async () => {
             return { error: `HTTP error! status: ${response.status}` };
         }
 
-        const data = response;
+        const data = await response.json();
         return data;
     } catch (error) {
         console.error("Network error:", error);
@@ -211,26 +213,13 @@ export const getUsers = async () => {
             }
             return getUsers();
         }
-
+        
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
         }
 
         const data = await response.json();
-        const chatData = ref({});
-        chatData.value = data[0];
-        chatData.value.userName = chatData.value.user_one_name;
-        chatData.value.reported = data[0].reports;
-        chatData.value.interactions = chatData.value.interactions.map(
-            (interaction) => ({
-                _id: interaction._id,
-                message: interaction.message,
-                userId: interaction.userId,
-                timestamp: interaction.timestamp,
-                reports: interaction.reports,
-            })
-        );
-        return chatData;
+        return data;
     } catch (error) {
         console.error("Network error:", error);
         return { error: "Network error. Please try again later." };

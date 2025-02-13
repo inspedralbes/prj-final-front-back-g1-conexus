@@ -7,10 +7,10 @@
                     class="rounded-xl object-cover w-20 h-20 sm:w-32 sm:h-32 bg-white sm:ml-4" />
                 <div class="flex flex-col text-center sm:text-left mt-4 sm:mt-0 sm:ml-4">
                     <h3 class="font-semibold text-xl sm:text-2xl text-gray-900 mb-1 dark:text-white">
-                        {{ user.value.name }}
+                        {{ user.name }}
                     </h3>
                     <p class="text-sm sm:text-base text-gray-500 dark:text-gray-300">
-                        {{ user.value.city || $t("profilePage.placeWhereYouLive") }}
+                        {{ user.city || $t("profilePage.placeWhereYouLive") }}
                     </p>
                 </div>
             </div>
@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 
 const props = defineProps({
     banner: String,
@@ -40,4 +40,10 @@ const props = defineProps({
 const banner = computed(() => props.banner);
 const profile = computed(() => props.profile);
 const user = computed(() => props.user);
+
+onMounted(() => {
+    console.log('Banner:', banner);
+    console.log('Profile:', profile.value);
+    console.log('User:', user.value);
+});
 </script>

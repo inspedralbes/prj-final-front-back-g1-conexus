@@ -321,9 +321,7 @@ app.get('/users', verifyToken, async (req, res) => {
                 users.email,
                 users.banner,
                 users.profile,
-                qualifications.name AS qualification,
-                users.discord_link,
-                users.github_link
+                qualifications.name AS qualification
             FROM 
                 users
             LEFT JOIN 
@@ -337,6 +335,8 @@ app.get('/users', verifyToken, async (req, res) => {
         console.log('rows: ', rows);
         res.json(rows);
     } catch (error) {
+        console.log("tus putas muelas");
+        
         console.error('Database error:', error.message);
         res.status(500).json({ error: 'Database error' });
     }

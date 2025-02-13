@@ -1,17 +1,16 @@
 <template>
   <Header class="shadow-lg shadow-black/30"></Header>
 
-  <div v-if="user.value" class="dark:bg-gray-900 p-4 text-gray-900 dark:text-gray-100">
+  <div v-if="user" class="dark:bg-gray-900 p-4 text-gray-900 dark:text-gray-100">
     <!-- User - Banner & Profile Image -->
-    <BannerProfile :banner="banner" :profile="profile" :user="user"/>
+    <!-- <BannerProfile :banner="banner" :profile="profile" :user="user"/> -->
 
     <!-- User - Personal Info -->
     <PersonalInfo :user="user" />
-
     <!-- User - Availibility -->
-    <div class="dark:bg-gray-800 bg-white p-6 rounded-xl shadow-lg shadow-black/30 my-4">
-      <Calendar :availabilityJson="user.value.availability" :id="user.value.id"  />
-    </div>
+    <!-- <div class="dark:bg-gray-800 bg-white p-6 rounded-xl shadow-lg shadow-black/30 my-4">
+      <Calendar :availabilityJson="user.availability" :id="user.id"  />
+    </div> -->
   </div>
 
   <!-- If !users -->
@@ -30,7 +29,7 @@ import BannerProfile from "@/components/profile/BannerProfile.vue";
 import PersonalInfo from "@/components/profile/PersonalInfo.vue";
 import { useRoute } from 'vue-router';
 
-const user = reactive({});
+const user = ref({});
 const profile = ref(null);
 const banner = ref(null);
 
@@ -39,9 +38,13 @@ const route = useRoute();
 const userId = ref(route.params.id);
 
 onMounted(async () => {
-  user.value = useAppStore().getUser();
+  user.value = await useAppStore().getUser();
+  console.log("User:", user.value.profile);
   profile.value = user.value.profile;
   banner.value = user.value.banner;
+  console.log("Profile:", profile.value);
+  console.log("Banner:", banner.value);
+  console.log("User:", user);
   if (typeof user.value.tags == "string") {
     try {
       user.value.tags = JSON.parse(user.value.tags);

@@ -37,9 +37,12 @@ export default defineConfig({
     host: true,
     port: 5173,
     strictPort: true,
-    hmr: {
-      host: 'www.conexushub.cat',
-      protocol: 'wss',
+    // hmr: {
+    //   host: 'www.conexushub.cat',
+    //   protocol: 'wss',
+    // },
+    watch: {
+      usePolling: true
     }
   },
   build: {
@@ -54,3 +57,48 @@ export default defineConfig({
     }
   }
 })
+
+
+// import { fileURLToPath, URL } from 'node:url'
+// import { defineConfig } from 'vite'
+// import vue from '@vitejs/plugin-vue'
+// import vueDevTools from 'vite-plugin-vue-devtools'
+// import vueI18n from '@intlify/unplugin-vue-i18n/vite';
+// import path from 'path';
+
+// // https://vite.dev/config/
+// export default defineConfig({
+//   plugins: [
+//     vue(),
+//     vueDevTools(),
+//     vueI18n({
+//       include: path.resolve(__dirname, './src/assets/languages/**'),
+//       runtimeOnly: false,
+//       compositionOnly: false,
+//       fullInstall: true,
+//       escapeHtml: true
+//     }),
+//   ],
+//   resolve: {
+//     alias: {
+//       '@': fileURLToPath(new URL('./src', import.meta.url))
+//     },
+//     extensions: [
+//       '.js',
+//       '.json',
+//       '.jsx',
+//       '.mjs',
+//       '.ts',
+//       '.tsx',
+//       '.vue',
+//     ]
+//   },
+//   define: { 'process.env': {} },
+//   server: {
+//     host: '0.0.0.0',
+//     port: 5173,
+//     watch: {
+//       usePolling: true
+//     }
+//   }
+// })
