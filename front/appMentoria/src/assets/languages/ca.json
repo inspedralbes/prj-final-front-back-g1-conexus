@@ -93,7 +93,8 @@
         "placeWhereYouLive": "Lloc on vius...",
         "pendant": "Pendent d'assignar",
         "unfollow": "Deixar de seguir",
-        "follow": "Seguir"
+        "follow": "Seguir",
+        "chat": "Xat"
     },
     "LoginRegisterPage": {
         "subTitle": "Correu @inspedralbes.cat",

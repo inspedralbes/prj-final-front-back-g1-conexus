@@ -273,12 +273,13 @@
 
       <div v-else>
         <div
-          v-for="post in posts.sort(
+            v-for="(post, index) in posts.sort(
             (a, b) => new Date(b.created_at) - new Date(a.created_at)
-          )"
+            )"
           :key="post.id"
-          class="max-w-3xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden mt-6 dark:bg-gray-800"
+          
         >
+        <div class="max-w-3xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden mt-6 dark:bg-gray-800">
           <div v-if="post.reports === 0">
             <header class="flex items-center p-4 border-b">
               <img
@@ -340,6 +341,10 @@
             </footer>
           </div>
         </div>
+          <div v-if="index%10==0 || (posts.length <= 10 && index==posts.length-1)">
+            <RecommendedProfiles style="z-index: 0;"/>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -355,6 +360,7 @@ import {
 import socketBack from "../services/socketBack.js";
 import { useAppStore } from "@/stores/index";
 import Loading from "@/components/Loading.vue"; // Import the Loading component
+import RecommendedProfiles from "@/components/recommendedProfiles.vue";
 
 const community_url = import.meta.env.VITE_URL_BACK_COMMUNITY;
 const back_url = import.meta.env.VITE_URL_BACK;

@@ -1375,8 +1375,7 @@ export const getProfile = async (id) => {
 
 export const checkIfFollows = async (id, user_id) => {
     try {
-        console.log("asdfansijdfnasjd",id, user_id.value);
-
+     
         const response = await fetch(`${BACK_URL}/checkIfFollows/`+id+`/`+user_id, {
             method: 'GET',
             headers: {
@@ -1430,5 +1429,38 @@ export const followUser = async (id, user_id) => {
     }catch(error){
         console.error('Network error:', error);
         return { error: 'Network error. Please try again later.' };
+    }
+}
+
+export const getRecommendedUsers = async (id) => {
+    try {
+        const response = await fetch(`${BACK_URL}/recommendedUsers/${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+        });
+
+        if (response.status === 401) {
+            const refreshResult = await refreshToken();
+
+            if (refreshResult.error) {
+                return { error: 'No se pudo renovar el token. Inicia sesión nuevamente.' };
+            }
+
+            // Reintenta la petición después de renovar el token
+            return await getRecommendedUsers(id);
+        }
+
+        if (!response.ok) {
+            return { error: `HTTP error! status: ${response.status}` };
+        }
+        let responseJson =await response.json();
+        console.log(responseJson)
+        return responseJson;
+    } catch (error) {
+        console.error('Network error:', error);
+        return { "error": 'Network error. Please try again later.'+error };
     }
 }

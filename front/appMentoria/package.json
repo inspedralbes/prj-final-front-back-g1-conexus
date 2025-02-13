@@ -23,7 +23,8 @@
     "vue-double-slider": "^0.2.1",
     "vue-hour-range-picker": "^1.0.1",
     "vue-i18n": "^10.0.5",
-    "vue-router": "^4.4.5"
+    "vue-router": "^4.4.5",
+    "vue3-carousel": "^0.14.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.1",

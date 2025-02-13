@@ -91,7 +91,8 @@
         "placeWhereYouLive": "Ort, an dem du lebst...",
         "pendant": "Noch zugewiesen",
         "unfollow": "Entfolgen",
-        "follow": "Folgen"
+        "follow": "Folgen",
+        "chat": "Chat"
     },
     "LoginRegisterPage": {
         "subTitle": "@inspedralbes.cat E-Mail",

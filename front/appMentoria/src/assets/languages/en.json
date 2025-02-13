@@ -88,7 +88,8 @@
         "placeWhereYouLive": "Place where you live...",
         "pendant": "Pending assignment",
         "unfollow": "Unfollow",
-        "follow": "Follow"
+        "follow": "Follow",
+        "chat": "Chatten"
     },
     "LoginRegisterPage": {
         "subTitle": "@inspedralbes.cat Email",

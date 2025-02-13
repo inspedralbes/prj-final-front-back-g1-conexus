@@ -1379,16 +1379,61 @@ app.get('/checkIfFollows/:user_id/:followed_id', verifyToken, async (req, res) =
     const { user_id, followed_id } = req.params;
 
     try {
+        let result;
         console.log("user_id",user_id);
         console.log("followed_id",followed_id);
         const connection = await mysql.createConnection(dbConfig);
-        let result = await connection.execute('SELECT * FROM following WHERE user_id = ? AND following_user_id = ?', [user_id, followed_id]);
+         [result] = await connection.execute('SELECT * FROM following WHERE user_id = ? AND following_user_id = ?', [user_id, followed_id]);
         connection.end();
-        console.log("awanabunbunbun",result);
+        console.log(result)
         if (result.length == 0) return res.status(200).json({ following: false });
 
         res.status(200).json({ following: true });
     } catch (error) {
         res.status(500).json({ "error": 'Database error'+ error });
+    }
+});
+
+app.get('/recommendedUsers/:user_id', verifyToken, async (req, res) => {
+    const { user_id } = req.params;
+
+    try {
+        let recommendedUsers = [];
+        const connection = await mysql.createConnection(dbConfig);
+        const [rows] = await connection.execute('SELECT * FROM users WHERE id != ? AND id IN (SELECT user_id FROM following WHERE following_user_id = ? ORDER BY RAND())', [user_id, user_id]);
+        console.log("Yo sigo a",rows);
+        for (const row of rows) {
+            let [auxRows] = await connection.execute('SELECT * FROM users WHERE id != ? AND id IN (SELECT user_id FROM following WHERE following_user_id = ? ORDER BY RAND())', [row.id, row.id]);
+            console.log(row.id, "sigue a", auxRows);
+            auxRows.forEach((auxRow) => {
+            console.log("auxRow", auxRow);
+            console.log(auxRow.id != user_id);
+            console.log(!recommendedUsers.includes(auxRow));
+            if (auxRow.id != user_id && !recommendedUsers.includes(auxRow)) {
+                recommendedUsers.push(auxRow);
+                console.log("recomendado", auxRow);
+            }
+            });
+        }
+        console.log("me han recomendado", recommendedUsers);
+        console.log("hay", recommendedUsers.length, "usuarios recomendados");
+        if(recommendedUsers.length < 16){
+            let [auxRows]=await connection.execute('SELECT * FROM users WHERE id != ? AND id NOT IN (SELECT user_id FROM following WHERE following_user_id = ?) ORDER BY RAND()', [user_id, user_id]);
+             auxRows.forEach((auxRow) => {
+                if(auxRow.id != user_id && !recommendedUsers.includes(auxRow)){
+                    recommendedUsers.push(auxRow);
+                }
+            });
+        }
+            if(recommendedUsers.length > 16){
+                recommendedUsers = recommendedUsers.sort(() => Math.random() - 0.5);
+                recommendedUsers = recommendedUsers.slice(0,16);
+            }
+        connection.end();
+
+        console.log("Los usuarios que estan siendo recomendados són", recommendedUsers);
+        res.status(200).json(recommendedUsers);
+    } catch (error) {
+        res.status(500).json({ error: 'Database error' });
     }
 });

@@ -97,7 +97,7 @@ const router = useRouter();
 
 async function checkFollowing(id) {
   console.log("id", id);
-  let following = await checkIfFollows(id, userId);
+  let following = await checkIfFollows(id, userId.value);
   console.log("following", following.following);
   return following.following;
 }
