@@ -32,7 +32,7 @@ import Calendar from "@/components/profile/Calendar.vue";
 import BannerProfile from "@/components/profile/BannerProfile.vue";
 import PersonalInfo from "@/components/profile/PersonalInfo.vue";
 import { useRoute } from "vue-router";
-import { getProfile } from "@/services/communicationManager";
+import { getProfile } from "@/services/communicationsScripts/mainManager";
 
 const user = reactive({});
 const profile = ref(null);

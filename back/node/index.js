@@ -429,7 +429,7 @@ app.put('/users/:id', verifyToken, async (req, res) => {
         res.status(500).json({ error: 'Database error' });
     }
 });
-});
+
 
 app.put('/users/:id', verifyToken, async (req, res) => {
     const { id } = req.params;

@@ -3,7 +3,7 @@
     <img
       :src="banner"
       alt="banner-image"
-      class="h-32 sm:h-48 w-full rounded-xl object-cover"
+      class="h-32 sm:h-48 w-full rounded-xl object-cover image"
     />
     <div
       class="flex flex-col items-center sm:flex-row sm:justify-between -translate-y-10 sm:-translate-y-16"
@@ -78,7 +78,8 @@
 <script setup>
 import { computed, onMounted, ref } from "vue";
 import { useAppStore } from "@/stores/index";
-import { followUser, checkIfFollows, chatButton } from "@/services/communicationManager";
+import { followUser, checkIfFollows} from "@/services/communicationsScripts/mainManager";
+import {chatButton} from "@/services/communicationsScripts/chatManager";
 import { useRouter } from "vue-router";
 
 const following = ref(false);
@@ -115,3 +116,8 @@ onMounted(async () => {
   following.value = await checkFollowing(user.value.value.id);
 });
 </script>
+<style scoped>
+.image{
+  z-index: 5;
+}
+</style>

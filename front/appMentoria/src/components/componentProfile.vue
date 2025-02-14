@@ -35,7 +35,7 @@
   import { ref, onMounted, computed } from 'vue';
   import { useRouter } from 'vue-router';
   import { defineProps } from 'vue';
-  import { chatButton } from '@/services/communicationManager';
+
   
   const props = defineProps({
     user: {

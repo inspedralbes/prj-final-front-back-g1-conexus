@@ -82,7 +82,7 @@ onMounted(async () => {
 <template>
 
   <div id="app" :class="isDarkMode ? 'dark' : ''">
-  <LanguageSelector />
+  <!-- <LanguageSelector /> -->
     <RouterView
       v-if="!isLoading || userAPP.name"
       class="bg-backgroundLight text-gray-900 dark:bg-backgroundDark dark:text-gray-100"

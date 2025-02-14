@@ -341,8 +341,10 @@
             </footer>
           </div>
         </div>
-          <div v-if="index%10==0 || (posts.length <= 10 && index==posts.length-1)">
-            <RecommendedProfiles style="z-index: 0;"/>
+          <div v-if="index % 10 == 0 || (posts.length <= 10 && index == posts.length - 1 && index == posts.length - 1)">
+            <div class="max-w-3xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden mt-6 dark:bg-gray-800">
+              <RecommendedProfiles/>
+            </div>
           </div>
         </div>
       </div>

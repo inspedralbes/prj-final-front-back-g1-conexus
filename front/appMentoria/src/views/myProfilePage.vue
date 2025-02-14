@@ -11,7 +11,7 @@
     <!-- User - Availibility -->
     <div class="dark:bg-gray-800 bg-white p-6 rounded-xl shadow-lg shadow-black/30 my-4">
       <Calendar :availabilityJson="user.value.availability" :id="user.value.id" />
-    </div>
+     </div>
   </div>
 
   <!-- If !users -->
@@ -34,7 +34,7 @@ import Calendar from "@/components/profile/Calendar.vue";
 import BannerProfile from "@/components/profile/BannerProfile.vue";
 import PersonalInfo from "@/components/profile/PersonalInfo.vue";
 import { useRoute } from "vue-router";
-import { getProfile } from "@/services/communicationManager";
+import { getProfile } from "@/services/communicationsScripts/mainManager";
 import RecommendedProfiles from "@/components/recommendedProfiles.vue";
 
 const user = reactive({});

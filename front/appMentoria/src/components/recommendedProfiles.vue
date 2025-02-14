@@ -17,7 +17,7 @@
 import 'vue3-carousel/carousel.css'
 import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel'
 import { onMounted, ref } from 'vue';
-import { getRecommendedUsers } from '../services/communicationManager';
+import { getRecommendedUsers } from '../services/communicationsScripts/mainManager';
 import ViewPeopleMentoria from '@/components/viewPeopleMentoria.vue';
 import { useAppStore } from '@/stores';
 import ComponentProfile from './componentProfile.vue';
@@ -52,6 +52,9 @@ onMounted(async () => {
 </script>
 
 <style>
+.container{
+  z-index: 0;
+}
 .custom-carousel {
   display: block;
 

@@ -209,7 +209,7 @@
                         $t("PersonalInfo.noLanguages") }}</p>
                     <div class="flex flex-wrap space-x-4 w-full overflow-hidden">
                         <span v-if="user.value.languages" v-for="lang in user.value.languages.split(', ')" :key="lang"
-                            class="flex-inline items-center px-3 py-1 bg-gray-200 text-gray-700 rounded-full m-2">{{
+                        class="p-2 rounded-lg text-gray-700 bg-gray-100 dark:text-gray-300 dark:bg-gray-700">{{
                             lang }}</span>
                     </div>
                 </div>
