@@ -1,13 +1,13 @@
 <template>
   <div class="flex flex-col p-6">
     <div
-      class="relative w-full max-w-3xl mx-auto bg-containersLight dark:bg-containersDark shadow-custom rounded-lg"
+      class="relative w-full max-w-3xl mx-auto bg-containersTheme shadow-custom rounded-lg"
     >
       <!-- Header con Filtros -->
       <div
-        class="p-4 border-b flex flex-col md:flex-row justify-between items-center dark:border-gray-600"
+        class="p-4 border-b flex flex-col md:flex-row justify-between items-center border-textThemeColor"
       >
-        <h2 class="text-lg font-semibold text-gray-700 dark:text-white">
+        <h2 class="text-lg font-semibold text-textThemeColor">
           {{$t("notificationList.title")}}
         </h2>
 
@@ -36,7 +36,7 @@
             {{$t("notificationList.comments")}}
           </button>
           <button
-            class="px-3 py-1 text-sm rounded-md"
+            class="px-3 py-1 text-sm rounded-md text-textThemeColor"
             :class="
               filter.includes('Petició') || filter.includes('Publicació')
                 ? 'bg-red-400 text-white dark:bg-red-700 dark:text-black'
@@ -61,7 +61,7 @@
       </div>
 
       <!-- Lista de Notificaciones -->
-      <ul class="divide-y divide-gray-200 dark:divide-gray-600">
+      <ul class="divide-y divide-bgTheme">
         <NotificationItem
           v-for="notification in filteredNotifications"
           :key="notification.id"
@@ -74,7 +74,7 @@
           <!-- Mostrar etiqueta junto al tipo de notificación -->
           <span
             v-if="notification.tag"
-            class="ml-2 inline-block text-xs font-semibold text-white py-1 px-2 rounded-full"
+            class="ml-2 inline-block text-xs font-semibold text-textThemeColor py-1 px-2 rounded-full"
             :class="{
               'bg-green-500': notification.tag === 'Petició',
               'bg-blue-500': notification.tag === 'Publicació',
@@ -89,7 +89,7 @@
       <!-- Sin Notificaciones -->
       <div
         v-if="filteredNotifications.length === 0"
-        class="p-4 text-center text-gray-500 dark:text-gray-400"
+        class="p-4 text-center text-textThemeColor"
       >
        {{ $t("notificationList.noNotifications") }}
       </div>
