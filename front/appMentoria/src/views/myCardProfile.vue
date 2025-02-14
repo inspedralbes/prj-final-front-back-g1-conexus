@@ -1,8 +1,8 @@
 <template>
   <Header class="shadow-lg shadow-black/30"></Header>
   <div class="p-4">
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <div>
+    <div class="flex flex-col lg:flex-row lg:space-x-6">
+      <div class="flex-1 mb-4 lg:mb-0">
         <!-- Contenedor de dropdowns para evitar solapamiento -->
         <div class="relative space-y-4">
           <!-- Dropdown de Diseño -->
@@ -71,7 +71,7 @@
           </div>
         </div>
       </div>
-      <div>
+      <div class="flex-2 mb-4 lg:mb-0">
         <PreviewCard
           :selectedDesignFront="selectedDesignFront"
           :selectedDesignBack="selectedDesignBack"
@@ -80,7 +80,7 @@
           :user="user"
         ></PreviewCard>
       </div>
-      <div>
+      <div class="flex-1">
         <SelectDataToShowUserCard
           :selectedDesignFront="selectedDesignFront"
           :selectedDesignBack="selectedDesignBack"
@@ -218,4 +218,4 @@ async function saveChanges() {
   align-items: center;
   width: 100%;
 } */
-</style>
+</style>s

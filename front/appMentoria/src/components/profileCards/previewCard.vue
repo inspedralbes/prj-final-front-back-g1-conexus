@@ -8,6 +8,7 @@
       <!-- Diseño Frontal -->
       <div
         v-if="frontDesign"
+        ref="frontCardRef"
         class="p-8 border rounded-lg shadow-lg h-[200px] flex items-center justify-center"
         @dragover.prevent
       >
@@ -33,6 +34,7 @@
       <!-- Diseño Trasero -->
       <div
         v-if="backDesign"
+        ref="backCardRef"
         class="p-8 border rounded-lg shadow-lg h-[200px] flex items-center justify-center"
         @dragover.prevent
       >
@@ -55,6 +57,7 @@
         </div>
       </div>
       <div
+        v-if="isDragging"
         class="mt-4 p-4 border border-red-500 rounded-lg shadow-lg bg-red-100 text-center text-red-700"
         @dragover.prevent
         @drop="onDropToDelete"
@@ -62,19 +65,50 @@
       >
         🚮 Arrossega aquí per eliminar un element
       </div>
+      <div class="flex justify-center mt-4 space-x-4">
+        <button
+          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          @click="generateImages"
+        >
+          Generar Imágenes
+        </button>
+      </div>
+      <div class="mt-6 text-center">
+        <h3 class="text-lg font-semibold">Imágenes Generadas</h3>
+        <div class="flex justify-center space-x-4 mt-4">
+          <img
+            v-if="svgFront"
+            :src="svgFront"
+            alt="Frontal Tarjeta"
+            class="border rounded-lg w-48 h-auto"
+          />
+          <img
+            v-if="svgBack"
+            :src="svgBack"
+            alt="Trasero Tarjeta"
+            class="border rounded-lg w-48 h-auto"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
 import { computed, ref } from "vue";
+import html2canvas from "html2canvas";
 import { useAppStore } from "@/stores/index";
 import { storeToRefs } from "pinia";
 
 const store = useAppStore();
-const { availableElementsCard } = storeToRefs(store);
+const { availableElementsCard, svgFront, svgBack, svgBase64 } =
+  storeToRefs(store);
 const draggedElement = ref(null);
 const touchPosition = ref({ x: 0, y: 0 });
+const isDragging = ref(false);
+
+const frontCardRef = ref(null);
+const backCardRef = ref(null);
 
 const props = defineProps({
   selectedDesignFront: Number,
@@ -102,7 +136,30 @@ const getElementContent = (side, index, defaultContent) => {
   return storedElement ? storedElement.content : defaultContent;
 };
 
+const generateImages = async () => {
+  console.log("a");
+  try {
+    if (frontCardRef.value) {
+      console.log("ey");
+      const canvasFront = await html2canvas(frontCardRef.value, {
+        backgroundColor: null, // Transparente si es necesario
+      });
+      svgFront.value = canvasFront.toDataURL("image/png");
+    }
+
+    if (backCardRef.value) {
+      const canvasBack = await html2canvas(backCardRef.value, {
+        backgroundColor: null,
+      });
+      svgBack.value = canvasBack.toDataURL("image/png");
+    }
+  } catch (error) {
+    console.error("Error al generar imágenes:", error);
+  }
+};
+
 const onDragStart = (side, index, event) => {
+  isDragging.value = true;
   const element = availableElementsCard.value.find(
     (item) => item.side === side && item.index === index
   );
@@ -113,6 +170,7 @@ const onDragStart = (side, index, event) => {
 };
 
 const onTouchStart = (side, index, event) => {
+  isDragging.value = true;
   const element = availableElementsCard.value.find(
     (item) => item.side === side && item.index === index
   );
@@ -133,6 +191,7 @@ const onTouchMove = (event) => {
 };
 
 const onTouchEnd = (event) => {
+  isDragging.value = false;
   const dropTarget = document.elementFromPoint(
     touchPosition.value.x,
     touchPosition.value.y
@@ -150,6 +209,7 @@ const onTouchEnd = (event) => {
 
 const onDropElement = (side, index, event) => {
   event.preventDefault();
+  isDragging.value = false;
   const field = JSON.parse(event.dataTransfer.getData("field"));
   console.log("field", field);
   if (draggedElement.value) {
@@ -181,6 +241,7 @@ const onDropElement = (side, index, event) => {
 };
 
 const onTouchDelete = () => {
+  isDragging.value = false;
   if (draggedElement.value) {
     store.removeElement(draggedElement.value.id);
     draggedElement.value = null;
@@ -189,9 +250,17 @@ const onTouchDelete = () => {
 
 const onDropToDelete = (event) => {
   event.preventDefault();
+  isDragging.value = false;
   if (draggedElement.value) {
     store.removeElement(draggedElement.value.id);
     draggedElement.value = null;
   }
 };
+
+async function generateCard() {
+  try {
+  } catch (error) {
+    console.error(error);
+  }
+}
 </script>

@@ -8,6 +8,9 @@ export const useAppStore = defineStore('appStore', {
     refreshToken: '',
     language: '',
     availableElementsCard: [],
+    svgFront: "", // Almacena el SVG del frente
+    svgBack: "",  // Almacena el SVG del reverso
+    svgBase64: "", // Almacena el SVG en base64
   }),
   actions: {
     setUser(user) {
@@ -82,9 +85,15 @@ export const useAppStore = defineStore('appStore', {
         this.availableElementsCard[fromIndex] = this.availableElementsCard[toIndex];
         this.availableElementsCard[toIndex] = temp;
       }
-    }
-
-
-
+    },
+    setSvgFront(svg) {
+      this.svgFront = svg;
+    },
+    setSvgBack(svg) {
+      this.svgBack = svg;
+    },
+    setSvgBase64(base64) {
+      this.svgBase64 = base64;
+    },
   }
 });

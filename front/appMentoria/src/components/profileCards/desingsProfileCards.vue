@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col space-y-2 p-2 min-h-screen">
     <div class="self-end text-right"></div>
-    <div class="grid grid-cols-1 gap-4">
+    <div class="flex flex-col space-y-6">
       <div v-for="design in designs" :key="design.id" class="space-y-6">
         <h2 class="text-xl font-semibold text-center">
           Diseño {{ design.id }}
