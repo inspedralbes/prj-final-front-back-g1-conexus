@@ -1,9 +1,9 @@
 <template>
     <div class="flex flex-col items-center min-h-screen p-4">
-      <div class="bg-backgroundLight dark:bg-backgroundDark shadow-custom rounded-lg p-6 w-full text-center">
-        <h1 class="text-2xl font-bold mb-4">{{ getLanguageName(selectedLanguage) }}</h1>
-        <div class="relative">
-          <button class="w-full flex items-center justify-between bg-buttomLight dark:bg-buttomDark p-2 rounded-lg" @click="toggleDropdown">
+      <div class="bg-bgTheme shadow-custom rounded-lg p-6 w-full text-center">
+        <h1 class="text-2xl font-bold mb-4 text-textThemeColor">{{ getLanguageName(selectedLanguage) }}</h1>
+        <div class="relative bg-containersTheme">
+          <button class="w-full flex items-center justify-between bg-buttonColorPrimary p-2 rounded-lg" @click="toggleDropdown">
             <span v-if="selectedLanguage" :class="`iconFlag fi fis fi-${selectedLanguage}`"></span>
             <span class="ml-2 font-semibold">{{ getLanguageName(selectedLanguage) }}</span>
             <svg class="w-4 h-4 ml-auto" aria-hidden="true" viewBox="0 0 10 6">
@@ -11,45 +11,45 @@
             </svg>
           </button>
           
-          <div v-if="isDropdownVisible" class="absolute mt-2 w-full bg-backgroundLight dark:bg-backgroundDark shadow-custom rounded-lg py-2 z-10">
+          <div v-if="isDropdownVisible" class="absolute mt-2 w-full bg-bgTheme shadow-custom rounded-lg py-2 z-10">
             <ul class="max-h-48 overflow-y-auto custom-scrollbar">
-              <li class="px-4 py-2 flex items-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600" @click="changeLanguage('es')">
+              <li class="px-4 py-2 flex items-center cursor-pointer hover:bg-bgColorPrimary text-textThemeColor" @click="changeLanguage('es')">
                 <span class="iconFlag fi fis fi-es"></span>
                 <span class="ml-2">Español</span>
               </li>
-              <li class="px-4 py-2 flex items-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600" @click="changeLanguage('gb')">
+              <li class="px-4 py-2 flex items-center cursor-pointer hover:bg-bgColorPrimary text-textThemeColor" @click="changeLanguage('gb')">
                 <span class="iconFlag fi fis fi-gb"></span>
                 <span class="ml-2">English</span>
               </li>
-              <li class="px-4 py-2 flex items-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600" @click="changeLanguage('es-ct')">
+              <li class="px-4 py-2 flex items-center cursor-pointer hover:bg-bgColorPrimary text-textThemeColor" @click="changeLanguage('es-ct')">
                 <span class="iconFlag fi fis fi-es-ct"></span>
                 <span class="ml-2">Català</span>
               </li>
-              <li class="px-4 py-2 flex items-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600" @click="changeLanguage('cn')">
+              <li class="px-4 py-2 flex items-center cursor-pointer hover:bg-bgColorPrimary text-textThemeColor" @click="changeLanguage('cn')">
                 <span class="iconFlag fi fis fi-cn"></span>
                 <span class="ml-2">中文</span>
               </li>
-              <li class="px-4 py-2 flex items-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600" @click="changeLanguage('es-pv')">
+              <li class="px-4 py-2 flex items-center cursor-pointer hover:bg-bgColorPrimary text-textThemeColor" @click="changeLanguage('es-pv')">
                 <span class="iconFlag fi fis fi-es-pv"></span>
                 <span class="ml-2">Euskera</span>
               </li>
-              <li class="px-4 py-2 flex items-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600" @click="changeLanguage('es-ga')">
+              <li class="px-4 py-2 flex items-center cursor-pointer hover:bg-bgColorPrimary text-textThemeColor" @click="changeLanguage('es-ga')">
                 <span class="iconFlag fi fis fi-es-ga"></span>
                 <span class="ml-2">Galego</span>
               </li>
-              <li class="px-4 py-2 flex items-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600" @click="changeLanguage('jp')">
+              <li class="px-4 py-2 flex items-center cursor-pointer hover:bg-bgColorPrimary text-textThemeColor" @click="changeLanguage('jp')">
                 <span class="iconFlag fi fis fi-jp"></span>
                 <span class="ml-2">日本語</span>
               </li>
-              <li class="px-4 py-2 flex items-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600" @click="changeLanguage('de')">
+              <li class="px-4 py-2 flex items-center cursor-pointer hover:bg-bgColorPrimary text-textThemeColor" @click="changeLanguage('de')">
                 <span class="iconFlag fi fis fi-de"></span>
                 <span class="ml-2">Deutsch</span>
               </li>
-              <li class="px-4 py-2 flex items-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600" @click="changeLanguage('pk')">
+              <li class="px-4 py-2 flex items-center cursor-pointer hover:bg-bgColorPrimary text-textThemeColor" @click="changeLanguage('pk')">
                 <span class="iconFlag fi fis fi-pk"></span>
                 <span class="ml-2">اردو</span>
               </li>
-              <li class="px-4 py-2 flex items-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600" @click="changeLanguage('pt')">
+              <li class="px-4 py-2 flex items-center cursor-pointer hover:bg-bgColorPrimary text-textThemeColor" @click="changeLanguage('pt')">
                 <span class="iconFlag fi fis fi-pt"></span>
                 <span class="ml-2">Português</span>
               </li>
@@ -141,17 +141,17 @@
   }
   
   .custom-scrollbar::-webkit-scrollbar-track {
-    background: var(--background-light);
+    background: var(--background);
   }
   
   .custom-scrollbar::-webkit-scrollbar-thumb {
-    background-color: var(--buttom-dark);
+    background-color: var(--bg-primary);
     border-radius: 10px;
     border: 2px solid var(--background-light);
   }
   
   .custom-scrollbar {
-    scrollbar-color: var(--buttom-dark) var(--background-light);
+    scrollbar-color: var(--bg-primary) var(--background-light);
     scrollbar-width: thin;
   }
   </style>

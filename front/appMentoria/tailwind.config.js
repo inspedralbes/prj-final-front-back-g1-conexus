@@ -16,6 +16,11 @@ export default {
       boxShadow: {
         custom: 'var(--box-shadow)',
     },
+    scrollbar: {
+      track: 'var(--background)',
+      thumb: 'var(--bg-primary)',
+      thumbHover: 'var(--bg-primary-hover)',
+    },
   },
   },
   plugins: [],
