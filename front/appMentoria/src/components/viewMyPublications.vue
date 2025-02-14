@@ -41,7 +41,7 @@
   
   <script setup>
 import { ref, onMounted } from "vue";
-import { getMyPublications } from "@/services/communicationManager";
+import { getMyPublicationsInCommunity } from "@/services/communicationsScripts/communityManager";
 import { useAppStore } from "@/stores/index";
 import viewMyPublicationItem from "./viewMyPublicationItem.vue";
 
@@ -58,7 +58,7 @@ const fetchPublications = async () => {
       return;
     }
 
-    const data = await getMyPublications(user_id);
+    const data = await getMyPublicationsInCommunity(user_id);
     if (!Array.isArray(data)) {
       console.error(
         "Error: La respuesta del servidor no es una lista válida.",
@@ -95,8 +95,8 @@ const handleRemove = (id) => {
 
 onMounted(fetchPublications);
 </script>
-  
-  <style scoped>
+
+<style scoped>
 .container {
   max-width: 1200px;
 }

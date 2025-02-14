@@ -1,11 +1,12 @@
-const { Server } = require("socket.io");
-const { createServer } = require("http");
-const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
-const fs = require("fs");
-const path = require("path");
-const dotenv = require("dotenv");
+const { Server } = require('socket.io');
+const { createServer } = require('http');
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const path = require('path');
+const dotenv = require('dotenv');
+// const { verifyToken } = require('../../middleware/auth.js');
+const { verifyToken } = require('/usr/src/node/middleware/auth.js');
 
 function loadEnv(envPath) {
   const result = dotenv.config({ path: envPath });
@@ -19,25 +20,23 @@ const chatEnv = loadEnv(path.resolve(__dirname, "./.env"));
 
 const PORT = chatEnv.PORT;
 const app = express();
-const server = createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-    allowedHeaders: ["Access-Control-Allow-Origin", "Content-Type"],
-  },
-});
 
 app.use(express.json());
-
-app.use(
-  cors({
-    origin: "*",
+app.use(cors({
+    origin: '*',
     credentials: true,
-    allowedHeaders: ["Access-Control-Allow-Origin", "Content-Type"],
-  })
-);
+    allowedHeaders: ["Content-Type", "Authorization"],
+}));
+
+const server = createServer(app);
+const io = new Server(server, {
+    cors: {
+        origin: '*',
+        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        credentials: true,
+        allowedHeaders: ["Access-Control-Allow-Origin", "Content-Type", "Authorization"],
+    }
+});
 
 mongoose
   .connect(chatEnv.MONGO_URI, { dbName: "Chat" })
@@ -63,11 +62,7 @@ app.get("/", (req, res) => {
   res.send("Hello World! I am a chat service");
 });
 
-app.get("/chatTest", (req, res) => {
-  res.send(JSON.stringify(chatEnv));
-});
-
-app.get("/getChats", async (req, res) => {
+app.get('/getChats', verifyToken, async (req, res) => {
   try {
     const messages = await Message.find();
     res.json(messages);
@@ -76,7 +71,7 @@ app.get("/getChats", async (req, res) => {
   }
 });
 
-app.get("/getChats/:id", async (req, res) => {
+app.get('/getChats/:id', verifyToken, async (req, res) => {
   const id = req.params.id;
   try {
     const messages = await Message.find();
@@ -91,7 +86,7 @@ app.get("/getChats/:id", async (req, res) => {
   }
 });
 
-app.get("/getChat/:id", async (req, res) => {
+app.get('/getChat/:id', verifyToken, async (req, res) => {
   const id = req.params.id;
   try {
     const messages = await Message.find({ _id: id });
@@ -101,7 +96,7 @@ app.get("/getChat/:id", async (req, res) => {
   }
 });
 
-app.post("/addChat", async (req, res) => {
+app.post("/addChat", verifyToken, async (req, res) => {
   console.log("addChat");
   const { _id, user_one_id, user_two_id, reports, interactions } = req.body;
   console.log("req.body:", req.body);
@@ -143,10 +138,9 @@ app.post("/addChat", async (req, res) => {
   }
 });
 
-app.post("/newChat", async (req, res) => {
-  console.log("newChat");
+app.post('/newChat', verifyToken, async (req, res) => {
+  console.log('newChat')
   const { user_one_id, user_two_id, interactions } = req.body;
-
   const existingChat = await Message.findOne({
     $or: [
       { user_one_id: user_one_id, user_two_id: user_two_id },
@@ -172,7 +166,7 @@ app.post("/newChat", async (req, res) => {
   }
 });
 
-app.post("/reportMessage", async (req, res) => {
+app.post("/reportMessage", verifyToken, async (req, res) => {
   const { chatId, messageId } = req.body;
 
   try {

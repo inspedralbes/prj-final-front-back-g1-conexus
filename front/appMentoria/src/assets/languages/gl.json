@@ -59,6 +59,7 @@
         "email": "Correo electrónico:",
         "phone": "Teléfono:",
         "softwareSkills": "Habilidades en software",
+        "developingSoftwareSkills": "Aprendendo habilidades...",
         "languages": "Idiomas",
         "noLanguages": "Aínda non hai...",
         "edit": "Editar"
@@ -96,7 +97,7 @@
         "chat": "Chat"
     },
     "LoginRegisterPage": {
-        "subTitle": "Correo @inspedralbes.cat",
+        "subTitle": "Correo {'@'}inspedralbes.cat",
         "accessGoogle": "Acceder con Google",
         "accessGithub": "Acceder con Github",
         "logIn": "Ou inicia sesión",
@@ -313,7 +314,7 @@
         "tags": "Etiquetas (JSON)",
         "tagsExample": "Exemplo de formato: [\"JavaScript\", \"Python\", \"React\"]",
         "availability": "Dispoñibilidade (JSON)",
-        "availabilityExample": "Exemplo de formato: {\"monday\":\"9:00-12:00\", \"friday\":\"9:00-12:00\"}"
+        "availabilityExample": "Exemplo de formato: {'{\"monday\":\"9:00-12:00\", \"friday\":\"9:00-12:00\"}'}"
     },
     "post": {
         "title": "Engadir unha publicación",
@@ -341,5 +342,14 @@
         "mentors": "Mentores",
         "request": "Peticiones",
         "share": "Compartir"
+    },
+    "navBarWeb": {
+        "main": "Principal",
+        "oferts": "Ofertas",
+        "profiles": "Profile",
+        "notifications": "Benachrichtigungen",
+        "chat": "Chat",
+        "gacha": "Gacha",
+        "games": "Xogos"
     }
 }

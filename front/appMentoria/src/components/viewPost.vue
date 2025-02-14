@@ -352,25 +352,19 @@
   
 <script setup>
 import { ref, onMounted, defineProps } from "vue";
-import {
-  getUsers,
-  getCommunityComments,
-  postCommunityComments,
-} from "../services/communicationManager";
-import socketBack from "../services/socketBack.js";
+import { getUsers } from "../services/communicationsScripts/mainManager";
+import { getCommunityComments, postCommunityComments } from "@/services/communicationsScripts/communityManager";
+import socketBack from "../services/socketsScripts/socketBack.js";
 import { useAppStore } from "@/stores/index";
 import Loading from "@/components/Loading.vue"; // Import the Loading component
 import RecommendedProfiles from "@/components/recommendedProfiles.vue";
 
 const community_url = import.meta.env.VITE_URL_BACK_COMMUNITY;
-const back_url = import.meta.env.VITE_URL_BACK;
 const loadingComment = ref({});
 const users = ref([]);
 const comments = ref([]);
 const selectedPost = ref(null);
 const loading = ref(true); // Add loading state
-const commentLoading = ref(false); // Add comment loading state
-const publicationLoading = ref(false); // Add publication loading state
 
 const commentInput = ref(null);
 const replyInputs = ref({});
@@ -485,7 +479,10 @@ function goMain() {
 
 onMounted(async () => {
   loading.value = true;
+  console.log("ViewPost mounted");
+  console.log(props.posts);
   users.value = await getUsers();
+  console.log('users :', users.value);
   comments.value = await getCommunityComments();
   socketBack.on("updateComments", async () => {
     console.log("New comment received");

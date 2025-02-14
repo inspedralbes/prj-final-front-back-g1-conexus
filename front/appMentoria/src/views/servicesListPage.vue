@@ -55,16 +55,15 @@
     />
   </div>
 </template>
-    
-  <script setup>
-import Header from "@/components/Header.vue";
-import NavBar from "@/components/NavBar.vue";
-import { ref, onMounted } from "vue";
-import {
-  getServices,
-  changeServiceViewUsers,
-} from "@/services/communicationManager";
 
+<script setup>
+import Header from "@/components/Header.vue";
+import NavBar from "@/components/navBar/NavBarApp.vue";
+import { ref, onMounted } from "vue";
+import { getServices, changeServiceViewUsers } from "@/services/communicationsScripts/microservicesManager";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 const services = ref([]);
 
 const fetchServices = async () => {
@@ -72,7 +71,7 @@ const fetchServices = async () => {
     const response = await getServices();
     services.value = response.map((service) => ({
       ...service,
-      description: service.description || $t("serviceListPage.noDescription"),
+      description: service.description || t("serviceListPage.noDescription"),
     }));
   } catch (error) {
     console.error("Error fetching services", error);
@@ -93,7 +92,7 @@ onMounted(() => {
   fetchServices();
 });
 </script>
-    
-  <style scoped>
+
+<style scoped>
 /* Estilos específicos con Tailwind ya incluidos */
 </style>

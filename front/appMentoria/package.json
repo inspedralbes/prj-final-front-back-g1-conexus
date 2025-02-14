@@ -22,11 +22,12 @@
     "vue": "^3.5.13",
     "vue-double-slider": "^0.2.1",
     "vue-hour-range-picker": "^1.0.1",
-    "vue-i18n": "^10.0.5",
+    "vue-i18n": "^11.1.0",
     "vue-router": "^4.4.5",
     "vue3-carousel": "^0.14.0"
   },
   "devDependencies": {
+    "@intlify/unplugin-vue-i18n": "^6.0.3",
     "@vitejs/plugin-vue": "^5.2.1",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.49",

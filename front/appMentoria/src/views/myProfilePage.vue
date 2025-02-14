@@ -63,5 +63,11 @@ onMounted(async () => {
       console.error("Error al parsear availibility:", error);
     }
   }
+  if(user.value.softwareSkills==null){
+    user.value.softwareSkills = [];
+  }
+  if(user.value.softSkills==null){
+    user.value.softSkills = [];
+  }
 });
 </script>

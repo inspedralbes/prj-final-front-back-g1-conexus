@@ -1,15 +1,19 @@
 <template>
   <div class="flex flex-col min-h-screen">
     <Header class="fixed top-0 left-0 right-0 z-10"></Header>
+    <NavBarWeb class="hidden lg:fixed lg:top-0 lg:left-0 lg:h-screen lg:w-60 lg:block"></NavBarWeb>
+    <NavBarApp 
+      class="fixed bottom-0 left-0 right-0 w-full lg:hidden ">
+    </NavBarApp>
     <main class="flex-grow mt-16">
       <ViewChatList></ViewChatList>
     </main>
-    <NavBar></NavBar>
   </div>
 </template>
 
 <script setup>
-import NavBar from '@/components/NavBar.vue';
+import NavBarApp from "@/components/navBar/NavBarApp.vue";
 import Header from '@/components/Header.vue';
-import ViewChatList from '@/components/ViewChatList.vue';
+import ViewChatList from '@/components/chat/ViewChatList.vue';
+import NavBarWeb from "@/components/navBar/NavBarWeb.vue";
 </script>

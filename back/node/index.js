@@ -2,20 +2,14 @@
 const fileUpload = require('express-fileupload');
 const { Server } = require('socket.io');
 const { createServer } = require('http');
-const jwt = require('jsonwebtoken');
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const mysql = require('mysql2/promise');
 const path = require('path');
 const cors = require('cors');
-const FormData = require('form-data');
-const fs = require('fs');
 require('dotenv').config();
 
-const secretKey = process.env.SECRET_KEY;
-const refreshKey = process.env.REFRESH_KEY;
-
-const refreshTokensDB = new Set();
+const { createTokens, verifyToken, refreshToken, deleteToken } = require('/usr/src/app/middleware/auth.js');
 
 const app = express();
 const port = process.env.PORT;
@@ -112,12 +106,9 @@ app.post('/loginAPI', async (req, res) => {
             }
         }
 
-        const tokenJW = jwt.sign({ id: userLogin.id, email: userLogin.email }, secretKey, { expiresIn: '1h' });
-        const refreshToken = jwt.sign({ id: userLogin.id, email: userLogin.email }, refreshKey, { expiresIn: '7d' });
+        const tokens = createTokens(userLogin);
 
-        refreshTokensDB.add(refreshToken);
-
-        res.status(200).json({ message: 'Login successful', accessToken: tokenJW, refreshToken: refreshToken, userLogin });
+        res.status(200).json({ message: 'Login successful', accessToken: tokens.accessToken, refreshToken: tokens.refreshToken, userLogin });
     } catch (error) {
         console.error('Database error:', error);
         res.status(500).json({ error: 'Database error' });
@@ -164,12 +155,9 @@ app.post('/login', async (req, res) => {
             }
         }
 
-        const aToken = jwt.sign({ id: userLogin.id, email: userLogin.email }, secretKey, { expiresIn: '1h' });
-        const rToken = jwt.sign({ id: userLogin.id, email: userLogin.email }, refreshKey, { expiresIn: '7d' })
+        const tokens = createTokens(userLogin);
 
-        refreshTokensDB.add(rToken);
-
-        res.status(200).json({ message: 'Login successful', accessToken: aToken, refreshToken: rToken, userLogin });
+        res.status(200).json({ message: 'Login successful', accessToken: tokens.accessToken, refreshToken: tokens.refreshToken, userLogin });
     } catch (error) {
         console.error('Database error:', error);
         res.status(500).json({ error: 'Database error' });
@@ -180,7 +168,7 @@ app.post('/login', async (req, res) => {
 });
 
 //Edit generalInfo
-app.put("/editGeneralInfo/:id", async (req,res)=>{
+app.put("/editGeneralInfo/:id", verifyToken, async (req,res)=>{
     const { id } = req.params;
     const { name, city } = req.body;
 
@@ -234,7 +222,7 @@ app.put("/editGeneralInfo/:id", async (req,res)=>{
 })
 
 //Edit PersonalInfo
-app.put("/editData/:id",async (req,res)=>{
+app.put("/editData/:id", verifyToken, async (req,res)=>{
     const { id } = req.params;
     const { description,phone,tags,skills,Instagram,Twitter,Linkedin,Facebook,Github,title } = req.body;
     const connection = await mysql.createConnection(dbConfig);
@@ -255,7 +243,7 @@ app.put("/editData/:id",async (req,res)=>{
 })
 
 //Edit Availability
-app.put("/updateAvailability/:id",async (req,res)=>{
+app.put("/updateAvailability/:id", verifyToken, async (req,res)=>{
     const { id } = req.params;
     let { availability } = req.body;
     const connection = await mysql.createConnection(dbConfig);
@@ -323,13 +311,12 @@ app.post('/logout', verifyToken, async (req, res) => {
     if (!accessToken) return res.status(401).send('Token is required');
     if (!refreshToken) return res.status(401).send('Token is required');
 
-    refreshTokensDB.delete(refreshToken);
-    console.log('HOLAAAAAAAAAAAAAAAA');
+    deleteToken(refreshToken);    
     res.status(200).send('User logout successfully');
 });
 
 // CRUD operations for users
-app.get('/users', async (req, res) => {
+app.get('/users', verifyToken, async (req, res) => {
     try {
         const connection = await mysql.createConnection(dbConfig);
         const [rows] = await connection.execute(`
@@ -354,12 +341,14 @@ app.get('/users', async (req, res) => {
         console.log('rows: ', rows);
         res.json(rows);
     } catch (error) {
+        console.log("tus putas muelas");
+        
         console.error('Database error:', error.message);
         res.status(500).json({ error: 'Database error:'+error.message });
     }
 });
 
-app.get('/usersAll', async (req, res) => {
+app.get('/usersAll', verifyToken, async (req, res) => {
     try {
         const connection = await mysql.createConnection(dbConfig);
         const [rows] = await connection.execute('SELECT * FROM users');
@@ -387,10 +376,27 @@ app.get('/userProfile/:id', async (req, res) => {
 
 });
 
-app.get('/users/:id', async (req, res) => {
+app.get('/userProfile/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
 
     try {
+        const connection = await mysql.createConnection(dbConfig);
+        const [rows] = await connection.execute('SELECT id,name, email, banner, profile, city, tags, availability, class_id, Linkedin, Instagram, Twitter, Github, Facebook, title, phone, softwareSkills, languages, description FROM users WHERE id = ?', [id]);
+        connection.end();
+
+        if (rows.length == 0) return res.status(404).json({ error: 'User not found' });
+
+        res.json(rows[0]);
+    } catch (error) {
+        res.status(500).json({ error: 'Database error' });
+    }
+
+});
+
+app.delete('/users/:id', async (req, res) => {
+    const { id } = req.params;
+
+   try {
         const connection = await mysql.createConnection(dbConfig);
         const [rows] = await connection.execute('SELECT * FROM users WHERE id = ?', [id]);
         connection.end();
@@ -423,8 +429,30 @@ app.put('/users/:id', verifyToken, async (req, res) => {
         res.status(500).json({ error: 'Database error' });
     }
 });
+});
 
-app.delete('/users/:id', async (req, res) => {
+app.put('/users/:id', verifyToken, async (req, res) => {
+    const { id } = req.params;
+    const { name, email, password, typesUsers_id } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    try {
+        const connection = await mysql.createConnection(dbConfig);
+        const [result] = await connection.execute(
+            'UPDATE users SET name = ?, email = ?, password = ?, typesUsers_id = ? WHERE id = ?',
+            [name, email, hashedPassword, typesUsers_id, id]
+        );
+        connection.end();
+
+        if (result.affectedRows == 0) return res.status(404).json({ error: 'User not found' });
+
+        res.json({ message: 'User updated successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
+app.delete('/users/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -439,8 +467,6 @@ app.delete('/users/:id', async (req, res) => {
         res.status(500).json({ error: 'Database error' });
     }
 });
-
-// CRUD operations for newDataUsers
 app.get('/newDataUsers', async (req, res) => {
     try {
         const connection = await mysql.createConnection(dbConfig);
@@ -565,7 +591,6 @@ app.delete('/newDataUsers/:id', async (req, res) => {
         res.status(500).json({ error: 'Database error' });
     }
 });
-
 // CRUD operations for qualifications
 app.get('/qualifications', verifyToken, async (req, res) => {
     try {
@@ -727,7 +752,7 @@ app.delete('/users/qualifications/:id', verifyToken, async (req, res) => {
 });
 
 // CRUD operations for classes
-app.get('/classes', async (req, res) => {
+app.get('/classes', verifyToken, async (req, res) => {
     try {
         const connection = await mysql.createConnection(dbConfig);
         const [rows] = await connection.execute('SELECT * FROM classes');
@@ -887,7 +912,7 @@ app.delete('/teachersClasses/:id', verifyToken, async (req, res) => {
 });
 
 // CRUD operations for reports comments
-app.get('/reports/comments', async (req, res) => {
+app.get('/reports/comments', verifyToken, async (req, res) => {
     try {
         const connection = await mysql.createConnection(dbConfig);
         const [results] = await connection.execute(`SELECT 
@@ -914,7 +939,7 @@ app.get('/reports/comments', async (req, res) => {
     }
 });
 
-app.get('/reports/comments/:id', async (req, res) => {
+app.get('/reports/comments/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -930,7 +955,7 @@ app.get('/reports/comments/:id', async (req, res) => {
     }
 });
 
-app.post('/reports/comments', async (req, res) => {
+app.post('/reports/comments', verifyToken, async (req, res) => {
     const { comment_id, user_id, report } = req.body;
 
     try {
@@ -944,7 +969,7 @@ app.post('/reports/comments', async (req, res) => {
     }
 });
 
-app.put('/reports/comments/:id', async (req, res) => {
+app.put('/reports/comments/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
 
@@ -961,7 +986,7 @@ app.put('/reports/comments/:id', async (req, res) => {
     }
 });
 
-app.delete('/reports/comments/:id', async (req, res) => {
+app.delete('/reports/comments/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -978,7 +1003,7 @@ app.delete('/reports/comments/:id', async (req, res) => {
 });
 
 // CRUD operations for reports users
-app.get('/reports/users', async (req, res) => {
+app.get('/reports/users', verifyToken, async (req, res) => {
     try {
         const connection = await mysql.createConnection(dbConfig);
         const [results] = await connection.execute(`
@@ -1006,7 +1031,7 @@ app.get('/reports/users', async (req, res) => {
     }
 });
 
-app.get('/reports/users/:id', async (req, res) => {
+app.get('/reports/users/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -1022,7 +1047,7 @@ app.get('/reports/users/:id', async (req, res) => {
     }
 });
 
-app.post('/reports/users', async (req, res) => {
+app.post('/reports/users', verifyToken, async (req, res) => {
     const { reported_user_id, user_id, report } = req.body;
 
     try {
@@ -1036,7 +1061,7 @@ app.post('/reports/users', async (req, res) => {
     }
 });
 
-app.put('/reports/users/:id', async (req, res) => {
+app.put('/reports/users/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
 
@@ -1053,7 +1078,7 @@ app.put('/reports/users/:id', async (req, res) => {
     }
 });
 
-app.delete('/reports/users/:id', async (req, res) => {
+app.delete('/reports/users/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -1070,7 +1095,7 @@ app.delete('/reports/users/:id', async (req, res) => {
 });
 
 // CRUD operations for chats reports
-app.get('/reports/chats', async (req, res) => {
+app.get('/reports/chats', verifyToken, async (req, res) => {
     try {
         const connection = await mysql.createConnection(dbConfig);
         const [results] = await connection.execute(`
@@ -1099,7 +1124,7 @@ app.get('/reports/chats', async (req, res) => {
     }
 });
 
-app.get('/reports/chats/:id', async (req, res) => {
+app.get('/reports/chats/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -1115,7 +1140,7 @@ app.get('/reports/chats/:id', async (req, res) => {
     }
 });
 
-app.post('/reports/chats', async (req, res) => {
+app.post('/reports/chats', verifyToken, async (req, res) => {
     const { message_id, user_id, content, report } = req.body;
   
     try {
@@ -1133,7 +1158,7 @@ app.post('/reports/chats', async (req, res) => {
     }
   });
 
-app.put('/reports/chats/:id', async (req, res) => {
+app.put('/reports/chats/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
 
@@ -1150,7 +1175,7 @@ app.put('/reports/chats/:id', async (req, res) => {
     }
 });
 
-app.delete('/reports/chats/:id', async (req, res) => {
+app.delete('/reports/chats/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -1167,7 +1192,7 @@ app.delete('/reports/chats/:id', async (req, res) => {
 });
 
 // Create users rewiews
-app.post('/reviews', async (req, res) => {
+app.post('/reviews', verifyToken, async (req, res) => {
     const { reviewed_user_id, reviewer_user_id, rating } = req.body;
 
     try {
@@ -1191,8 +1216,7 @@ app.post('/reviews', async (req, res) => {
     }
 });
 
-
-app.get('/pendingUsers', async (req, res) => {
+app.get('/pendingUsers', verifyToken, async (req, res) => {
     try {
 
         const connection = await mysql.createConnection(dbConfig);
@@ -1206,7 +1230,7 @@ app.get('/pendingUsers', async (req, res) => {
     }
 });
 
-app.delete('/verified/users/:id', async (req, res) => {
+app.delete('/verified/users/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
     console.log("ID recibido en backend:", id); // Depuración
     if (!id) {
@@ -1226,8 +1250,7 @@ app.delete('/verified/users/:id', async (req, res) => {
     }
 });
 
-
-app.put('/verified/users/:id', async (req, res) => {
+app.put('/verified/users/:id', verifyToken, async (req, res) => {
 
     const { id } = req.params;
 
@@ -1247,8 +1270,7 @@ app.put('/verified/users/:id', async (req, res) => {
     }
 });
 
-
-// Get type of users
+// This Routes its for statistics
 app.get('/typesUsers', async (req, res) => {
     try {
         const connection = await mysql.createConnection(dbConfig);
@@ -1283,69 +1305,20 @@ app.get('/publications', async (req, res) => {
     }
 });
 
-// Route for refresh access token
-app.post('/refresh', async (req, res) => {
-    console.log('Refresh token 0:', req.body);
-    const { refreshToken } = req.body;
-
-    console.log('Refresh token 1:', refreshToken);
-
-    if (!refreshToken) return res.status(401).send('Token is required');
-    if (!refreshTokensDB.has(refreshToken)) return res.status(403).send('Invalid token');
-
-    try {
-        console.log('Refresh token 2:', refreshToken);
-        const decoded = jwt.verify(refreshToken, refreshKey);
-        console.log('Decoded:', decoded);
-        const newAccessToken = jwt.sign({ id: decoded.id, email: decoded.email }, secretKey, { expiresIn: '1h' });
-        res.json({ accessToken: newAccessToken });
-    } catch (err) {
-        console.log('Error refresh:', err);
-        refreshTokensDB.delete(refreshToken);
-        res.status(403).json({ error: 'Invalid token or expired' });
-    }
-});
-
-// Function to verify token
-function verifyToken(req, res, next) {
-    const authHeader = req.headers['authorization'];
-    if (!authHeader) {
-        return res.status(401).json({ error: 'Token es requerido' });
-    }
-
-    const token = authHeader.split(' ')[1];
-    if (!token) {
-        return res.status(401).json({ error: 'Formato de token inválido' });
-    }
-
-    console.log('Token:', token);
-
-    jwt.verify(token, secretKey, (err, decoded) => {
-        if (err) {
-            console.log('Token verification error:', err);
-            if (err.name === 'TokenExpiredError') {
-                return res.status(401).json({ error: 'Token expirado' });
-            }
-            return res.status(403).json({ error: 'Fallo al autenticar el token' });
-        }
-        console.log('Decoded:', decoded);
-        req.user = decoded;
-        next();
-    });
-}
+app.post('/refresh', refreshToken);
 
 // Function to hash password
 async function hashPassword(password) {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
     return hashedPassword
-}
+};
 
 // Function to compare password
 async function comparePassword(password, hashedPassword) {
     const match = await bcrypt.compare(password, hashedPassword);
     return match
-}
+};
 
 // Start the server
 server.listen(port, () => {

@@ -59,6 +59,7 @@
         "email": "Email:",
         "phone": "Telefone:",
         "softwareSkills": "Habilidades em software",
+        "developingSoftwareSkills": "Aprender novas habilidades...",
         "languages": "Idiomas",
         "noLanguages": "Ainda não há...",
         "edit": "Editar"
@@ -96,7 +97,7 @@
         "chat": "Chat"
     },
     "LoginRegisterPage": {
-        "subTitle": "Email @inspedralbes.cat",
+        "subTitle": "Email {'@'}inspedralbes.cat",
         "accessGoogle": "Acessar com Google",
         "accessGithub": "Acessar com Github",
         "logIn": "Ou faça login",
@@ -312,7 +313,7 @@
         "tags": "Tags (JSON)",
         "tagsExample": "Formato de exemplo: [\"JavaScript\", \"Python\", \"React\"]",
         "availability": "Disponibilidade (JSON)",
-        "availabilityExample": "Formato de exemplo: {\"monday\":\"9:00-12:00\", \"friday\":\"9:00-12:00\"}"
+        "availabilityExample": "Formato de exemplo: {'{\"monday\":\"9:00-12:00\", \"friday\":\"9:00-12:00\"}'}"
     },
     "post": {
         "title": "Adicionar uma postagem",
@@ -340,5 +341,14 @@
         "mentors": "Mentores",
         "request": "Solicitações",
         "share": "Compartilhar"
+    },
+    "navBarWeb": {
+        "main": "Principal",
+        "oferts": "Ofertas",
+        "profiles": "Perfis",
+        "notifications": "Notificações",
+        "chat": "Chat",
+        "gacha": "Gacha",
+        "games": "Jogos"
     }
 }

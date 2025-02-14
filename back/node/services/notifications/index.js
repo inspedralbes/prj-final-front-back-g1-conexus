@@ -2,10 +2,10 @@
 const express = require('express');
 const mysql = require('mysql2/promise');
 const cors = require('cors');
-const FormData = require('form-data');
-
 const path = require('path');
 const dotenv = require('dotenv');
+// const { verifyToken } = require('../../middleware/auth.js');
+const { verifyToken } = require('/usr/src/node/middleware/auth.js');
 
 function loadEnv(envPath) {
     const result = dotenv.config({ path: envPath });
@@ -48,7 +48,7 @@ app.get('/', (req, res) => {
     res.send('Hello World! XDDDDDDDDDDDDDDD I am a notifications service');
 });
 
-app.get('/getNotifications', async (req, res) => {
+app.get('/getNotifications', verifyToken, async (req, res) => {
     console.log("user_id", req.query.user_id);
     const { user_id } = req.query;
     try {
@@ -61,7 +61,7 @@ app.get('/getNotifications', async (req, res) => {
     }
 });
 
-app.get('/notifications/:id', async (req, res) => {
+app.get('/notifications/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -77,8 +77,7 @@ app.get('/notifications/:id', async (req, res) => {
     }
 });
 
-
-app.put('/notifications/:id', async (req, res) => {
+app.put('/notifications/:id', verifyToken, async (req, res) => {
     console.log("req.params", req.params);
     const { id } = req.params;
 
@@ -103,7 +102,7 @@ app.put('/notifications/:id', async (req, res) => {
     }
 });
 
-app.put('/notificationCheckedIA/:id', async (req, res) => {
+app.put('/notificationCheckedIA/:id', verifyToken, async (req, res) => {
     const { description, request_id, publication_id } = req.body;
 
     try {
@@ -142,9 +141,7 @@ app.put('/notificationCheckedIA/:id', async (req, res) => {
     }
 });
 
-
-app.post('/notifications', async (req, res) => {
-
+app.post('/notifications', verifyToken, async (req, res) => {
     const { user_id, description, chat_id, report_id, publication_id, request_id, comment_id, revised } = req.body;
     console.log("user_id notification", user_id);
     console.log("desciption", description);

@@ -18,10 +18,11 @@
 
 <script setup>
 import { ref, onMounted, watch } from "vue";
-import ViewChat from "@/components/viewInfoChat.vue";
-import socketChat from "../services/socketChat";
+import ViewChat from "@/components/chat/viewInfoChat.vue";
+import socketChat from "@/services/socketsScripts/socketChat";
 import { useAppStore } from "@/stores/index";
-import { getUsers, fetchChats } from "../services/communicationManager";
+import { getUsers } from "@/services/communicationsScripts/mainManager";
+import { fetchChats } from "@/services/communicationsScripts/chatManager";
 
 const users = ref([]);
 const chats = ref([]);

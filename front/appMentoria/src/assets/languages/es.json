@@ -60,6 +60,7 @@
     "email": "Correo electrónico:",
     "phone": "Teléfono:",
     "softwareSkills": "Habilidades en software",
+    "developingSoftwareSkills": "Aprendiendo habilidades...",
     "languages": "Idiomas",
     "noLanguages": "Aún no hay...",
     "edit": "Editar"
@@ -96,19 +97,19 @@
         "follow": "Seguir",
         "chat": "Chat"
     },
-    "LoginRegisterPage": {
-        "subTitle": "Correo @inspedralbes.cat",
-        "accessGoogle": "Acceder con Google",
-        "accessGithub": "Acceder con Github",
-        "logIn": "O inicia sesión",
-        "mailPlaceholder": "Correo electrónico",
-        "passwordPlaceholder": "Contraseña",
-        "loginButton": "Inicia sesión",
-        "projectBy": "Proyecto realizado por el equipo de",
-        "withTheHelpOf": ", con la ayuda de",
-        "error": "Ha ocurrido un error al iniciar sesión",
-        "errorFields": "Error al iniciar sesión, comprueba los datos introducidos",
-        "invalidMail": "Error al iniciar sesión, el correo no es válido"
+    "LoginRegisterPage":{
+        "subTitle":"Correo {'@'}inspedralbes.cat",
+        "accessGoogle":"Acceder con Google",
+        "accessGithub":"Acceder con Github",
+        "logIn":"O inicia sesión",
+        "mailPlaceholder":"Correo electrónico",
+        "passwordPlaceholder":"Contraseña",
+        "loginButton":"Inicia sesión",
+        "projectBy":"Proyecto realizado por el equipo de",
+        "withTheHelpOf":", con la ayuda de",
+        "error":"Ha ocurrido un error al iniciar sesión",
+        "errorFields":"Error al iniciar sesión, comprueba los datos introducidos",
+        "invalidMail":"Error al iniciar sesión, el correo no es válido"
     },
     "AddComunityPost": {
         "create": "Crear una publicación",
@@ -313,7 +314,7 @@
         "tags": "Etiquetas (JSON)",
         "tagsExample": "Ejemplo de formato: [\"JavaScript\", \"Python\", \"React\"]",
         "availability": "Disponibilidad (JSON)",
-        "availabilityExample": "Ejemplo de formato: {\"monday\":\"9:00-12:00\", \"friday\":\"9:00-12:00\"}"
+        "availabilityExample": "Ejemplo de formato: {'{\"monday\":\"9:00-12:00\", \"friday\":\"9:00-12:00\"}'}"
     },
     "post": {
         "title": "Añade una publicación",
@@ -340,5 +341,15 @@
         "mentors": "Mentores",
         "request": "Peticiones",
         "share": "Compartir"
+    },
+
+    "navBarWeb": {
+        "main": "Principal",
+        "oferts": "Ofertas",
+        "profiles": "Perfiles",
+        "notifications": "Notificaciones",
+        "chat": "Chat",
+        "gacha": "Gacha",
+        "games": "Juegos"
     }
 }

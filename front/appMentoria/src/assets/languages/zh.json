@@ -59,6 +59,7 @@
         "email": "电子邮件:",
         "phone": "电话:",
         "softwareSkills": "软件技能",
+        "developingSoftwareSkills": "學習新技能...",
         "languages": "语言",
         "noLanguages": "还没有...",
         "edit": "编辑"
@@ -96,7 +97,7 @@
         "chat": "聊天"
     },
     "LoginRegisterPage": {
-        "subTitle": "@inspedralbes.cat 邮箱",
+        "subTitle": "{'@'}inspedralbes.cat 邮箱",
         "accessGoogle": "使用 Google 登录",
         "accessGithub": "使用 Github 登录",
         "logIn": "或登录",
@@ -311,7 +312,7 @@
         "tags": "标签 (JSON)",
         "tagsExample": "示例格式: [\"JavaScript\", \"Python\", \"React\"]",
         "availability": "可用性 (JSON)",
-        "availabilityExample": "示例格式: {\"monday\":\"9:00-12:00\", \"friday\":\"9:00-12:00\"}"
+        "availabilityExample": "示例格式: {'{\"monday\":\"9:00-12:00\", \"friday\":\"9:00-12:00\"}'}"
     },
     "post": {
         "title": "添加帖子",
@@ -339,5 +340,14 @@
         "mentors": "导师",
         "request": "请求",
         "share": "分享"
+    },
+    "navBarWeb": {
+        "main": "主页",
+        "oferts": "优惠",
+        "profiles": "简介",
+        "notifications": "通知",
+        "chat": "聊天",
+        "gacha": "扭蛋",
+        "games": "游戏"
     }
 }

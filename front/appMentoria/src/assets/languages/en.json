@@ -55,6 +55,7 @@
         "email": "Email:",
         "phone": "Phone:",
         "softwareSkills": "Software Skills",
+        "developingSoftwareSkills": "Learning skills...", 
         "languages": "Languages",
         "noLanguages": "No languages yet...",
         "edit": "Edit"
@@ -92,7 +93,7 @@
         "chat": "Chatten"
     },
     "LoginRegisterPage": {
-        "subTitle": "@inspedralbes.cat Email",
+        "subTitle": "{'@'}inspedralbes.cat Email",
         "accessGoogle": "Access with Google",
         "accessGithub": "Access with Github",
         "logIn": "Or log in",
@@ -312,7 +313,7 @@
         "tags": "Tags (JSON)",
         "tagsExample": "Example format: [\"JavaScript\", \"Python\", \"React\"]",
         "availability": "Availability (JSON)",
-        "availabilityExample": "Example format: {\"monday\":\"9:00-12:00\", \"friday\":\"9:00-12:00\"}"
+        "availabilityExample": "Example format: {'{\"monday\":\"9:00-12:00\", \"friday\":\"9:00-12:00\"}'}"
     },
     "post": {
         "title": "Add a Post",

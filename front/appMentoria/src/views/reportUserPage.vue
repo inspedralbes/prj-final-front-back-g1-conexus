@@ -12,7 +12,7 @@
 
 <script setup>
 import Header from '@/components/Header.vue';
-import NavBar from '@/components/NavBar.vue';
+import NavBar from '@/components/navBar/NavBarApp.vue';
 import viewReportUser from '@/components/viewReportUser.vue';
 import HeaderReport from '@/components/HeaderReport.vue';
 </script>

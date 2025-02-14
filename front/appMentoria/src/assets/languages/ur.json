@@ -58,6 +58,7 @@
         "email": "ای میل:",
         "phone": "فون:",
         "softwareSkills": "سافٹ ویئر کی مہارتیں",
+        "developingSoftwareSkills": "نئی مہارتیں سیکھنا...",
         "languages": "زبانیں",
         "noLanguages": "ابھی تک کوئی نہیں...",
         "edit": "ترمیم کریں"
@@ -95,7 +96,7 @@
         "chat": "چیٹ"
     },
     "LoginRegisterPage": {
-        "subTitle": "@inspedralbes.cat ای میل",
+        "subTitle": "{'@'}inspedralbes.cat ای میل",
         "accessGoogle": "گوگل کے ساتھ رسائی حاصل کریں",
         "accessGithub": "گٹ ہب کے ساتھ رسائی حاصل کریں",
         "logIn": "یا لاگ ان کریں",
@@ -310,7 +311,7 @@
         "tags": "ٹیگز (JSON)",
         "tagsExample": "مثال فارمیٹ: [\"JavaScript\", \"Python\", \"React\"]",
         "availability": "دستیابی (JSON)",
-        "availabilityExample": "مثال فارمیٹ: {\"monday\":\"9:00-12:00\", \"friday\":\"9:00-12:00\"}"
+        "availabilityExample": "مثال فارمیٹ: {'{\"monday\":\"9:00-12:00\", \"friday\":\"9:00-12:00\"}'}"
     },
     "post": {
         "title": "ایک پوسٹ شامل کریں",
@@ -338,5 +339,14 @@
         "mentors": "سرپرست",
         "request": "درخواستیں",
         "share": "شیئر کریں"
+    },
+    "navBarWeb": {
+        "main": "اہم",
+        "oferts": "پیشکشیں",
+        "profiles": "پروفائل",
+        "notifications": "اطلاعات",
+        "chat": "چیٹ",
+        "gacha": "گاچا",
+        "games": "کھیل"
     }
 }

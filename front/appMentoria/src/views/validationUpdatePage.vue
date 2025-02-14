@@ -11,7 +11,7 @@
 
 <script setup>
 import Header from '@/components/Header.vue';
-import NavBar from '@/components/NavBar.vue';
+import NavBar from '@/components/navBar/NavBarApp.vue';
 import viewValidationUpdate from '@/components/viewValidationUpdate.vue';
 import HeaderVerification from '@/components/HeaderVerification.vue';
 </script>

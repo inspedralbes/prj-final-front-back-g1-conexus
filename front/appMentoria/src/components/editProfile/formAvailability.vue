@@ -48,7 +48,7 @@
 <script setup>
 import { ref, onMounted, reactive, watch } from "vue";
 import { useAppStore } from "@/stores/index";
-import { updateAvailability } from "@/services/communicationManager";
+import { updateAvailability } from "@/services/communicationsScripts/mainManager.js";
 import { useI18n } from "vue-i18n";
 import router from "@/router";
 

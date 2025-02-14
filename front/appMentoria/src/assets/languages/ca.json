@@ -60,6 +60,7 @@
         "email": "Correu electrònic:",
         "phone": "Telèfon:",
         "softwareSkills":"Habilitats en programari",
+        "developingSoftwareSkills":"Aprenent habilitats...",
         "languages":"Idiomes",
         "noLanguages":"Encara no hi han...",
         "edit":"Editar"
@@ -97,7 +98,7 @@
         "chat": "Xat"
     },
     "LoginRegisterPage": {
-        "subTitle": "Correu @inspedralbes.cat",
+        "subTitle": "Correu {'@'}inspedralbes.cat",
         "accessGoogle": "Accedeix amb Google",
         "accessGithub": "Accedeix amb Github",
         "logIn": "O inicia sessió",
@@ -317,7 +318,7 @@
         "tags": "Etiquetes (JSON)",
         "tagsExample": "Exemple de format: [\"JavaScript\", \"Python\", \"React\"]",
         "availability": "Disponibilitat (JSON)",
-        "availabilityExample": "Exemple de format: {\"monday\":\"9:00-12:00\", \"friday\":\"9:00-12:00\"}"
+        "availabilityExample": "Exemple de format: {'{\"monday\":\"9:00-12:00\", \"friday\":\"9:00-12:00\"}'}"
     },
     "post": {
         "title": "Afegeix una publicació",
@@ -345,5 +346,14 @@
         "mentors": "Mentors",
         "request": "Peticions",
         "share": "Compartir"
+    },
+    "navBarWeb": {
+        "main": "Principal",
+        "oferts": "Ofertes",
+        "profiles": "Perfils",
+        "notifications": "Notificacions",
+        "chat": "Xat",
+        "gacha": "Gacha",
+        "games": "Jocs"
     }
 }

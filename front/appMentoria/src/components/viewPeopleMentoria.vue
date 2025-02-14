@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-xs sm:max-w-sm rounded overflow-hidden shadow-lg mx-auto my-4">
+  <div class="max-w-xs sm:max-w-sm rounded overflow-hidden shadow-custom mx-auto my-4 bg-containersLight dark:bg-containersDark">
     <div class="relative">
       <img class="w-full object-cover clippy" :src="`${imageBanner}${user.banner}`" alt="User Image">
       <div
@@ -43,7 +43,7 @@
 import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { defineProps } from 'vue';
-import { chatButton } from '@/services/communicationManager';
+import { chatButton } from '@/services/communicationsScripts/chatManager';
 
 const props = defineProps({
   user: {

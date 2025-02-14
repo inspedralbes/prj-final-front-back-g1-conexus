@@ -59,6 +59,7 @@
         "email": "メールアドレス:",
         "phone": "電話:",
         "softwareSkills": "ソフトウェアスキル",
+        "developingSoftwareSkills": "新しいスキルを学んでいます...",
         "languages": "言語",
         "noLanguages": "まだありません...",
         "edit": "編集"
@@ -96,7 +97,7 @@
         "chat": "チャット"
     },
     "LoginRegisterPage": {
-        "subTitle": "@inspedralbes.cat メール",
+        "subTitle": "{'@'}inspedralbes.cat メール",
         "accessGoogle": "Googleでログイン",
         "accessGithub": "Githubでログイン",
         "logIn": "またはログイン",
@@ -312,7 +313,7 @@
         "tags": "タグ (JSON)",
         "tagsExample": "例の形式: [\"JavaScript\", \"Python\", \"React\"]",
         "availability": "可用性 (JSON)",
-        "availabilityExample": "例の形式: {\"monday\":\"9:00-12:00\", \"friday\":\"9:00-12:00\"}"
+        "availabilityExample": "例の形式: {'{\"monday\":\"9:00-12:00\", \"friday\":\"9:00-12:00\"}'}"
     },
     "post": {
         "title": "投稿を追加",
@@ -340,5 +341,14 @@
         "mentors": "メンター",
         "request": "リクエスト",
         "share": "共有"
+    },
+    "navBarWeb": {
+        "main": "メイン",
+        "oferts": "オファー",
+        "profiles": "プロフィール",
+        "notifications": "通知",
+        "chat": "チャット",
+        "gacha": "ガチャ",
+        "games": "ゲーム"
     }
 }
