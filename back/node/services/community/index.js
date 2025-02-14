@@ -7,8 +7,8 @@ const fs = require('fs');
 const FormData = require('form-data');
 const path = require('path');
 const dotenv = require('dotenv');
-// const { verifyToken } = require('../../middleware/auth.js');
-const { verifyToken } = require('/usr/src/node/middleware/auth.js');
+// const { verifyToken, refreshToken } = require('../../middleware/auth.js');
+const { verifyToken, refreshToken } = require('/usr/src/node/middleware/auth.js');
 
 function loadEnv(envPath) {
     const result = dotenv.config({ path: envPath });
@@ -290,10 +290,11 @@ app.get('/publications', verifyToken, async (req, res) => {
 
 app.post('/publications', verifyToken, async (req, res) => {
     const { title, description, user_id, expired_at } = req.body;
-    var notificationIAnoResponse;
 
-    console.log("file", req.files);
-    console.log("body", req.body);
+    const authHeader = req.headers['authorization'];
+    const token = authHeader.split(' ')[1];
+
+    var notificationIAnoResponse;
 
     if (!title || !description || !req.files || !req.files.image) {
         return res.status(400).json({ error: 'Faltan datos obligatorios (título, descripción, imagen).' });
@@ -428,18 +429,30 @@ app.post('/publications', verifyToken, async (req, res) => {
                 console.log("notification content", notificationPayload);
 
                 try {
-                    console.log("Hola 5");
-                    const notificationResponse = await fetch(NOTIFICATION_URL + '/notifications', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(notificationPayload),
-                    });
+                    const fetchNotification = async () => {
+                        const notificationResponse = await fetch(NOTIFICATION_URL + '/notifications', {
+                            method: 'POST',
+                            headers: { 
+                                'Content-Type': 'application/json',
+                                'Authorization': 'Bearer ' + token
+                            },
+                            body: JSON.stringify(notificationPayload),
+                        });
+    
+                        console.log("response notification", notificationResponse);
 
-                    console.log("response notification", notificationResponse);
-
-                    if (!notificationResponse.ok) {
-                        console.error("Error al enviar la notificación:", await notificationResponse.text());
-                    }
+                        if (notificationResponse.status == 401) {
+                            const refreshResult = await refreshToken(token);
+                            if (refreshResult.error) {
+                                return { error: 'No se pudo renovar el token. Inicia sesión nuevamente.'};
+                            }
+                            return fetchNotification();
+                        }
+    
+                        if (!notificationResponse.ok) {
+                            console.error("Error al enviar la notificación:", await notificationResponse.text());
+                        }
+                    };
                 } catch (notificationError) {
                     console.error("Error al realizar el fetch de la notificación:", notificationError);
                 }
@@ -464,14 +477,13 @@ app.post('/publications', verifyToken, async (req, res) => {
         console.log("runing", running);
         try {
             const connection = await mysql.createConnection(dbConfig);
-            console.log("connection", connection);
-            console.log("user_id", user_id);
             console.log("Intento de insertar en la base de datos");
             const [result] = await connection.execute(
                 `INSERT INTO publications (typesPublications_id, title, description, user_id, image, text_ia, image_ia, expired_at)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
                 [1, title, description, user_id, `/upload/${imageName}`, textIA, imageIA, expired_at]
             );
+            console.log("Resultado de la inserción", result);
             const publication_id = result.insertId;
             res.status(201).json({
                 message: 'publicació creada, pendent de revisar!',
@@ -497,15 +509,28 @@ app.post('/publications', verifyToken, async (req, res) => {
         }
 
         try {
-            const notificationResponse = await fetch(NOTIFICATION_URL + '/notifications', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(notificationIAnoResponse),
-            });
-
-            if (!notificationResponse.ok) {
-                console.error("Error al enviar la notificación:", await notificationResponse.text());
-            }
+            const fetchNotification = async () => {
+                const notificationResponse = await fetch(NOTIFICATION_URL + '/notifications', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify(notificationIAnoResponse), 
+                });
+    
+                if (notificationResponse.status == 401) {
+                    const refreshResult = await refreshToken(token);
+                    if (refreshResult.error) {
+                        return { error: 'No se pudo renovar el token. Inicia sesión nuevamente.'};
+                    }
+                    return fetchNotification();
+                }
+    
+                if (!notificationResponse.ok) {
+                    console.error("Error al enviar la notificación:", await notificationResponse.text());
+                }
+            };
         } catch (notificationError) {
             console.error("Error al realizar el fetch de la notificación:", notificationError);
         }
@@ -686,18 +711,25 @@ async function checkIA() {
     const serverIAtext = IA_TEXT_URL + '/';
     const serverIAimage = IA_IMAGE_URL + '/';
 
+    console.log("dentro del try catch del check AI 1");
+
     try {
-        console.log("dentro del try catch del check AI 1");
         const responseText = await fetch(serverIAtext);
-        if (!responseText.ok) throw new Error(`Error IA: ${responseText.statusText}`);
+        if (!responseText.ok) {
+            console.log(`Error IA TEXT: ${responseText.statusText}`)
+            running = false;
+        }
 
         const responseImage = await fetch(serverIAimage);
-        if (!responseImage.ok) throw new Error(`Error IA: ${responseImage.statusText}`);
-
+        if (!responseImage.ok) {
+            console.log(`Error IA IMAGE: ${responseImage.statusText}`)
+            running = false;
+        }
     } catch (error) {
+        console.error(`Error al llamar a la IA: ${error.message}`);
         running = false;
-        console.error(`Error al analizar contenido: ${error.message}`);
     }
+
     return running;
 }
 

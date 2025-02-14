@@ -7,8 +7,8 @@ const fs = require('fs');
 const FormData = require('form-data');
 const path = require('path');
 const dotenv = require('dotenv');
-// const { verifyToken } = require('../../middleware/auth.js');
-const { verifyToken } = require('/usr/src/node/middleware/auth.js');
+// const { verifyToken, refreshToken } = require('../../middleware/auth.js');
+const { verifyToken, refreshToken } = require('/usr/src/node/middleware/auth.js');
 
 function loadEnv(envPath) {
     const result = dotenv.config({ path: envPath });
@@ -287,6 +287,9 @@ app.post('/publications', verifyToken, async (req, res) => {
     const { title, description, user_id, availability, expired_at } = req.body;
     var notificationIAnoResponse;
 
+    const authHeader = req.headers['authorization'];
+    const token = authHeader.split(' ')[1];
+
     console.log("file", req.files);
     console.log("body response front", req.body);
 
@@ -430,18 +433,30 @@ app.post('/publications', verifyToken, async (req, res) => {
                 console.log("notification content", notificationPayload);
 
                 try {
-                    console.log("Hola 5");
-                    const notificationResponse = await fetch(NOTIFICATION_URL + '/notifications', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(notificationPayload),
-                    });
+                    const fetchNotification = async () => {
+                        const notificationResponse = await fetch(NOTIFICATION_URL + '/notifications', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${token}`,
+                            },
+                            body: JSON.stringify(notificationPayload),
+                        });
 
-                    console.log("response notification", notificationResponse);
+                        console.log("response notification", notificationResponse);
 
-                    if (!notificationResponse.ok) {
-                        console.error("Error al enviar la notificación:", await notificationResponse.text());
-                    }
+                        if (notificationResponse.status == 401) {
+                            const refreshResult = await refreshToken(token);
+                            if (refreshResult.error) {
+                                return { error: 'No se pudo renovar el token. Inicia sesión nuevamente.' };
+                            }
+                            return fetchNotification();
+                        }
+
+                        if (!notificationResponse.ok) {
+                            console.error("Error al enviar la notificación:", await notificationResponse.text());
+                        }
+                    };
                 } catch (notificationError) {
                     console.error("Error al realizar el fetch de la notificación:", notificationError);
                 }
@@ -490,15 +505,28 @@ app.post('/publications', verifyToken, async (req, res) => {
         }
 
         try {
-            const notificationResponse = await fetch(NOTIFICATION_URL + '/notifications', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(notificationIAnoResponse),
-            });
+            const fetchNotification = async () => {
+                const notificationResponse = await fetch(NOTIFICATION_URL + '/notifications', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    body: JSON.stringify(notificationIAnoResponse),
+                });
 
-            if (!notificationResponse.ok) {
-                console.error("Error al enviar la notificación:", await notificationResponse.text());
-            }
+                if (notificationResponse.status == 401) {
+                    const refreshResult = await refreshToken(token);
+                    if (refreshResult.error) {
+                        return { error: 'No se pudo renovar el token. Inicia sesión nuevamente.'};
+                    }
+                    return fetchNotification();
+                }
+
+                if (!notificationResponse.ok) {
+                    console.error("Error al enviar la notificación:", await notificationResponse.text());
+                }
+            };
         } catch (notificationError) {
             console.error("Error al realizar el fetch de la notificación:", notificationError);
         }
