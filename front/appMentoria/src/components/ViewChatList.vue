@@ -38,7 +38,6 @@ const fetchChatsNow = async (userId) => {
     chats.value = result.chats;
     chatsInfo.value = result.chatsInfo;
     chats.value = chats.value.filter(chat => {
-      console.log("chat", chat.users);
       if (chat.users[0] === userId || (chat.users.includes(userId) && chat.interactions && chat.interactions.length > 0)) {
       return true;
       }
@@ -57,6 +56,7 @@ onMounted(async () => {
   socketChat.emit("joinRoom", userId);
 
   socketChat.on("receiveMessage", (newMessage) => {
+    console.log("ruben es un pedazo de maricon")
     fetchChatsNow(userId);
   });
   

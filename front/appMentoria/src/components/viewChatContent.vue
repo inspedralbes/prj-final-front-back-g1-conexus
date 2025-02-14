@@ -163,7 +163,7 @@ const leaveRoom = (roomId) => {
 const sendMessageInMongoNow = () => {
   const message = messageInput.value.value;
   if (message) {
-    sendMessageInMongo(chatData.value, currentUser, message);
+    sendMessageInMongo(chatData.value, currentUser, message, users);
     messageInput.value.value = "";
   }
 }; 

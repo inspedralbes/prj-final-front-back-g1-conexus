@@ -458,7 +458,8 @@ export const fetchMessages = async (chatId) => {
 export const sendMessageInMongo = async (
     chatData,
     currentUser,
-    messageInput
+    messageInput,
+    users
 ) => {
     const newMessage = {
         message: messageInput,
@@ -478,8 +479,10 @@ export const sendMessageInMongo = async (
             messageInput.value = "";
         }
         socketChat.emit("sendMessage", {
-            roomId: chatData._rawValue._id,
+            chatData: chatData.value,
             message: newMessage,
+            userId: currentUser.value,
+            users: users.value
         });
     } catch (error) {
         console.error("Error sending message:", error);

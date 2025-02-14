@@ -143,7 +143,7 @@ app.post("/newChat", async (req, res) => {
   const { name, users, interactions } = req.body;
 
   const existingChat = await Message.findOne({
-    users: { $all: users },
+    users: { $size: 2, $all: users },
   });
 
   if (existingChat) {
@@ -218,14 +218,46 @@ io.on('connection', (socket) => {
     console.log(`User ${socket.id} Out ${roomId}`);
   });
 
-  socket.on('sendMessage', (data) => {
-    const { roomId, message } = data;
-    io.to(roomId).emit('receiveMessage', message);
+  socket.on('sendMessage', async (data) => {
+    const { chatData, message, userId, users } = data;
+    const roomId = chatData._id;
+    try {
+      console.log(roomId);
+      if (chatData) {
+        const isFirstInteraction = chatData.interactions.length === 0;
+        const userObj = Array.isArray(users) ? users.find(u => u.id === userId) : null;
+        if (isFirstInteraction) {
+          const notificationPromises = chatData.users.slice(1).map(async (user) => {
+            const notificationPayload = {
+              user_id: user,
+              title: 'New chat opened',
+              message: `You have a new message from ${userObj.name}!`
+            };
+            console.log("notificationPayload", notificationPayload);
+
+            const response = await fetch(chatEnv.ENDPOINT_URL_PUSH_NOTIFICATIONS + '/sendNotification', {
+              method: 'POST',
+              headers: {
+          'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(notificationPayload)
+            });
+
+            console.log("response", await response.json());
+          });
+
+          await Promise.all(notificationPromises);
+          }
+        }
+      io.to(roomId).emit('receiveMessage', message);
+    } catch (err) {
+      console.error("Error saving message:", err);
+    }
     console.log(`Message from ${socket.id} in ${roomId}: ${message}`);
   });
 
   socket.on('disconnect', () => {
-    console.log('User disconected:', socket.id);
+    console.log('User disconnected:', socket.id);
   });
 });
 
