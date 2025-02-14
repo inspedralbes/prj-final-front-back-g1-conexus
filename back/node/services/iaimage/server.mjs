@@ -116,12 +116,12 @@ async function checkPublications() {
             if (typesPublications_id == 1(imageAnalysis.category === 'OFENSIVA' || (imageAnalysis.category === 'POTENCIALMENTE_SUGERENTE' && imageAnalysis.subcategory === 'OFENSIVO'))) {
                 reason = (`imagen: ${imageAnalysis.reason}`);
                 notificationDescription = `S'ha generat un report al postejar una publicació. Reasons: ${reason}`;
-                endpoint = iaimgEnd.ENDPOINT_URL_COMMUNITY + "/reports/publications";
+                endpoint = iaimgEnd.ENDPOINT_URL_COMMUNITY + "/reports/publications/IA";
                 needReport = true;
             } else if (typesPublications_id == 2(imageAnalysis.category === 'OFENSIVA' && imageAnalysis.category === 'CONTENIDO_SEXUAL' || imageAnalysis.subcategory === 'SIN_PERSONAS_OFENSIVA' || (imageAnalysis.category === 'POTENCIALMENTE_SUGERENTE' && imageAnalysis.subcategory === 'FAMOSOS_SUGERENTE' || imageAnalysis.subcategory === 'DESCONOCIDOS_POTENCIALMENTE_SUGERENTE' || imageAnalysis.subcategory === 'FAMOSOS_POTENCIALMENTE_SUGERENTE' || imageAnalysis.subcategory === 'FAMOSOS_OFENSIVO'))) {
                 reason = (`imagen: ${imageAnalysis.reason}`);
                 notificationDescription = `S'ha generat un report al postejar una publicació. Reasons: ${reason}`;
-                endpoint = iaimgEnd.ENDPOINT_URL_EMPLOYMENTEXCHANGE + "/reports/publications";
+                endpoint = iaimgEnd.ENDPOINT_URL_EMPLOYMENTEXCHANGE + "/reports/publications/IA";
                 needReport = true;
             }
 
@@ -137,6 +137,12 @@ async function checkPublications() {
                     user_id: publicationsUnverified.user_id,
                     description: notificationDescription,
                     report_id: resultReport.insertId,
+                }
+
+                if (typesPublications_id == 1) {
+                    notificationPayload.publication_id = id;
+                } else if (typesPublications_id == 2) {
+                    notificationPayload.request_id = id;
                 }
 
                 //Create REPORT
@@ -160,7 +166,7 @@ async function checkPublications() {
 
                 //Create NOTIFICATION
                 try {
-                    const notificationResponse = await fetch(iaimgEnd.ENDPOINT_URL_NOTIFICATIONS + "/notifications", {
+                    const notificationResponse = await fetch(iaimgEnd.ENDPOINT_URL_NOTIFICATIONS + '/notificationCheckedIA/' + notificationPayload.publication_id || notificationPayload.request_id, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

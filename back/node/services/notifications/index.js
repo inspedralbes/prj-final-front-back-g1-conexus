@@ -102,7 +102,7 @@ app.put('/notifications/:id', verifyToken, async (req, res) => {
     }
 });
 
-app.put('/notificationCheckedIA/:id', verifyToken, async (req, res) => {
+app.put('/notificationCheckedIA/:id', async (req, res) => {
     const { description, request_id, publication_id } = req.body;
 
     try {
@@ -142,6 +142,48 @@ app.put('/notificationCheckedIA/:id', verifyToken, async (req, res) => {
 });
 
 app.post('/notifications', verifyToken, async (req, res) => {
+    const { user_id, description, chat_id, report_id, publication_id, request_id, comment_id, revised } = req.body;
+    console.log("user_id notification", user_id);
+    console.log("desciption", description);
+    console.log("request_id", request_id);
+    if (!user_id) {
+        return res.status(400).json({ error: 'User id is required.' });
+    }
+
+    console.log("body", req.body);
+
+    try {
+        const connection = await mysql.createConnection(dbConfig);
+        const [result] = await connection.execute(
+            'INSERT INTO notifications (user_id, description, chat_id, report_id, publication_id, request_id, comment_id, revised) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            [user_id, description || null, chat_id || null, report_id || null, publication_id || null, request_id || null, comment_id || null, 0]
+        );
+
+        console.log("result", result);
+
+        res.status(201).json({
+            notificationId: result.insertId,
+            user_id,
+            description,
+            chat_id,
+            report_id,
+            publication_id,
+            request_id,
+            comment_id,
+            revised: 0
+        });
+
+        connection.end();
+        console.log('Notification created:', result);
+
+    } catch (error) {
+        console.log("error", error);
+        res.status(500).json({ error: 'Database error' });
+    }
+
+});
+
+app.post('/notifications/IA', async (req, res) => {
     const { user_id, description, chat_id, report_id, publication_id, request_id, comment_id, revised } = req.body;
     console.log("user_id notification", user_id);
     console.log("desciption", description);

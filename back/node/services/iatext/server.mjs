@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
-import fetch from "node-fetch";
+import fetch from "node-fetch"; 
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -133,9 +133,9 @@ async function checkPublications() {
                     let endpointPubli;
 
                     if (typesPublications_id === 1) {
-                        endpointPubli = iatextEnd.ENDPOINT_URL_COMMUNITY + "/reports/publications";
+                        endpointPubli = iatextEnd.ENDPOINT_URL_COMMUNITY + "/reports/publications/IA";
                     } else if (typesPublications_id === 2) {
-                        endpointPubli = iatextEnd.ENDPOINT_URL_EMPLOYMENTEXCHANGE + "/reports/publications";
+                        endpointPubli = iatextEnd.ENDPOINT_URL_EMPLOYMENTEXCHANGE + "/reports/publications/IA";
                     }
 
                     try {

@@ -650,6 +650,22 @@ app.delete('/reports/publications/:id', verifyToken, async (req, res) => {
     }
 });
 
+app.post('/reports/publications/IA', verifyToken, async (req, res) => {
+    const { publication_id, user_id, report, status } = req.body;
+
+    try {
+        const connection = await mysql.createConnection(dbConfig);
+        const [result] = await connection.execute(
+            'INSERT INTO reportsPublications (publication_id, user_id, report, status) VALUES (?, ?, ?, ?)',
+            [publication_id, user_id, report, status]
+        );
+        connection.end();
+        res.status(201).json({ message: 'ReportPublication created successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
 async function checkIA() {
 
     var running = true;
