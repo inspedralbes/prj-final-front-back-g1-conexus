@@ -1,7 +1,7 @@
 <template>
-  <div class="flex flex-col p-6 bg-white dark:bg-gray-800">
+  <div class="flex flex-col p-6">
     <div
-      class="relative w-full max-w-3xl mx-auto bg-white dark:bg-gray-700 shadow-md rounded-lg"
+      class="relative w-full max-w-3xl mx-auto bg-containersLight dark:bg-containersDark shadow-custom rounded-lg"
     >
       <!-- Header con Filtros -->
       <div
@@ -100,9 +100,9 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import NotificationItem from "./NotificationItem.vue";
-import { getNotifications } from "@/services/communicationManager";
+import { getNotifications } from "@/services/communicationsScripts/notificationsManager";
 import { useAppStore } from "@/stores/index";
-import { updateNotificationRevision } from "@/services/communicationManager";
+import { updateNotificationRevision } from "@/services/communicationsScripts/notificationsManager";
 
 // Obtener datos del usuario desde Pinia
 const appStore = useAppStore();

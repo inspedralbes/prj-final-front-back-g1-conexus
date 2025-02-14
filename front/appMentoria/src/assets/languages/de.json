@@ -58,6 +58,7 @@
         "email": "E-Mail:",
         "phone": "Telefon:",
         "softwareSkills": "Softwarekenntnisse",
+        "developingSoftwareSkills":"Fähigkeiten erlernen...",
         "languages": "Sprachen",
         "noLanguages": "Noch keine...",
         "edit": "Bearbeiten"
@@ -89,7 +90,10 @@
     },
     "profilePage": {
         "placeWhereYouLive": "Ort, an dem du lebst...",
-        "pendant": "Noch zugewiesen"
+        "pendant": "Noch zugewiesen",
+        "unfollow": "Entfolgen",
+        "follow": "Folgen",
+        "chat": "Chat"
     },
     "LoginRegisterPage": {
         "subTitle": "{'@'}inspedralbes.cat E-Mail",
@@ -339,5 +343,14 @@
         "mentors": "Mentoren",
         "request": "Anfragen",
         "share": "Teilen"
+    },
+    "navBarWeb": {
+        "main": "Hauptseite",
+        "oferts": "Angebote",
+        "profiles": "Profile",
+        "notifications": "Benachrichtigungen",
+        "chat": "Chat",
+        "gacha": "Gacha",
+        "games": "Spiele"
     }
 }

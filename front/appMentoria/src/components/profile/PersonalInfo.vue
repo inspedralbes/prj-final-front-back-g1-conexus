@@ -39,7 +39,7 @@
                             <!-- Tooltip -->
                             <div
                                 class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-gray-800 dark:bg-gray-700 text-white text-sm rounded-lg py-1 px-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg">
-                               {{ $t("PersonalInfo.githubProfile") }}
+                                {{ $t("PersonalInfo.githubProfile") }}
                             </div>
                             <!-- Tooltip Arrow -->
                             <div
@@ -182,34 +182,40 @@
                 <!-- Contact Info -->
                 <div class="space-y-1">
                     <h3 class="font-semibold">{{ $t("PersonalInfo.contact") }}</h3>
-                    <p class="text-gray-500 dark:text-gray-400">{{ $t("PersonalInfo.email") }} {{ user.value.email }}</p>
-                    <p class="text-gray-500 dark:text-gray-400">{{ $t("PersonalInfo.phone") }} {{ user.value.phone || 'No hi ha...' }}
+                    <p class="text-gray-500 dark:text-gray-400">{{ $t("PersonalInfo.email") }} {{ user.value.email }}
+                    </p>
+                    <p class="text-gray-500 dark:text-gray-400">{{ $t("PersonalInfo.phone") }} {{ user.value.phone ||
+                        'No hi ha...' }}
                     </p>
                 </div>
 
                 <!-- Software Skills -->
-                <div class="space-y-1">
+                <div class="space-y-1" v-if="user.value.softwareSkills">
                     <h3 class="font-semibold">{{ $t("PersonalInfo.softwareSkills") }}</h3>
                     <div class="flex flex-wrap space-x-4 w-full overflow-hidden">
-                        <span v-for="tag in user.value.softwareSkills.split(', ')" :key="tag"
+                        <span v-if="user.value.softwareSkills && user.value.softwareSkills.length > 0"
+                            v-for="tag in user.value.softwareSkills.split(', ')" :key="tag"
                             class="p-2 rounded-lg text-gray-700 bg-gray-100 dark:text-gray-300 dark:bg-gray-700">{{ tag
                             }}</span>
+                        <span v-else class="text-gray-500 dark:text-gray-400">{{
+                            $t("PersonalInfo.developingSoftwareSkills") }}</span>
                     </div>
                 </div>
 
                 <!-- Languages -->
-                <div class="space-y-1">
+                <div class="space-y-1" v-if="user.value.languages">
                     <h3 class="font-semibold">{{ $t("PersonalInfo.languages") }}</h3>
-                    <p class="text-gray-500 dark:text-gray-400" v-if="!user.value.languages ">{{  $t("PersonalInfo.noLanguages") }}</p>
+                    <p class="text-gray-500 dark:text-gray-400" v-if="!user.value.languages">{{
+                        $t("PersonalInfo.noLanguages") }}</p>
                     <div class="flex flex-wrap space-x-4 w-full overflow-hidden">
-                        <span v-for="lang in user.value.languages.split(', ')" :key="lang"
-                        class="flex-inline items-center px-3 py-1 bg-gray-200 text-gray-700 rounded-full m-2">{{ lang
-                            }}</span>
+                        <span v-if="user.value.languages" v-for="lang in user.value.languages.split(', ')" :key="lang"
+                        class="p-2 rounded-lg text-gray-700 bg-gray-100 dark:text-gray-300 dark:bg-gray-700">{{
+                            lang }}</span>
                     </div>
                 </div>
             </div>
         </div>
-        <button @click="$router.push('/editProfile/profile')"
+        <button @click="$router.push('/editProfile/profile')" v-if="user.value.id === userId"
             class="flex items-center space-x-1 mt-6 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg shadow">
             <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                 fill="currentColor" viewBox="0 0 24 24">
@@ -223,8 +229,10 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
-
+import { computed,ref  } from 'vue';
+import { useAppStore } from "@/stores/index";
+let appStore = useAppStore();
+const userId=ref(appStore.getUser().id)
 const props = defineProps({
     user: Object
 });

@@ -7,7 +7,6 @@ import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
 import fetch from "node-fetch";
-import fs from "fs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -237,14 +236,12 @@ app.post("/classifyTextCommunity", async (req, res) => {
             - **PROHIBIDO**: Si el comentario menciona temas sensibles o prohibidos como política, religión o contenido inapropiado.
 
         Además:
-        - No incluyas el campo "reason" si la categoría es **POSITIVO**.
         - Asegúrate de devolver estrictamente el formato solicitado.
 
         Devuelve estrictamente el resultado en el siguiente formato JSON:
         {
         "category": "TOXICO" o "OFENSIVO" o "POCO_OFENSIVO" o "POSITIVO" o "PROHIBIDO",
-        "reason": "Explica por qué se clasificó de esta manera. Que se muestre en catalan" (solo si aplica)
-        }
+        "reason": "Explica por qué se clasificó de esta manera. Que se muestre en catalan"
 
         Algunos ejemplos a tener en cuenta:
 

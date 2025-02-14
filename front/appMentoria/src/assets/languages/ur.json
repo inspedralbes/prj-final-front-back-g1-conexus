@@ -58,6 +58,7 @@
         "email": "ای میل:",
         "phone": "فون:",
         "softwareSkills": "سافٹ ویئر کی مہارتیں",
+        "developingSoftwareSkills": "نئی مہارتیں سیکھنا...",
         "languages": "زبانیں",
         "noLanguages": "ابھی تک کوئی نہیں...",
         "edit": "ترمیم کریں"
@@ -89,7 +90,10 @@
     },
     "profilePage": {
         "placeWhereYouLive": "جہاں آپ رہتے ہیں...",
-        "pendant": "تفویض کرنے کے لئے زیر التواء"
+        "pendant": "تفویض کرنے کے لئے زیر التواء",
+        "unfollow": "فالو کرنا منسوخ کریں",
+        "edit": "ترمیم کریں",
+        "chat": "چیٹ"
     },
     "LoginRegisterPage": {
         "subTitle": "{'@'}inspedralbes.cat ای میل",
@@ -335,5 +339,14 @@
         "mentors": "سرپرست",
         "request": "درخواستیں",
         "share": "شیئر کریں"
+    },
+    "navBarWeb": {
+        "main": "اہم",
+        "oferts": "پیشکشیں",
+        "profiles": "پروفائل",
+        "notifications": "اطلاعات",
+        "chat": "چیٹ",
+        "gacha": "گاچا",
+        "games": "کھیل"
     }
 }

@@ -46,6 +46,23 @@ function extractJsonContent(responseText) {
     return responseText.substring(jsonStart, jsonEnd);
 }
 
+async function generateContentWithRetry(model, prompt, imagePart, retries = 3, delay = 1000) {
+    for (let i = 0; i < retries; i++) {
+        try {
+            const result = await model.generateContent([prompt, imagePart]);
+            return result;
+        } catch (error) {
+            if (error.status === 503 && i < retries - 1) {
+                console.warn(`Service unavailable, retrying in ${delay}ms...`);
+                await new Promise(resolve => setTimeout(resolve, delay));
+                delay *= 2; // Exponential backoff
+            } else {
+                throw error;
+            }
+        }
+    }
+}
+
 let totalTokensAcumulados = 0;
 app.get("/", (req, res) => {
     res.send("Hello World! I am an image service");
@@ -151,7 +168,7 @@ app.post("/classify-imageOffers", async (req, res) => {
 
         const promptTokens = encode(prompt).length;
 
-        const result = await model.generateContent([prompt, imagePart]);
+        const result = await generateContentWithRetry(model, prompt, imagePart);
 
         const responseText = result.response.text();
 
@@ -245,7 +262,7 @@ app.post("/classify-imageCommunity", async (req, res) => {
 
         const promptTokens = encode(prompt).length;
 
-        const result = await model.generateContent([prompt, imagePart]);
+        const result = await generateContentWithRetry(model, prompt, imagePart);
 
         const responseText = result.response.text();
 

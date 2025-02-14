@@ -19,8 +19,19 @@ El flag --build asegura que las imágenes se construyan nuevamente si hay cambio
 - Navega a http://localhost:3000 para verificar el backend.
 - Navega a http://localhost:8080 para acceder a Adminer y verificar la base de datos MySQL.
 - Navega a http://localhost:8081 para acceder a Mongo Express y verificar la base de datos MongoDB.
+- Navega a http://localhost:4000 para acceder a Los microservicios-api y saber si esta corriendo.
 
-## 5. Verifica los logs:
+## 5. Enciende y verifica los microservicios:
+- Para encender los microservicios, ejecuta (desde Thunder Client o similar):
+```bash
+    curl -X GET http://localhost:4000/startAllServices/dev
+```
+- Para obtener los microservicios, ejecuta (desde Thunder Client o similar):
+```bash
+    curl -X GET http://localhost:4000/startAllServices/dev
+```
+
+## 6. Verifica los logs:
 - Puedes ver los logs de los servicios en la terminal donde ejecutaste docker-compose up.
 - Para ver los logs de un servicio específico, puedes abrir otra terminal y ejecutar:
 ```bash	
@@ -28,7 +39,7 @@ El flag --build asegura que las imágenes se construyan nuevamente si hay cambio
 ```
 Reemplaza <service_name> con el nombre del servicio, por ejemplo, tr2g2-back.
 
-## 6. Detén los servicios:
+## 7. Detén los servicios:
 - Para detener los servicios, presiona Ctrl + C en la terminal donde ejecutaste docker-compose up.
 - Para eliminar los contenedores, redes y volúmenes creados por Docker Compose, ejecuta:
 ```bash
@@ -36,7 +47,7 @@ Reemplaza <service_name> con el nombre del servicio, por ejemplo, tr2g2-back.
 ```
 Siguiendo estos pasos, deberías poder probar y verificar que la configuración de Docker Compose funciona correctamente con el proyecto.
 
-## 7. Eliminar los volúmenes (Si es necesario):
+## 8. Eliminar los volúmenes (Si es necesario):
 - Si deseas eliminar los volúmenes de Docker, puedes agregar el flag -v al comando docker-compose down:
 ```bash
     docker-compose -f docker-compose.dev.yml down -v

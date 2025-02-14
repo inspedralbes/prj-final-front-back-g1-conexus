@@ -101,9 +101,9 @@
 </template>
 
 <script>
-import { updateReportUser } from "@/services/communicationManager";
-import { deleteReportUser } from "@/services/communicationManager";
-import { fetchAllUserReports } from "@/services/communicationManager";
+import { updateReportUser } from "@/services/communicationsScripts/mainManager";
+import { deleteReportUser } from "@/services/communicationsScripts/mainManager";
+import { fetchAllUserReports } from "@/services/communicationsScripts/mainManager";
 export default {
   data() {
     return {

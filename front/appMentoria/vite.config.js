@@ -40,7 +40,10 @@ export default defineConfig({
     // hmr: {
     //   host: 'www.conexushub.cat',
     //   protocol: 'wss',
-    // }
+    // },
+    watch: {
+      usePolling: true
+    }
   },
   build: {
     chunkSizeWarningLimit: 1000,

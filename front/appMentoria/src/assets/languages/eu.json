@@ -59,6 +59,7 @@
         "email": "Posta elektronikoa:",
         "phone": "Telefonoa:",
         "softwareSkills": "Software trebetasunak",
+        "developingSoftwareSkills": "Ikasteko gaitasunak...",
         "languages": "Hizkuntzak",
         "noLanguages": "Oraindik ez dago hizkuntzarik...",
         "edit": "Editatu"
@@ -90,7 +91,10 @@
     },
     "profilePage": {
         "placeWhereYouLive": "Bizilekua...",
-        "pendant": "Esleitzeko zain"
+        "pendant": "Esleitzeko zain",
+        "unfollow": "Jarraitzeari utzi",
+        "follow": "Jarraitu",
+        "chat": "Txata"
     },
     "LoginRegisterPage": {
         "subTitle": "{'@'}inspedralbes.cat posta",
@@ -337,5 +341,14 @@
         "mentors": "Mentoreak",
         "request": "Eskaerak",
         "share": "Partekatu"
+    },
+    "navBarWeb": {
+        "main": "Nagusia",
+        "oferts": "Eskaintzak",
+        "profiles": "Profila",
+        "notifications": "Jakinarazpenak",
+        "chat": "Txata",
+        "gacha": "Gacha",
+        "games": "Jokoak"
     }
 }

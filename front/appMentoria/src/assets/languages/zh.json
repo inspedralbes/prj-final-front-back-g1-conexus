@@ -59,6 +59,7 @@
         "email": "电子邮件:",
         "phone": "电话:",
         "softwareSkills": "软件技能",
+        "developingSoftwareSkills": "學習新技能...",
         "languages": "语言",
         "noLanguages": "还没有...",
         "edit": "编辑"
@@ -90,7 +91,10 @@
     },
     "profilePage": {
         "placeWhereYouLive": "你住的地方...",
-        "pendant": "待分配"
+        "pendant": "待分配",
+        "follow": "关注",
+        "unfollow": "取消关注",
+        "chat": "聊天"
     },
     "LoginRegisterPage": {
         "subTitle": "{'@'}inspedralbes.cat 邮箱",
@@ -336,5 +340,14 @@
         "mentors": "导师",
         "request": "请求",
         "share": "分享"
+    },
+    "navBarWeb": {
+        "main": "主页",
+        "oferts": "优惠",
+        "profiles": "简介",
+        "notifications": "通知",
+        "chat": "聊天",
+        "gacha": "扭蛋",
+        "games": "游戏"
     }
 }

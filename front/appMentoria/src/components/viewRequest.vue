@@ -2,7 +2,7 @@
   <div>
     <div
       v-if="loading"
-      class="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-800"
+      class="flex items-center justify-center min-h-screen bg-backgroundLight dark:bg-backgroundDark"
     >
       <Loading />
     </div>
@@ -343,12 +343,9 @@
   
 <script setup>
 import { ref, onMounted, defineProps, computed } from "vue";
-import {
-  getUsers,
-  getEmploymentExchangeComments,
-  postEmploymentExchangeComments,
-} from "../services/communicationManager";
-import socketBack from "../services/socketBack.js";
+import { getUsers } from "@/services/communicationsScripts/mainManager";
+import { getEmploymentExchangeComments, postEmploymentExchangeComments } from "@/services/communicationsScripts/employmentExchangeManager";
+import socketBack from "../services/socketsScripts/socketBack.js";
 import { useAppStore } from "@/stores/index";
 import Loading from "@/components/Loading.vue"; // Import the Loading component
 

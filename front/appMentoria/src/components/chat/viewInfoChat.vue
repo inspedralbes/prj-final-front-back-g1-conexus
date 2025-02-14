@@ -62,7 +62,7 @@
 <script setup>
 import { ref, onMounted, watch } from "vue";
 import { defineProps } from "vue";
-import viewChatContent from "./viewChatContent.vue";
+import viewChatContent from "@/components/chat/viewChatContent.vue";
 import { useAppStore } from "@/stores/index";
 
 const props = defineProps({
