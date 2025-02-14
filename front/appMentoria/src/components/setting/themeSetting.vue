@@ -1,5 +1,5 @@
 <template>
-  <div class="p-6 rounded-lg w-96 bg-backgroundLight dark:bg-backgroundDark text-textPrimary">
+  <div class="p-6 rounded-lg w-96 bg-containersTheme text-textPrimary">
     <!-- Tamaño de la fuente -->
     <div>
       <label class="block text-lg font-semibold mb-2">Tamaño de la fuente</label>
@@ -25,8 +25,7 @@
           v-for="color in colors" 
           :key="color"
           class="px-4 py-2 rounded border text-white"
-          :class="[`w-8 h-8 rounded-full cursor-pointer`, `color-${color}`, color === selectedColor ? 'selected-color' : '']"
-          :style="{ backgroundColor: color }"
+          :class="[`w-8 h-8 rounded-full cursor-pointer bg-bgColorPrimary`, `color-${color}`, color === selectedColor ? 'selected-color' : '']"
           @click="setColor(color)">
         </div>
       </div>
@@ -37,13 +36,12 @@
       <label class="block text-lg font-semibold mb-2">Imagen de fondo</label>
       <div class="flex gap-2">
         <button 
-          v-for="(bg, index) in backgrounds" 
-          :key="index" 
-          class="px-4 py-2 rounded border text-white"
-          :class="selectedBackground === bg.name ? 'border-bgPrimary ring-2 ring-bgPrimary' : 'border-gray-400'"
-          :style="{ borderColor: selectedColor}"
-          @click="updateBackground(bg.name)">
-          {{ bg.label }}
+          v-for="theme in themes" 
+          :key="theme" 
+          class="px-4 py-2 rounded border text-textThemeColor"
+          :class="[`bg-containersTheme`, `theme-${theme}`,, theme === selectedTheme ? 'selected-color' : 'border-gray-400']"
+          @click="setThemes(theme)">
+          {{ theme }}
         </button>
       </div>
     </div>
@@ -55,28 +53,18 @@ import { ref, watchEffect } from 'vue';
 import { useAppStore } from '@/stores/index';
 
 const colors = useAppStore().getColors();
+const themes = useAppStore().getThemes();
 const selectedColor = ref(localStorage.getItem("color"));
 const fontSize = ref(localStorage.getItem("fontSize"));
-const selectedBackground = ref(localStorage.getItem("selectedBackground"));
+const selectedTheme = ref(localStorage.getItem("theme"));
 
-const backgrounds = [
-  { name: "Predeterminado", label: "Predet." },
-  { name: "Noche clara", label: "Noche clara" },
-  { name: "Oscuro", label: "Oscuro" }
-];
+const setThemes = (newTheme) => {
+  useAppStore().setSelectedTheme(newTheme);
+}
 
 // Actualizar tema y aplicarlo a <html>
 const setColor = (newColor) => {
-  selectedColor.value = newColor;
-  document.documentElement.classList.remove(...colors.map(t => `color-${t}`));
-  document.documentElement.classList.add(`color-${newColor}`);
-  localStorage.setItem("color", newColor);
-};
-
-// Actualizar fondo y guardar en localStorage
-const updateBackground = (background) => {
-  selectedBackground.value = background;
-  localStorage.setItem("selectedBackground", background);
+  useAppStore().setSelectedColor(newColor);
 };
 
 // Guardar cambios en localStorage
@@ -84,7 +72,6 @@ watchEffect(() => {
   localStorage.setItem("fontSize", fontSize.value);
 });
 </script>
-
 
 <style scoped>
 .selected-color {

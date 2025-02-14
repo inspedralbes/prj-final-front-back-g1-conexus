@@ -1,6 +1,6 @@
 <script setup>
 import { RouterView } from "vue-router";
-import { ref, onMounted, reactive, watch, computed } from "vue";
+import { ref, onMounted, reactive, watch } from "vue";
 import { useAppStore } from "@/stores/index";
 import router from "@/router";
 import { getUserForRefreshLogin } from "./services/communicationManager";
@@ -8,14 +8,10 @@ import Loading from "./components/Loading.vue";
 import NavBarWeb from "./components/navBar/NavBarWeb.vue";
 import NavBarApp from "./components/navBar/NavBarApp.vue";
 
-
 const userAPP = reactive({}); // Objeto reactivo para el usuario
 const isDarkMode = ref(false);
 const isLoading = ref(true); // Bandera para controlar el estado de carga
-// const fontSizes = ref(localStorage.getItem("fontSize") || 16);
-// const selectedColor = ref(localStorage.getItem("selectedColor") || "bg-buttomLight");
-// const selectedBackground = ref(localStorage.getItem("selectedBackground") || "Predeterminado");
-
+const appStore = useAppStore();
 
 async function validateLogin() {
   const profileURL = ref("");
@@ -51,9 +47,9 @@ async function validateLogin() {
       user.profile = profileURL.value;
       user.banner = bannerURL.value;
 
-      useAppStore().setUser(user);
-      useAppStore().setAccessToken(localStorage.getItem("accessToken"));
-      useAppStore().setRefreshToken(localStorage.getItem("refreshToken"));
+      appStore.setUser(user);
+      appStore.setAccessToken(localStorage.getItem("accessToken"));
+      appStore.setRefreshToken(localStorage.getItem("refreshToken"));
 
       return user;
     }
@@ -62,23 +58,25 @@ async function validateLogin() {
     return null; // Retorna null si ocurre un error inesperado
   }
 }
-onMounted(async () => {
 
-  const darkModePreference = localStorage.getItem("darkMode");
-  if (darkModePreference == "enabled") {
-    isDarkMode.value = true;
-    document.documentElement.classList.add("dark");
-  } else {
-    isDarkMode.value = false;
-    document.documentElement.classList.remove("dark");
+onMounted(async () => {
+  const colorPreference = localStorage.getItem("color");
+  if (colorPreference != null) {
+    const colors = appStore.getColors();
+    const appElement = document.getElementById("app");
+    appElement.classList.remove(...colors.map((t) => `color-${t}`));
+    appElement.classList.add(`color-${colorPreference}`);
+    console.log("Color preference:", colorPreference);
   }
 
-  // const colorPreference = localStorage.getItem("color");
-  // if (colorPreference != null) {
-  //   const colors = useAppStore().getColors();
-  //   document.documentElement.classList.remove(...colors.map((t) => `color-${t}`));
-  //   document.documentElement.classList.add(`color-${themePreference}`);
-  // }
+  const themePreference = localStorage.getItem("theme");
+  if (themePreference != null) {
+    const themes = appStore.getThemes();
+    const appElement = document.getElementById("app");
+    appElement.classList.remove(...themes.map((t) => `theme-${t}`));
+    appElement.classList.add(`theme-${themePreference}`);
+    console.log("Theme preference:", themePreference);
+  }
 
   const user = await validateLogin();
   if (user) {
@@ -89,16 +87,29 @@ onMounted(async () => {
 
   isLoading.value = false;
 });
+
+// Watch for changes in selectedColor and selectedTheme
+watch(() => appStore.selectedColor, (newColor) => {
+  const colors = appStore.getColors();
+  const appElement = document.getElementById("app");
+  appElement.classList.remove(...colors.map((t) => `color-${t}`));
+  appElement.classList.add(`color-${newColor}`);
+});
+
+watch(() => appStore.selectedTheme, (newTheme) => {
+  const themes = appStore.getThemes();
+  const appElement = document.getElementById("app");
+  appElement.classList.remove(...themes.map((t) => `theme-${t}`));
+  appElement.classList.add(`theme-${newTheme}`);
+});
 </script>
 
 <template>
-  <div id="app" :class="[isDarkMode ? 'dark' : '']">
+  <div id="app" class="bg-bgTheme text-textThemeColor">
     <NavBarWeb class="hidden lg:fixed lg:top-0 lg:left-0 lg:h-screen lg:w-60 lg:block"></NavBarWeb>
-    <NavBarApp class="fixed bottom-0 left-0 right-0 w-full lg:hidden ">
-    </NavBarApp>
-    <RouterView v-if="!isLoading || userAPP.name"
-      class="bg-backgroundLight text-gray-900 dark:bg-backgroundDark dark:text-gray-100" />
-    <div v-else class="flex items-center justify-center min-h-screen bg-backgroundLight dark:bg-backgroundDark">
+    <NavBarApp class="fixed bottom-0 left-0 right-0 w-full lg:hidden "></NavBarApp>
+    <RouterView v-if="!isLoading || userAPP.name" />
+    <div v-else class="flex items-center justify-center min-h-screen bg-bgTheme text-textThemeColor">
       <Loading />
     </div>
   </div>

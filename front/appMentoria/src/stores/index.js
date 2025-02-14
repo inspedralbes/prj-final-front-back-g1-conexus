@@ -1,62 +1,69 @@
-import { defineStore } from 'pinia'
+import { defineStore } from 'pinia';
 
-export const useAppStore = defineStore( 'appStore', {  
+export const useAppStore = defineStore('appStore', {
   state: () => ({
     user: {},
     accessToken: '',
     refreshToken: '',
     language: '',
-    themes: [
-      'light',
-      'dark'
-    ],
-    colors: [
-      'purple',
-      'pink',
-      'yellow',
-      'green',
-      'blue'
-    ],
+    themes: ['light', 'dark'],
+    colors: ['purple', 'pink', 'yellow', 'green', 'blue'],
+    selectedColor: localStorage.getItem('color') || 'purple',
+    selectedTheme: localStorage.getItem('theme') || 'light',
   }),
   actions: {
     setUser(user) {
-      this.user = user
-    },
-    getUser() {
-      return this.user
+      this.user = user;
     },
     setAccessToken(accessToken) {
-      this.accessToken = accessToken
-    },
-    getAccessToken() {
-      return this.accessToken
+      this.accessToken = accessToken;
     },
     setRefreshToken(refreshToken) {
-      this.refreshToken = refreshToken
-    },
-    getRefreshToken() {
-      return this.refreshToken
-    },
-    getTypeUser() {
-      return this.user.typesUsers_id
+      this.refreshToken = refreshToken;
     },
     setLanguage(language) {
-      this.language = language
-    },
-    getLanguage() {
-      return this.language
+      this.language = language;
     },
     setThemes(themes) {
-      this.themes = themes
-    },
-    getThemes() {
-      return this.themes
+      this.themes = themes;
     },
     setColors(colors) {
-      this.colors = colors
+      this.colors = colors;
+    },
+    setSelectedColor(color) {
+      this.selectedColor = color;
+      localStorage.setItem('color', color);
+    },
+    setSelectedTheme(theme) {
+      this.selectedTheme = theme;
+      localStorage.setItem('theme', theme);
+    },
+    getUser() {
+      return this.user;
+    },
+    getTypeUser() {
+      return this.user.type;
+    },
+    getAccessToken() {
+      return this.accessToken;
+    },
+    getRefreshToken() {
+      return this.refreshToken;
+    },
+    getLanguage() {
+      return this.language;
+    },
+    getThemes() {
+      return this.themes;
     },
     getColors() {
-      return this.colors
-    }
-  }
+      return this.colors;
+    },
+    getSelectedColor() {
+      return this.selectedColor;
+    },
+    getSelectedTheme() {
+      return this.selectedTheme;
+    },
+  },
 });

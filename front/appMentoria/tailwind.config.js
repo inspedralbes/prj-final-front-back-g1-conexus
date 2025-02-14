@@ -4,16 +4,14 @@ export default {
   theme: {
     extend: {
       colors: {
-        buttonLight: 'var(--button-light)',
-        buttonDark: 'var(--button-dark)',
-        containersLight: 'var(--containers-light)',
-        containersDark: 'var(--containers-dark)',
-        backgroundLight: 'var(--background-light)',
-        backgroundDark: 'var(--background-dark)',
-        bgPrimary: 'var(--bg-primary)',
-        textPrimary: 'var(--text-primary)',
-        buttonPrimary: 'var(--button-primary)',
-        buttonHoverPrimary: 'var(--button-hover-primary)',
+        buttonTheme: 'var(--button)',
+        containersTheme: 'var(--containers)',
+        bgTheme: 'var(--background)',
+        textThemeColor: 'var(--text-color)',
+        bgColorPrimary: 'var(--bg-primary)',
+        textColorPrimary: 'var(--text-primary)',
+        buttonColorPrimary: 'var(--button-primary)',
+        buttonColorHoverPrimary: 'var(--button-hover-primary)',
       },
       boxShadow: {
         custom: 'var(--box-shadow)',
