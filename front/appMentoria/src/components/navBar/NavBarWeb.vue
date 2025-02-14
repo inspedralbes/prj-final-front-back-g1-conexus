@@ -39,8 +39,8 @@
                 </a>
 
                 <a href="#" @click="selectItem('requests', () => $router.push('/requests'))"
-                  :class="{ 'bg-bgColorPrimary text-textThemeColor': selectedItem === 'requests', ' dark:text-gray-900 text-gray-900 dark:hover:text-white hover:text-white hover:bg-buttonColorHoverPrimary': selectedItem !== 'requests' }"
-                  class="flex items-center px-4 py-2.5 text-sm font-medium transition-all duration-200 dark:text-white text-gray-900 dark:hover:text-white hover:text-white rounded-lg  hover:bg-buttonColorPrimary group">
+                  :class="{ 'bg-bgColorPrimary text-textThemeColor': selectedItem === 'requests', 'text-textThemeColor dark:hover:text-white hover:text-white hover:bg-buttonColorHoverPrimary': selectedItem !== 'requests' }"
+                  class="flex items-center px-4 py-2.5 text-sm font-medium transition-all duration-200 text-textThemeColor dark:hover:text-white hover:text-white rounded-lg  hover:bg-buttonColorPrimary group">
                   <svg class="w-5 h-5 mr-4 text-textThemeColor group-hover:text-textThemeColor" aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -50,9 +50,9 @@
                 </a>
 
                 <a href="#" @click="selectItem('perfiles', () => $router.push('/profiles'))"
-                  :class="{ 'bg-bgColorPrimary text-textThemeColor': selectedItem === 'perfiles', ' dark:text-gray-900 text-textThemeColor dark:hover:text-white hover:text-white dark:hover:bg-buttomDark hover:bg-buttomLight': selectedItem !== 'perfiles' }"
-                  class="flex items-center px-4 py-2.5 text-sm font-medium transition-all duration-200 dark:text-white text-textThemeColor dark:hover:text-white hover:text-white rounded-lg dark:hover:bg-buttomDark hover:bg-buttomLight group">
-                  <svg class="flex-shrink-0 w-5 h-5 mr-4 dark:text-white group-hover:text-white" aria-hidden="true"
+                  :class="{ 'bg-bgColorPrimary text-textThemeColor': selectedItem === 'perfiles', 'text-textThemeColor  hover:text-white hover:bg-buttonColorHoverPrimary': selectedItem !== 'perfiles' }"
+                  class="flex items-center px-4 py-2.5 text-sm font-medium transition-all duration-200 text-textThemeColor hover:text-white rounded-lg hover:bg-buttonColorPrimary group">
+                  <svg class="flex-shrink-0 w-5 h-5 mr-4 group-hover:text-textThemeColor" aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
                     stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -62,9 +62,9 @@
                 </a>
 
                 <a href="#" @click="selectItem('notificacines', () => $router.push('/notifications'))"
-                  :class="{ 'bg-buttomLight dark:bg-buttomDark dark:text-white text-white': selectedItem === 'notificaciones', ' dark:text-gray-900 text-gray-900 dark:hover:text-white hover:text-white dark:hover:bg-buttomDark hover:bg-buttomLight': selectedItem !== 'notificaciones' }"
-                  class="flex items-center px-4 py-2.5 text-sm font-medium transition-all duration-200 dark:text-white text-gray-900 dark:hover:text-white hover:text-white rounded-lg dark:hover:bg-buttomDark hover:bg-buttomLight group">
-                  <svg class="w-5 h-5 mr-4 text-gray-800 dark:text-white group-hover:text-white" aria-hidden="true"
+                  :class="{ 'bg-bgColorPrimary text-textThemeColor': selectedItem === 'notificaciones', ' text-textThemeColor hover:text-white hover:bg-buttonColorHoverPrimary': selectedItem !== 'notificaciones' }"
+                  class="flex items-center px-4 py-2.5 text-sm font-medium transition-all duration-200 text-textThemeColor hover:text-white rounded-lg hover:bg-buttonColorPrimary group">
+                  <svg class="flex-shrink-0 w-5 h-5 mr-4 group-hover:text-textThemeColor" aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
                     stroke-width="2">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -84,9 +84,9 @@
 
               <nav class="flex-1 space-y-2">
                 <a href="#" @click="selectItem('chat', () => router.push('/chatList'))"
-                  :class="{ 'bg-buttomLight dark:bg-buttomDark dark:text-white text-white': selectedItem === 'chat', ' dark:text-gray-900 text-gray-900 dark:hover:text-white hover:text-white dark:hover:bg-buttomDark hover:bg-buttomLight': selectedItem !== 'chat' }"
-                  class="flex items-center px-4 py-2.5 text-sm font-medium transition-all duration-200 dark:text-white text-gray-900 dark:hover:text-white hover:text-white rounded-lg dark:hover:bg-buttomDark hover:bg-buttomLight group">
-                  <svg class="w-5 h-5  mr-4 text-gray-800 dark:text-white group-hover:text-white" aria-hidden="true"
+                  :class="{ 'bg-bgColorPrimary text-textThemeColor': selectedItem === 'chat', ' text-textThemeColor hover:text-white hover:bg-buttonColorHoverPrimary': selectedItem !== 'chat' }"
+                  class="flex items-center px-4 py-2.5 text-sm font-medium transition-all duration-200 text-textThemeColor hover:text-white rounded-lg hover:bg-buttonColorPrimary group">
+                  <svg class="flex-shrink-0 w-5 h-5 mr-4 group-hover:text-textThemeColor" aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M9 17h6l3 3v-3h2V9h-2M4 4h11v8H9l-3 3v-3H4V4Z" />
@@ -96,9 +96,9 @@
                 </a>
 
                 <a href="#" @click="selectItem('gacha')"
-                  :class="{ 'bg-buttomLight dark:bg-buttomDark dark:text-white text-white' : selectedItem === 'gacha', ' dark:text-gray-900 text-gray-900 dark:hover:text-white hover:text-white dark:hover:bg-buttomDark hover:bg-buttomLight': selectedItem !== 'gacha' }"
-                  class="flex items-center px-4 py-2.5 text-sm font-medium transition-all duration-200 dark:text-white text-gray-900 dark:hover:text-white hover:text-white rounded-lg dark:hover:bg-buttomDark hover:bg-buttomLight group">
-                  <svg class="w-5 h-5 mr-4 text-gray-800 dark:text-white group-hover:text-white" aria-hidden="true"
+                  :class="{ 'bg-bgColorPrimary text-textThemeColor' : selectedItem === 'gacha', ' text-textThemeColor hover:text-white hover:bg-buttonColorHoverPrimary': selectedItem !== 'gacha' }"
+                  class="flex items-center px-4 py-2.5 text-sm font-medium transition-all duration-200 text-textThemeColor hover:text-white rounded-lg hover:bg-buttonColorPrimary group">
+                  <svg class="flex-shrink-0 w-5 h-5 mr-4 group-hover:text-textThemeColor" aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M18.5 12A2.5 2.5 0 0 1 21 9.5V7a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v2.5a2.5 2.5 0 0 1 0 5V17a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-2.5a2.5 2.5 0 0 1-2.5-2.5Z" />
@@ -108,9 +108,9 @@
                 </a>
 
                 <a href="#" @click="selectItem('Game')"
-                  :class="{ 'bg-buttomLight dark:bg-buttomDark dark:text-white text-white': selectedItem === 'game', ' dark:text-gray-900 text-gray-900 dark:hover:text-white hover:text-white dark:hover:bg-buttomDark hover:bg-buttomLight': selectedItem !== 'game' }"
-                  class="flex items-center px-4 py-2.5 text-sm font-medium transition-all duration-200 dark:text-white text-gray-900 dark:hover:text-white hover:text-white rounded-lg dark:hover:bg-buttomDark hover:bg-buttomLight group">
-                  <svg class="w-5 h-5 mr-6 text-gray-800 dark:text-white group-hover:text-white" aria-hidden="true"
+                  :class="{ 'bg-bgColorPrimary text-textThemeColor': selectedItem === 'game', ' text-textThemeColor hover:text-white hover:bg-buttonColorHoverPrimary': selectedItem !== 'game' }"
+                  class="flex items-center px-4 py-2.5 text-sm font-medium transition-all duration-200 text-textThemeColor hover:text-white rounded-lg hover:bg-buttonColorPrimary group">
+                  <svg class="flex-shrink-0 w-5 h-5 mr-4 group-hover:text-textThemeColor" aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="m10.051 8.102-3.778.322-1.994 1.994a.94.94 0 0 0 .533 1.6l2.698.316m8.39 1.617-.322 3.78-1.994 1.994a.94.94 0 0 1-1.595-.533l-.4-2.652m8.166-11.174a1.366 1.366 0 0 0-1.12-1.12c-1.616-.279-4.906-.623-6.38.853-1.671 1.672-5.211 8.015-6.31 10.023a.932.932 0 0 0 .162 1.111l.828.835.833.832a.932.932 0 0 0 1.111.163c2.008-1.102 8.35-4.642 10.021-6.312 1.475-1.478 1.133-4.77.855-6.385Zm-2.961 3.722a1.88 1.88 0 1 1-3.76 0 1.88 1.88 0 0 1 3.76 0Z" />
@@ -129,8 +129,8 @@
 
               <div>
                   <button @click="handleClick"
-                    class="flex items-center px-4 text-sm font-medium transition-all duration-200 text-gray-900 hover:text-white rounded-lg group">
-                    <svg class="w-7 h-7 mr-6 text-gray-800 dark:text-white" aria-hidden="true"
+                    class="flex items-center px-4 text-sm font-medium transition-all duration-200 text-textThemeColor rounded-lg group">
+                    <svg class="w-7 h-7 mr-6 text-textThemeColor" aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" stroke-width="2">
                       <path fill-rule="evenodd"
                         d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4.243a1 1 0 1 0-2 0V11H7.757a1 1 0 1 0 0 2H11v3.243a1 1 0 1 0 2 0V13h3.243a1 1 0 1 0 0-2H13V7.757Z"

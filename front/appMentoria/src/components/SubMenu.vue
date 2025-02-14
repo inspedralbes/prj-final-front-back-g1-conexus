@@ -4,7 +4,7 @@
       <div class="relative inline-block text-left dropdown">
         <span class="rounded-md shadow-sm">
           <button
-            class="flex items-center justify-between w-full px-4 py-3 text-sm font-medium dark:text-white text-gray-900 transition-all duration-200 rounded-lg dark:hover:bg-buttomDark hover:bg-gray-100 shadow-custom dark:shadow-customDark">
+            class="flex items-center justify-between w-full px-4 py-3 text-sm font-medium text-textThemeColor transition-all duration-200 rounded-lg hover:bg-buttonColorPrimary shadow-custom dark:shadow-customDark">
             <img class="flex-shrink-0 object-cover w-9 h-9 mr-3 rounded-full" :src="`${profile}`" alt="User Photo" />
             {{ name }}
             <svg class="w-5 h-5 ml-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
