@@ -477,11 +477,13 @@ app.post('/publications', verifyToken, async (req, res) => {
         console.log("runing", running);
         try {
             const connection = await mysql.createConnection(dbConfig);
+            console.log("Intento de conexión a la base de datos", connection);
             console.log("Intento de insertar en la base de datos");
+            console.log(" datos", title, description, user_id, `/upload/${imageName}`, textIA, imageIA, expired_at || null);
             const [result] = await connection.execute(
                 `INSERT INTO publications (typesPublications_id, title, description, user_id, image, text_ia, image_ia, expired_at)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-                [1, title, description, user_id, `/upload/${imageName}`, textIA, imageIA, expired_at]
+                [1, title, description, user_id, `/upload/${imageName}`, textIA, imageIA, expired_at || null]
             );
             console.log("Resultado de la inserción", result);
             const publication_id = result.insertId;
@@ -491,6 +493,13 @@ app.post('/publications', verifyToken, async (req, res) => {
                 text_ia: 0,
                 image_ia: 0,
             });
+            connection.end();
+
+        } catch (error) {
+            res.status(500).json({ error: 'Error al analizar contenido', details: error.message });
+        }
+
+        try {
 
             const notificationReason = 'Tu publicació sera revisada més tard! Gràcies per la teva paciència.';
 
@@ -501,14 +510,6 @@ app.post('/publications', verifyToken, async (req, res) => {
                 revised: 0
             };
 
-            console.log("notification if no response ia", notificationIAnoResponse);
-            connection.end();
-
-        } catch (error) {
-            res.status(500).json({ error: 'Error al analizar contenido', details: error.message });
-        }
-
-        try {
             const fetchNotification = async () => {
                 const notificationResponse = await fetch(NOTIFICATION_URL + '/notifications', {
                     method: 'POST',

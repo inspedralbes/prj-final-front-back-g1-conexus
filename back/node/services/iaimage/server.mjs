@@ -70,7 +70,7 @@ async function checkPublications() {
         const [rows] = await connection.execute("SELECT * FROM publications WHERE image_ia = 0");
         console.log(`Found ${rows.length} unverified publications.`);
 
-        for (publicationsUnverified of rows) {
+        for (const publicationsUnverified of rows) {
             const { id, typesPublications_id, image } = publicationsUnverified;
 
             const formData = new FormData();
