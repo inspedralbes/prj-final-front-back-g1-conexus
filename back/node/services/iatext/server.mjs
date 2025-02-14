@@ -24,20 +24,18 @@ const iatextEnd = loadEnv(path.resolve(__dirname, './.env'));
 const app = express();
 const port = iatextEnd.PORT;
 
-app.use(express.json());
+// CORS configuration
 app.use(cors({
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
 }));
-
 app.use((req, res, next) => {
     res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
     next();
 });
-// app.use(fileUpload());
+
 // Asegúrate de que el middleware para parsear JSON esté configurado
 app.use(express.json());
-
 
 const genAI = new GoogleGenerativeAI(iatextEnd.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
@@ -56,11 +54,6 @@ const dbConfig = {
     password: iatextEnd.MYSQL_PASS,
     database: iatextEnd.MYSQL_DB
 };
-
-app.get("/", (req, res) => {
-    res.send("Hello World! I am a comment service");
-
-});
 
 checkPublications();
 async function checkPublications() {
@@ -214,6 +207,9 @@ async function checkPublications() {
 
 }
 
+app.get("/", (req, res) => {
+    res.send("Hello World! I am a comment service");
+});
 
 app.post("/classifyTextCommunity", async (req, res) => {
     try {

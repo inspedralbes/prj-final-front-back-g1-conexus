@@ -20,25 +20,23 @@ function loadEnv(envPath) {
 
 const iaimgEnd = loadEnv(path.resolve(__dirname, './.env'));
 
-
 const app = express();
 const port = iaimgEnd.PORT;
 
+// CORS configuration
 app.use(cors({
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
 }));
-
 app.use((req, res, next) => {
     res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
     next();
 });
+// File upload configuration
 app.use(fileUpload());
-
 
 const genAI = new GoogleGenerativeAI(iaimgEnd.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
 
 function extractJsonContent(responseText) {
     const jsonStart = responseText.indexOf("{");
@@ -46,13 +44,150 @@ function extractJsonContent(responseText) {
     return responseText.substring(jsonStart, jsonEnd);
 }
 
+let totalTokensAcumulados = 0;
+
+const dbConfig = {
+    host: iaimgEnd.MYSQL_HOST,
+    user: iaimgEnd.MYSQL_USER,
+    password: iaimgEnd.MYSQL_PASS,
+    database: iaimgEnd.MYSQL_DB
+};
+
+checkPublications();
+async function checkPublications() {
+    let imageAnalysis;
+    let verifiedPublicationImage = 0;
+    let endpoint;
+    let needReport = false;
+    let reason;
+    let notificationDescription;
+
+    try {
+        const connection = await mysql.createConnection(dbConfig);
+        const [rows] = await connection.execute("SELECT * FROM publications WHERE image_ia = 0");
+        console.log(`Found ${rows.length} unverified publications.`);
+
+        for (publicationsUnverified of rows) {
+            const { id, typesPublications_id, image } = publicationsUnverified;
+
+            const formData = new FormData();
+            formData.append('image', fs.createReadStream(image));
+
+            if (typesPublications_id == 1) {
+                endpoint = iaimgEnd.ENDPOINT_URL_IAIMAGE + "/classify-community";
+            } else if (typesPublications_id == 2) {
+                endpoint = iaimgEnd.ENDPOINT_URL_IAIMAGE + "/classify-offers";
+            } else {
+                console.error("Invalid type of publication.");
+                continue;
+            }
+
+            console.log(`endpoint: ${endpoint}`);
+
+            try {
+                const fetchPromise = await import('node-fetch');
+                const fetch = fetchPromise.default;
+                const response = await fetch(endpoint, {
+                    method: "POST",
+                    body: formData,
+                    headers: formData.getHeaders(),
+                });
+
+                if (!response.ok) {
+                    console.error(`Error processing image: ${response.statusText}`);
+                }
+                imageAnalysis = await response.json();
+                verifiedPublicationImage = 1;
+            } catch (error) {
+                console.error(`Error processing image: ${error}`);
+                verifiedPublicationImage = 0;
+            }
+
+            if (verifiedPublicationImage == 1) {
+                const [updateResult] = await connection.execute("UPDATE publications SET image_ia = 1 WHERE id = ?", [id]);
+                if (updateResult.affectedRows != 1) {
+                    console.error(`Failed to update publication ID: ${id}`);
+                }
+            }
+
+            if (typesPublications_id == 1(imageAnalysis.category === 'OFENSIVA' || (imageAnalysis.category === 'POTENCIALMENTE_SUGERENTE' && imageAnalysis.subcategory === 'OFENSIVO'))) {
+                reason = (`imagen: ${imageAnalysis.reason}`);
+                notificationDescription = `S'ha generat un report al postejar una publicació. Reasons: ${reason}`;
+                endpoint = iaimgEnd.ENDPOINT_URL_COMMUNITY + "/reports/publications";
+                needReport = true;
+            } else if (typesPublications_id == 2(imageAnalysis.category === 'OFENSIVA' && imageAnalysis.category === 'CONTENIDO_SEXUAL' || imageAnalysis.subcategory === 'SIN_PERSONAS_OFENSIVA' || (imageAnalysis.category === 'POTENCIALMENTE_SUGERENTE' && imageAnalysis.subcategory === 'FAMOSOS_SUGERENTE' || imageAnalysis.subcategory === 'DESCONOCIDOS_POTENCIALMENTE_SUGERENTE' || imageAnalysis.subcategory === 'FAMOSOS_POTENCIALMENTE_SUGERENTE' || imageAnalysis.subcategory === 'FAMOSOS_OFENSIVO'))) {
+                reason = (`imagen: ${imageAnalysis.reason}`);
+                notificationDescription = `S'ha generat un report al postejar una publicació. Reasons: ${reason}`;
+                endpoint = iaimgEnd.ENDPOINT_URL_EMPLOYMENTEXCHANGE + "/reports/publications";
+                needReport = true;
+            }
+
+            if (needReport) {
+                const resultReport = {
+                    publication_id: id,
+                    user_id: publicationsUnverified.user_id,
+                    report: reason,
+                    status: 'pending',
+                }
+
+                const notificationPayload = {
+                    user_id: publicationsUnverified.user_id,
+                    description: notificationDescription,
+                    report_id: resultReport.insertId,
+                }
+
+                //Create REPORT
+                try {
+                    const reportResponse = await fetch(endpoint, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(resultReport),
+                    });
+
+                    if (!reportResponse.ok) {
+                        throw new Error(
+                            `Failed to report publication ID: ${id}. Status: ${reportResponse.status}`
+                        );
+                    }
+                } catch (error) {
+                    console.error(`Error reporting publication: ${error}`);
+                }
+
+                //Create NOTIFICATION
+                try {
+                    const notificationResponse = await fetch(iaimgEnd.ENDPOINT_URL_NOTIFICATIONS + "/notifications", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(notificationPayload),
+                    });
+
+                    if (!notificationResponse.ok) {
+                        throw new Error(
+                            `Failed to create notification for publication ID: ${id}. Status: ${notificationResponse.status}`
+                        );
+                    }
+                } catch (error) {
+                    console.error(`Error creating notification: ${error}`);
+                }
+            }
+        }
+    } catch (error) {
+        console.error(`Error processing publications: ${error}`);
+    }
+}
+
+// Function to generate content with retries
 async function generateContentWithRetry(model, prompt, imagePart, retries = 3, delay = 1000) {
     for (let i = 0; i < retries; i++) {
         try {
             const result = await model.generateContent([prompt, imagePart]);
             return result;
         } catch (error) {
-            if (error.status === 503 && i < retries - 1) {
+            if (error.status == 503 && i < retries - 1) {
                 console.warn(`Service unavailable, retrying in ${delay}ms...`);
                 await new Promise(resolve => setTimeout(resolve, delay));
                 delay *= 2; // Exponential backoff
@@ -63,10 +198,11 @@ async function generateContentWithRetry(model, prompt, imagePart, retries = 3, d
     }
 }
 
-let totalTokensAcumulados = 0;
 app.get("/", (req, res) => {
     res.send("Hello World! I am an image service");
 });
+
+// Route to classify an image for the imageOffers model
 app.post("/classify-imageOffers", async (req, res) => {
     try {
         if (!req.files || Object.keys(req.files).length === 0) {
@@ -195,6 +331,7 @@ app.post("/classify-imageOffers", async (req, res) => {
     }
 });
 
+// Route to classify an image for the imageCommunity model
 app.post("/classify-imageCommunity", async (req, res) => {
     try {
         console.log("estoy dentro");
@@ -288,6 +425,7 @@ app.post("/classify-imageCommunity", async (req, res) => {
         res.status(500).json({ error: "Hubo un error procesando la imagen." });
     }
 });
+
 app.listen(port, () => {
     console.log(`Servidor escuchando en http://localhost:${port}`);
 });
