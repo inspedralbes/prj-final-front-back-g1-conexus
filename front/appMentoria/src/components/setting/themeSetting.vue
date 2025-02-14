@@ -24,7 +24,9 @@
         <div 
           v-for="color in colors" 
           :key="color"
-          :class="[`w-8 h-8 rounded-full cursor-pointer`, `color-${color}`, selectedColor === color ? 'ring-2 ring-white' : '']"
+          class="px-4 py-2 rounded border text-white"
+          :class="[`w-8 h-8 rounded-full cursor-pointer`, `color-${color}`, color === selectedColor ? 'selected-color' : '']"
+          :style="{ backgroundColor: color }"
           @click="setColor(color)">
         </div>
       </div>
@@ -39,6 +41,7 @@
           :key="index" 
           class="px-4 py-2 rounded border text-white"
           :class="selectedBackground === bg.name ? 'border-bgPrimary ring-2 ring-bgPrimary' : 'border-gray-400'"
+          :style="{ borderColor: selectedColor}"
           @click="updateBackground(bg.name)">
           {{ bg.label }}
         </button>
@@ -52,7 +55,7 @@ import { ref, watchEffect } from 'vue';
 import { useAppStore } from '@/stores/index';
 
 const colors = useAppStore().getColors();
-const color = ref(localStorage.getItem("color"));
+const selectedColor = ref(localStorage.getItem("color"));
 const fontSize = ref(localStorage.getItem("fontSize"));
 const selectedBackground = ref(localStorage.getItem("selectedBackground"));
 
@@ -64,7 +67,7 @@ const backgrounds = [
 
 // Actualizar tema y aplicarlo a <html>
 const setColor = (newColor) => {
-  color.value = newColor;
+  selectedColor.value = newColor;
   document.documentElement.classList.remove(...colors.map(t => `color-${t}`));
   document.documentElement.classList.add(`color-${newColor}`);
   localStorage.setItem("color", newColor);
@@ -81,3 +84,11 @@ watchEffect(() => {
   localStorage.setItem("fontSize", fontSize.value);
 });
 </script>
+
+
+<style scoped>
+.selected-color {
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  border: 2px solid white;
+}
+</style>
