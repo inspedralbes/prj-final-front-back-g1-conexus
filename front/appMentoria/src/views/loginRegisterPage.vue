@@ -1,7 +1,7 @@
 <template>
-  <div class="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
+  <div class="min-h-screen bg-bgTheme text-gray-900 flex justify-center">
     <div
-      class="max-w-screen-xl m-0 sm:m-10 bg-containersLight dark:bg-containersDark shadow sm:rounded-lg flex justify-center flex-1"
+      class="max-w-screen-xl m-0 sm:m-10 bg-containersTheme shadow sm:rounded-lg flex justify-center flex-1"
     >
       <div class="lg:w-1/2 xl:w-5/12 p-6 sm:p-12">
         <ToggleDarkMode />
@@ -17,15 +17,15 @@
           >
             <p>{{ message }}</p>
           </div>
-          <h1 class="text-2xl xl:text-3xl font-extrabold mb-5">CONEXUS</h1>
-          <h2 class="text-xl font-light xl:text-2xl mb-3">
+          <h1 class="text-2xl xl:text-3xl font-extrabold mb-5 text-textThemeColor">CONEXUS</h1>
+          <h2 class="text-xl font-light xl:text-2xl mb-3 text-textThemeColor">
             {{ $t("LoginRegisterPage.subTitle") }}
           </h2>
           <div class="w-full flex-1 mt-3">
             <div class="flex flex-col items-center">
               <button
                 @click="signInWithGoogle"
-                class="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-orange-100 dark:bg-orange-300 text-gray-800 dark:text-white flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline"
+                class="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-buttonColorPrimary text-textThemeColor  flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline"
               >
                 <div class="bg-white p-2 rounded-full">
                   <svg class="w-4" viewBox="0 0 533.5 544.3">
@@ -52,7 +52,7 @@
 
               <button
                 @click="signInWithGithub"
-                class="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-orange-100 dark:bg-orange-300 text-gray-800 dark:text-white flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline mt-5"
+                class="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-buttonColorPrimary text-textThemeColor flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline mt-5"
               >
                 <div class="bg-white p-1 rounded-full">
                   <svg class="w-6" viewBox="0 0 32 32">
@@ -68,7 +68,7 @@
 
             <div class="my-12 border-b text-center">
               <div
-                class="leading-none px-2 inline-block text-sm text-gray-600 dark:text-white tracking-wide font-medium bg-white dark:bg-neutral-600 transform translate-y-1/2"
+                class="leading-none px-2 inline-block text-sm text-textThemeColor tracking-wide font-medium bg-bgTheme transform translate-y-1/2"
               >
                 {{ $t("LoginRegisterPage.logIn") }}
               </div>
@@ -76,20 +76,20 @@
 
             <div class="mx-auto max-w-xs">
               <input
-                class="w-full px-8 py-4 rounded-lg font-medium dark:bg-backgroundDark dark:text-white border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
+                class="w-full px-8 py-4 rounded-lg font-medium bg-bgTheme dark:text-white border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
                 type="email"
                 :placeholder="$t('LoginRegisterPage.mailPlaceholder')"
                 v-model="userLogin.email"
               />
               <input
-                class="w-full px-8 py-4 rounded-lg font-medium dark:bg-backgroundDark dark:text-white border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
+                class="w-full px-8 py-4 rounded-lg font-medium bg-bgTheme dark:text-white border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
                 type="password"
                 :placeholder="$t('LoginRegisterPage.passwordPlaceholder')"
                 v-model="userLogin.password"
               />
               <button
                 @click="signInWithApp"
-                class="mt-5 tracking-wide font-semibold bg-buttomLight dark:bg-buttomDark text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
+                class="mt-5 tracking-wide font-semibold bg-buttonColorPrimary text-textThemeColor w-full py-4 rounded-lg hover:bg-buttonColorPrimary transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
               >
                 <svg
                   class="w-6 h-6 -ml-2"
@@ -106,14 +106,14 @@
                 <span class="ml-3"> {{ $t("LoginRegisterPage.loginButton") }}</span>
               </button>
               <p
-                class="mt-6 text-xs text-gray-600 dark:text-gray-100 text-center"
+                class="mt-6 text-xs text-textThemeColor text-center"
               >
                 {{ $t("LoginRegisterPage.projectBy") }}
-                <span class="border-b border-gray-500 border-dotted">
+                <span class="border-b border-textThemeColor border-dotted">
                   Conexus
                 </span>
                 {{ $t("LoginRegisterPage.withTheHelpOf") }}
-                <span class="border-b border-gray-500 border-dotted">
+                <span class="border-b border-textThemeColor border-dotted">
                   Institut Pedralbes
                 </span>
               </p>
