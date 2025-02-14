@@ -47,3 +47,12 @@ location / {
 
 :information_source: Si el dominio no está creado, haz que el DNS apunte a tu servidor, crea el servicio apuntando al puerto predeterminado (80) o al que necesites e inserta la configuración predeterminada.
 
+## 7. Enciende y verifica los microservicios:
+- Para encender los microservicios, ejecuta (desde Thunder Client o terminal):
+```bash
+    curl -X GET http://localhost:4000/startAllServices/dev
+```
+- Para obtener los microservicios, ejecuta (desde Thunder Client o terminal):
+```bash
+    curl -X GET http://localhost:4000/startAllServices/dev
+```
