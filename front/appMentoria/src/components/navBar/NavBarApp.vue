@@ -1,12 +1,12 @@
 <template>
   <div>
     <div
-      class="fixed bottom-0 left-1/2 transform -translate-x-1/2 inline-flex left-0 mx-auto justify-between bg-containersLight dark:bg-containersDark w-full shadow-custom"
+      class="fixed bottom-0 left-1/2 transform -translate-x-1/2 inline-flex left-0 mx-auto justify-between bg-containersTheme w-full shadow-custom"
     >
       <button
         aria-current="page"
         @click="selectItem('home', () => $router.push('/'))"
-        :class="{'text-white': selectedItem === 'home', 'text-orange-300': selectedItem !== 'home'}"
+        :class="{'text-white': selectedItem === 'home', 'text-textColorPrimary': selectedItem !== 'home'}"
         class="inline-flex flex-col items-center text-xs font-medium py-3 px-4 flex-grow group"
       >
         <svg
@@ -23,7 +23,7 @@
       </button>
       <a
         @click="selectItem('search')"
-        :class="{'text-white': selectedItem === 'search', 'text-orange-300': selectedItem !== 'search'}"
+        :class="{'text-white': selectedItem === 'search', 'text-textColorPrimary': selectedItem !== 'search'}"
         class="inline-flex flex-col items-center text-xs font-medium py-3 px-4 flex-grow group"
         href="#"
       >
@@ -44,10 +44,10 @@
 
       <button
         @click="toggleButtonAddPost"
-        class="relative inline-flex flex-col items-center text-xs font-medium dark:text-buttomDark text-buttomLight py-3 px-6 flex-grow"
+        class="relative inline-flex flex-col items-center text-xs font-medium text-textColorPrimary py-3 px-6 flex-grow"
       >
         <div
-          class="absolute bottom-5 p-3 rounded-full border-4 border-buttomLight dark:border-buttomDark  bg-containersLight dark:bg-containersDark"
+          class="absolute bottom-5 p-3 rounded-full border-4 border-textColorPrimary  bg-containersTheme"
         >
           <svg
             class="w-7 h-7 b"
@@ -67,7 +67,7 @@
       </button>
       <button
         @click="selectItem('notifications', () => $router.push('/notifications'))"
-        :class="{'text-white': selectedItem === 'notifications', 'text-orange-300': selectedItem !== 'notifications'}"
+        :class="{'text-white': selectedItem === 'notifications', 'text-textColorPrimary': selectedItem !== 'notifications'}"
         class="inline-flex flex-col items-center text-xs font-medium py-3 px-4 flex-grow group"
       >
         <svg
@@ -82,7 +82,7 @@
         </svg>
       </button>
       <button @click="selectItem('chatList', () => $router.push('/chatList'))"
-        :class="{'text-white': selectedItem === 'chatList', 'text-orange-300': selectedItem !== 'chatList'}"
+        :class="{'text-white': selectedItem === 'chatList', 'text-textColorPrimary': selectedItem !== 'chatList'}"
         class="inline-flex flex-col items-center text-xs font-medium py-3 px-4 flex-grow group"
       >
         <svg
