@@ -308,7 +308,9 @@ app.post('/publications', verifyToken, async (req, res) => {
     const formData = new FormData();
     formData.append('image', fs.createReadStream(imagePath));
 
+    console.log("Antes de checkIA");
     var running = await checkIA();
+    console.log("Después de checkIA");
     console.log("running", running);
     let textIA = 0, imageIA = 0;
     if (running == true) {
@@ -458,12 +460,17 @@ app.post('/publications', verifyToken, async (req, res) => {
             res.status(500).json({ error: 'Error al guardar la publicación en la base de datos.', details: error.message });
         }
     } else {
+        console.log("No se puede analizar contenido, IA no disponible");
+        console.log("runing", running);
         try {
             const connection = await mysql.createConnection(dbConfig);
+            console.log("connection", connection);
+            console.log("user_id", user_id);
+            console.log("Intento de insertar en la base de datos");
             const [result] = await connection.execute(
                 `INSERT INTO publications (typesPublications_id, title, description, user_id, image, text_ia, image_ia, expired_at)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-                [1, title, description, user_id, `/upload/${imageName}`, textIA, imageIA, expired_at || null]
+                [1, title, description, user_id, `/upload/${imageName}`, textIA, imageIA, expired_at]
             );
             const publication_id = result.insertId;
             res.status(201).json({
@@ -535,22 +542,6 @@ app.get('/getMyPublications', verifyToken, async (req, res) => {
         res.json(rows);
     } catch (error) {
         console.error('Database error:', error);
-        res.status(500).json({ error: 'Database error' });
-    }
-});
-
-app.post('/publications', verifyToken, async (req, res) => {
-    const { title, description, user_id } = req.body;
-
-    try {
-        const connection = await mysql.createConnection(dbConfig);
-        const [result] = await connection.execute(
-            'INSERT INTO publications (typesPublications_id, title, description, user_id) VALUES (?, ?, ?, ?)',
-            [1, title, description, user_id]
-        );
-        connection.end();
-        res.status(201).json({ message: 'Publication created successfully' });
-    } catch (error) {
         res.status(500).json({ error: 'Database error' });
     }
 });
@@ -696,6 +687,7 @@ async function checkIA() {
     const serverIAimage = IA_IMAGE_URL + '/';
 
     try {
+        console.log("dentro del try catch del check AI 1");
         const responseText = await fetch(serverIAtext);
         if (!responseText.ok) throw new Error(`Error IA: ${responseText.statusText}`);
 

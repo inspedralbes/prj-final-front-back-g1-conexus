@@ -7,10 +7,6 @@ const secretKey = process.env.SECRET_KEY;
 const refreshKey = process.env.REFRESH_KEY;
 const mongoUri = process.env.MONGO_URI;
 
-console.log('Secret key:', secretKey);
-console.log('Refresh key:', refreshKey);
-console.log('Mongo URI:', mongoUri);
-
 // Conexión a la base de datos
 mongoose.connect(mongoUri, { 
     dbName: 'Tokens'
@@ -52,8 +48,6 @@ function createTokens(user) {
 
 // Middleware para verificar el token de acceso
 function verifyToken(req, res, next) {
-    console.log('Verify token:', req.headers);
-
     const authHeader = req.headers['authorization'];
     if (!authHeader) {
         return res.status(401).json({ error: 'Token es requerido' });
@@ -70,7 +64,6 @@ function verifyToken(req, res, next) {
             if (err.name === 'TokenExpiredError') {
                 return res.status(401).json({ error: 'Token expirado' });
             }
-            console.log('Error al autenticar el token verifyToken:', err);
             return res.status(403).json({ error: 'Fallo al autenticar el token verifyToken'});
         }
         req.user = decoded;
@@ -80,10 +73,7 @@ function verifyToken(req, res, next) {
 
 // Lógica para refrescar el token
 async function refreshToken(req, res) {
-    console.log('Refresh token 0:', req.body);
     const { refreshToken } = req.body;
-
-    console.log('Refresh token 1:', refreshToken);
 
     if (!refreshToken) return res.status(401).send('Token es requerido');
 
@@ -92,11 +82,7 @@ async function refreshToken(req, res) {
         if (!tokenDoc) {
             return res.status(403).json({ error: 'Token inválido' });
         }
-
-        console.log('Refresh token 2:', refreshToken);
         const decoded = jwt.verify(refreshToken, refreshKey);
-        console.log('Decoded:', decoded);
-
         const newAccessToken = jwt.sign(
             { id: decoded.id, email: decoded.email },
             secretKey,
@@ -104,7 +90,6 @@ async function refreshToken(req, res) {
         );
         res.json({ accessToken: newAccessToken });
     } catch (err) {
-        console.log('Error al refrescar el token:', err);
         res.status(403).json({ error: 'Token inválido o expirado' });
     }
 }
