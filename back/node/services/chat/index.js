@@ -222,6 +222,7 @@ io.on('connection', (socket) => {
       if (chatData) {
         const isFirstInteraction = chatData.interactions.length === 0;
         const userObj = Array.isArray(users) ? users.find(u => u.id === userId) : null;
+        console.log("isFirstInteraction", isFirstInteraction);
         if (isFirstInteraction) {
           const notificationPromises = chatData.users.slice(1).map(async (user) => {
             const notificationPayload = {

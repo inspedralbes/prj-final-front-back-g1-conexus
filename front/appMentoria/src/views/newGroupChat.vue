@@ -1,6 +1,10 @@
 <template>
     <div class="flex flex-col min-h-screen">
         <Header class="fixed top-0 left-0 right-0 z-10"></Header>
+        <NavBarWeb class="hidden lg:fixed lg:top-0 lg:left-0 lg:h-screen lg:w-60 lg:block"></NavBarWeb>
+        <NavBarApp 
+        class="fixed bottom-0 left-0 right-0 w-full lg:hidden ">
+        </NavBarApp>
         <main class="flex-grow my-20 p-4">
             <div>
                 <h2 class="text-lg font-semibold mb-2 rounded-md">Llista de usuaris</h2>
@@ -28,17 +32,18 @@
                 </ul>
             </div>
         </main>
-        <NavBar></NavBar>
     </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted, watch } from "vue";
-import NavBar from '@/components/NavBar.vue';
-import Header from '@/components/Header.vue';
 import { useRouter } from 'vue-router';
 import { useAppStore } from "@/stores/index";
-import { chatButton, getUsers, fetchChats } from "../services/communicationManager";
+import { chatButton, fetchChats } from "../services/communicationsScripts/chatManager.js";
+import { getUsers } from "../services/communicationsScripts/mainmanager.js";
+import NavBarApp from "@/components/navBar/NavBarApp.vue";
+import Header from '@/components/Header.vue';
+import NavBarWeb from "@/components/navBar/NavBarWeb.vue";
 
 const BACK_URL = import.meta.env.VITE_URL_BACK;
 const users = ref([]);

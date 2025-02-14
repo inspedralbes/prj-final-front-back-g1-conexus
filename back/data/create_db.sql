@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS users (
     profile VARCHAR(255),
     city VARCHAR(255),
     tags JSON DEFAULT NULL,  
-    availibility JSON DEFAULT NULL,
+    availability JSON DEFAULT NULL,
     verified BOOLEAN DEFAULT 0,
     status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
     review DECIMAL(2,1) DEFAULT 0,
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS users (
     softwareSkills VARCHAR(510) DEFAULT NULL,
     languages VARCHAR(510) DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    description VARCHAR(600) DEFAULT NULL,
+    description TEXT DEFAULT NULL,
     FOREIGN KEY (typesUsers_id) REFERENCES typesUsers(id),
     FOREIGN KEY (class_id) REFERENCES classes(id),
     FOREIGN KEY (qualification_id) REFERENCES qualifications(id)
@@ -213,4 +213,14 @@ CREATE TABLE IF NOT EXISTS notifications (
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (publication_id) REFERENCES publications(id),
     FOREIGN KEY (comment_id) REFERENCES comments(id)
+);
+
+-- Table following
+CREATE TABLE IF NOT EXISTS following (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    following_user_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (following_user_id) REFERENCES users(id)
 );
