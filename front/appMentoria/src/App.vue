@@ -1,5 +1,5 @@
 <script setup>
-import { RouterView } from "vue-router";
+import { RouterView, useRoute } from "vue-router";
 import { ref, onMounted, reactive, watch } from "vue";
 import { useAppStore } from "@/stores/index";
 import router from "@/router";
@@ -12,6 +12,7 @@ const userAPP = reactive({}); // Objeto reactivo para el usuario
 const isDarkMode = ref(false);
 const isLoading = ref(true); // Bandera para controlar el estado de carga
 const appStore = useAppStore();
+const route = useRoute();
 
 async function validateLogin() {
   const profileURL = ref("");
@@ -106,8 +107,8 @@ watch(() => appStore.selectedTheme, (newTheme) => {
 
 <template>
   <div id="app" class="bg-bgTheme text-textThemeColor">
-    <NavBarWeb class="hidden lg:fixed lg:top-0 lg:left-0 lg:h-screen lg:w-60 lg:block"></NavBarWeb>
-    <NavBarApp class="fixed bottom-0 left-0 right-0 w-full lg:hidden "></NavBarApp>
+    <NavBarWeb v-if="route.name !== 'login'" class="hidden lg:fixed lg:top-0 lg:left-0 lg:h-screen lg:w-60 lg:block"></NavBarWeb>
+    <NavBarApp v-if="route.name !== 'login'" class="fixed bottom-0 left-0 right-0 w-full lg:hidden "></NavBarApp>
     <RouterView v-if="!isLoading || userAPP.name" />
     <div v-else class="flex items-center justify-center min-h-screen bg-bgTheme text-textThemeColor">
       <Loading />
