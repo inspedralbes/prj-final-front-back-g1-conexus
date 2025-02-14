@@ -153,7 +153,7 @@ const designs = ref([
       classes: "grid-cols-6 grid-rows-6 gap-4",
       elements: [
         {
-          dataField: [props.user.qrCode],
+          dataField: props.user.qrCode,
           classes:
             "row-start-2 row-span-4 col-start-1 col-end-3 w-full h-16 rounded",
           fixed: true, //qr fija
@@ -190,7 +190,7 @@ const designs = ref([
       classes: "grid-cols-6 gap-4",
       elements: [
         {
-          dataField: [props.user.profile],
+          dataField: props.user.profile,
           classes:
             "col-start-3 justify-center w-16 h-16 col-span-3 rounded-full",
           fixed: true,
@@ -264,7 +264,7 @@ const designs = ref([
           fixed: false,
         },
         {
-          dataField: [props.user.qrCode],
+          dataField: props.user.qrCode,
           classes: "row-start-2 col-start-5 w-16 h-16 rounded",
           fixed: true,
         },
@@ -278,7 +278,7 @@ const designs = ref([
       classes: "grid-cols-6 grid-rows-6 gap-4",
       elements: [
         {
-          dataField: [props.user.qrCode],
+          dataField: props.user.qrCode,
           classes:
             "row-start-2 row-span-4 col-start-1 col-end-3 w-full h-16 rounded",
           fixed: true,
@@ -360,7 +360,7 @@ const designs = ref([
           fixed: false,
         },
         {
-          dataField: [props.user.profile],
+          dataField: props.user.profile,
           classes: "row-start-2 col-start-5 w-16 h-16 rounded-full",
           fixed: true,
         },
@@ -396,7 +396,7 @@ const designs = ref([
           fixed: false,
         },
         {
-          dataField: [props.user.phone],
+          dataField: props.user.phone,
           classes: "row-start-3 col-start-5 col-span-2 w-full h-5 rounded",
           fixed: true,
         },
@@ -433,7 +433,7 @@ const designs = ref([
       classes: "grid-cols-6 grid-rows-6 gap-4",
       elements: [
         {
-          dataField: [props.user.qrCode],
+          dataField: props.user.qrCode,
           classes:
             "row-start-2 row-span-4 col-start-1 col-end-3 w-full h-16 rounded",
           fixed: true,
@@ -470,7 +470,7 @@ const designs = ref([
       classes: "grid-cols-6 grid-rows-6 gap-4",
       elements: [
         {
-          dataField: [props.user.qrCode],
+          dataField: props.user.qrCode,
           classes:
             "row-start-1 row-span-4 col-start-1 col-end-3 w-full h-16 rounded",
           fixed: true,
@@ -530,7 +530,7 @@ const designs = ref([
       classes: "grid-cols-6 grid-rows-6 gap-4",
       elements: [
         {
-          dataField: [props.user.profile],
+          dataField: props.user.profile,
           classes:
             "row-start-2 row-span-2 col-start-1 col-end-3 w-16 h-16 rounded-full",
           fixed: true,
@@ -594,7 +594,7 @@ const designs = ref([
           fixed: false,
         },
         {
-          dataField: [props.user.profile],
+          dataField: props.user.profile,
           classes: "row-start-1 row-span-2 col-start-5 w-16 h-16 rounded-full",
           fixed: true,
         },
@@ -654,7 +654,7 @@ const designs = ref([
           fixed: false,
         },
         {
-          dataField: [props.user.qrCode],
+          dataField: props.user.qrCode,
           classes: "col-start-5 row-start-4 w-full col-span-2 h-16 rounded",
           fixed: true,
         },

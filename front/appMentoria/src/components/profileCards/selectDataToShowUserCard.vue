@@ -220,6 +220,8 @@
 import { ref, computed } from "vue";
 import { useAppStore } from "@/stores/index";
 
+//vue-dndrop
+
 const appStore = useAppStore();
 const user = computed(() => appStore.user);
 
