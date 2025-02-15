@@ -2,7 +2,8 @@
   <div class="h-full">
     <div class="flex flex-1 bg-gray-50 h-full">
       <div class="hidden md:flex md:w-64 md:flex-col lg:w-80 lg:flex lg:flex-col lg:h-full">
-        <div class="flex flex-col flex-grow pt-5 overflow-y-auto bg-containersTheme shadow-custom dark:shadow-customDark">
+        <div
+          class="flex flex-col flex-grow pt-5 overflow-y-auto bg-containersTheme shadow-custom dark:shadow-customDark">
           <div class="px-4 mt-8 py-5">
             <label for="" class="sr-only"> Search </label>
             <div class="relative">
@@ -96,14 +97,14 @@
                 </a>
 
                 <a href="#" @click="selectItem('gacha')"
-                  :class="{ 'bg-bgColorPrimary text-textThemeColor' : selectedItem === 'gacha', ' text-textThemeColor hover:text-white hover:bg-buttonColorHoverPrimary': selectedItem !== 'gacha' }"
+                  :class="{ 'bg-bgColorPrimary text-textThemeColor': selectedItem === 'gacha', ' text-textThemeColor hover:text-white hover:bg-buttonColorHoverPrimary': selectedItem !== 'gacha' }"
                   class="flex items-center px-4 py-2.5 text-sm font-medium transition-all duration-200 text-textThemeColor hover:text-white rounded-lg hover:bg-buttonColorPrimary group">
                   <svg class="flex-shrink-0 w-5 h-5 mr-4 group-hover:text-textThemeColor" aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M18.5 12A2.5 2.5 0 0 1 21 9.5V7a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v2.5a2.5 2.5 0 0 1 0 5V17a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-2.5a2.5 2.5 0 0 1-2.5-2.5Z" />
                   </svg>
-                  
+
                   {{ $t("navBarWeb.gacha") }}
                 </a>
 
@@ -127,20 +128,20 @@
 
               <hr class="border-gray-300" />
 
-              <div>
-                  <button @click="handleClick"
-                    class="flex items-center px-4 text-sm font-medium transition-all duration-200 text-textThemeColor rounded-lg group">
-                    <svg class="w-7 h-7 mr-6 text-textThemeColor" aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                      <path fill-rule="evenodd"
-                        d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4.243a1 1 0 1 0-2 0V11H7.757a1 1 0 1 0 0 2H11v3.243a1 1 0 1 0 2 0V13h3.243a1 1 0 1 0 0-2H13V7.757Z"
-                        clip-rule="evenodd" />
-                    </svg>
-                    {{ $t("navBarWeb.addPost") }}
-                  </button>
-                </div>
+              <div v-if="route.path === '/' || route.path === '/requests'">
+                <button @click="handleClick"
+                  class="flex items-center px-4 text-sm font-medium transition-all duration-200 text-textThemeColor rounded-lg group">
+                  <svg class="w-7 h-7 mr-6 text-textThemeColor" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path fill-rule="evenodd"
+                      d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4.243a1 1 0 1 0-2 0V11H7.757a1 1 0 1 0 0 2H11v3.243a1 1 0 1 0 2 0V13h3.243a1 1 0 1 0 0-2H13V7.757Z"
+                      clip-rule="evenodd" />
+                  </svg>
+                  {{ $t("navBarWeb.addPost") }}
+                </button>
+              </div>
               <div class="absolute bottom-0 left-0 w-full">
-                
+
                 <div class="pb-4">
                   <SubMenu></SubMenu>
                 </div>
