@@ -35,6 +35,8 @@ services:
       - ./back/microprocessos_api:/usr/src/app
       - ./back/node/services:/usr/src/node/services
       - ./back/node/middleware:/usr/src/node/middleware
+      - ./back/node/services/community/upload:/usr/src/node/community/upload
+      - ./back/node/services/employmentexchange/upload:/usr/src/node/employmentexchange/upload
     working_dir: /usr/src/app
     ports:
       - 3001:3001

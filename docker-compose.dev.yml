@@ -75,6 +75,8 @@ services:
     command: sh -c "cp .env.dev .env && npm install && npm run dev"
     volumes:
       - ./back/node/services/iaimage:/usr/src/app
+      - ./back/node/services/community/upload:/usr/src/node/community/upload
+      - ./back/node/services/employmentexchange/upload:/usr/src/node/employmentexchange/upload
     working_dir: /usr/src/app
     ports:
       - 3004:3004

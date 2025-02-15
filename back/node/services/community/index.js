@@ -304,6 +304,8 @@ app.post('/publications', verifyToken, async (req, res) => {
     const imageName = `${Date.now()}-${imageFile.name}`;
     const imagePath = path.join(__dirname, 'upload', imageName);
 
+    console.log("imagePath en el post de publications: ", imagePath);
+
     await imageFile.mv(imagePath);
 
     const formData = new FormData();
@@ -475,6 +477,7 @@ app.post('/publications', verifyToken, async (req, res) => {
     } else {
         console.log("No se puede analizar contenido, IA no disponible");
         console.log("runing", running);
+        var publication_id;
         try {
             const connection = await mysql.createConnection(dbConfig);
             console.log("Intento de conexión a la base de datos", connection);
@@ -486,7 +489,7 @@ app.post('/publications', verifyToken, async (req, res) => {
                 [1, title, description, user_id, `/upload/${imageName}`, textIA, imageIA, expired_at || null]
             );
             console.log("Resultado de la inserción", result);
-            const publication_id = result.insertId;
+            publication_id = result.insertId;
             res.status(201).json({
                 message: 'publicació creada, pendent de revisar!',
                 publication_id: publication_id,

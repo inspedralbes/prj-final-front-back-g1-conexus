@@ -9,6 +9,7 @@ import fileUpload from "express-fileupload";
 import FormData from "form-data";
 import fs from "fs";
 import mysql from "mysql2/promise";
+import fetch from "node-fetch";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -64,6 +65,7 @@ async function checkPublications() {
     let needReport = false;
     let reason;
     let notificationDescription;
+    let imagePath;
 
     try {
         const connection = await mysql.createConnection(dbConfig);
@@ -73,13 +75,12 @@ async function checkPublications() {
         for (const publicationsUnverified of rows) {
             const { id, typesPublications_id, image } = publicationsUnverified;
 
-            const formData = new FormData();
-            formData.append('image', fs.createReadStream(image));
-
             if (typesPublications_id == 1) {
-                endpoint = iaimgEnd.ENDPOINT_URL_IAIMAGE + "/classify-community";
+                endpoint = iaimgEnd.ENDPOINT_URL_IAIMAGE + "/classify-imageCommunity";
+                imagePath = '/usr/src/node/community' + image;
             } else if (typesPublications_id == 2) {
-                endpoint = iaimgEnd.ENDPOINT_URL_IAIMAGE + "/classify-offers";
+                endpoint = iaimgEnd.ENDPOINT_URL_IAIMAGE + "/classify-imageOffers";
+                imagePath = '/usr/src/node/employmentexchange' + image;
             } else {
                 console.error("Invalid type of publication.");
                 continue;
@@ -88,8 +89,14 @@ async function checkPublications() {
             console.log(`endpoint: ${endpoint}`);
 
             try {
-                const fetchPromise = await import('node-fetch');
-                const fetch = fetchPromise.default;
+                console.log("Processing image HOLAAAAAAAAAAA...");
+
+                const formData = new FormData();
+                formData.append('image', fs.createReadStream(imagePath));
+                console.log(`$formData: ${formData}`);
+
+                console.log(`imagePath: ${imagePath}`);
+
                 const response = await fetch(endpoint, {
                     method: "POST",
                     body: formData,
@@ -97,28 +104,32 @@ async function checkPublications() {
                 });
 
                 if (!response.ok) {
+                    console.log('holaaaaaaaaaa')
                     console.error(`Error processing image: ${response.statusText}`);
+                } else {
+                    console.log('holaaaaaaaaaa, estoy dentro del else')
+                    imageAnalysis = await response.json();
+                    verifiedPublicationImage = 1;
                 }
-                imageAnalysis = await response.json();
-                verifiedPublicationImage = 1;
             } catch (error) {
-                console.error(`Error processing image: ${error}`);
+                console.error(`Error processing image HOLA DENTRO DEL TRY CAtch: ${error}`);
                 verifiedPublicationImage = 0;
             }
 
             if (verifiedPublicationImage == 1) {
+                console.log(`Image analysis estoy en el verifiedPublicationImage: ${imageAnalysis}`);
                 const [updateResult] = await connection.execute("UPDATE publications SET image_ia = 1 WHERE id = ?", [id]);
                 if (updateResult.affectedRows != 1) {
                     console.error(`Failed to update publication ID: ${id}`);
                 }
             }
 
-            if (typesPublications_id == 1(imageAnalysis.category === 'OFENSIVA' || (imageAnalysis.category === 'POTENCIALMENTE_SUGERENTE' && imageAnalysis.subcategory === 'OFENSIVO'))) {
+            if (typesPublications_id == 1 && (imageAnalysis.category === 'OFENSIVA' || (imageAnalysis.category === 'POTENCIALMENTE_SUGERENTE' && imageAnalysis.subcategory === 'OFENSIVO'))) {
                 reason = (`imagen: ${imageAnalysis.reason}`);
                 notificationDescription = `S'ha generat un report al postejar una publicació. Reasons: ${reason}`;
                 endpoint = iaimgEnd.ENDPOINT_URL_COMMUNITY + "/reports/publications/IA";
                 needReport = true;
-            } else if (typesPublications_id == 2(imageAnalysis.category === 'OFENSIVA' && imageAnalysis.category === 'CONTENIDO_SEXUAL' || imageAnalysis.subcategory === 'SIN_PERSONAS_OFENSIVA' || (imageAnalysis.category === 'POTENCIALMENTE_SUGERENTE' && imageAnalysis.subcategory === 'FAMOSOS_SUGERENTE' || imageAnalysis.subcategory === 'DESCONOCIDOS_POTENCIALMENTE_SUGERENTE' || imageAnalysis.subcategory === 'FAMOSOS_POTENCIALMENTE_SUGERENTE' || imageAnalysis.subcategory === 'FAMOSOS_OFENSIVO'))) {
+            } else if (typesPublications_id == 2 && (imageAnalysis.category === 'OFENSIVA' && imageAnalysis.category === 'CONTENIDO_SEXUAL' || imageAnalysis.subcategory === 'SIN_PERSONAS_OFENSIVA' || (imageAnalysis.category === 'POTENCIALMENTE_SUGERENTE' && imageAnalysis.subcategory === 'FAMOSOS_SUGERENTE' || imageAnalysis.subcategory === 'DESCONOCIDOS_POTENCIALMENTE_SUGERENTE' || imageAnalysis.subcategory === 'FAMOSOS_POTENCIALMENTE_SUGERENTE' || imageAnalysis.subcategory === 'FAMOSOS_OFENSIVO'))) {
                 reason = (`imagen: ${imageAnalysis.reason}`);
                 notificationDescription = `S'ha generat un report al postejar una publicació. Reasons: ${reason}`;
                 endpoint = iaimgEnd.ENDPOINT_URL_EMPLOYMENTEXCHANGE + "/reports/publications/IA";
@@ -342,9 +353,11 @@ app.post("/classify-imageOffers", async (req, res) => {
 
 // Route to classify an image for the imageCommunity model
 app.post("/classify-imageCommunity", async (req, res) => {
-    try {
+    console.log("estoy dentro de imageCommunity");
+    // try {
         console.log("estoy dentro");
         if (!req.files || Object.keys(req.files).length === 0) {
+            console.log("No se recibió ningún archivo.");
             return res.status(400).json({ error: "No se recibió ningún archivo." });
         }
 
@@ -429,10 +442,10 @@ app.post("/classify-imageCommunity", async (req, res) => {
 
         res.json(JSON.parse(jsonResponse));
 
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "Hubo un error procesando la imagen." });
-    }
+    // } catch (error) {
+    //     console.error(error);
+    //     res.status(500).json({ error: "Hubo un error procesando la imagen." });
+    // }
 });
 
 app.listen(port, () => {
