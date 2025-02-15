@@ -334,8 +334,6 @@ app.get('/users', verifyToken, async (req, res) => {
                 qualifications
             ON 
                 users.qualification_id = qualifications.id
-            WHERE 
-                users.typesUsers_id = 1
         `);
         connection.end();
         console.log('rows: ', rows);
