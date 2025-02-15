@@ -1,12 +1,12 @@
 <template>
-  <div class="max-w-xs sm:max-w-sm rounded overflow-hidden shadow-custom mx-auto my-4 bg-containersLight dark:bg-containersDark">
+  <div class="max-w-xs sm:max-w-sm rounded overflow-hidden shadow-custom mx-auto my-4 bg-containersTheme">
     <div class="relative">
       <img class="w-full h-48 object-cover clippy" :src="`${imageBanner}${user.banner}`" alt="User Image">
       <div
-        class="clippy absolute bottom-0 left-0 top-0 right-0 bg-blue-700 bg-opacity-50 p-2 sm:p-4 text-white flex flex-col justify-end items-center">
+        class="clippy absolute bottom-0 left-0 top-0 right-0 bg-blue-700 bg-opacity-50 p-2 sm:p-4 text-textThemeColor flex flex-col justify-end items-center">
       </div>
       <div
-        class="absolute bottom-0 right-0 mb-4 sm:mb-6 mr-4 sm:mr-6 rounded-full h-14 sm:h-16 lg:h-20 w-14 sm:w-16 lg:w-20 flex items-center bg-green-400 justify-center text-2xl sm:text-4xl font-thin text-white shadow-2xl md:translate-y-3">
+        class="absolute bottom-0 right-0 mb-4 sm:mb-6 mr-4 sm:mr-6 rounded-full h-14 sm:h-16 lg:h-20 w-14 sm:w-16 lg:w-20 flex items-center bg-buttonColorPrimary justify-center text-2xl sm:text-4xl font-thin text-textThemeColor shadow-2xl md:translate-y-3">
         <img :src="profileSrc" alt="User Avatar" class="rounded-full h-full w-full object-cover">
       </div>
     </div>
@@ -30,7 +30,7 @@
 
       <div class="lg:py-4">
         <a @click="chatButton(user.id, router)" href="#" rel="noopener noreferrer"
-          class="flex items-center py-3 px-6 bg-buttomLight dark:bg-buttomDark text-white rounded-full shadow-lg shadow-black/30 transition-all duration-500 hover:shadow-gray-100 hover:bg-buttomLight dark:hover:bg-orange-400 dark:hover:shadow-buttomLight">
+          class="flex items-center py-3 px-6 bg-buttonColorPrimary text-textThemeColor rounded-full shadow-lg shadow-black/30 transition-all duration-500 hover:shadow-gray-100 hover:bg-buttonColorPrimary">
           {{ $t('viewPeopleMentoria.chat') }}
 
         </a>
