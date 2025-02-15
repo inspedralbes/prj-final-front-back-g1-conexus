@@ -5,7 +5,7 @@
     <NavBarApp 
       class="fixed bottom-0 left-0 right-0 w-full lg:hidden ">
     </NavBarApp>
-    <main class="flex-grow mt-16 mb-60">
+    <main class="flex-grow mt-16 mb-60 z-0">
       <ViewRequests></ViewRequests>
     </main>
   </div>

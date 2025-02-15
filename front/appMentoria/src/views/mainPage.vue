@@ -2,7 +2,7 @@
   <div class="flex flex-col min-h-screen">
     <Header class="fixed top-0 left-0 right-0 z-10"></Header>
     
-    <main class="flex-grow mt-16 mb-60"> 
+    <main class="flex-grow mt-16 mb-60 z-0"> 
       <ViewPostList></ViewPostList>
     </main>
 

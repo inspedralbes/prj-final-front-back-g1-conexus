@@ -2,7 +2,7 @@
   <div>
     <div
       v-if="loading"
-      class="flex items-center justify-center min-h-screen bg-backgroundLight dark:bg-backgroundDark"
+      class="flex items-center justify-center min-h-screen bg-containersTheme"
     >
       <Loading />
     </div>
@@ -10,11 +10,11 @@
     <div v-else>
       <div
         v-if="selectedrequest"
-        class="max-w-3xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden mt-6 dark:bg-gray-900"
+        class="max-w-3xl mx-auto bg-containersTheme shadow-lg rounded-lg overflow-hidden mt-6"
       >
         <button
           @click="goMain"
-          class="py-2 px-4 fixed top-0 left-0 mt-3 ml-4 z-20"
+          class="py-2 px-4 fixed top-0 left-0 mt-3 ml-4 z-20 text-textThemeColor"
         >
           <svg
             width="20"
@@ -44,27 +44,27 @@
             selectedrequest.image_ia === 0
           "
         >
-          <header class="flex items-center p-4 border-b">
+          <header class="flex items-center p-4 border-b border-buttonColorPrimary">
             <img
               :src="getAuthorProfile(selectedrequest.user_id)"
               alt="Avatar"
               class="w-12 h-12 rounded-full mr-4"
             />
             <div>
-              <h2 class="font-bold text-lg">
+              <h2 class="font-bold text-lg text-textThemeColor">
                 {{ getAuthorName(selectedrequest.user_id) }}
               </h2>
-              <p class="text-gray-500 text-sm dark:text-white mb-6">
+              <p class="text-textThemeColor text-sm mb-6">
                 {{ getAuthorHandle(selectedrequest.user_id) }} ·
                 {{ timeSince(selectedrequest.created_at) }}
               </p>
             </div>
           </header>
 
-          <main class="p-4 space-y-4">
-            <h1 class="text-xl font-bold">{{ selectedrequest.title }}</h1>
+          <main class="p-4 space-y-4 bg-containersTheme">
+            <h1 class="text-xl font-bold text-textThemeColor">{{ selectedrequest.title }}</h1>
             <p
-              class="text-gray-800 text-lg whitespace-pre-line dark:text-gray-300"
+              class="text-textThemeColor text-lg whitespace-pre-line"
             >
               {{ selectedrequest.description }}
             </p>
@@ -82,20 +82,20 @@
           </main>
         </div>
         <div class="p-4">
-          <h3 class="text-lg font-bold">{{ $t("viewRequest.coments") }}</h3>
-          <div class="border-t-2 border-gray-200 px-4 p-4 mb-2 sm:mb-0">
-            <div class="relative flex">
+          <h3 class="text-lg font-bold text-textThemeColor">{{ $t("viewRequest.coments") }}</h3>
+          <div class="border-t-2 border-buttonColorPrimary px-4 p-4 mb-2 sm:mb-0">
+            <div class="relative flex bg-containersTheme border-buttonColorPrimary">
               <input
                 ref="commentInput"
                 type="text"
                 placeholder="Escriu un comentari!"
-                class="w-full focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-600 pl-5 pr-20 bg-gray-200 rounded-md py-3 dark:bg-gray-800 dark:text-white"
+                class="w-full focus:outline-none focus:placeholder-bgTheme text-textThemeColor placeholder-textThemeColor pl-5 pr-20 bg-bgTheme rounded-md py-3 border-2 border-buttonColorPrimary z-index-0"
               />
-              <div class="absolute right-0 items-center inset-y-0 flex">
+              <div class="absolute right-0 items-center inset-y-0 flex border-buttonColorPrimary">
                 <button
                   @click="sendCommentInMongo(null)"
                   type="button"
-                  class="inline-flex items-center justify-center rounded-full h-10 w-10 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300 focus:outline-none mr-4"
+                  class="inline-flex items-center justify-center rounded-full h-10 w-10 transition duration-500 ease-in-out text-textThemeColor hover:bg-textColorPrimary focus:outline-none mr-4"
                 >
                   <svg
                     viewBox="0 -0.5 25 25"
@@ -142,25 +142,25 @@
                 class="w-8 h-8 rounded-full"
               />
               <div>
-                <div class="flex items-center space-x-2">
-                  <h4 class="font-bold">
+                <div class="flex items-center space-x-2 text-textThemeColor">
+                  <h4 class="font-bold text-textThemeColor">
                     {{ getAuthorName(comment.user_id) }}
                   </h4>
-                  <span class="text-gray-500 text-sm">{{
+                  <span class="text-textThemeColor text-sm">{{
                     timeSince(comment.created_at)
                   }}</span>
                 </div>
                 <p style="word-break: break-word">{{ comment.comment }}</p>
                 <div
                   v-if="getCommentsInComments(comment.id).length"
-                  class="ml-8 mt-2 space-y-2"
+                  class="ml-8 mt-2 space-y-2 text-textThemeColor"
                 >
                   <div
                     v-for="reply in getCommentsInComments(comment.id).filter(
                       (reply) => reply.reported === 0 || reply.text_ia === 0
                     )"
                     :key="reply.id"
-                    class="flex items-start space-x-4 mb-4 mr-10"
+                    class="flex items-start space-x-4 mb-4 mr-10 text-textThemeColor"
                   >
                     <img
                       :src="getAuthorProfile(reply.user_id)"
@@ -168,11 +168,11 @@
                       class="w-8 h-8 rounded-full"
                     />
                     <div>
-                      <div class="flex items-center space-x-2">
-                        <h4 class="font-bold">
+                      <div class="flex items-center space-x-2 text-textThemeColor">
+                        <h4 class="font-bold text-textThemeColor">
                           {{ getAuthorName(reply.user_id) }}
                         </h4>
-                        <span class="text-gray-500 text-sm">{{
+                        <span class="text-gray-500 text-sm text-textThemeColor">{{
                           timeSince(reply.created_at)
                         }}</span>
                       </div>
@@ -185,14 +185,14 @@
                     type="text"
                     :placeholder="$t('viewRequest.comentPlaceholder')"
                     v-model="replyInputs[comment.id]"
-                    class="w-3/4 focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-600 pl-3 pr-16 bg-gray-200 rounded-md py-2 dark:bg-gray-800 dark:text-white"
+                    class="w-3/4 focus:outline-none focus:placeholder-textThemeColor text-textThemeColor placeholder-textThemeColor pl-3 pr-16 bg-bgTheme rounded-md py-2 border-2 border-buttonColorPrimary"
                     style="width: 100%"
                   />
                   <div class="absolute right-0 items-center inset-y-0 flex">
                     <button
                       @click="sendCommentInMongo(comment.id)"
                       type="button"
-                      class="inline-flex items-center justify-center rounded-full h-10 w-10 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300 focus:outline-none mr-4"
+                      class="inline-flex items-center justify-center rounded-full h-10 w-10 transition duration-500 ease-in-out text-textThemeColor hover:bg-buttonColorPrimary focus:outline-none mr-4"
                     >
                       <svg
                         viewBox="0 -0.5 25 25"
@@ -232,20 +232,20 @@
           (a, b) => new Date(b.created_at) - new Date(a.created_at)
         )"
         :key="request.id"
-        class="max-w-3xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden mt-6 dark:bg-gray-900"
+        class="max-w-3xl mx-auto bg-containersTheme shadow-lg rounded-lg overflow-hidden mt-6"
       >
         <div v-if="request.reports === 0">
-          <header class="flex items-center p-4 border-b">
+          <header class="flex items-center p-4 border-b border-buttonColorPrimary">
             <img
               :src="getAuthorProfile(request.user_id)"
               alt="Avatar"
               class="w-12 h-12 rounded-full mr-4"
             />
             <div>
-              <h2 class="font-bold text-lg">
+              <h2 class="font-bold text-lg text-textThemeColor">
                 {{ getAuthorName(request.user_id) }}
               </h2>
-              <p class="text-gray-500 text-sm dark:text-white">
+              <p class="text-textThemeColor text-sm">
                 {{ getAuthorHandle(request.user_id) }} ·
                 {{ timeSince(request.created_at) }}
               </p>
@@ -253,9 +253,9 @@
           </header>
 
           <main class="p-4 space-y-4">
-            <h1 class="text-xl font-bold">{{ request.title }}</h1>
+            <h1 class="text-xl font-bold text-textThemeColor">{{ request.title }}</h1>
             <p
-              class="text-gray-800 text-lg whitespace-pre-line dark:text-gray-300"
+              class="text-textThemeColor text-lg whitespace-pre-line "
             >
               {{ request.description }}
             </p>
@@ -270,7 +270,7 @@
                 class="w-full"
               />
               <button
-                class="block mx-auto mt-2 px-2 py-2 text-sm text-blue-500 hover:text-blue-600 focus:outline-none"
+                class="block mx-auto mt-2 px-2 py-2 text-sm text-textColorPrimary hover:text-buttonColorHoverPrimary focus:outline-none"
                 @click="toggleExpand(request.id)"
               >
                 {{
@@ -282,25 +282,25 @@
             </div>
 
             <!-- Mostrar disponibilidad cuando expandido -->
-            <div v-if="expandedRequests.includes(request.id)" class="mt-6">
-              <h2 class="text-lg font-semibold text-center text-white mb-4">
+            <div v-if="expandedRequests.includes(request.id)" class="mt-6 bg-containersTheme">
+              <h2 class="text-lg font-semibold text-center text-textThemeColor mb-4">
                 {{ $t("viewRequest.availability") }}
               </h2>
               <div
-                class="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg shadow-md"
+                class="bg-bgTheme p-4 rounded-lg shadow-md border-2 border-buttonColorPrimary"
               >
-                <p class="text-gray-800 dark:text-gray-300 text-center">
+                <p class="text-textThemeColor text-center">
                   <span
                     v-for="(day, index) in parseAvailability(
                       request.availability
                     )"
                     :key="index"
-                    class="block py-2 border-b border-gray-300 dark:border-gray-700"
+                    class="block py-2 border-b border-buttonColorPrimary"
                   >
-                    <strong class="text-gray-900 dark:text-gray-200">{{
+                    <strong class="text-textThemeColor">{{
                       day.day
                     }}</strong>
-                    <span class="text-sm text-gray-500 dark:text-gray-400">
+                    <span class="text-sm text-textThemeColor">
                       {{ $t("viewRequest.from") }} {{ day.startTime }} {{ $t("viewRequest.to") }} {{ day.endTime }}
                     </span>
                   </span>
@@ -309,8 +309,8 @@
             </div>
           </main>
 
-          <footer class="p-4 border-t flex justify-between items-center">
-            <div class="flex justify-around text-gray-500 dark:text-gray-300">
+          <footer class="p-4 border-t flex justify-between items-center border-buttonColorPrimary">
+            <div class="flex justify-around text-textThemeColor">
               <button
                 class="flex items-center space-x-1 hover:text-gray-500"
                 @click="showrequestWithComments(request)"
@@ -332,8 +332,6 @@
                 <span>{{ getCommentsWithrequestId(request.id).length }}</span>
               </button>
             </div>
-
-            <!-- Botón "Ver más" -->
           </footer>
         </div>
       </div>

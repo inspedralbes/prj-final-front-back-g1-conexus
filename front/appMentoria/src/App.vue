@@ -108,7 +108,7 @@ watch(() => appStore.selectedTheme, (newTheme) => {
 <template>
   <div id="app" class="bg-bgTheme text-textThemeColor">
     <NavBarWeb v-if="route.name !== 'login'" class="hidden lg:fixed lg:top-0 lg:left-0 lg:h-screen lg:w-60 lg:block"></NavBarWeb>
-    <NavBarApp v-if="route.name !== 'login'" class="fixed bottom-0 left-0 right-0 w-full lg:hidden "></NavBarApp>
+    <NavBarApp v-if="route.name !== 'login'" class="fixed bottom-0 left-0 right-0 w-full lg:hidden z-10"></NavBarApp>
     <RouterView v-if="!isLoading || userAPP.name" />
     <div v-else class="flex items-center justify-center min-h-screen bg-bgTheme text-textThemeColor">
       <Loading />
