@@ -1,7 +1,7 @@
 <template>
   <Header class="shadow-lg shadow-black/30"></Header>
 
-  <div v-if="user.value" class="dark:bg-gray-900 p-4 text-gray-900 dark:text-gray-100">
+  <div v-if="user.value" class="bg-bgTheme p-4 text-textThemeColor">
     <!-- User - Banner & Profile Image -->
     <BannerProfile :banner="banner" :profile="profile" :user="user"/>
 
@@ -9,13 +9,13 @@
     <PersonalInfo :user="user" />
 
     <!-- User - Availibility -->
-    <div class="dark:bg-gray-800 bg-white p-6 rounded-xl shadow-lg shadow-black/30 my-4">
+    <div class="dark:bg-bgTheme bg-textThemeColor p-6 rounded-xl shadow-lg shadow-black/30 my-4">
       <Calendar :availabilityJson="user.value.availability" :id="user.value.id"  />
     </div>
   </div>
 
   <!-- If !users -->
-  <div v-else class="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
+  <div v-else class="flex items-center justify-center min-h-screen bg-textThemeColor">
     <Loading />
   </div>
 </template>
