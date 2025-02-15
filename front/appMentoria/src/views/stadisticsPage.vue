@@ -65,9 +65,6 @@
         <Loading />
     </div>
 
-    <!-- NavBar -->
-    <NavBar />
-
     <!-- Modal para ampliar imágenes -->
     <div v-if="selectedImage" 
          class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
@@ -78,7 +75,6 @@
 </template>
 
 <script setup>
-import NavBar from '@/components/navBar/NavBarApp.vue';
 import Loading from '@/components/Loading.vue';
 import { ref, onMounted } from 'vue';
 

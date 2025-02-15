@@ -68,6 +68,10 @@ onMounted(async () => {
     appElement.classList.remove(...colors.map((t) => `color-${t}`));
     appElement.classList.add(`color-${colorPreference}`);
     console.log("Color preference:", colorPreference);
+  } else {
+    const color = 'yellow';
+    const appElement = document.getElementById("app");
+    appElement.classList.add(`color-${color}`);
   }
 
   const themePreference = localStorage.getItem("theme");
@@ -77,6 +81,10 @@ onMounted(async () => {
     appElement.classList.remove(...themes.map((t) => `theme-${t}`));
     appElement.classList.add(`theme-${themePreference}`);
     console.log("Theme preference:", themePreference);
+  } else {
+    const theme = 'light';
+    const appElement = document.getElementById("app");
+    appElement.classList.add(`theme-${theme}`);
   }
 
   const user = await validateLogin();
@@ -107,8 +115,8 @@ watch(() => appStore.selectedTheme, (newTheme) => {
 
 <template>
   <div id="app" class="bg-bgTheme text-textThemeColor">
-    <NavBarWeb v-if="route.name !== 'login'" class="hidden lg:fixed lg:top-0 lg:left-0 lg:h-screen lg:w-60 lg:block z-10"></NavBarWeb>
-    <NavBarApp v-if="route.name !== 'login'" class="fixed bottom-0 left-0 right-0 w-full lg:hidden z-10"></NavBarApp>
+    <NavBarWeb v-if="route.name !== 'login' && !isLoading" class="hidden lg:fixed lg:top-0 lg:left-0 lg:h-screen lg:w-60 lg:block z-10"></NavBarWeb>
+    <NavBarApp v-if="route.name !== 'login' && !isLoading" class="fixed bottom-0 left-0 right-0 w-full lg:hidden z-10"></NavBarApp>
     <RouterView v-if="!isLoading || userAPP.name" />
     <div v-else class="flex items-center justify-center min-h-screen bg-bgTheme text-textThemeColor">
       <Loading />

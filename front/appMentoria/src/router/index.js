@@ -10,7 +10,6 @@ import chatListPage from '../views/chatListPage.vue'
 import loginPage from '../views/loginRegisterPage.vue'
 import addComunityPost from '../views/addComunityPost.vue'
 import addRequestPost from '../views/addRequestPost.vue'
-import adminPanel from '../views/adminPanel.vue'
 import reportUserPage from '@/views/reportUserPage.vue'
 import reportPublicacioPage from '@/views/reportPublicacioPage.vue'
 import reportCommentsPage from '@/views/reportCommentsPage.vue'
@@ -60,11 +59,6 @@ const routes = [
     component: profilesPage,
   },
   {
-    path: '/admin',
-    name: 'admin',
-    component: adminPanel,
-  },
-  {
     path: '/report',
     name: 'reportPage',
     component: reportPage,
@@ -83,11 +77,6 @@ const routes = [
     path: '/myrequests',
     name: 'myrequests',
     component: myRequests,
-  },
-  {
-    path: '/admin',
-    name: 'admin',
-    component: adminPanel,
   },
   {
     path: '/reportUserPage',

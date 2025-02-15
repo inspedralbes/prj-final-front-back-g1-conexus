@@ -5,13 +5,10 @@
           <HeaderReport class="mb-8"></HeaderReport>
         </div>
       </div>
-  
-      <NavBar class="fixed bottom-0 left-0 right-0 z-20 shadow-md bg-white dark:bg-gray-800"></NavBar>
     </div>
   </template>
   
   <script setup>
   import HeaderReport from '@/components/HeaderReport.vue';
-  import NavBar from '@/components/navBar/NavBarApp.vue';
   </script>
   

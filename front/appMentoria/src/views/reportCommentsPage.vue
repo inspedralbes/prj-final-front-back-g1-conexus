@@ -5,11 +5,9 @@
             <ViewReportComments></ViewReportComments>
         </div>
     </div>
-    <NavBar></NavBar>
 </template>
 
 <script setup>
-import NavBar from '@/components/navBar/NavBarApp.vue';
 import ViewReportComments from '@/components/viewReportComments.vue';
 import HeaderReport from '@/components/HeaderReport.vue';
 </script>

@@ -6,11 +6,8 @@
       <viewMyRequests></viewMyRequests>
     </div>
   </div>
-  <NavBar></NavBar>
 </template>
   
   <script setup>
-import Header from "@/components/Header.vue";
-import NavBar from "@/components/navBar/NavBarApp.vue";
 import viewMyRequests from "@/components/viewMyRequests.vue";
 </script>

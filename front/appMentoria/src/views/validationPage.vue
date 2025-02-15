@@ -5,11 +5,9 @@
             <viewValidationUser></viewValidationUser>
         </div>
     </div>
-    <NavBar></NavBar>
 </template>
 
 <script setup>
-import NavBar from '@/components/navBar/NavBarApp.vue';
 import viewValidationUser from '@/components/viewValidationUser.vue';
 import HeaderVerification from '@/components/HeaderVerification.vue';
 </script>

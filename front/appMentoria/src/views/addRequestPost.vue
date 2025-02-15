@@ -25,14 +25,11 @@
     <main class="flex-grow min-h-screen bg-bgTheme">
       <RequestPost></RequestPost>
     </main>
-    <NavBar></NavBar>
   </div>
 </template>
 
   <script setup>
 import RequestPost from "@/components/RequestPost.vue";
-import Header from "@/components/Header.vue";
-import NavBar from "@/components/navBar/NavBarApp.vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();

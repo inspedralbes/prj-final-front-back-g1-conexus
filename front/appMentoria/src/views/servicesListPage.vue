@@ -46,16 +46,10 @@
         </ul>
       </div>
     </main>
-
-    <!-- Navigation Bar -->
-    <NavBar
-      class="fixed bottom-0 left-0 right-0 z-20 shadow-md bg-white dark:bg-gray-800"
-    />
   </div>
 </template>
     
   <script setup>
-import NavBar from "@/components/navBar/NavBarApp.vue";
 import { ref, onMounted } from "vue";
 import {
   getServices,

@@ -7,11 +7,9 @@
       <ViewReportPublicacio></ViewReportPublicacio>
     </div>
   </div>
-  <NavBar></NavBar>
 </template>
 
 <script setup>
-import NavBar from "@/components/navBar/NavBarApp.vue";
 import ViewReportPublicacio from "@/components/viewReportPublicacio.vue";
 import HeaderReport from "@/components/HeaderReport.vue";
 </script>

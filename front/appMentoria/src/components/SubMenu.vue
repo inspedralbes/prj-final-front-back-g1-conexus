@@ -41,13 +41,6 @@
                 class="text-textThemeColor flex justify-between w-full px-4 py-2 text-sm leading-5 text-left" role="menuitem">
                 {{ $t("subMenu.setting") }}
               </button>
-              <div v-if="userTypes == 2" class="py-1">
-                <button @click="$router.push('/report')" tabindex="3"
-                  class="text-textThemeColor flex justify-between w-full px-4 py-2 text-sm leading-5 text-left"
-                  role="menuitem">
-                  {{ $t("subMenu.admin") }}
-                </button>
-              </div>
               <div v-if="userTypes == 3" class="py-1">
                 <button @click="$router.push('/report')" tabindex="3"
                   class="text-textThemeColor flex justify-between w-full px-4 py-2 text-sm leading-5 text-left"
@@ -104,7 +97,7 @@ onMounted(() => {
   user.value = appStore.getUser();
   profile.value = user.value.profile;
   name.value = user.value.name;
-  userTypes.value = appStore.getTypeUser();
+  userTypes.value = user.value.typesUsers_id;
 });
 
 const handleLogout = async () => {

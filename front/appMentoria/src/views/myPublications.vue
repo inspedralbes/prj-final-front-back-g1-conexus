@@ -6,11 +6,8 @@
       <viewMyPublications></viewMyPublications>
     </div>
   </div>
-  <NavBar></NavBar>
 </template>
 
 <script setup>
-import Header from "@/components/Header.vue";
-import NavBar from "@/components/navBar/NavBarApp.vue";
 import viewMyPublications from "@/components/viewMyPublications.vue";
 </script>

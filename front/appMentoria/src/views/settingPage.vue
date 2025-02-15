@@ -1,7 +1,6 @@
 <template>
   <div class="flex flex-col min-h-screen bg-backgroundLight dark:bg-backgroundDark">
     <div class="flex flex-col lg:flex-row">
-      <NavBarWeb class="hidden lg:fixed lg:top-0 lg:left-0 lg:h-screen lg:w-60 lg:block bg-white shadow-md"></NavBarWeb>
       <div class="flex-grow lg:ml-60 p-6">
         <h1 class="border-b pb-4 text-3xl font-semibold text-gray-400">Configuración</h1>
         <div class="flex flex-col sm:flex-row sm:space-x-4 mt-6">
@@ -50,7 +49,6 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import NavBarWeb from '@/components/navBar/NavBarWeb.vue';
 import LanguageSetting from '@/components/setting/languageSetting.vue';
 import ThemeSetting from '@/components/setting/themeSetting.vue';
 
