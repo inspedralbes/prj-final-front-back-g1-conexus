@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-col min-h-screen">
-    <button @click="goBack" class="py-2 px-4 fixed top-0 left-0 mt-3 ml-4 z-20">
+  <div class="flex flex-col min-h-screen bg-bgTheme text-textThemeColor">
+    <button @click="goBack" class="py-2 px-4 fixed top-0 left-0 mt-3 ml-4 z-20 text-textThemeColor">
       <svg
         width="20"
         height="20"
@@ -23,7 +23,7 @@
       </svg>
     </button>
     <Header class="fixed top-0 left-0 right-0 z-10"></Header>
-    <main class="flex-grow min-h-screen">
+    <main class="flex-grow min-h-screen bg-bgTheme">
       <RequestPost></RequestPost>
     </main>
     <NavBar></NavBar>

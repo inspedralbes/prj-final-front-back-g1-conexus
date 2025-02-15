@@ -1,15 +1,15 @@
 <template>
   <div
-    class="bg-gray-100 min-h-screen flex items-center justify-center p-6 sm:p-8 dark:bg-neutral-900 dark:text-white"
+    class="bg-bgTheme min-h-screen flex items-center justify-center p-6 sm:p-8 text-textThemeColor"
   >
     <div
-      class="max-w-md w-full bg-white dark:bg-neutral-800 p-6 sm:p-8 rounded-lg shadow-md my-20 mb-20"
+      class="max-w-md w-full bg-containersTheme p-6 sm:p-8 rounded-lg shadow-md my-20 mb-20"
     >
       <form>
         <!-- Título y descripción -->
         <div class="mb-6">
           <label
-            class="block text-gray-700 text-sm font-bold mb-2 dark:text-gray-300"
+            class="block text-textThemeColor text-sm font-bold mb-2"
             for="title"
           >
            {{ $t("requestPost.title") }}
@@ -19,7 +19,7 @@
             name="postContent"
             rows="1"
             v-model="title"
-            class="w-full border rounded-md leading-5 transition duration-150 ease-in-out sm:text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-300 dark:border-gray-700 dark:bg-neutral-900 dark:text-white"
+            class="w-full border rounded-md leading-5 transition duration-150 ease-in-out sm:text-sm resize-none focus:outline-none focus:ring-2 focus:ring-buttonColorPrimary border-buttonColorPrimary bg-containersTheme text-textThemeColor"
             :placeholder="$t('requestPost.titlePlaceholder')"
           ></textarea>
           <textarea
@@ -27,7 +27,7 @@
             name="postContent"
             rows="4"
             v-model="description"
-            class="w-full mt-4 border rounded-md leading-5 transition duration-150 ease-in-out sm:text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-300 dark:border-gray-700 dark:bg-neutral-900 dark:text-white"
+            class="w-full mt-4 border rounded-md leading-5 transition duration-150 ease-in-out sm:text-sm resize-none focus:outline-none focus:ring-2 focus:ring-buttonColorPrimary border-buttonColorPrimary bg-containersTheme text-textThemeColor"
             :placeholder="$t('requestPost.DescriptionPlaceholder')"
           ></textarea>
         </div>
@@ -36,7 +36,7 @@
         <div class="mb-6">
           <label
             for="image-upload"
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            class="block text-sm font-medium text-textThemeColor mb-2"
           >
             {{ $t("requestPost.uploadImage") }}
           </label>
@@ -45,7 +45,7 @@
             type="file"
             accept="image/*"
             @change="handleImageUpload"
-            class="block w-full text-sm text-gray-500 dark:text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-neutral-700 dark:file:text-blue-300 dark:hover:file:bg-neutral-600"
+            class="block w-full text-sm text-textThemeColor file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-buttonColorPrimary file:text-textThemeColor hover:file:bg-containersTheme"
           />
         </div>
 
@@ -53,13 +53,12 @@
         <div class="mb-6">
           <label
             for="availability"
-            class="block text-gray-700 text-sm font-bold mb-2 dark:text-gray-300"
+            class="block text-textThemeColor text-sm font-bold mb-2"
           >
           {{ $t("requestPost.availability") }}
-      
           </label>
           <button
-            class="p-2 bg-blue-100 rounded-md mb-4 w-full sm:w-auto dark:bg-blue-700 dark:text-white dark:hover:bg-blue-800"
+            class="p-2 bg-buttonColorPrimary rounded-md mb-4 w-full sm:w-auto text-textThemeColor hover:bg-buttonColorHoverPrimary"
             type="button"
             @click="addAvailability"
           >
@@ -72,10 +71,9 @@
           >
             <select
               v-model="availability.day"
-              class="border rounded-md p-2 text-sm w-full sm:w-auto dark:border-gray-700 dark:bg-neutral-900 dark:text-white"
+              class="border rounded-md p-2 text-sm w-full sm:w-auto border-buttonColorPrimary bg-containersTheme text-textThemeColor"
             >
-              <option disabled value="">
-              {{ $t("requestPost.selectDay") }}</option>
+              <option disabled value="">{{ $t("requestPost.selectDay") }}</option>
               <option v-for="day in week" :key="day" :value="day">
                 {{ day }}
               </option>
@@ -83,10 +81,9 @@
             <select
               v-model="availability.startTime"
               @change="validateTimes(index)"
-              class="border rounded-md p-2 text-sm w-full sm:w-auto dark:border-gray-700 dark:bg-neutral-900 dark:text-white"
+              class="border rounded-md p-2 text-sm w-full sm:w-auto border-buttonColorPrimary bg-containersTheme text-textThemeColor"
             >
-              <option disabled value="">
-              {{ $t("requestPost.startTime") }}</option>
+              <option disabled value="">{{ $t("requestPost.startTime") }}</option>
               <option
                 v-for="hour in filteredHours(index, 'start')"
                 :key="hour"
@@ -98,7 +95,7 @@
             <select
               v-model="availability.endTime"
               @change="validateTimes(index)"
-              class="border rounded-md p-2 text-sm w-full sm:w-auto dark:border-gray-700 dark:bg-neutral-900 dark:text-white justify-between"
+              class="border rounded-md p-2 text-sm w-full sm:w-auto border-buttonColorPrimary bg-containersTheme text-textThemeColor"
             >
               <option disabled value="">{{$t("requestPost.endTime")}}</option>
               <option
@@ -112,7 +109,7 @@
             <button
               type="button"
               @click="removeAvailability(index)"
-              class="bg-red-500 hover:bg-red-600 text-white p-2 rounded-md dark:bg-red-700 dark:hover:bg-red-800 mb-4 sm:w-auto w-full flex justify-center items-center"
+              class="bg-red-500 hover:bg-red-600 text-white p-2 rounded-md mb-4 sm:w-auto w-full flex justify-center items-center"
             >
               <svg
                 width="19"
@@ -161,7 +158,7 @@
           <button
             type="button"
             @click="submitPostPeticio"
-            class="w-full py-2 px-4 bg-blue-500 dark:bg-blue-700 text-white font-semibold rounded-lg hover:bg-blue-600 dark:hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-300 flex justify-center items-center"
+            class="w-full py-2 px-4 bg-bgColorPrimary text-textThemeColor font-semibold rounded-lg hover:bg-buttonColorHoverPrimary focus:outline-none focus:ring-2 focus:ring-buttonColorPrimary flex justify-center items-center"
             :disabled="isLoading"
           >
             <span v-if="!isLoading">Publicar</span>
@@ -187,7 +184,6 @@
                 ></path>
               </svg>
               {{ $t("requestPost.publishing") }}
-          
             </span>
           </button>
         </div>
@@ -203,7 +199,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { postEmploymentExchangePublication } from "@/services/communicationManager";
 import { useAppStore } from "@/stores/index";
-import NavBar from "./navBar/NavBarApp.vue";
+
 const router = useRouter();
 const title = ref("");
 const description = ref("");
@@ -348,7 +344,6 @@ function goBack() {
   max-width: 500px;
   margin: 0 auto;
   padding: 20px;
-  border: 1px solid #ccc;
   border-radius: 10px;
   background-color: #fff;
 }
@@ -360,7 +355,6 @@ function goBack() {
 textarea {
   width: 100%;
   padding: 10px;
-  border: 1px solid #737272;
   border-radius: 5px;
   resize: none;
 }
