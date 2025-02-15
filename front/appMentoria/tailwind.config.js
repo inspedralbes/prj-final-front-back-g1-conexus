@@ -11,7 +11,7 @@ export default {
         bgColorPrimary: 'var(--bg-primary)',
         textColorPrimary: 'var(--text-primary)',
         buttonColorPrimary: 'var(--button-primary)',
-        buttonColorHoverPrimary: 'var(--button-hover-primary)',
+        buttonColorSecondary: 'var(--button-secondary)',
       },
       boxShadow: {
         custom: 'var(--box-shadow)',

@@ -4,7 +4,6 @@
       class="max-w-screen-xl m-0 sm:m-10 bg-containersTheme shadow sm:rounded-lg flex justify-center flex-1"
     >
       <div class="lg:w-1/2 xl:w-5/12 p-6 sm:p-12">
-        <ToggleDarkMode />
         <div class="mt-12 flex flex-col items-center">
           <div
             v-if="message"
@@ -25,7 +24,7 @@
             <div class="flex flex-col items-center">
               <button
                 @click="signInWithGoogle"
-                class="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-buttonColorPrimary text-textThemeColor  flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline"
+                class="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-buttonColorPrimary text-textThemeColor hover:bg-buttonColorSecondary flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline"
               >
                 <div class="bg-white p-2 rounded-full">
                   <svg class="w-4" viewBox="0 0 533.5 544.3">
@@ -52,7 +51,7 @@
 
               <button
                 @click="signInWithGithub"
-                class="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-buttonColorPrimary text-textThemeColor flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline mt-5"
+                class="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-buttonColorPrimary text-textThemeColor hover:bg-buttonColorSecondary flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline mt-5"
               >
                 <div class="bg-white p-1 rounded-full">
                   <svg class="w-6" viewBox="0 0 32 32">
@@ -89,7 +88,7 @@
               />
               <button
                 @click="signInWithApp"
-                class="mt-5 tracking-wide font-semibold bg-buttonColorPrimary text-textThemeColor w-full py-4 rounded-lg hover:bg-buttonColorPrimary transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
+                class="mt-5 tracking-wide font-semibold bg-buttonColorPrimary text-textThemeColor w-full py-4 rounded-lg hover:bg-buttonColorSecondary transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
               >
                 <svg
                   class="w-6 h-6 -ml-2"
@@ -142,7 +141,6 @@ import {
   GithubAuthProvider,
   signInWithPopup,
 } from "firebase/auth";
-import ToggleDarkMode from "@/components/ToggleDarkMode.vue";
 import { loginAPI, loginDB } from "@/services/communicationManager";
 import { useAppStore } from "@/stores/index";
 import router from "@/router";

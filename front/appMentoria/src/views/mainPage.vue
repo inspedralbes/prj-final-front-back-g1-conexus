@@ -6,9 +6,9 @@
 
     <div
       v-if="showModal"
-      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+      class="fixed inset-0 flex items-center justify-center bg-containersTheme bg-opacity-50"
     >
-      <div class="bg-white p-6 rounded-lg shadow-lg max-w-md mx-auto">
+      <div class="bg-containersTheme p-6 rounded-lg shadow-lg max-w-md mx-auto">
         <h2 class="text-xl font-bold mb-4">{{ $t("mainPage.allow") }}</h2>
         <p class="mb-4">
           {{ $t("mainPage.questionPermission") }}
@@ -19,7 +19,7 @@
         <div class="flex justify-end">
           <button
             @click="closeModal"
-            class="bg-blue-500 text-white px-4 py-2 rounded"
+            class="bg-buttonColorPrimary text-white px-4 py-2 rounded hover:bg-buttonColorHoverPrimary"
           >
             {{ $t("mainPage.ok") }}
           </button>

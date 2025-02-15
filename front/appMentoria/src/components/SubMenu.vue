@@ -63,9 +63,6 @@
             </div>
             <div class="py-1">
               <div class="flex justify-between px-4 py-2 text-textThemeColor">
-                <span>
-                  <ToggleDarkMode />
-                </span>
                 <span class="text-textThemeColor">
                   <svg @click="handleLogout" width="40" height="40" fill="#000000" viewBox="-9 0 32 32" version="1.1" class="text-textThemeColor"
                     xmlns="http://www.w3.org/2000/svg">
@@ -90,7 +87,6 @@
 
 <script setup>
 import { ref, onMounted, reactive } from "vue";
-import ToggleDarkMode from "./ToggleDarkMode.vue";
 import { useAppStore } from "@/stores/index";
 import { logout } from "@/services/communicationManager";
 import { useRouter } from "vue-router";

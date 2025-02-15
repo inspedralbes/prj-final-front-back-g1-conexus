@@ -36,34 +36,34 @@
 .color-purple {
   --bg-primary: #b500ea;
   --text-primary: #b500ea;
-  --button-primary-hover: #bf54df;
+  --button-secondary: #bf54df;
   --button-primary: #b500ea;
 }
 
 .color-pink {
   --bg-primary: #ec4899;
   --text-primary: #ec4899;
-  --button-primary-hover: #f06ab3;
+  --button-secondary: #f06ab3;
   --button-primary: #ec4899;
 }
 
 .color-yellow {
   --bg-primary: #f59e0b;
   --text-primary: #f59e0b;
-  --button-primary-hover: #f5b90b;
+  --button-secondary: #ffcd36;
   --button-primary: #f59e0b;
 }
 
 .color-green {
   --bg-primary: #00b341;
   --text-primary: #00b341;
-  --button-primary-hover: #00d14d;
+  --button-secondary: #00d14d;
   --button-primary: #00b341;
 }
 
 .color-blue {
   --bg-primary: #00a9e0;
   --text-primary: #00a9e0;
-  --button-primary-hover: #00c2f0;
+  --button-secondary: #00c2f0;
   --button-primary: #00a9e0;
 }
