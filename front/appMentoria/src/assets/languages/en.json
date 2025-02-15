@@ -337,5 +337,16 @@
         "mentors": "Mentors",
         "request": "Requests",
         "share": "Share"
+    },
+    
+    "navBarWeb": {
+        "main": "Main",
+        "oferts": "Oferts",
+        "profiles": "Profiles",
+        "notifications": "Notifications",
+        "chat": "Chat",
+        "gacha": "Gacha",
+        "games": "Games",
+        "addPost" : "Add Post"
     }
 }

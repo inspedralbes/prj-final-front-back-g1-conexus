@@ -351,6 +351,7 @@
         "notifications": "Notificacions",
         "chat": "Xat",
         "gacha": "Gacha",
-        "games": "Jocs"
+        "games": "Jocs",
+        "addPost" : "Afegir publicació"
     }
 }

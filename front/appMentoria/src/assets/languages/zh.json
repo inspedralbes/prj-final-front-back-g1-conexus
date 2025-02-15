@@ -345,6 +345,7 @@
         "notifications": "通知",
         "chat": "聊天",
         "gacha": "扭蛋",
-        "games": "游戏"
+        "games": "游戏",
+        "addPost": "添加帖子"
     }
 }

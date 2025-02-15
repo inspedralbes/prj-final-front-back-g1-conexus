@@ -347,6 +347,7 @@
         "notifications": "Notificaciones",
         "chat": "Chat",
         "gacha": "Gacha",
-        "games": "Juegos"
+        "games": "Juegos",
+        "addPost": "Añadir post"
     }
 }

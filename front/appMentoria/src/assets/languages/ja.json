@@ -346,6 +346,7 @@
         "notifications": "通知",
         "chat": "チャット",
         "gacha": "ガチャ",
-        "games": "ゲーム"
+        "games": "ゲーム",
+        "addPost": "投稿を追加"
     }
 }
