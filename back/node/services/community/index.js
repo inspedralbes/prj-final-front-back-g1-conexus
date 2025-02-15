@@ -280,7 +280,19 @@ app.delete('/comments/:id', verifyToken, async (req, res) => {
 app.get('/publications', verifyToken, async (req, res) => {
     try {
         const connection = await mysql.createConnection(dbConfig);
-        const [rows] = await connection.execute('SELECT * FROM publications WHERE typesPublications_id = 1 AND text_ia = 1 AND image_ia = 1');
+        const { user_id } = req.query;
+        const today = new Date().toISOString().split('T')[0];
+
+        const [rows] = await connection.execute(`
+            SELECT p.*, IF(f.user_id IS NOT NULL, 1, 0) AS is_followed
+            FROM publications p
+            LEFT JOIN following f ON p.user_id = f.user_id AND f.following_user_id = ?
+            WHERE p.typesPublications_id = 1 AND p.text_ia = 1 AND p.image_ia = 1
+            ORDER BY 
+            (DATE(p.created_at) = ?) DESC,
+            is_followed DESC,
+            p.created_at DESC
+        `, [user_id, today]);
         connection.end();
         res.json(rows);
     } catch (error) {

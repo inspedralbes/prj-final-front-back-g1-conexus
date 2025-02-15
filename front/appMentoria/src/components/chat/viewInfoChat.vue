@@ -1,57 +1,62 @@
 <template>
-  <div>
-    <div
-      v-if="selectedChatId === false"
-      v-for="chat in chats"
-      :key="chat.id"
-      class="chat-item overflow-y-auto"
-    >
+    <div>
       <div
-        style="display: flex; align-items: center"
-        @click="selectChat(chat._id), updateUserIdLaOtra(chat)"
+        v-if="selectedChatId === false"
+        v-for="chat in chats"
+        :key="chat._id"
+        class="chat-item overflow-y-auto"
       >
-        <img
-          v-if="chat.user_one_id === userId"
-          :src="getAuthorProfile(chat.user_two_id)"
-          alt=""
-          class="w-10 sm:w-16 h-10 sm:h-16 rounded-full"
-        />
-        <img
-          v-if="chat.user_two_id === userId"
-          :src="getAuthorProfile(chat.user_one_id)"
-          alt=""
-          class="w-10 sm:w-16 h-10 sm:h-16 rounded-full"
-        />
-        <div style="margin-left: 1rem">
-          <h3 v-if="chat.user_one_id === userId">
-            {{ getAuthorName(chat.user_two_id) }}
-          </h3>
-          <h3 v-if="chat.user_two_id === userId">
-            {{ getAuthorName(chat.user_one_id) }}
-          </h3>
-          <p
-            v-if="
-              chat.interactions &&
-              chat.interactions.length > 0 &&
-              chat.interactions[chat.interactions.length - 1].message !== null
-            "
+          <div
+            style="display: flex; align-items: center"
+            @click="selectChat(chat._id)"
           >
-            {{ chat.interactions[chat.interactions.length - 1].message }}
-          </p>
-        </div>
+          <div v-if="chat.users.length > 2">
+            <h3>{{ chat.name }}</h3>
+            <p
+              v-if="
+                chat.interactions &&
+                chat.interactions.length > 0 &&
+                chat.interactions[chat.interactions.length - 1].message !== null
+              "
+            >
+              {{ chat.interactions[chat.interactions.length - 1].message }}
+            </p>
+          </div>
+            <div v-else style="display: flex; align-items: center">
+            <img
+              :src="getAuthorProfile(chat.users[0] === userId ? chat.users[1] : chat.users[0])"
+              alt="Profile Image"
+              style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px"
+            />
+            <div>
+              <h3 v-if="chat.users[0] === userId">
+              {{ getAuthorName(chat.users[1]) }}
+              </h3>
+              <h3 v-else>
+              {{ getAuthorName(chat.users[0]) }}
+              </h3>
+              <p
+              v-if="
+                chat.interactions &&
+                chat.interactions.length > 0 &&
+                chat.interactions[chat.interactions.length - 1].message !== null
+              "
+              >
+              {{ chat.interactions[chat.interactions.length - 1].message }}
+              </p>
+            </div>
+            </div>
       </div>
     </div>
+  </div>
     <viewChatContent
       v-if="selectedChatId !== false"
-      :chatId="selectedChatId"
+      :chatData="chats.find((chat) => chat._id === selectedChatId)"
       :users="users"
-      :userMio="userId"
-      :userElla="userIdLaOtra"
       :BACK_URL="BACK_URL"
       @closeChat="selectedChatId = false"
       class="overlay"
     />
-  </div>
 </template>
 
 <script setup>
@@ -94,16 +99,6 @@ watch(
   }
 );
 
-const userIdLaOtra = ref(false);
-
-const updateUserIdLaOtra = (chat) => {
-  if (chat.user_one_id === userId.value) {
-    userIdLaOtra.value = chat.user_two_id;
-  } else {
-    userIdLaOtra.value = chat.user_one_id;
-  }
-};
-
 const selectedChatId = ref(false);
 
 const selectChat = (chatId) => {
@@ -132,6 +127,7 @@ const getAuthorProfile = (userId) => {
 
 onMounted(() => {
   selectedChatId.value = false;
+  console.log("ViewChatList mounted");
 });
 </script>
 

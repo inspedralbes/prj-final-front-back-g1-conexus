@@ -50,10 +50,10 @@ export const fetchMessages = async (chatId) => {
 };
 
 // Send message
-export const sendMessageInMongo = async (chatData, currentUser, messageInput) => {
+export const sendMessageInMongo = async (chatData, currentUser, messageInput, users) => {
     const newMessage = {
         message: messageInput,
-        userId: currentUser,
+        userId: currentUser.value, // Asegúrate de que userId sea una cadena
         timestamp: new Date().toISOString(),
     };
 
@@ -64,7 +64,7 @@ export const sendMessageInMongo = async (chatData, currentUser, messageInput) =>
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
             },
-            body: JSON.stringify(chatData._rawValue),
+            body: JSON.stringify({ ...chatData._rawValue, interactions: [...chatData._rawValue.interactions, newMessage] }),
         });
 
         if (response.status === 401) {
@@ -83,9 +83,10 @@ export const sendMessageInMongo = async (chatData, currentUser, messageInput) =>
             messageInput.value = "";
         }
         socketChat.emit("sendMessage", {
-            chatId: chatData._rawValue._id,
-            userId: currentUser,
-            message: newMessage.message,
+            chatData: chatData.value,
+            message: newMessage,
+            userId: currentUser.value,
+            users: users.value
         });
     } catch (error) {
         console.error("Error sending message:", error);
@@ -132,37 +133,36 @@ export const fetchChats = async (userId) => {
 };
 
 // Create a new chat
-export const chatButton = async (userid2, router) => {
+export const chatButton = async (name, users, router) => {
     const appStore = useAppStore();
-    const userid1 = appStore.getUser().id;
+    if(users.length === 1) {
+        users = [appStore.user.id, users[0]];
+    }
     const newMessage = {
-        user_one_id: userid1,
-        user_two_id: userid2,
+        name: name,
+        users: users,
         interactions: [],
-        __v: 0,
+        reports: 0,
     };
     try {
         const response = await fetch(`${CHAT_URL}/newChat`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
             body: JSON.stringify(newMessage),
         });
-
-        if (response.status === 401) {
+        if (response.status == 401) {
             const refreshResult = await refreshToken();
             if (refreshResult.error) {
                 return { error: 'No se pudo renovar el token. Inicia sesión nuevamente.'};
             }
-            return chatButton(userid2, router);
+            return chatButton(name, users, router);
         }
-
         if (!response.ok) {
-            return { error: `HTTP error! status: ${response.status}` };
+            throw new Error("Failed to send message");
         }
-        
         router.push("/chatList");
     } catch (error) {
         console.error("Error sending message:", error);
@@ -170,6 +170,7 @@ export const chatButton = async (userid2, router) => {
     }
 };
 
+// Report chat in mongo
 export const reportChatMongo = async (chatId, messageId) => {
     try {
         const response = await fetch(`${CHAT_URL}/reportMessage`, {

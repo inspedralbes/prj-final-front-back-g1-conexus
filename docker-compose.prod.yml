@@ -15,10 +15,11 @@ services:
     build:
       dockerfile: ./back/node/prod.Dockerfile
       context: .
-    command: sh -c "cp .env.prod .env && pnpm install && chmod 777 .script.prod.sh && ./.script.prod.sh && node server.js"
+    command: sh -c "cp .env.prod .env && pnpm install && chmod +x .script.prod.sh && ./.script.prod.sh && cd /usr/src/node/middleware && cp .env.prod .env && pnpm install && cd /usr/src/app && pnpm run dev "
     volumes:
       - ./back/microprocessos_api:/usr/src/app
       - ./back/node/services:/usr/src/node/services
+      - ./back/node/middleware:/usr/src/node/middleware
     working_dir: /usr/src/app
     ports:
       - 3001:3001
@@ -29,7 +30,7 @@ services:
       - 3006:3006
       - 3007:3007
       - 3008:3008
-      - 3013:24848
+      - 3013:4000
     links:
      - tr-final-mysql
      - tr-final-mongodb

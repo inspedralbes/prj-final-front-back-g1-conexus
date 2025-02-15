@@ -91,7 +91,10 @@
     },
     "profilePage": {
         "placeWhereYouLive": "Lugar onde vives...",
-        "pendant": "Pendente de asignar"
+        "pendant": "Pendente de asignar",
+        "unfollow": "Deixar de seguir",
+        "follow": "Seguir",
+        "chat": "Chat"
     },
     "LoginRegisterPage": {
         "subTitle": "Correo {'@'}inspedralbes.cat",

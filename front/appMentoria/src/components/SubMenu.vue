@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <div class="flex items-center justify-center px-0">
       <div class="relative inline-block text-left dropdown">
         <span class="rounded-md shadow-sm">
@@ -148,6 +148,9 @@ const handleLogout = async () => {
 </script>
 
 <style>
+.container {
+  z-index: 1000;
+}
 .dropdown:focus-within .dropdown-menu {
   opacity: 1;
   transform: translate(0) scale(1);

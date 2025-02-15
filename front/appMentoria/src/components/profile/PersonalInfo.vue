@@ -190,7 +190,7 @@
                 </div>
 
                 <!-- Software Skills -->
-                <div class="space-y-1">
+                <div class="space-y-1" v-if="user.value.softwareSkills">
                     <h3 class="font-semibold">{{ $t("PersonalInfo.softwareSkills") }}</h3>
                     <div class="flex flex-wrap space-x-4 w-full overflow-hidden">
                         <span v-if="user.value.softwareSkills && user.value.softwareSkills.length > 0"
@@ -203,19 +203,19 @@
                 </div>
 
                 <!-- Languages -->
-                <div class="space-y-1">
+                <div class="space-y-1" v-if="user.value.languages">
                     <h3 class="font-semibold">{{ $t("PersonalInfo.languages") }}</h3>
                     <p class="text-gray-500 dark:text-gray-400" v-if="!user.value.languages">{{
                         $t("PersonalInfo.noLanguages") }}</p>
                     <div class="flex flex-wrap space-x-4 w-full overflow-hidden">
                         <span v-if="user.value.languages" v-for="lang in user.value.languages.split(', ')" :key="lang"
-                            class="flex-inline items-center px-3 py-1 bg-gray-200 text-gray-700 rounded-full m-2">{{
+                        class="p-2 rounded-lg text-gray-700 bg-gray-100 dark:text-gray-300 dark:bg-gray-700">{{
                             lang }}</span>
                     </div>
                 </div>
             </div>
         </div>
-        <button @click="$router.push('/editProfile/profile')"
+        <button @click="$router.push('/editProfile/profile')" v-if="user.value.id === userId"
             class="flex items-center space-x-1 mt-6 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg shadow">
             <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                 fill="currentColor" viewBox="0 0 24 24">
@@ -229,8 +229,10 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
-
+import { computed,ref  } from 'vue';
+import { useAppStore } from "@/stores/index";
+let appStore = useAppStore();
+const userId=ref(appStore.getUser().id)
 const props = defineProps({
     user: Object
 });

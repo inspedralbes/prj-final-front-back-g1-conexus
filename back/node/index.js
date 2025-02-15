@@ -95,6 +95,11 @@ app.post('/loginAPI', async (req, res) => {
                     let className = resultClassName[0].name;
                     userLogin = users[0];
                     userLogin.class_name = className;
+
+                    const [following]= await connection.execute('SELECT * FROM following WHERE user_id = ?', [userLogin.id]);
+                    const [followers]= await connection.execute('SELECT * FROM following WHERE following_id = ?', [userLogin.id]);
+                    userLogin.following = following;
+                    userLogin.followers = followers;
                 } else {
                     userLogin = users[0];
                 }
@@ -321,15 +326,14 @@ app.get('/users', verifyToken, async (req, res) => {
                 users.email,
                 users.banner,
                 users.profile,
-                qualifications.name AS qualification
+                qualifications.name AS qualification,
+                users.Github
             FROM 
                 users
             LEFT JOIN 
                 qualifications
             ON 
                 users.qualification_id = qualifications.id
-            WHERE 
-                users.typesUsers_id = 1
         `);
         connection.end();
         console.log('rows: ', rows);
@@ -338,7 +342,7 @@ app.get('/users', verifyToken, async (req, res) => {
         console.log("tus putas muelas");
         
         console.error('Database error:', error.message);
-        res.status(500).json({ error: 'Database error' });
+        res.status(500).json({ error: 'Database error:'+error.message });
     }
 });
 
@@ -353,10 +357,44 @@ app.get('/usersAll', verifyToken, async (req, res) => {
     }
 });
 
-app.get('/users/:id', verifyToken, async (req, res) => {
+app.get('/userProfile/:id', async (req, res) => {
     const { id } = req.params;
 
     try {
+        const connection = await mysql.createConnection(dbConfig);
+        const [rows] = await connection.execute('SELECT id,name, email, banner, profile, city, tags, availability, class_id, Linkedin, Instagram, Twitter, Github, Facebook, title, phone, softwareSkills, languages, description FROM users WHERE id = ?', [id]);
+        connection.end();
+
+        if (rows.length == 0) return res.status(404).json({ error: 'User not found' });
+
+        res.json(rows[0]);
+    } catch (error) {
+        res.status(500).json({ error: 'Database error' });
+    }
+
+});
+
+app.get('/userProfile/:id', verifyToken, async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const connection = await mysql.createConnection(dbConfig);
+        const [rows] = await connection.execute('SELECT id,name, email, banner, profile, city, tags, availability, class_id, Linkedin, Instagram, Twitter, Github, Facebook, title, phone, softwareSkills, languages, description FROM users WHERE id = ?', [id]);
+        connection.end();
+
+        if (rows.length == 0) return res.status(404).json({ error: 'User not found' });
+
+        res.json(rows[0]);
+    } catch (error) {
+        res.status(500).json({ error: 'Database error' });
+    }
+
+});
+
+app.delete('/users/:id', async (req, res) => {
+    const { id } = req.params;
+
+   try {
         const connection = await mysql.createConnection(dbConfig);
         const [rows] = await connection.execute('SELECT * FROM users WHERE id = ?', [id]);
         connection.end();
@@ -368,6 +406,28 @@ app.get('/users/:id', verifyToken, async (req, res) => {
         res.status(500).json({ error: 'Database error' });
     }
 });
+
+app.put('/users/:id', verifyToken, async (req, res) => {
+    const { id } = req.params;
+    const { name, email, password, typesUsers_id } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    try {
+        const connection = await mysql.createConnection(dbConfig);
+        const [result] = await connection.execute(
+            'UPDATE users SET name = ?, email = ?, password = ?, typesUsers_id = ? WHERE id = ?',
+            [name, email, hashedPassword, typesUsers_id, id]
+        );
+        connection.end();
+
+        if (result.affectedRows == 0) return res.status(404).json({ error: 'User not found' });
+
+        res.json({ message: 'User updated successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
 
 app.put('/users/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
@@ -405,7 +465,130 @@ app.delete('/users/:id', verifyToken, async (req, res) => {
         res.status(500).json({ error: 'Database error' });
     }
 });
+app.get('/newDataUsers', async (req, res) => {
+    try {
+        const connection = await mysql.createConnection(dbConfig);
+        const [rows] = await connection.execute('SELECT * FROM newDataUsers');
+        connection.end();
+        res.json(rows);
+    } catch (error) {
+        res.status(500).json({ error: 'Database error' });
+    }
+});
 
+app.get('/newDataUsers/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const connection = await mysql.createConnection(dbConfig);
+        const [rows] = await connection.execute('SELECT * FROM newDataUsers WHERE id = ?', [id]);
+        connection.end();
+
+        if (rows.length == 0) return res.status(404).json({ error: 'User not found' });
+
+        res.json(rows[0]);
+    } catch (error) {
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
+app.post('/newDataUsers', verifyToken, async (req, res) => {
+    try {
+        console.log('New data user:', req.body);
+        const { userPinia, userData } = req.body;
+
+        // Validar que ambos objetos existan
+        if (!userPinia || !userData) {
+            return res.status(400).json({ error: 'Datos incompletos: se necesitan userPinia y userData.' });
+        }
+
+        // Fusionar los datos: Actualizar userPinia con los valores de userData
+        const updatedUser = {
+            ...userPinia,
+            ...userData,
+            tags: userData.tags || userPinia.tags, // Manejar valores específicos
+            availibility: userData.availibility || userPinia.availibility,
+        };
+
+        console.log('Usuario actualizado:', updatedUser);
+
+        // Convertir `tags` y `availibility` a JSON string si no están vacíos
+        if (updatedUser.tags && typeof updatedUser.tags !== 'string') {
+            updatedUser.tags = JSON.stringify(updatedUser.tags);
+        }
+
+        if (updatedUser.availibility && typeof updatedUser.availibility !== 'string') {
+            updatedUser.availibility = JSON.stringify(updatedUser.availibility);
+        }
+
+        // Aquí va la lógica para guardar los datos en la base de datos
+        const connection = await mysql.createConnection(dbConfig);
+        const query = `
+            INSERT INTO newDataUsers (typesUsers_id, user_id, name, email, password, banner, profile, class_id, city, discord_link, github_link, tags, availibility)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `;
+        const values = [
+            updatedUser.typesUsers_id,
+            updatedUser.user_id,
+            updatedUser.name,
+            updatedUser.email,
+            updatedUser.password,
+            updatedUser.banner,
+            updatedUser.profile,
+            updatedUser.class_id,
+            updatedUser.city,
+            updatedUser.discord_link,
+            updatedUser.github_link,
+            updatedUser.tags,
+            updatedUser.availibility,
+        ];
+        await connection.execute(query, values);
+        connection.end();
+
+        // Simulación de respuesta exitosa
+        res.status(201).json({ message: 'Datos del usuario actualizados correctamente', updatedUser });
+    } catch (error) {
+        console.error('Error al procesar los datos:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+});
+
+app.put('/newDataUsers/:id', async (req, res) => {
+    const { id } = req.params;
+    const { typesUsers_id, user_id, name, email, password, token, banner, profile, status, class_id } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    try {
+        const connection = await mysql.createConnection(dbConfig);
+        const [result] = await connection.execute(
+            'UPDATE newDataUsers SET typesUsers_id = ?, user_id = ?, name = ?, email = ?, password = ?, token = ?, banner = ?, profile = ?, status = ?, class_id = ? WHERE id = ?',
+            [typesUsers_id, user_id, name, email, hashedPassword, token, banner, profile, status, class_id, id]
+        );
+        connection.end();
+
+        if (result.affectedRows == 0) return res.status(404).json({ error: 'User not found' });
+
+        res.json({ message: 'New data user updated successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
+app.delete('/newDataUsers/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const connection = await mysql.createConnection(dbConfig);
+        const [result] = await connection.execute('DELETE FROM newDataUsers WHERE id = ?', [id]);
+        connection.end();
+
+        if (result.affectedRows == 0) return res.status(404).json({ error: 'User not found' });
+
+        res.json({ message: 'New data user deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Database error' });
+    }
+});
 // CRUD operations for qualifications
 app.get('/qualifications', verifyToken, async (req, res) => {
     try {
@@ -1138,4 +1321,90 @@ async function comparePassword(password, hashedPassword) {
 // Start the server
 server.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
+});
+
+//User follows or unfollows someone
+app.post('/follow', verifyToken, async (req, res) => {
+    const { user_id, followed_id } = req.body;
+
+    try {
+        const connection = await mysql.createConnection(dbConfig);
+        const [result] = await connection.execute('SELECT * FROM following WHERE user_id = ? AND following_user_id = ?', [user_id, followed_id]);
+        if(result.length == 0){
+            const [result] = await connection.execute('INSERT INTO following (user_id, following_user_id) VALUES (?, ?)', [user_id, followed_id]);
+            connection.end();
+            res.status(200).json({ following:true });
+        }
+        else{
+            const connection = await mysql.createConnection(dbConfig);
+            const [result] = await connection.execute('DELETE FROM following WHERE user_id = ? AND following_user_id = ?', [user_id, followed_id]);
+            connection.end();
+            res.status(200).json({ following: false });
+        }
+    } catch (error) {
+        res.status(500).json({ "error": 'Database error'+ error });
+    }
+});
+
+app.get('/checkIfFollows/:user_id/:followed_id', verifyToken, async (req, res) => {
+    const { user_id, followed_id } = req.params;
+
+    try {
+        let result;
+        console.log("user_id",user_id);
+        console.log("followed_id",followed_id);
+        const connection = await mysql.createConnection(dbConfig);
+         [result] = await connection.execute('SELECT * FROM following WHERE user_id = ? AND following_user_id = ?', [user_id, followed_id]);
+        connection.end();
+        console.log(result)
+        if (result.length == 0) return res.status(200).json({ following: false });
+
+        res.status(200).json({ following: true });
+    } catch (error) {
+        res.status(500).json({ "error": 'Database error'+ error });
+    }
+});
+
+app.get('/recommendedUsers/:user_id', verifyToken, async (req, res) => {
+    const { user_id } = req.params;
+
+    try {
+        let recommendedUsers = [];
+        const connection = await mysql.createConnection(dbConfig);
+        const [rows] = await connection.execute('SELECT * FROM users WHERE id != ? AND id IN (SELECT user_id FROM following WHERE following_user_id = ? ORDER BY RAND())', [user_id, user_id]);
+        console.log("Yo sigo a",rows);
+        for (const row of rows) {
+            let [auxRows] = await connection.execute('SELECT * FROM users WHERE id != ? AND id IN (SELECT user_id FROM following WHERE following_user_id = ? ORDER BY RAND())', [row.id, row.id]);
+            console.log(row.id, "sigue a", auxRows);
+            auxRows.forEach((auxRow) => {
+            console.log("auxRow", auxRow);
+            console.log(auxRow.id != user_id);
+            console.log(!recommendedUsers.includes(auxRow));
+            if (auxRow.id != user_id && !recommendedUsers.includes(auxRow)) {
+                recommendedUsers.push(auxRow);
+                console.log("recomendado", auxRow);
+            }
+            });
+        }
+        console.log("me han recomendado", recommendedUsers);
+        console.log("hay", recommendedUsers.length, "usuarios recomendados");
+        if(recommendedUsers.length < 16){
+            let [auxRows]=await connection.execute('SELECT * FROM users WHERE id != ? AND id NOT IN (SELECT user_id FROM following WHERE following_user_id = ?) ORDER BY RAND()', [user_id, user_id]);
+             auxRows.forEach((auxRow) => {
+                if(auxRow.id != user_id && !recommendedUsers.includes(auxRow)){
+                    recommendedUsers.push(auxRow);
+                }
+            });
+        }
+            if(recommendedUsers.length > 16){
+                recommendedUsers = recommendedUsers.sort(() => Math.random() - 0.5);
+                recommendedUsers = recommendedUsers.slice(0,16);
+            }
+        connection.end();
+
+        console.log("Los usuarios que estan siendo recomendados són", recommendedUsers);
+        res.status(200).json(recommendedUsers);
+    } catch (error) {
+        res.status(500).json({ error: 'Database error' });
+    }
 });

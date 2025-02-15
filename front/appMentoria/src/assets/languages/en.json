@@ -87,7 +87,10 @@
     },
     "profilePage": {
         "placeWhereYouLive": "Place where you live...",
-        "pendant": "Pending assignment"
+        "pendant": "Pending assignment",
+        "unfollow": "Unfollow",
+        "follow": "Follow",
+        "chat": "Chatten"
     },
     "LoginRegisterPage": {
         "subTitle": "{'@'}inspedralbes.cat Email",

@@ -989,11 +989,140 @@ export const updateAvailability = async (id, availability) => {
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
         }
-        let toReturn = await response.json();
-        toReturn.status = 200
+        let toReturn=await response.json();
+        toReturn.status=200
         return toReturn
-    } catch (error) {
+    }catch (error) {
         console.error('Error updating availability:', error);
         throw error;
     }
+    }
+
+    
+
+export const getProfile = async (id) => {
+    try {
+        const response = await fetch(`${BACK_URL}/userProfile/${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+        });
+
+        if (response.status === 401) {
+            const refreshResult = await refreshToken();
+
+            if (refreshResult.error) {
+                return { error: 'No se pudo renovar el token. Inicia sesión nuevamente.' };
+            }
+
+            // Reintenta la petición después de renovar el token
+            return await getProfile(id);
+        }
+
+        if (!response.ok) {
+            return { error: `HTTP error! status: ${response.status}` };
+        }
+        let res=await response.json();
+        res.banner=BACK_URL+res.banner
+        res.profile=BACK_URL+res.profile
+        return res;
+    } catch (error) {
+        console.error('Network error:', error);
+        return { error: 'Network error. Please try again later.' };
+    }
+}
+
+export const checkIfFollows = async (id, user_id) => {
+    try {
+     
+        const response = await fetch(`${BACK_URL}/checkIfFollows/`+id+`/`+user_id, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+        });
+
+        if (response.status === 401) {
+            const refreshResult = await refreshToken();
+
+            if (refreshResult.error) {
+                return { error: 'No se pudo renovar el token. Inicia sesión nuevamente.' };
+            }
+
+            // Reintenta la petición después de renovar el token
+            return await checkIfFollows(id, user_id);
+        }
+
+        if (!response.ok) {
+            return { error: `HTTP error! status: ${response.status}` };
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Network error:', error);
+        return { error: 'Network error. Please try again later.' };
+    }
+}
+export const followUser = async (id, user_id) => {
+    try{
+        const response = await fetch(`${BACK_URL}/follow`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+            body: JSON.stringify({ "user_id":id,"followed_id":user_id }),
+        });
+        if(response.status === 401){
+            const refreshResult = await refreshToken();
+            if(refreshResult.error){
+                return { error: 'No se pudo renovar el token. Inicia sesión nuevamente.' };
+            }
+            return await followUser(id, user_id);
+        }
+        if(!response.ok){
+            return { error: `HTTP error! status: ${response.status}` };
+        }
+        return await response.json();
+    }catch(error){
+        console.error('Network error:', error);
+        return { error: 'Network error. Please try again later.' };
+    }
+}
+
+export const getRecommendedUsers = async (id) => {
+    try {
+        const response = await fetch(`${BACK_URL}/recommendedUsers/${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+        });
+
+        if (response.status === 401) {
+            const refreshResult = await refreshToken();
+
+            if (refreshResult.error) {
+                return { error: 'No se pudo renovar el token. Inicia sesión nuevamente.' };
+            }
+
+            // Reintenta la petición después de renovar el token
+            return await getRecommendedUsers(id);
+        }
+
+        if (!response.ok) {
+            return { error: `HTTP error! status: ${response.status}` };
+        }
+        let responseJson =await response.json();
+        console.log(responseJson)
+        return responseJson;
+    } catch (error) {
+        console.error('Network error:', error);
+        return { "error": 'Network error. Please try again later.'+error };
+    }
+
 }

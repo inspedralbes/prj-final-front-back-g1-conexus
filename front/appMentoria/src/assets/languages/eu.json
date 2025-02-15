@@ -91,7 +91,10 @@
     },
     "profilePage": {
         "placeWhereYouLive": "Bizilekua...",
-        "pendant": "Esleitzeko zain"
+        "pendant": "Esleitzeko zain",
+        "unfollow": "Jarraitzeari utzi",
+        "follow": "Jarraitu",
+        "chat": "Txata"
     },
     "LoginRegisterPage": {
         "subTitle": "{'@'}inspedralbes.cat posta",
