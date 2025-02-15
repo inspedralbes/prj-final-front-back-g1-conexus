@@ -1,5 +1,4 @@
 <template>
-    <Header></Header>
     <div v-if="!isLoading" class="bg-gray-100 dark:bg-gray-900 min-h-screen py-12 px-6">
         <!-- Encabezado -->
         <h1 class="text-3xl font-bold text-gray-900 dark:text-white text-center mb-8">
@@ -79,7 +78,6 @@
 </template>
 
 <script setup>
-import Header from '@/components/Header.vue';
 import NavBar from '@/components/navBar/NavBarApp.vue';
 import Loading from '@/components/Loading.vue';
 import { ref, onMounted } from 'vue';

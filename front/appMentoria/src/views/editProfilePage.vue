@@ -1,5 +1,4 @@
 <template>
-    <Header class="shadow-lg shadow-black/30"></Header>
     <div v-if="user.value" class="dark:bg-gray-900 p-4 text-gray-900 dark:text-gray-100">
         <div class="space-y-8">
             <!-- Formulario 1: Información general -->

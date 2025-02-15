@@ -1,7 +1,5 @@
 <template>
   <div class="relative">
-    <!-- Header -->
-    <Header class="fixed top-0 left-0 right-0 z-20 shadow-md" />
 
     <!-- Main Content -->
     <main
@@ -57,7 +55,6 @@
 </template>
     
   <script setup>
-import Header from "@/components/Header.vue";
 import NavBar from "@/components/navBar/NavBarApp.vue";
 import { ref, onMounted } from "vue";
 import {

@@ -18,10 +18,6 @@
         ></path>
       </svg>
     </button>
-
-    <!-- Encabezado fijo -->
-    <Header class="fixed top-0 left-0 right-0 z-10"></Header>
-
     <!-- Contenido principal -->
     <main
       class="flex-grow flex items-center justify-center pt-20 pb-20 mx-4 overflow-auto bg-bgTheme"

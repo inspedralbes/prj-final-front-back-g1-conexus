@@ -22,7 +22,6 @@
         </g>
       </svg>
     </button>
-    <Header class="fixed top-0 left-0 right-0 z-10"></Header>
     <main class="flex-grow min-h-screen bg-bgTheme">
       <RequestPost></RequestPost>
     </main>

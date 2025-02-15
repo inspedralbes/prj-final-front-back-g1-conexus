@@ -1,6 +1,4 @@
 <template>
-  <Header class="shadow-lg shadow-black/30"></Header>
-
   <div v-if="user.value" class="bg-bgTheme p-4 text-textThemeColor">
     <!-- User - Banner & Profile Image -->
     <BannerProfile :banner="banner" :profile="profile" :user="user"/>
