@@ -57,7 +57,6 @@ onMounted(async () => {
   socketChat.emit("joinRoom", userId);
 
   socketChat.on("receiveMessage", (newMessage) => {
-    console.log("ruben es un pedazo de maricon")
     fetchChatsNow(userId);
   });
   

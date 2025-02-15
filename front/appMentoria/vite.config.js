@@ -37,10 +37,10 @@ export default defineConfig({
     host: true,
     port: 5173,
     strictPort: true,
-    // hmr: {
-    //   host: 'www.conexushub.cat',
-    //   protocol: 'wss',
-    // },
+    hmr: {
+      host: 'www.conexushub.cat',
+      protocol: 'wss',
+    },
     watch: {
       usePolling: true
     }

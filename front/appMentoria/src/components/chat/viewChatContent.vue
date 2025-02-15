@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col h-screen dark:bg-neutral-900 z-2000 relative chat-container">
+  <div class="flex flex-col h-screen dark:bg-neutral-900 z-3000 relative">
     <div class="flex sm:items-center justify-between py-2 border-b-2 border-gray-200">
       <div class="relative flex items-center space-x-4">
         <div class="relative ps-5">
@@ -218,13 +218,3 @@ const confirmReport = async (interaction) => {
   }
 };
 </script>
-<style scoped>
-.chat-container {
-  position: fixed; /* o absolute, dependiendo de tus necesidades */
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 9999; /* Un valor alto para asegurar que esté delante de otros elementos */
-}
-</style>
