@@ -1,10 +1,15 @@
 import { refreshToken } from "@/services/communicationsScripts/mainManager";
+import { useAppStore } from "@/stores/index";
 const COMMUNITY_URL = import.meta.env.VITE_URL_BACK_COMMUNITY;
 
 // Get Community Publications
 export const getCommunityPublication = async () => {
+    const user_id = useAppStore().getUser().id;
+
+    console.log('user_id:', user_id);
+
     try {
-        const response = await fetch(`${COMMUNITY_URL}/publications`, {
+        const response = await fetch(`${COMMUNITY_URL}/publications?user_id=${user_id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

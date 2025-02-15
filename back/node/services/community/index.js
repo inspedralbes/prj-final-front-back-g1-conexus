@@ -283,6 +283,8 @@ app.get('/publications', verifyToken, async (req, res) => {
         const { user_id } = req.query;
         const today = new Date().toISOString().split('T')[0];
 
+        console.log(req.query);
+        console.log('antes de la query', user_id, today);
         const [rows] = await connection.execute(`
             SELECT p.*, IF(f.user_id IS NOT NULL, 1, 0) AS is_followed
             FROM publications p
@@ -293,6 +295,7 @@ app.get('/publications', verifyToken, async (req, res) => {
             is_followed DESC,
             p.created_at DESC
         `, [user_id, today]);
+        console.log('después de la query');
         connection.end();
         res.json(rows);
     } catch (error) {

@@ -131,32 +131,6 @@ services:
     depends_on:
       - tr-final-mongodb
 
-  # tr-final-microprocessos-api:
-  #   build:
-  #     dockerfile: ./back/node/dev.Dockerfile
-  #     context: .
-  #   command: sh -c "cp .env.dev .env && npm install && chmod +x .script.dev.sh && ./.script.dev.sh && cd /usr/src/node/middleware && cp .env.dev .env && npm install && cd /usr/src/app && npm run dev "
-  #   volumes:
-  #     - ./back/microprocessos_api:/usr/src/app
-  #     - ./back/node/services:/usr/src/node/services
-  #     - ./back/node/middleware:/usr/src/node/middleware
-  #   working_dir: /usr/src/app
-  #   ports:
-  #     - 3001:3001
-  #     - 3002:3002
-  #     - 3003:3003
-  #     - 3004:3004
-  #     - 3005:3005
-  #     - 3006:3006
-  #     - 3007:3007
-  #     - 3008:3008
-  #     - 4000:4000
-  #   links:
-  #     - tr-final-mysql
-  #     - tr-final-mongodb
-  #   depends_on:
-  #     - tr-final-mongodb
-
   tr-final-mongodb:
     image: mongo
     restart: always
