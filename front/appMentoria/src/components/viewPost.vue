@@ -43,14 +43,14 @@
             selectedPost.image_ia === 0
           "
         >
-          <header class="flex items-center p-4 border-b bg-containersTheme">
+          <header class="flex items-center p-4 border-b bg-containersTheme text-wrap">
             <img
               :src="getAuthorProfile(selectedPost.user_id)"
               alt="Avatar"
               class="w-12 h-12 rounded-full mr-4"
             />
             <div>
-              <h2 class="font-bold text-lg text-textThemeColor">
+              <h2 class="font-bold text-lg text-textThemeColor text-wrap">
                 {{ getAuthorName(selectedPost.user_id) }}
               </h2>
               <p class="text-gray-500 text-sm text-textThemeColor mb-6">
@@ -61,9 +61,9 @@
           </header>
 
           <main class="p-4 space-y-4 bg-containersTheme ">
-            <h1 class="text-xl font-bold text-textThemeColor">{{ selectedPost.title }}</h1>
+            <h1 class="text-xl font-bold text-textThemeColor text-wrap">{{ selectedPost.title }}</h1>
             <p
-              class="text-textThemeColor text-lg whitespace-pre-liner"
+              class="text-textThemeColor text-lg whitespace-pre-liner text-wrap"
             >
               {{ selectedPost.description }}
             </p>
@@ -496,3 +496,10 @@ onMounted(async () => {
   }
 });
 </script>
+<style scooped>
+.text-wrap {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+</style>
