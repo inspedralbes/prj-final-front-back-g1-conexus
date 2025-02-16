@@ -7,5 +7,5 @@
 </template>
 
 <script setup>
-import ViewChatList from '@/components/ViewChatList.vue';
+import ViewChatList from '@/components/chat/ViewChatList.vue';
 </script>

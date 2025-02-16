@@ -1,5 +1,4 @@
 import { useAppStore } from '@/stores/index';
-import { ref } from 'vue';
 
 const BACK_URL = import.meta.env.VITE_URL_BACK;
 
