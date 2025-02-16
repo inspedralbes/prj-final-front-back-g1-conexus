@@ -1,0 +1,25 @@
+# Ignorar el entorno virtual
+venv/
+env/
+
+# Ignorar archivos y carpetas de configuración específicos del IDE
+.idea/
+.vscode/
+
+# Ignorar archivos de compilación de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+
+# Ignorar archivos temporales
+*.log
+*.bak
+*.swp
+
+# Ignorar el archivo de configuración de distutils (si lo tienes)
+*.egg-info/
+
+# Ignorar archivos de configuración de PyCharm
+*.iml

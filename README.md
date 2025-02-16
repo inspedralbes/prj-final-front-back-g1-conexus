@@ -1,16 +1,28 @@
-# transversals
-Esquema mínim de carpetes pels projectes transversals
+# Transversals - Mentories
 
-És obligatori seguir aquesta estructura tot i que la podeu ampliar.
+## Equip format per:
+* Sara Martínez
+* Climent Fernández
+* Rubén Lora 
+* Julie Villegas
+* Eric Gómez
 
-## Atenció
-Un cop comenceu heu de canviar aquesta explicació amb la corresponent al vostre projecte (utilitzant markdown)
+## Breu descripció:
+* L'objectiu del nostre projecte és crear una aplicació web que permeti a les persones usuàries trobar i oferir mentories en diferents àmbits. Aquesta aplicació permetrà posar en contacte a les persones usuàries que vulguin oferir mentories amb les que vulguin rebre-les. A més, també es podrà valorar la mentoria rebuda i oferida.
 
-# Aquest fitxer ha de contenir com a mínim:
- * Nom dels integrants
- * Nom del projecte
- * Petita descripció
- * Adreça del gestor de tasques (taiga, jira, trello...)
- * Adreça del prototip gràfic del projecte (Penpot, figma, moqups...)
- * URL de producció (quan la tingueu)
- * Estat: (explicació d'en quin punt està)
+## Estat del Projecte:
+* Primera fase del projecte finalitzat ✈️
+
+## Gestor de tasques:
+* Scrum GitHub 🐼: https://github.com/orgs/inspedralbes/projects/16 
+
+## Diagrama casos d'ús:
+![Diagrama de caso de uso (TR2)](https://github.com/user-attachments/assets/3ef4f6bf-aa79-4d59-bde6-243317a8486d)
+
+## PenPot -- Prototipatge:
+![pantallesUsuari](https://github.com/user-attachments/assets/ed0e4024-67b8-4084-973e-c3219a56ae23)
+
+![pantallesAdmin](https://github.com/user-attachments/assets/6e5f3627-4436-48b8-a774-f1658542d77c)
+
+## URL de producció:
+* https://conexushub.cat
