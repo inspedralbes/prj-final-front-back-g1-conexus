@@ -1,5 +1,5 @@
 <template>
-  <div class="dark:bg-gray-800 bg-white p-6 rounded-xl shadow-lg shadow-black/30 my-4">
+  <div class="bg-containersTheme p-6 rounded-xl shadow-lg shadow-black/30 my-4">
     <img
       :src="banner"
       alt="banner-image"
@@ -12,15 +12,15 @@
         <img
           :src="profile"
           alt="user-avatar-image"
-          class="rounded-xl object-cover w-20 h-20 sm:w-32 sm:h-32 bg-white sm:ml-4"
+          class="rounded-xl object-cover w-20 h-20 sm:w-32 sm:h-32 bg-buttonColorPrimary sm:ml-4"
         />
         <div class="flex flex-col text-center sm:text-left mt-4 sm:mt-0 sm:ml-4">
           <h3
-            class="font-semibold text-xl sm:text-2xl text-gray-900 mb-1 dark:text-white"
+            class="font-semibold text-xl sm:text-2xl text-textThemeColor mb-1"
           >
             {{ user.value.name }}
           </h3>
-          <p class="text-sm sm:text-base text-gray-500 dark:text-gray-300">
+          <p class="text-sm sm:text-base text-textThemeColor">
             {{ user.value.city || $t("profilePage.placeWhereYouLive") }}
           </p>
         </div>
@@ -28,7 +28,7 @@
       <div class="mt-4 sm:mt-0 sm:mr-4" v-if="user.value.id === userId">
         <button
           @click="$router.push('/editProfile/banner')"
-          class="py-3 px-3 sm:py-4 sm:px-4 rounded-full bg-indigo-600 text-white shadow-lg shadow-black/30 hover:bg-indigo-700 transition"
+          class="py-3 px-3 sm:py-4 sm:px-4 rounded-full bg-buttonColorPrimary text-textThemeColor shadow-lg shadow-black/30 hover:bg-buttonColorSecondary transition"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -46,34 +46,32 @@
           </svg>
         </button>
       </div>
-      <div class="mt-4 sm:mt-0 sm:mr-4" v-if="user.value.id !== userId">
+
+      <div class="mt-4 sm:mt-0 sm:mr-2 mr-auto" v-if="user.value.id !== userId">
         <button
           @click="chatButton(user.value.id, router)"
-          class="py-3 px-3 sm:py-4 sm:px-4 rounded-full bg-indigo-600 text-white shadow-lg shadow-black/30 hover:bg-indigo-700 transition"
+          class="mr-2 py-3 px-3 sm:py-4 sm:px-4 rounded-full bg-buttonColorPrimary text-textThemeColor shadow-lg shadow-black/30 hover:bg-buttonColorSecondary transition"
         >
           {{ $t("profilePage.chat") }}
         </button>
-      </div>
-
-      <div v-if="user.value.id !== userId">
         <button
           v-if="following"
           @click="follow(user.value.id)"
-          class="py-3 px-3 sm:py-4 sm:px-4 rounded-full bg-indigo-600 text-white shadow-lg shadow-black/30 hover:bg-indigo-700 transition"
+          class="py-3 px-3 sm:py-4 sm:px-4 rounded-full bg-buttonColorPrimary text-textThemeColor shadow-lg shadow-black/30 hover:bg-buttonColorSecondary transition"
         >
           {{ $t("profilePage.unfollow") }}
         </button>
         <button
           v-if="!following"
           @click="follow(user.value.id)"
-          class="py-3 px-3 sm:py-4 sm:px-4 rounded-full bg-indigo-600 text-white shadow-lg shadow-black/30 hover:bg-indigo-700 transition"
+          class="py-3 px-3 sm:py-4 sm:px-4 rounded-full bg-buttonColorPrimary text-textThemeColor shadow-lg shadow-black/30 hover:bg-buttonColorSecondary transition"
         >
           {{ $t("profilePage.follow") }}
         </button>
       </div>
     </div>
   </div>
-    <div class="bg-containersTheme p-6 rounded-xl shadow-lg shadow-custom my-4">
+  <!-- <div class="bg-containersTheme p-6 rounded-xl shadow-lg shadow-custom my-4">
         <img :src="banner" alt="banner-image" class="h-32 sm:h-48 w-full rounded-xl object-cover" />
         <div class="flex flex-col items-center sm:flex-row sm:justify-between -translate-y-10 sm:-translate-y-16">
             <div class="flex flex-col sm:flex-row items-center sm:items-end">
@@ -99,7 +97,7 @@
                 </button>
             </div>
         </div>
-    </div>
+  </div> -->
 </template>
 
 <script setup>

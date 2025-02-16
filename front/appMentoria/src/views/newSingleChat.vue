@@ -1,13 +1,13 @@
 <template>
     <div class="flex flex-col min-h-screen">
-        <Header class="fixed top-0 left-0 right-0 z-10"></Header>
         <NavBarWeb class="hidden lg:fixed lg:top-0 lg:left-0 lg:h-screen lg:w-60 lg:block"></NavBarWeb>
         <NavBarApp 
         class="fixed bottom-0 left-0 right-0 w-full lg:hidden ">
         </NavBarApp>
         <main class="flex-grow my-20 p-4">
-            <div>
-                <h2 class="text-lg font-semibold mb-2">Llista de usuaris</h2>
+            <h1 class="py-5 text-4xl font-bold text-textThemeColor">Crear Nueva Coversacion</h1>
+            <div class="border-buttonColorPrimary border-2 p-4 rounded-lg"> 
+                <h2 class="text-lg font-semibold mb-2 text-textThemeColor">Llistat d'usuaris</h2>
                 <input 
                     type="text" 
                     v-model="searchQuery" 
@@ -16,9 +16,9 @@
                 />
                 <ul>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <li v-for="user in filteredUsers" :key="user.id" class="mb-1 flex items-center" @click="createChat(user.id)">
+                        <li v-for="user in filteredUsers" :key="user.id" class="mb-1 flex items-center border-1 border-buttonColorPrimary" @click="createChat(user.id)">
                             <img :src="updateProfile(user.id)" alt="User Photo"
-                                class="w-10 h-10 rounded-full border-2 border-gray-300 mr-2 cursor-pointer">
+                                class="w-10 h-10 rounded-full mr-2 cursor-pointer bg-buttonColorPrimary">
                             <span>{{ user.name }}</span>
                         </li>
                     </div>

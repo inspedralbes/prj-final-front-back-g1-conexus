@@ -120,7 +120,7 @@ watch(() => appStore.selectedTheme, (newTheme) => {
   <div id="app" class="bg-bgTheme text-textThemeColor">
     <div v-if="!isLoading" class="min-h-screen hidden md:flex">
       <NavBarWeb v-if="route.name !== 'login'" class="hidden md:flex md:flex-col md:h-screen md:w-60 fixed"></NavBarWeb>
-      <div :class="['flex-1 overflow-auto ', route.name !== 'login' ? 'ml-60' : '']">
+      <div :class="['flex-1 overflow-auto ', route.name !== 'login' ? 'ml-60 mb-4' : '']">
         <RouterView/> 
       </div>
     </div>

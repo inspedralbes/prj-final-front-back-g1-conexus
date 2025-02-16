@@ -4,7 +4,7 @@
         v-if="selectedChatId === false"
         v-for="chat in chats"
         :key="chat._id"
-        class="chat-item overflow-y-auto"
+        class="chat-item overflow-y-auto "
       >
           <div
             style="display: flex; align-items: center"

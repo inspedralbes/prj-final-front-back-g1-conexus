@@ -1,22 +1,23 @@
 <template>
-  <!-- Header -->
-  <h2 class="text-xl font-semibold border-b border-buttonColorPrimary pb-4 mb-4">{{ $t("calendar.title") }}</h2>
+<div class="bg-containersTheme p-6 rounded-md ">
+    <!-- Header -->
+    <h2 class="text-xl font-semibold border-b border-buttonColorPrimary text-textThemeColor pb-4 mb-4">{{ $t("calendar.title") }}</h2>
   <!-- Table -->
-  <div class="border-b border-buttonColorPrimary pb-6" v-if="availability">
-    <div class="bg-textThemeColor mt-6 rounded-md shadow-md overflow-hidden">
-      <table v-if="availability" class="min-w-full border-collapse">
-        <thead>
-          <tr class="bg-containersTheme">
+  <div class="border-b border-buttonColorPrimary pb-6 bg-containersTheme " v-if="availability">
+    <div class="bg-textThemeColor mt-6 overflow-hidden">
+      <table v-if="availability" class="min-w-full border-collapse ">
+        <thead class="bg-bgTheme border-b border-buttonColorTertiary">
+          <tr class="bg-containersTheme ">
             <th class="py-3 px-4 text-left text-sm font-medium text-textThemeColor">
-              {{ $t("calendar.day") }}
+              {{ $t("calendar.day") }} 
             </th>
             <th class="py-3 px-4 text-left text-sm font-medium text-textThemeColor">
               {{ $t("calendar.availability") }}
             </th>
           </tr>
         </thead>
-        <tbody>
-          <tr v-for="object in availability" :key="day" class="border-b last:border-none border-buttonColorPrimary">
+        <tbody class="bg-containersTheme border-buttonColorTertiary">
+          <tr v-for="object in availability" :key="day" class="border-b last:border-none border-buttonColorTertiary">
             <td class="py-3 px-4 text-sm text-textThemeColor">{{ formatDay(object.day) }}</td>
             <td class="py-3 px-4 text-sm text-textThemeColor" :class="formatHours(object.startTime, object.endTime) ? 'text-green-600' : 'text-red-500'">
               {{ formatHours(object.startTime, object.endTime) || 'No disponible' }}
@@ -44,6 +45,7 @@
     </svg>
     <span>{{ $t("calendar.edit") }}</span>
   </button>
+</div>
 
 </template>
 
@@ -64,22 +66,23 @@ const formatHours = (startTime, endTime) => {
 };
 const formatDay = (day) => {
   switch(day){
-    case 'Dilluns':
+    case 'monday':
       return t("calendar.monday");
-    case 'Dimarts':
+    case 'muesday':
       return t("calendar.tuesday");
-    case 'Dimecres':
+    case 'wednesday':
       return t("calendar.wednesday");
-    case 'Dijous':
+    case 'thursday':
       return t("calendar.thursday");
-    case 'Divendres':
+    case 'friday':
       return t("calendar.friday");
-    case 'Dissabte':
+    case 'saturday':
       return t("calendar.saturday");
-    case 'Diumenge':
+    case 'sunday':
       return t("calendar.sunday");
-      
   }
+
+  console.log(day);
 };
 onMounted(() => {
   console.log("availability", availability);

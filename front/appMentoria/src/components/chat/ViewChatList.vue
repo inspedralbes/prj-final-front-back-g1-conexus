@@ -1,17 +1,17 @@
 <template>
-  <div>
+  <div class="bg-bgTheme">
     <button @click="$router.push({ path: '/newSingleChat'})" class="btn btn-primary">Crear Chat Privat</button>
     <button @click="$router.push({ path: '/newGroupChat'})" class="btn btn-primary">Crear Chat Grupal</button>
     <div
       v-if="chats.length === 0 && chatsInfo"
       class="flex items-center justify-center h-full"
     >
-      <p class="text-gray-500">No hi tens chats</p>
+      <p class="text-textThemeColor">No hi tens chats</p>
     </div>
     <div v-if="!chatsInfo" class="flex items-center justify-center h-full">
-      <p class="text-gray-500">Error</p>
+      <p class="text-textThemeColor">Error</p>
     </div>
-    <div v-else class="overflow-auto">
+    <div v-else class="overflow-auto ">
       <ViewChat :chats="chats" :users="users" />
       <div class="h-20"></div>
     </div>

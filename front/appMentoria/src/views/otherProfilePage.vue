@@ -8,7 +8,7 @@
 
         <!-- User - Availibility -->
         <div v-if="user.value.availibility"
-            class="dark:bg-gray-800 bg-white p-6 rounded-xl shadow-lg shadow-black/30 my-4">
+            class="p-6 rounded-xl shadow-lg shadow-black/30 my-4">
             <Calendar :availibilityJson="JSON.stringify(user.value.availibility)" />
         </div>
     </div>

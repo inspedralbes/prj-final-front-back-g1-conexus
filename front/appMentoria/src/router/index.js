@@ -147,8 +147,6 @@ const routes = [
     name: 'newGroupChat',
     component: newGroupChat
   }
- 
-
 ];
 
 const router = createRouter({

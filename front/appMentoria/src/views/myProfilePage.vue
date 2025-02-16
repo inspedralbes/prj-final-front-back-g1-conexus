@@ -7,9 +7,9 @@
     <PersonalInfo :user="user" />
 
     <!-- User - Availibility -->
-    <div class="dark:bg-bgTheme bg-textThemeColor p-6 rounded-xl shadow-lg shadow-black/30 my-4">
+    <div class="bg-containersTheme  text-textThemeColor p-6 rounded-xl shadow-lg shadow-black/30 my-4">
       <Calendar :availabilityJson="user.value.availability" :id="user.value.id" />
-     </div>
+    </div>
   </div>
 
   <!-- If !users -->

@@ -1,5 +1,4 @@
 <template>
-  <Header class="shadow-lg shadow-black/30"></Header>
 
   <div v-if="user.value" class="dark:bg-gray-900 p-4 text-gray-900 dark:text-gray-100">
     <!-- User - Banner & Profile Image -->
@@ -9,7 +8,7 @@
     <PersonalInfo :user="user" />
 
     <!-- User - Availibility -->
-    <div class="dark:bg-gray-800 bg-white p-6 rounded-xl shadow-lg shadow-black/30 my-4">
+    <div class="bg-containersTheme  rounded-xl shadow-lg shadow-black/30 ">
       <Calendar :availabilityJson="user.value.availability" :id="user.value.id" />
     </div>
   </div>

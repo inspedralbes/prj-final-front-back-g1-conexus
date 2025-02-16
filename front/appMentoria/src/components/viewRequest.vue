@@ -312,7 +312,7 @@
           <footer class="p-4 border-t flex justify-between items-center border-buttonColorPrimary">
             <div class="flex justify-around text-textThemeColor">
               <button
-                class="flex items-center space-x-1 hover:text-gray-500"
+                class="flex items-center space-x-1 hover:text-buttonColorSecondary"
                 @click="showrequestWithComments(request)"
               >
                 <svg

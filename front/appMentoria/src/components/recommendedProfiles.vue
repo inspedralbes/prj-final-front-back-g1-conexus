@@ -1,9 +1,8 @@
 <template>
   <div class="container">
- <Carousel v-bind="carouselConfig">
-    <Slide v-for="user in users" :key="slide" class="custom-carousel">
-    <div class="data"><ComponentProfile :key="user.id" :user="user" /></div>
-      
+  <Carousel v-bind="carouselConfig">
+    <Slide v-for="user in users" :key="slide" class="custom-carousel bg-bgTheme mb-3">
+    <div class="data bg-containersTheme"><ComponentProfile :key="user.id" :user="user" /></div>
     </Slide>
 
     <template #addons>
@@ -57,7 +56,6 @@ onMounted(async () => {
 }
 .custom-carousel {
   display: block;
-
 }
 
 </style>
