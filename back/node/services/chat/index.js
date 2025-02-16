@@ -1,11 +1,12 @@
-const { Server } = require("socket.io");
-const { createServer } = require("http");
-const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
-const fs = require("fs");
-const path = require("path");
-const dotenv = require("dotenv");
+const { Server } = require('socket.io');
+const { createServer } = require('http');
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const path = require('path');
+const dotenv = require('dotenv');
+// const { verifyToken } = require('../../middleware/auth.js');
+const { verifyToken } = require('/usr/src/node/middleware/auth.js');
 
 function loadEnv(envPath) {
   const result = dotenv.config({ path: envPath });
@@ -19,25 +20,23 @@ const chatEnv = loadEnv(path.resolve(__dirname, "./.env"));
 
 const PORT = chatEnv.PORT;
 const app = express();
-const server = createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-    allowedHeaders: ["Access-Control-Allow-Origin", "Content-Type"],
-  },
-});
 
 app.use(express.json());
-
-app.use(
-  cors({
-    origin: "*",
+app.use(cors({
+    origin: '*',
     credentials: true,
-    allowedHeaders: ["Access-Control-Allow-Origin", "Content-Type"],
-  })
-);
+    allowedHeaders: ["Content-Type", "Authorization"],
+}));
+
+const server = createServer(app);
+const io = new Server(server, {
+    cors: {
+        origin: '*',
+        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        credentials: true,
+        allowedHeaders: ["Access-Control-Allow-Origin", "Content-Type", "Authorization"],
+    }
+});
 
 mongoose
   .connect(chatEnv.MONGO_URI, { dbName: "Chat" })
@@ -45,8 +44,8 @@ mongoose
   .catch((err) => console.error("Error de conexión a MongoDB:", err));
 
 const messageSchema = new mongoose.Schema({
-  user_one_id: Number,
-  user_two_id: Number,
+  name: String,
+  users: [Number],
   reports: { type: Number, default: 0 },
   interactions: [
     {
@@ -63,11 +62,7 @@ app.get("/", (req, res) => {
   res.send("Hello World! I am a chat service");
 });
 
-app.get("/chatTest", (req, res) => {
-  res.send(JSON.stringify(chatEnv));
-});
-
-app.get("/getChats", async (req, res) => {
+app.get('/getChats', verifyToken, async (req, res) => {
   try {
     const messages = await Message.find();
     res.json(messages);
@@ -76,14 +71,13 @@ app.get("/getChats", async (req, res) => {
   }
 });
 
-app.get("/getChats/:id", async (req, res) => {
+app.get('/getChats/:id', verifyToken, async (req, res) => {
   const id = req.params.id;
   try {
     const messages = await Message.find();
-    const filteredMessages = messages.filter(
-      (message) => message.user_one_id == id || message.user_two_id == id
+    const filteredMessages = messages.filter((message) =>
+      message.users.includes(Number(id))
     );
-    "ID:", id;
     console.log("Messages:", filteredMessages);
     res.json(filteredMessages);
   } catch (err) {
@@ -91,7 +85,7 @@ app.get("/getChats/:id", async (req, res) => {
   }
 });
 
-app.get("/getChat/:id", async (req, res) => {
+app.get('/getChat/:id', verifyToken, async (req, res) => {
   const id = req.params.id;
   try {
     const messages = await Message.find({ _id: id });
@@ -101,24 +95,22 @@ app.get("/getChat/:id", async (req, res) => {
   }
 });
 
-app.post("/addChat", async (req, res) => {
+app.post("/addChat", verifyToken, async (req, res) => {
   console.log("addChat");
-  const { _id, user_one_id, user_two_id, reports, interactions } = req.body;
+  const { _id, users, reports, interactions } = req.body;
   console.log("req.body:", req.body);
   try {
     let message;
-    let isFirstInteraction = false;
     if (_id) {
       message = await Message.findByIdAndUpdate(
         _id,
-        { user_one_id, user_two_id, interactions },
+        { users, reports, interactions },
         { new: true, upsert: true }
       );
     } else {
-      message = new Message({ user_one_id, user_two_id, reports, interactions });
+      message = new Message({ users, reports, interactions });
       await message.save();
     }
-
     // if (isFirstInteraction) {
     //   console.log("eyyyyyyyyyyy estoy dentro");
     //   const notificationPayload = {
@@ -135,23 +127,19 @@ app.post("/addChat", async (req, res) => {
     //     body: JSON.stringify(notificationPayload)
     //   });
     // }
-
-    res.json(message);
+    res.status(200).json(message);
   } catch (err) {
-    console.error('Error en /addChat:', err);
+    console.error("Error adding chat:", err);
     res.status(500).send(err);
   }
 });
 
-app.post("/newChat", async (req, res) => {
+app.post("/newChat", verifyToken, async (req, res) => {
   console.log("newChat");
-  const { user_one_id, user_two_id, interactions } = req.body;
+  const { name, users, interactions } = req.body;
 
   const existingChat = await Message.findOne({
-    $or: [
-      { user_one_id: user_one_id, user_two_id: user_two_id },
-      { user_one_id: user_two_id, user_two_id: user_one_id },
-    ],
+    users: { $size: 2, $all: users },
   });
 
   if (existingChat) {
@@ -159,8 +147,8 @@ app.post("/newChat", async (req, res) => {
   }
   try {
     const message = new Message({
-      user_one_id,
-      user_two_id,
+      name,
+      users,
       reports: 0,
       interactions,
     });
@@ -172,7 +160,7 @@ app.post("/newChat", async (req, res) => {
   }
 });
 
-app.post("/reportMessage", async (req, res) => {
+app.post("/reportMessage", verifyToken, async (req, res) => {
   const { chatId, messageId } = req.body;
 
   try {
@@ -189,7 +177,6 @@ app.post("/reportMessage", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
 
 const TWENTY_FOUR_HOURS_IN_MS = 24 * 60 * 60 * 1000;
 
@@ -214,54 +201,60 @@ setInterval(async () => {
   }
 }, 10000);
 
-io.on("connection", (socket) => {
-  console.log("a user connected");
+io.on('connection', (socket) => {
+  console.log('Nuevo cliente conectado:', socket.id);
 
-  socket.on("sendMessage", async (data) => {
-    console.log("sendMessage:", data);
-    const { chatId, userId, message } = data;
-    const newMessage = {
-      userId,
-      message,
-      timestamp: new Date(),
-    };
+  socket.on('joinRoom', (roomId) => {
+    socket.join(roomId);
+    console.log(`User ${socket.id} In ${roomId}`);
+  });
 
+  socket.on('leaveRoom', (roomId) => {
+    socket.leave(roomId);
+    console.log(`User ${socket.id} Out ${roomId}`);
+  });
+
+  socket.on('sendMessage', async (data) => {
+    const { chatData, message, userId, users } = data;
+    const roomId = chatData._id;
     try {
-      const chat = await Message.findById(chatId);
-      if (chat) {
-        const isFirstInteraction = chat.interactions.length === 0;
-        chat.interactions.push(newMessage);
-        await chat.save();
-        io.emit('receiveMessage', newMessage);
-        console.log('Message saved:', newMessage);
-
+      console.log(roomId);
+      if (chatData) {
+        const isFirstInteraction = chatData.interactions.length === 0;
+        const userObj = Array.isArray(users) ? users.find(u => u.id === userId) : null;
+        console.log("isFirstInteraction", isFirstInteraction);
         if (isFirstInteraction) {
-          const notificationPayload = {
-            user_id: userId === chat.user_one_id ? chat.user_two_id : chat.user_one_id,
-            title: 'Nou chat obert',
-            message: `Tens un nou missatge de ${userId}!`
-          };
+          const notificationPromises = chatData.users.slice(1).map(async (user) => {
+            const notificationPayload = {
+              user_id: user,
+              title: 'New chat opened',
+              message: `You have a new message from ${userObj.name}!`
+            };
+            console.log("notificationPayload", notificationPayload);
 
-          console.log("toy dentro perras");
+            const response = await fetch(chatEnv.ENDPOINT_URL_PUSH_NOTIFICATIONS + '/sendNotification', {
+              method: 'POST',
+              headers: {
+          'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(notificationPayload)
+            });
 
-          const response = await fetch(chatEnv.ENDPOINT_URL_PUSH_NOTIFICATIONS + '/sendNotification', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(notificationPayload)
+            console.log("response", await response.json());
           });
 
-          console.log("response", response.json());
+          await Promise.all(notificationPromises);
+          }
         }
-      }
+      io.to(roomId).emit('receiveMessage', message);
     } catch (err) {
       console.error("Error saving message:", err);
     }
+    console.log(`Message from ${socket.id} in ${roomId}: ${message}`);
   });
 
-  socket.on("disconnect", () => {
-    console.log("user disconnected");
+  socket.on('disconnect', () => {
+    console.log('User disconnected:', socket.id);
   });
 });
 

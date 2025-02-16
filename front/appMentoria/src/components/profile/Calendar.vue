@@ -2,7 +2,7 @@
   <!-- Header -->
   <h2 class="text-xl font-semibold border-b border-buttonColorPrimary pb-4 mb-4">{{ $t("calendar.title") }}</h2>
   <!-- Table -->
-  <div class="border-b border-buttonColorPrimary pb-6">
+  <div class="border-b border-buttonColorPrimary pb-6" v-if="availability">
     <div class="bg-textThemeColor mt-6 rounded-md shadow-md overflow-hidden">
       <table v-if="availability" class="min-w-full border-collapse">
         <thead>
@@ -34,7 +34,7 @@
     </div>
   </div>
   <!-- Edit button -->
-  <button @click="$router.push('/editProfile/calendar')"
+  <button @click="$router.push('/editProfile/calendar')" v-if="id === userId"
     class="flex items-center space-x-1 mt-6 bg-buttonColorPrimary hover:bg-buttonColorPrimary text-textThemeColor py-2 px-4 rounded-lg shadow">
     <svg class="w-5 h-5 text-textThemeColor" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
       fill="currentColor" viewBox="0 0 24 24">
@@ -48,13 +48,15 @@
 </template>
 
 <script setup>
+import { useAppStore } from '@/stores';
 import { computed, onMounted, ref } from 'vue';
 import { useI18n } from "vue-i18n";
 
 const { t } = useI18n();
-
-const props = defineProps(['availabilityJson'])
+const userId = ref(useAppStore().getUser().id);
+const props = defineProps(['availabilityJson', 'id'])
 var availability = ref(props.availabilityJson);
+var id=ref(props.id)
 
 const formatHours = (startTime, endTime) => {
   if (!startTime || !endTime) return null;
@@ -79,7 +81,9 @@ const formatDay = (day) => {
       
   }
 };
-
+onMounted(() => {
+  console.log("availability", availability);
+});
 </script>
 
 <style scoped>

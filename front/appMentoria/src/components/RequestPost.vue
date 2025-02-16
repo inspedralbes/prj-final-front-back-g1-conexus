@@ -197,7 +197,7 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { postEmploymentExchangePublication } from "@/services/communicationManager";
+import { postEmploymentExchangePublication } from "@/services/communicationsScripts/employmentexchangeManager";
 import { useAppStore } from "@/stores/index";
 
 const router = useRouter();
@@ -315,7 +315,7 @@ async function submitPostPeticio() {
       return;
     }
 
-    const responseData = await response.json();
+    // const responseData = await response.json();
     router.push("/requests"); // Redirigir después de completar
   } catch (error) {
     alert("Error al enviar la publicación: " + error.message);

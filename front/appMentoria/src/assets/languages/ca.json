@@ -60,6 +60,7 @@
         "email": "Correu electrònic:",
         "phone": "Telèfon:",
         "softwareSkills":"Habilitats en programari",
+        "developingSoftwareSkills":"Aprenent habilitats...",
         "languages":"Idiomes",
         "noLanguages":"Encara no hi han...",
         "edit":"Editar"
@@ -91,7 +92,10 @@
     },
     "profilePage": {
         "placeWhereYouLive": "Lloc on vius...",
-        "pendant": "Pendent d'assignar"
+        "pendant": "Pendent d'assignar",
+        "unfollow": "Deixar de seguir",
+        "follow": "Seguir",
+        "chat": "Xat"
     },
     "LoginRegisterPage": {
         "subTitle": "Correu {'@'}inspedralbes.cat",

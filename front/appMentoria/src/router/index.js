@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { useAppStore } from '@/stores/index';
 import mainPage from '../views/mainPage.vue'
 import profilePage from '@/views/myProfilePage.vue'
+import profile from '@/views/profilePage.vue'
 import profilesPage from '@/views/profilesPage.vue'
 import reportPage from '../views/reportPage.vue'
 import validationPage from '../views/validationPage.vue'
@@ -21,6 +22,8 @@ import stadisticsPage from '@/views/stadisticsPage.vue';
 import requestsPage from '../views/mainRequests.vue'
 import editProfilePage from '@/views/editProfilePage.vue';
 import settingPage from '@/views/settingPage.vue';
+import newSingleChat from '@/views/newSingleChat.vue';
+import newGroupChat from '@/views/newGroupChat.vue';
 
 const routes = [
   {
@@ -128,7 +131,24 @@ const routes = [
     path: '/settingPage',
     name: 'settingPage',
     component: settingPage,
+  },
+  {
+    path: '/profile/:id',
+    name: 'profilePage',
+    component: profile,
+  },
+  {
+    path: '/newSingleChat',
+    name: 'newSingleChat',
+    component: newSingleChat
+  },
+  {
+    path: '/newGroupChat',
+    name: 'newGroupChat',
+    component: newGroupChat
   }
+ 
+
 ];
 
 const router = createRouter({

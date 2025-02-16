@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <div class="flex items-center justify-center px-0">
       <div class="relative inline-block text-left dropdown">
         <span class="rounded-md shadow-sm">
@@ -81,7 +81,7 @@
 <script setup>
 import { ref, onMounted, reactive } from "vue";
 import { useAppStore } from "@/stores/index";
-import { logout } from "@/services/communicationManager";
+import { logout } from "@/services/communicationsScripts/mainManager";
 import { useRouter } from "vue-router";
 
 const appStore = useAppStore();

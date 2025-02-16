@@ -2,10 +2,10 @@
 const express = require('express');
 const mysql = require('mysql2/promise');
 const cors = require('cors');
-const FormData = require('form-data');
-
 const path = require('path');
 const dotenv = require('dotenv');
+// const { verifyToken } = require('../../middleware/auth.js');
+const { verifyToken } = require('/usr/src/node/middleware/auth.js');
 
 function loadEnv(envPath) {
     const result = dotenv.config({ path: envPath });
@@ -48,7 +48,7 @@ app.get('/', (req, res) => {
     res.send('Hello World! XDDDDDDDDDDDDDDD I am a notifications service');
 });
 
-app.get('/getNotifications', async (req, res) => {
+app.get('/getNotifications', verifyToken, async (req, res) => {
     console.log("user_id", req.query.user_id);
     const { user_id } = req.query;
     try {
@@ -61,7 +61,7 @@ app.get('/getNotifications', async (req, res) => {
     }
 });
 
-app.get('/notifications/:id', async (req, res) => {
+app.get('/notifications/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -77,8 +77,7 @@ app.get('/notifications/:id', async (req, res) => {
     }
 });
 
-
-app.put('/notifications/:id', async (req, res) => {
+app.put('/notifications/:id', verifyToken, async (req, res) => {
     console.log("req.params", req.params);
     const { id } = req.params;
 
@@ -142,9 +141,49 @@ app.put('/notificationCheckedIA/:id', async (req, res) => {
     }
 });
 
+app.post('/notifications', verifyToken, async (req, res) => {
+    const { user_id, description, chat_id, report_id, publication_id, request_id, comment_id, revised } = req.body;
+    console.log("user_id notification", user_id);
+    console.log("desciption", description);
+    console.log("request_id", request_id);
+    if (!user_id) {
+        return res.status(400).json({ error: 'User id is required.' });
+    }
 
-app.post('/notifications', async (req, res) => {
+    console.log("body", req.body);
 
+    try {
+        const connection = await mysql.createConnection(dbConfig);
+        const [result] = await connection.execute(
+            'INSERT INTO notifications (user_id, description, chat_id, report_id, publication_id, request_id, comment_id, revised) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            [user_id, description || null, chat_id || null, report_id || null, publication_id || null, request_id || null, comment_id || null, 0]
+        );
+
+        console.log("result", result);
+
+        res.status(201).json({
+            notificationId: result.insertId,
+            user_id,
+            description,
+            chat_id,
+            report_id,
+            publication_id,
+            request_id,
+            comment_id,
+            revised: 0
+        });
+
+        connection.end();
+        console.log('Notification created:', result);
+
+    } catch (error) {
+        console.log("error", error);
+        res.status(500).json({ error: 'Database error' });
+    }
+
+});
+
+app.post('/notifications/IA', async (req, res) => {
     const { user_id, description, chat_id, report_id, publication_id, request_id, comment_id, revised } = req.body;
     console.log("user_id notification", user_id);
     console.log("desciption", description);

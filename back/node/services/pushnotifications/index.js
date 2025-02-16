@@ -5,6 +5,8 @@ const path = require('path');
 const { createServer } = require('http');
 const morgan = require('morgan');
 const webpush = require('web-push');
+// const { verifyToken } = require('../../middleware/auth.js');
+const { verifyToken } = require('/usr/src/node/middleware/auth.js');
 
 function loadEnv(envPath) {
     const result = dotenv.config({ path: envPath });
@@ -25,20 +27,18 @@ app.use(morgan('dev'));
 app.use(cors({
     origin: '*',
     credentials: true,
-    allowedHeaders: ["Access-Control-Allow-Origin", "Content-Type"],
+    allowedHeaders: ["Access-Control-Allow-Origin", "Content-Type", "Authorization"],
 }));
 
 webpush.setVapidDetails('mailto:test@conexushub.com', pushNotificationsEnv.PUBLIC_VAPID_KEY, pushNotificationsEnv.PRIVATE_VAPID_KEY);
+
 app.get('/', (req, res) => {
     res.send('Hello World! I am a push notifications service');
 });
 
-// app.use(require('./routes/index'));
-
-
 const subscriptions = {};
 
-app.post('/subscribe', (req, res) => {
+app.post('/subscribe', verifyToken, (req, res) => {
     const { user_id, subscription } = req.body;
 
     if (!subscription || !subscription.endpoint) {
@@ -50,7 +50,7 @@ app.post('/subscribe', (req, res) => {
     res.status(201).json({ message: 'Subscription saved' });
 });
 
-app.post('/sendNotification', (req, res) => {
+app.post('/sendNotification', verifyToken, (req, res) => {
     const { user_id, title, message } = req.body;
 
     console.log("aaaaaa body", req.body);
@@ -87,7 +87,6 @@ app.post('/sendNotification', (req, res) => {
             res.status(500).json({ error: 'Error sending notification' });
         });
 });
-
 
 console.log(pushNotificationsEnv.PUBLIC_VAPID_KEY, pushNotificationsEnv.PRIVATE_VAPID_KEY);
 

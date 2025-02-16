@@ -133,7 +133,7 @@
 import Header from "@/components/Header.vue";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { postCommunityPublication } from "@/services/communicationManager";
+import { postCommunityPublication } from "@/services/communicationsScripts/communityManager";
 import { useAppStore } from "@/stores/index";
 
 const router = useRouter();

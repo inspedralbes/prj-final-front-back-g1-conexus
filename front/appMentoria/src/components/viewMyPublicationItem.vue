@@ -80,7 +80,9 @@
       
   <script setup>
 import { computed } from "vue";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 const props = defineProps({
   id: Number,
   typesPublications_id: Number,
@@ -106,15 +108,15 @@ const fullImageUrl = computed(() => {
 // Computed property para mostrar el estado de verificación por IA del texto
 const textIaStatus = computed(() => {
   return props.text_ia === 0
-    ? $t("ViewMyPublicationItem.textNotVerified")
-    : $t("ViewMyPublicationItem.textVerified");
+    ? t("ViewMyPublicationItem.textNotVerified")
+    : t("ViewMyPublicationItem.textVerified");
 });
 
 // Computed property para mostrar el estado de verificación por IA de la imagen
 const imageIaStatus = computed(() => {
   return props.image_ia === 0
-    ? $t("ViewMyPublicationItem.imgNotVerified")
-    : $t("ViewMyPublicationItem.imgVerified");
+    ? t("ViewMyPublicationItem.imgNotVerified")
+    : t("ViewMyPublicationItem.imgVerified");
 });
 
 // Computed property para determinar si el estado es 'En proceso' (tanto texto como imagen IA en 0)

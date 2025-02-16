@@ -14,7 +14,7 @@ services:
     build:
       dockerfile: ./back/node/dev.Dockerfile
       context: .
-    command: sh -c "cp .env.DEV .env && npm install && npm run dev"
+    command: sh -c "cp .env.DEV .env && npm install && cd /usr/src/app/middleware && cp .env.dev .env && npm install && cd /usr/src/app && npm run dev"
     volumes:
       - ./back/node:/usr/src/app
     working_dir: /usr/src/app
@@ -23,97 +23,113 @@ services:
     links:
       - tr-final-mysql
       - tr-final-mongodb
+    depends_on:
+      - tr-final-mongodb
 
-  chat:
+  service-chat:
     build:
       context: ./back/node/services/chat
       dockerfile: ../../dev.Dockerfile
-    command: sh -c "cp .env.DEV .env && npm install && node index.js"
+    command: sh -c "cp .env.dev .env && npm install && npm run dev"
     volumes:
       - ./back/node/services/chat:/usr/src/app
+      - ./back/node/middleware:/usr/src/node/middleware
     working_dir: /usr/src/app
     ports:
       - 3001:3001
     depends_on:
       - tr-final-mongodb
-    #  - tr-final-back
 
-  community:
+  service-community:
     build:
       context: ./back/node/services/community
       dockerfile: ../../dev.Dockerfile
-    command: sh -c "cp .env.DEV .env && npm install && npm run dev"
+    command: sh -c "cp .env.dev .env && npm install && npm run dev"
     volumes:
       - ./back/node/services/community:/usr/src/app
+      - ./back/node/middleware:/usr/src/node/middleware
     working_dir: /usr/src/app
     ports:
       - 3002:3002
-
-  employmentexchange:
+    depends_on:
+      - tr-final-mongodb
+    
+  service-employmentexchange:
     build:
       context: ./back/node/services/employmentexchange
       dockerfile: ../../dev.Dockerfile
-    command: sh -c "cp .env.DEV .env && npm install && npm run dev"
+    command: sh -c "cp .env.dev .env && npm install && npm run dev"
     volumes:
       - ./back/node/services/employmentexchange:/usr/src/app
+      - ./back/node/middleware:/usr/src/node/middleware
     working_dir: /usr/src/app
     ports:
       - 3003:3003
+    depends_on:
+      - tr-final-mongodb
 
-  ia-image:
+  service-ia-image:
     build:
       context: ./back/node/services/iaimage
       dockerfile: ../../dev.Dockerfile
-    command: sh -c "cp .env.DEV .env && npm install && npm run dev"
+    command: sh -c "cp .env.dev .env && npm install && npm run dev"
     volumes:
       - ./back/node/services/iaimage:/usr/src/app
+      - ./back/node/services/community/upload:/usr/src/node/community/upload
+      - ./back/node/services/employmentexchange/upload:/usr/src/node/employmentexchange/upload
     working_dir: /usr/src/app
     ports:
       - 3004:3004
 
-  ia-text:
+  service-ia-text:
     build:
       context: ./back/node/services/iatext
       dockerfile: ../../dev.Dockerfile
-    command: sh -c "cp .env.DEV .env && npm install && npm run dev"
+    command: sh -c "cp .env.dev .env && npm install && npm run dev"
     volumes:
       - ./back/node/services/iatext:/usr/src/app
     working_dir: /usr/src/app
     ports:
       - 3005:3005
-
-  notifications:
+  
+  service-notifications:
     build:
       context: ./back/node/services/notifications
       dockerfile: ../../dev.Dockerfile
-    command: sh -c "cp .env.DEV .env && npm install && npm run dev"
+    command: sh -c "cp .env.dev .env && npm install && npm run dev"
     volumes:
       - ./back/node/services/notifications:/usr/src/app
+      - ./back/node/middleware:/usr/src/node/middleware
     working_dir: /usr/src/app
     ports:
       - 3006:3006
+    depends_on:
+      - tr-final-mongodb
 
-  statistics:
+  service-statistics:
     build:
       context: ./back/node/services/statistics
       dockerfile: ../../dev.Dockerfile
-    command: sh -c "cp .env.DEV .env && npm install && npm run dev"
+    command: sh -c "cp .env.dev .env && npm install && npm run dev"
     volumes:
       - ./back/node/services/statistics:/usr/src/app
     working_dir: /usr/src/app
     ports:
       - 3007:3007
-
-  push-notifications:
+  
+  service-push-notifications:
     build:
-      context: ./back/node/services/push-notifications
+      context: ./back/node/services/pushnotifications
       dockerfile: ../../dev.Dockerfile
-    command: sh -c "cp .env.DEV .env && npm install && npm run dev"
+    command: sh -c "cp .env.dev .env && npm install && npm run dev"
     volumes:
-      - ./back/node/services/push-notifications:/usr/src/app
+      - ./back/node/services/pushnotifications:/usr/src/app
+      - ./back/node/middleware:/usr/src/node/middleware
     working_dir: /usr/src/app
     ports:
       - 3008:3008
+    depends_on:
+      - tr-final-mongodb
 
   tr-final-mongodb:
     image: mongo

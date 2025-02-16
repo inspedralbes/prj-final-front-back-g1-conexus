@@ -5,10 +5,10 @@ const mysql = require('mysql2/promise');
 const cors = require('cors');
 const fs = require('fs');
 const FormData = require('form-data');
-const { request } = require('http');
-const { text } = require('stream/consumers');
 const path = require('path');
 const dotenv = require('dotenv');
+// const { verifyToken, refreshToken } = require('../../middleware/auth.js');
+const { verifyToken, refreshToken } = require('/usr/src/node/middleware/auth.js');
 
 function loadEnv(envPath) {
     const result = dotenv.config({ path: envPath });
@@ -54,7 +54,7 @@ app.get('/', (req, res) => {
 
 app.use('/upload', express.static(path.join(__dirname, 'upload')));
 
-app.get('/comments', async (req, res) => {
+app.get('/comments', verifyToken, async (req, res) => {
     try {
         const connection = await mysql.createConnection(dbConfig);
         const [rows] = await connection.execute('SELECT * FROM comments WHERE text_ia = 1');
@@ -65,7 +65,7 @@ app.get('/comments', async (req, res) => {
     }
 });
 
-app.get('/comments/:id', async (req, res) => {
+app.get('/comments/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -81,7 +81,7 @@ app.get('/comments/:id', async (req, res) => {
     }
 });
 
-app.post('/comments', async (req, res) => {
+app.post('/comments', verifyToken, async (req, res) => {
     const { publication_id, user_id, commentReply_id, comment } = req.body;
     var notificationIAnoResponse;
     var report;
@@ -239,7 +239,7 @@ app.post('/comments', async (req, res) => {
 });
 
 // CRUD operations for publications
-app.get('/publications', async (req, res) => {
+app.get('/publications', verifyToken, async (req, res) => {
     try {
         const connection = await mysql.createConnection(dbConfig);
         const [rows] = await connection.execute('SELECT * FROM publications WHERE typesPublications_id = 2 AND text_ia = 1 AND image_ia = 1');
@@ -250,7 +250,7 @@ app.get('/publications', async (req, res) => {
     }
 });
 
-app.get('/publications/:id', async (req, res) => {
+app.get('/publications/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -266,7 +266,7 @@ app.get('/publications/:id', async (req, res) => {
     }
 });
 
-app.get('/getMyPublications', async (req, res) => {
+app.get('/getMyPublications', verifyToken, async (req, res) => {
     console.log("user_id recibido:", req.query.user_id); // Confirma el valor
     const { user_id } = req.query;
 
@@ -283,11 +283,12 @@ app.get('/getMyPublications', async (req, res) => {
     }
 });
 
-
-
-app.post('/publications', async (req, res) => {
+app.post('/publications', verifyToken, async (req, res) => {
     const { title, description, user_id, availability, expired_at } = req.body;
     var notificationIAnoResponse;
+
+    const authHeader = req.headers['authorization'];
+    const token = authHeader.split(' ')[1];
 
     console.log("file", req.files);
     console.log("body response front", req.body);
@@ -384,7 +385,7 @@ app.post('/publications', async (req, res) => {
             if (imageAnalysis.error && imageAnalysis.error.includes("No se pudo clasificar la imagen por contenido sexual explícito o implícito que infringe las políticas de moderación.")) {
                 throw new Error('Publicación no permitida debido a contenido sexual explícito o implícito');
             }
-            
+
             const [result] = await connection.execute(
                 'INSERT INTO publications (typesPublications_id, title, description, user_id, image, availability, reports, text_ia, image_ia, expired_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
                 [2, title, description, user_id, `/upload/${imageName}`, availability, 0, 1, 1, expired_at || null]
@@ -398,7 +399,7 @@ app.post('/publications', async (req, res) => {
             if (isReportableComment(descriptionAnalysis)) {
                 reasons.push(`descripción: ${descriptionAnalysis.reason}`);
             }
-            if (imageAnalysis.category === 'OFENSIVA' && imageAnalysis.category === 'CONTENIDO_SEXUAL' || imageAnalysis.subcategory === 'SIN_PERSONAS_OFENSIVA'  || (imageAnalysis.category === 'POTENCIALMENTE_SUGERENTE' && imageAnalysis.subcategory === 'FAMOSOS_SUGERENTE' || imageAnalysis.subcategory === 'DESCONOCIDOS_POTENCIALMENTE_SUGERENTE' || imageAnalysis.subcategory === 'FAMOSOS_POTENCIALMENTE_SUGERENTE' || imageAnalysis.subcategory === 'FAMOSOS_OFENSIVO')) {
+            if (imageAnalysis.category === 'OFENSIVA' && imageAnalysis.category === 'CONTENIDO_SEXUAL' || imageAnalysis.subcategory === 'SIN_PERSONAS_OFENSIVA' || (imageAnalysis.category === 'POTENCIALMENTE_SUGERENTE' && imageAnalysis.subcategory === 'FAMOSOS_SUGERENTE' || imageAnalysis.subcategory === 'DESCONOCIDOS_POTENCIALMENTE_SUGERENTE' || imageAnalysis.subcategory === 'FAMOSOS_POTENCIALMENTE_SUGERENTE' || imageAnalysis.subcategory === 'FAMOSOS_OFENSIVO')) {
                 reasons.push(`imagen: ${imageAnalysis.reason}`);
             }
 
@@ -432,18 +433,30 @@ app.post('/publications', async (req, res) => {
                 console.log("notification content", notificationPayload);
 
                 try {
-                    console.log("Hola 5");
-                    const notificationResponse = await fetch(NOTIFICATION_URL + '/notifications', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(notificationPayload),
-                    });
+                    const fetchNotification = async () => {
+                        const notificationResponse = await fetch(NOTIFICATION_URL + '/notifications', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${token}`,
+                            },
+                            body: JSON.stringify(notificationPayload),
+                        });
 
-                    console.log("response notification", notificationResponse);
+                        console.log("response notification", notificationResponse);
 
-                    if (!notificationResponse.ok) {
-                        console.error("Error al enviar la notificación:", await notificationResponse.text());
-                    }
+                        if (notificationResponse.status == 401) {
+                            const refreshResult = await refreshToken(token);
+                            if (refreshResult.error) {
+                                return { error: 'No se pudo renovar el token. Inicia sesión nuevamente.' };
+                            }
+                            return fetchNotification();
+                        }
+
+                        if (!notificationResponse.ok) {
+                            console.error("Error al enviar la notificación:", await notificationResponse.text());
+                        }
+                    };
                 } catch (notificationError) {
                     console.error("Error al realizar el fetch de la notificación:", notificationError);
                 }
@@ -492,15 +505,28 @@ app.post('/publications', async (req, res) => {
         }
 
         try {
-            const notificationResponse = await fetch(NOTIFICATION_URL + '/notifications', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(notificationIAnoResponse),
-            });
+            const fetchNotification = async () => {
+                const notificationResponse = await fetch(NOTIFICATION_URL + '/notifications', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    body: JSON.stringify(notificationIAnoResponse),
+                });
 
-            if (!notificationResponse.ok) {
-                console.error("Error al enviar la notificación:", await notificationResponse.text());
-            }
+                if (notificationResponse.status == 401) {
+                    const refreshResult = await refreshToken(token);
+                    if (refreshResult.error) {
+                        return { error: 'No se pudo renovar el token. Inicia sesión nuevamente.'};
+                    }
+                    return fetchNotification();
+                }
+
+                if (!notificationResponse.ok) {
+                    console.error("Error al enviar la notificación:", await notificationResponse.text());
+                }
+            };
         } catch (notificationError) {
             console.error("Error al realizar el fetch de la notificación:", notificationError);
         }
@@ -508,7 +534,7 @@ app.post('/publications', async (req, res) => {
     }
 });
 
-app.put('/publications/:id', async (req, res) => {
+app.put('/publications/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
     const { typesPublications_id, title, description, user_id, reports } = req.body;
 
@@ -528,7 +554,7 @@ app.put('/publications/:id', async (req, res) => {
     }
 });
 
-app.delete('/publications/:id', async (req, res) => {
+app.delete('/publications/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -545,7 +571,7 @@ app.delete('/publications/:id', async (req, res) => {
 });
 
 // CRUD operations for reportsPublications
-app.get('/reports/publications', async (req, res) => {
+app.get('/reports/publications', verifyToken, async (req, res) => {
     try {
         const connection = await mysql.createConnection(dbConfig);
         const [rows] = await connection.execute('SELECT * FROM reportsPublications');
@@ -556,7 +582,7 @@ app.get('/reports/publications', async (req, res) => {
     }
 });
 
-app.get('/reports/publications/:id', async (req, res) => {
+app.get('/reports/publications/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -572,7 +598,7 @@ app.get('/reports/publications/:id', async (req, res) => {
     }
 });
 
-app.post('/reports/publications', async (req, res) => {
+app.post('/reports/publications', verifyToken, async (req, res) => {
     const { publication_id, user_id, report, status } = req.body;
 
     try {
@@ -588,7 +614,7 @@ app.post('/reports/publications', async (req, res) => {
     }
 });
 
-app.put('/reports/publications/:id', async (req, res) => {
+app.put('/reports/publications/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
     const { publication_id, user_id, report, status } = req.body;
 
@@ -608,7 +634,7 @@ app.put('/reports/publications/:id', async (req, res) => {
     }
 });
 
-app.delete('/reports/publications/:id', async (req, res) => {
+app.delete('/reports/publications/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -619,6 +645,22 @@ app.delete('/reports/publications/:id', async (req, res) => {
         if (result.affectedRows == 0) return res.status(404).json({ error: 'ReportPublication not found' });
 
         res.json({ message: 'ReportPublication deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
+app.post('/reports/publications/IA', verifyToken, async (req, res) => {
+    const { publication_id, user_id, report, status } = req.body;
+
+    try {
+        const connection = await mysql.createConnection(dbConfig);
+        const [result] = await connection.execute(
+            'INSERT INTO reportsPublications (publication_id, user_id, report, status) VALUES (?, ?, ?, ?)',
+            [publication_id, user_id, report, status]
+        );
+        connection.end();
+        res.status(201).json({ message: 'ReportPublication created successfully' });
     } catch (error) {
         res.status(500).json({ error: 'Database error' });
     }

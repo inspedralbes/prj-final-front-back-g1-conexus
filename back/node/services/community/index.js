@@ -7,13 +7,15 @@ const fs = require('fs');
 const FormData = require('form-data');
 const path = require('path');
 const dotenv = require('dotenv');
+// const { verifyToken, refreshToken } = require('../../middleware/auth.js');
+const { verifyToken, refreshToken } = require('/usr/src/node/middleware/auth.js');
 
 function loadEnv(envPath) {
-  const result = dotenv.config({ path: envPath });
-  if (result.error) {
-      throw result.error;
-  }
-  return result.parsed; 
+    const result = dotenv.config({ path: envPath });
+    if (result.error) {
+        throw result.error;
+    }
+    return result.parsed;
 }
 
 const comEnd = loadEnv(path.resolve(__dirname, './.env'));
@@ -54,7 +56,7 @@ app.get('/', (req, res) => {
 app.use('/upload', express.static(path.join(__dirname, 'upload')));
 
 // CRUD operations for comments
-app.get('/comments', async (req, res) => {
+app.get('/comments', verifyToken, async (req, res) => {
     try {
         const connection = await mysql.createConnection(dbConfig);
         const [rows] = await connection.execute('SELECT * FROM comments WHERE text_ia = 1');
@@ -65,7 +67,7 @@ app.get('/comments', async (req, res) => {
     }
 });
 
-app.get('/comments/:id', async (req, res) => {
+app.get('/comments/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -81,7 +83,7 @@ app.get('/comments/:id', async (req, res) => {
     }
 });
 
-app.post('/comments', async (req, res) => {
+app.post('/comments', verifyToken, async (req, res) => {
     const { publication_id, user_id, commentReply_id, comment } = req.body;
     var notificationIAnoResponse;
     var report;
@@ -238,7 +240,7 @@ app.post('/comments', async (req, res) => {
     }
 });
 
-app.put('/comments/:id', async (req, res) => {
+app.put('/comments/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
     const { publication_id, user_id, commentReply_id, comment } = req.body;
 
@@ -258,7 +260,7 @@ app.put('/comments/:id', async (req, res) => {
     }
 });
 
-app.delete('/comments/:id', async (req, res) => {
+app.delete('/comments/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -275,10 +277,25 @@ app.delete('/comments/:id', async (req, res) => {
 });
 
 // CRUD operations for publications
-app.get('/publications', async (req, res) => {
+app.get('/publications', verifyToken, async (req, res) => {
     try {
         const connection = await mysql.createConnection(dbConfig);
-        const [rows] = await connection.execute('SELECT * FROM publications WHERE typesPublications_id = 1 AND text_ia = 1 AND image_ia = 1');
+        const { user_id } = req.query;
+        const today = new Date().toISOString().split('T')[0];
+
+        console.log(req.query);
+        console.log('antes de la query', user_id, today);
+        const [rows] = await connection.execute(`
+            SELECT p.*, IF(f.user_id IS NOT NULL, 1, 0) AS is_followed
+            FROM publications p
+            LEFT JOIN following f ON p.user_id = f.user_id AND f.following_user_id = ?
+            WHERE p.typesPublications_id = 1 AND p.text_ia = 1 AND p.image_ia = 1
+            ORDER BY 
+            (DATE(p.created_at) = ?) DESC,
+            is_followed DESC,
+            p.created_at DESC
+        `, [user_id, today]);
+        console.log('después de la query');
         connection.end();
         res.json(rows);
     } catch (error) {
@@ -286,12 +303,13 @@ app.get('/publications', async (req, res) => {
     }
 });
 
-app.post('/publications', async (req, res) => {
+app.post('/publications', verifyToken, async (req, res) => {
     const { title, description, user_id, expired_at } = req.body;
-    var notificationIAnoResponse;
 
-    console.log("file", req.files);
-    console.log("body", req.body);
+    const authHeader = req.headers['authorization'];
+    const token = authHeader.split(' ')[1];
+
+    var notificationIAnoResponse;
 
     if (!title || !description || !req.files || !req.files.image) {
         return res.status(400).json({ error: 'Faltan datos obligatorios (título, descripción, imagen).' });
@@ -301,12 +319,16 @@ app.post('/publications', async (req, res) => {
     const imageName = `${Date.now()}-${imageFile.name}`;
     const imagePath = path.join(__dirname, 'upload', imageName);
 
+    console.log("imagePath en el post de publications: ", imagePath);
+
     await imageFile.mv(imagePath);
 
     const formData = new FormData();
     formData.append('image', fs.createReadStream(imagePath));
 
+    console.log("Antes de checkIA");
     var running = await checkIA();
+    console.log("Después de checkIA");
     console.log("running", running);
     let textIA = 0, imageIA = 0;
     if (running == true) {
@@ -424,18 +446,30 @@ app.post('/publications', async (req, res) => {
                 console.log("notification content", notificationPayload);
 
                 try {
-                    console.log("Hola 5");
-                    const notificationResponse = await fetch(NOTIFICATION_URL + '/notifications', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(notificationPayload),
-                    });
+                    const fetchNotification = async () => {
+                        const notificationResponse = await fetch(NOTIFICATION_URL + '/notifications', {
+                            method: 'POST',
+                            headers: { 
+                                'Content-Type': 'application/json',
+                                'Authorization': 'Bearer ' + token
+                            },
+                            body: JSON.stringify(notificationPayload),
+                        });
+    
+                        console.log("response notification", notificationResponse);
 
-                    console.log("response notification", notificationResponse);
-
-                    if (!notificationResponse.ok) {
-                        console.error("Error al enviar la notificación:", await notificationResponse.text());
-                    }
+                        if (notificationResponse.status == 401) {
+                            const refreshResult = await refreshToken(token);
+                            if (refreshResult.error) {
+                                return { error: 'No se pudo renovar el token. Inicia sesión nuevamente.'};
+                            }
+                            return fetchNotification();
+                        }
+    
+                        if (!notificationResponse.ok) {
+                            console.error("Error al enviar la notificación:", await notificationResponse.text());
+                        }
+                    };
                 } catch (notificationError) {
                     console.error("Error al realizar el fetch de la notificación:", notificationError);
                 }
@@ -456,20 +490,34 @@ app.post('/publications', async (req, res) => {
             res.status(500).json({ error: 'Error al guardar la publicación en la base de datos.', details: error.message });
         }
     } else {
+        console.log("No se puede analizar contenido, IA no disponible");
+        console.log("runing", running);
+        var publication_id;
         try {
             const connection = await mysql.createConnection(dbConfig);
+            console.log("Intento de conexión a la base de datos", connection);
+            console.log("Intento de insertar en la base de datos");
+            console.log(" datos", title, description, user_id, `/upload/${imageName}`, textIA, imageIA, expired_at || null);
             const [result] = await connection.execute(
                 `INSERT INTO publications (typesPublications_id, title, description, user_id, image, text_ia, image_ia, expired_at)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
                 [1, title, description, user_id, `/upload/${imageName}`, textIA, imageIA, expired_at || null]
             );
-            const publication_id = result.insertId;
+            console.log("Resultado de la inserción", result);
+            publication_id = result.insertId;
             res.status(201).json({
                 message: 'publicació creada, pendent de revisar!',
                 publication_id: publication_id,
                 text_ia: 0,
                 image_ia: 0,
             });
+            connection.end();
+
+        } catch (error) {
+            res.status(500).json({ error: 'Error al analizar contenido', details: error.message });
+        }
+
+        try {
 
             const notificationReason = 'Tu publicació sera revisada més tard! Gràcies per la teva paciència.';
 
@@ -480,23 +528,28 @@ app.post('/publications', async (req, res) => {
                 revised: 0
             };
 
-            console.log("notification if no response ia", notificationIAnoResponse);
-            connection.end();
-
-        } catch (error) {
-            res.status(500).json({ error: 'Error al analizar contenido', details: error.message });
-        }
-
-        try {
-            const notificationResponse = await fetch(NOTIFICATION_URL + '/notifications', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(notificationIAnoResponse),
-            });
-
-            if (!notificationResponse.ok) {
-                console.error("Error al enviar la notificación:", await notificationResponse.text());
-            }
+            const fetchNotification = async () => {
+                const notificationResponse = await fetch(NOTIFICATION_URL + '/notifications', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify(notificationIAnoResponse), 
+                });
+    
+                if (notificationResponse.status == 401) {
+                    const refreshResult = await refreshToken(token);
+                    if (refreshResult.error) {
+                        return { error: 'No se pudo renovar el token. Inicia sesión nuevamente.'};
+                    }
+                    return fetchNotification();
+                }
+    
+                if (!notificationResponse.ok) {
+                    console.error("Error al enviar la notificación:", await notificationResponse.text());
+                }
+            };
         } catch (notificationError) {
             console.error("Error al realizar el fetch de la notificación:", notificationError);
         }
@@ -504,8 +557,7 @@ app.post('/publications', async (req, res) => {
     }
 });
 
-
-app.get('/publications/:id', async (req, res) => {
+app.get('/publications/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -521,7 +573,7 @@ app.get('/publications/:id', async (req, res) => {
     }
 });
 
-app.get('/getMyPublications', async (req, res) => {
+app.get('/getMyPublications', verifyToken, async (req, res) => {
     console.log("user_id recibido:", req.query.user_id); // Confirma el valor
     const { user_id } = req.query;
 
@@ -538,23 +590,7 @@ app.get('/getMyPublications', async (req, res) => {
     }
 });
 
-app.post('/publications', async (req, res) => {
-    const { title, description, user_id } = req.body;
-
-    try {
-        const connection = await mysql.createConnection(dbConfig);
-        const [result] = await connection.execute(
-            'INSERT INTO publications (typesPublications_id, title, description, user_id) VALUES (?, ?, ?, ?)',
-            [1, title, description, user_id]
-        );
-        connection.end();
-        res.status(201).json({ message: 'Publication created successfully' });
-    } catch (error) {
-        res.status(500).json({ error: 'Database error' });
-    }
-});
-
-app.put('/publications/:id', async (req, res) => {
+app.put('/publications/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
     const { typesPublications_id, title, description, user_id, reports } = req.body;
 
@@ -574,7 +610,7 @@ app.put('/publications/:id', async (req, res) => {
     }
 });
 
-app.delete('/publications/:id', async (req, res) => {
+app.delete('/publications/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -591,7 +627,7 @@ app.delete('/publications/:id', async (req, res) => {
 });
 
 // CRUD operations for reportsPublications
-app.get('/reports/publications', async (req, res) => {
+app.get('/reports/publications', verifyToken, async (req, res) => {
     try {
         const connection = await mysql.createConnection(dbConfig);
         const [rows] = await connection.execute(`
@@ -621,7 +657,7 @@ app.get('/reports/publications', async (req, res) => {
     }
 });
 
-app.get('/reports/publications/:id', async (req, res) => {
+app.get('/reports/publications/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -637,7 +673,7 @@ app.get('/reports/publications/:id', async (req, res) => {
     }
 });
 
-app.post('/reports/publications', async (req, res) => {
+app.post('/reports/publications', verifyToken, async (req, res) => {
     const { publication_id, user_id, report, status } = req.body;
 
     try {
@@ -653,7 +689,7 @@ app.post('/reports/publications', async (req, res) => {
     }
 });
 
-app.put('/reports/publications/:id', async (req, res) => {
+app.put('/reports/publications/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
 
@@ -661,7 +697,7 @@ app.put('/reports/publications/:id', async (req, res) => {
         const connection = await mysql.createConnection(dbConfig);
         const [result] = await connection.execute(
             'UPDATE reportsPublications SET status = ? WHERE id = ?',
-            [ status, id]
+            [status, id]
         );
         connection.end();
 
@@ -673,7 +709,7 @@ app.put('/reports/publications/:id', async (req, res) => {
     }
 });
 
-app.delete('/reports/publications/:id', async (req, res) => {
+app.delete('/reports/publications/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -689,23 +725,46 @@ app.delete('/reports/publications/:id', async (req, res) => {
     }
 });
 
-async function checkIA() {
+app.post('/reports/publications/IA', async (req, res) => {
+    const { publication_id, user_id, report, status } = req.body;
 
+    try {
+        const connection = await mysql.createConnection(dbConfig);
+        const [result] = await connection.execute(
+            'INSERT INTO reportsPublications (publication_id, user_id, report, status) VALUES (?, ?, ?, ?)',
+            [publication_id, user_id, report, status]
+        );
+        connection.end();
+        res.status(201).json({ message: 'ReportPublication created successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
+async function checkIA() {
     var running = true;
     const serverIAtext = IA_TEXT_URL + '/';
     const serverIAimage = IA_IMAGE_URL + '/';
 
+    console.log("dentro del try catch del check AI 1");
+
     try {
         const responseText = await fetch(serverIAtext);
-        if (!responseText.ok) throw new Error(`Error IA: ${responseText.statusText}`);
+        if (!responseText.ok) {
+            console.log(`Error IA TEXT: ${responseText.statusText}`)
+            running = false;
+        }
 
         const responseImage = await fetch(serverIAimage);
-        if (!responseImage.ok) throw new Error(`Error IA: ${responseImage.statusText}`);
-
+        if (!responseImage.ok) {
+            console.log(`Error IA IMAGE: ${responseImage.statusText}`)
+            running = false;
+        }
     } catch (error) {
+        console.error(`Error al llamar a la IA: ${error.message}`);
         running = false;
-        console.error(`Error al analizar contenido: ${error.message}`);
     }
+
     return running;
 }
 

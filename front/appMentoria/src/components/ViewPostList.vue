@@ -11,7 +11,7 @@
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import ViewPost from "@/components/viewPost.vue";
-import { getCommunityPublication } from "../services/communicationManager";
+import { getCommunityPublication } from "@/services/communicationsScripts/communityManager";
 
 const posts = ref([]);
 const route = useRoute();

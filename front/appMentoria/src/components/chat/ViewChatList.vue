@@ -1,5 +1,7 @@
 <template>
   <div>
+    <button @click="$router.push({ path: '/newSingleChat'})" class="btn btn-primary">Crear Chat Privat</button>
+    <button @click="$router.push({ path: '/newGroupChat'})" class="btn btn-primary">Crear Chat Grupal</button>
     <div
       v-if="chats.length === 0 && chatsInfo"
       class="flex items-center justify-center h-full"
@@ -18,10 +20,11 @@
 
 <script setup>
 import { ref, onMounted, watch } from "vue";
-import ViewChat from "@/components/viewInfoChat.vue";
-import socketChat from "../services/socketChat";
+import ViewChat from "@/components/chat/viewInfoChat.vue";
+import socketChat from "@/services/socketsScripts/socketChat";
 import { useAppStore } from "@/stores/index";
-import { getUsers, fetchChats } from "../services/communicationManager";
+import { getUsers } from "@/services/communicationsScripts/mainManager";
+import { fetchChats } from "@/services/communicationsScripts/chatManager";
 
 const users = ref([]);
 const chats = ref([]);
@@ -36,19 +39,27 @@ const fetchChatsNow = async (userId) => {
     chats.value = result.chats;
     chatsInfo.value = result.chatsInfo;
     chats.value = chats.value.filter(chat => {
-      if (chat.user_two_id === userId && (!chat.interactions || chat.interactions.length === 0)) {
-        return false;
-      }
+      if (chat.users[0] === userId || (chat.users.includes(userId) && chat.interactions && chat.interactions.length > 0)) {
       return true;
+      }
+      return false;
     });
-  } catch (error) {}
+  } catch (error) {
+    console.error("Error fetching chats:", error);
+  }
 };
 
 onMounted(async () => {
+  console.log("ViewChatList mounted");
   users.value = await getUsers();
-  socketChat.on("receiveMessage", async (newMessage) => {
-    await fetchChatsNow(userId);
+  
+  // Unirse a la room del usuario
+  socketChat.emit("joinRoom", userId);
+
+  socketChat.on("receiveMessage", (newMessage) => {
+    fetchChatsNow(userId);
   });
+  
   await fetchChatsNow(userId);
 });
 

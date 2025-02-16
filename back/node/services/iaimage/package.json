@@ -17,7 +17,10 @@
         "dotenv": "^16.4.5",
         "express": "^4.21.2",
         "express-fileupload": "^1.5.1",
-        "gpt-tokenizer": "^2.8.1"
+        "form-data": "^4.0.1",
+        "gpt-tokenizer": "^2.8.1",
+        "mysql2": "^3.11.5",
+        "node-fetch": "^3.3.2"
     },
     "devDependencies": {
         "nodemon": "^3.1.7"

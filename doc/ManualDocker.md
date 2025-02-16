@@ -14,11 +14,12 @@ Puedes verificar si Docker está instalado ejecutando docker --version y docker-
 ```
 El flag --build asegura que las imágenes se construyan nuevamente si hay cambios en los Dockerfiles.
 
-## 4. Verifica que los servicios estén corriendo:
+## 4. Verifica que los servicios principales estén corriendo:
 - Abre tu navegador y navega a http://localhost:5173 para verificar el frontend.
 - Navega a http://localhost:3000 para verificar el backend.
 - Navega a http://localhost:8080 para acceder a Adminer y verificar la base de datos MySQL.
 - Navega a http://localhost:8081 para acceder a Mongo Express y verificar la base de datos MongoDB.
+- Navega a http://localhost:... desde el 3001 al 3008 para acceder a los servicios de los microservicios.
 
 ## 5. Verifica los logs:
 - Puedes ver los logs de los servicios en la terminal donde ejecutaste docker-compose up.

@@ -3,13 +3,12 @@ import { RouterView, useRoute } from "vue-router";
 import { ref, onMounted, reactive, watch } from "vue";
 import { useAppStore } from "@/stores/index";
 import router from "@/router";
-import { getUserForRefreshLogin } from "./services/communicationManager";
+import { getUserForRefreshLogin } from "./services/communicationsScripts/mainManager";
 import Loading from "./components/Loading.vue";
 import NavBarWeb from "./components/navBar/NavBarWeb.vue";
 import NavBarApp from "./components/navBar/NavBarApp.vue";
 
 const userAPP = reactive({}); // Objeto reactivo para el usuario
-const isDarkMode = ref(false);
 const isLoading = ref(true); // Bandera para controlar el estado de carga
 const appStore = useAppStore();
 const route = useRoute();

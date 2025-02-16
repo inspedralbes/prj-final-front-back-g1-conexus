@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <div
       class="fixed bottom-0 left-1/2 transform -translate-x-1/2 inline-flex left-0 mx-auto justify-between bg-containersTheme w-full shadow-custom"
     >
@@ -140,3 +140,9 @@ watch(route, (newRoute) => {
   }
 }, { immediate: true });
 </script>
+
+<style scoped>
+.container {
+  z-index: 1000;
+}
+</style>

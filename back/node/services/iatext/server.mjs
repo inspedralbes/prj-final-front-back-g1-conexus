@@ -6,8 +6,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
-import fetch from "node-fetch";
-import fs from "fs";
+import fetch from "node-fetch"; 
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -25,20 +24,18 @@ const iatextEnd = loadEnv(path.resolve(__dirname, './.env'));
 const app = express();
 const port = iatextEnd.PORT;
 
-app.use(express.json());
+// CORS configuration
 app.use(cors({
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
 }));
-
 app.use((req, res, next) => {
     res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
     next();
 });
-// app.use(fileUpload());
+
 // Asegúrate de que el middleware para parsear JSON esté configurado
 app.use(express.json());
-
 
 const genAI = new GoogleGenerativeAI(iatextEnd.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
@@ -57,11 +54,6 @@ const dbConfig = {
     password: iatextEnd.MYSQL_PASS,
     database: iatextEnd.MYSQL_DB
 };
-
-app.get("/", (req, res) => {
-    res.send("Hello World! I am a comment service");
-
-});
 
 checkPublications();
 async function checkPublications() {
@@ -141,9 +133,9 @@ async function checkPublications() {
                     let endpointPubli;
 
                     if (typesPublications_id === 1) {
-                        endpointPubli = iatextEnd.ENDPOINT_URL_COMMUNITY + "/reports/publications";
+                        endpointPubli = iatextEnd.ENDPOINT_URL_COMMUNITY + "/reports/publications/IA";
                     } else if (typesPublications_id === 2) {
-                        endpointPubli = iatextEnd.ENDPOINT_URL_EMPLOYMENTEXCHANGE + "/reports/publications";
+                        endpointPubli = iatextEnd.ENDPOINT_URL_EMPLOYMENTEXCHANGE + "/reports/publications/IA";
                     }
 
                     try {
@@ -215,6 +207,9 @@ async function checkPublications() {
 
 }
 
+app.get("/", (req, res) => {
+    res.send("Hello World! I am a comment service");
+});
 
 app.post("/classifyTextCommunity", async (req, res) => {
     try {
@@ -237,14 +232,12 @@ app.post("/classifyTextCommunity", async (req, res) => {
             - **PROHIBIDO**: Si el comentario menciona temas sensibles o prohibidos como política, religión o contenido inapropiado.
 
         Además:
-        - No incluyas el campo "reason" si la categoría es **POSITIVO**.
         - Asegúrate de devolver estrictamente el formato solicitado.
 
         Devuelve estrictamente el resultado en el siguiente formato JSON:
         {
         "category": "TOXICO" o "OFENSIVO" o "POCO_OFENSIVO" o "POSITIVO" o "PROHIBIDO",
-        "reason": "Explica por qué se clasificó de esta manera. Que se muestre en catalan" (solo si aplica)
-        }
+        "reason": "Explica por qué se clasificó de esta manera. Que se muestre en catalan"
 
         Algunos ejemplos a tener en cuenta:
 

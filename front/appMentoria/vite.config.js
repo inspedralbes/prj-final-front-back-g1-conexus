@@ -40,9 +40,9 @@ export default defineConfig({
     // hmr: {
     //   host: 'www.conexushub.cat',
     //   protocol: 'wss',
-    // }
+    // },
     watch: {
-      usePolling: true,
+      usePolling: true
     }
   },
   build: {
