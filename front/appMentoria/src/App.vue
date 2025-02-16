@@ -114,13 +114,31 @@ watch(() => appStore.selectedTheme, (newTheme) => {
 
 <template>
   <div id="app" class="bg-bgTheme text-textThemeColor">
-    <NavBarWeb v-if="route.name !== 'login' && !isLoading" class="hidden lg:fixed lg:top-0 lg:left-0 lg:h-screen lg:w-60 lg:block z-10"></NavBarWeb>
-    <NavBarApp v-if="route.name !== 'login' && !isLoading" class="fixed bottom-0 left-0 right-0 w-full lg:hidden z-10"></NavBarApp>
-    <RouterView v-if="!isLoading || userAPP.name" />
+    <div v-if="!isLoading" class="min-h-screen hidden md:flex">
+      <NavBarWeb v-if="route.name !== 'login'" class="hidden md:flex md:flex-col md:h-screen md:w-60 fixed"></NavBarWeb>
+      <div class="flex-1 overflow-auto ml-60">
+        <RouterView v-if="userAPP.name"/> 
+      </div>
+    </div>
+    <div v-if="!isLoading" class="flex flex-col fixed min-h-screen md:hidden items-center justify-center">
+      <div class="flex-1 w-full overflow-auto flex items-center justify-center">
+        <RouterView v-if="userAPP.name"/>
+      </div>
+      <NavBarApp v-if="route.name !== 'login' && !isLoading" class="fixed bottom-0 left-0 right-0 w-full md:hidden z-10"></NavBarApp>
+    </div>
     <div v-else class="flex items-center justify-center min-h-screen bg-bgTheme text-textThemeColor">
       <Loading />
     </div>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+@media (max-width: 1068px) {
+  .md\:hidden {
+    display: flex !important;
+  }
+  .md\:flex {
+    display: none !important;
+  }
+}
+</style>

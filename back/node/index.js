@@ -96,8 +96,8 @@ app.post('/loginAPI', async (req, res) => {
                     userLogin = users[0];
                     userLogin.class_name = className;
 
-                    const [following]= await connection.execute('SELECT * FROM following WHERE user_id = ?', [userLogin.id]);
-                    const [followers]= await connection.execute('SELECT * FROM following WHERE following_id = ?', [userLogin.id]);
+                    const [following] = await connection.execute('SELECT * FROM following WHERE user_id = ?', [userLogin.id]);
+                    const [followers] = await connection.execute('SELECT * FROM following WHERE following_id = ?', [userLogin.id]);
                     userLogin.following = following;
                     userLogin.followers = followers;
                 } else {
@@ -168,7 +168,7 @@ app.post('/login', async (req, res) => {
 });
 
 //Edit generalInfo
-app.put("/editGeneralInfo/:id", verifyToken, async (req,res)=>{
+app.put("/editGeneralInfo/:id", verifyToken, async (req, res) => {
     const { id } = req.params;
     const { name, city } = req.body;
 
@@ -207,7 +207,7 @@ app.put("/editGeneralInfo/:id", verifyToken, async (req,res)=>{
         values.push(id);
 
         const [result] = await connection.execute(query, values);
-        
+
 
         if (result.affectedRows == 0) return res.status(404).json({ error: 'User not found' });
 
@@ -222,15 +222,15 @@ app.put("/editGeneralInfo/:id", verifyToken, async (req,res)=>{
 })
 
 //Edit PersonalInfo
-app.put("/editData/:id", verifyToken, async (req,res)=>{
+app.put("/editData/:id", verifyToken, async (req, res) => {
     const { id } = req.params;
-    const { description,phone,tags,skills,Instagram,Twitter,Linkedin,Facebook,Github,title } = req.body;
+    const { description, phone, tags, skills, Instagram, Twitter, Linkedin, Facebook, Github, title } = req.body;
     const connection = await mysql.createConnection(dbConfig);
     console.log("editDataTime")
     try {
         const [result] = await connection.execute(
             'UPDATE users SET Linkedin = ?, Instagram = ?, description = ?, Twitter = ?, Github = ?, Facebook = ?, title=?, phone=?,softwareSkills=?, languages=? WHERE id = ?',
-            [Linkedin,Instagram,description,Twitter,Github,Facebook,title,phone,skills,tags,id]
+            [Linkedin, Instagram, description, Twitter, Github, Facebook, title, phone, skills, tags, id]
         );
         connection.end();
 
@@ -243,29 +243,29 @@ app.put("/editData/:id", verifyToken, async (req,res)=>{
 })
 
 //Edit Availability
-app.put("/updateAvailability/:id", verifyToken, async (req,res)=>{
+app.put("/updateAvailability/:id", verifyToken, async (req, res) => {
     const { id } = req.params;
     let { availability } = req.body;
     const connection = await mysql.createConnection(dbConfig);
     console.log("editAvailability")
-    if(availability.length == 0){
+    if (availability.length == 0) {
         availability = null;
     }
     try {
         const [result] = await connection.execute(
             'UPDATE users SET availability = ? WHERE id = ?',
-            [availability,id]
+            [availability, id]
         );
         const [updatedUser] = await connection.execute('SELECT * FROM users WHERE id = ?', [id]);
         connection.end();
         if (updatedUser.length == 0) return res.status(404).json({ error: 'User not found' });
         console.log("Responding")
         res.status(200).json(updatedUser);
-       
+
     } catch (error) {
         res.status(500).json({ "error": 'Database error', "errorText": error });
     }
-    
+
 })
 
 // Access User for email
@@ -311,7 +311,7 @@ app.post('/logout', verifyToken, async (req, res) => {
     if (!accessToken) return res.status(401).send('Token is required');
     if (!refreshToken) return res.status(401).send('Token is required');
 
-    deleteToken(refreshToken);    
+    deleteToken(refreshToken);
     res.status(200).send('User logout successfully');
 });
 
@@ -340,9 +340,9 @@ app.get('/users', verifyToken, async (req, res) => {
         res.json(rows);
     } catch (error) {
         console.log("tus putas muelas");
-        
+
         console.error('Database error:', error.message);
-        res.status(500).json({ error: 'Database error:'+error.message });
+        res.status(500).json({ error: 'Database error:' + error.message });
     }
 });
 
@@ -394,7 +394,7 @@ app.get('/userProfile/:id', verifyToken, async (req, res) => {
 app.delete('/users/:id', async (req, res) => {
     const { id } = req.params;
 
-   try {
+    try {
         const connection = await mysql.createConnection(dbConfig);
         const [rows] = await connection.execute('SELECT * FROM users WHERE id = ?', [id]);
         connection.end();
@@ -1140,21 +1140,21 @@ app.get('/reports/chats/:id', verifyToken, async (req, res) => {
 
 app.post('/reports/chats', verifyToken, async (req, res) => {
     const { message_id, user_id, content, report } = req.body;
-  
+
     try {
-      const connection = await mysql.createConnection(dbConfig);
-      const [result] = await connection.execute(
-        'INSERT INTO reportsChats (message_id, user_id, content, report) VALUES (?, ?, ?, ?)',
-        [message_id, user_id, content, report]
-      );
-      connection.end();
-  
-      res.status(201).send({ id: result.insertId });
+        const connection = await mysql.createConnection(dbConfig);
+        const [result] = await connection.execute(
+            'INSERT INTO reportsChats (message_id, user_id, content, report) VALUES (?, ?, ?, ?)',
+            [message_id, user_id, content, report]
+        );
+        connection.end();
+
+        res.status(201).send({ id: result.insertId });
     } catch (error) {
-      console.error('Error saving report:', error);
-      res.status(500).json({ error: 'Database error' });
+        console.error('Error saving report:', error);
+        res.status(500).json({ error: 'Database error' });
     }
-  });
+});
 
 app.put('/reports/chats/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
@@ -1268,6 +1268,81 @@ app.put('/verified/users/:id', verifyToken, async (req, res) => {
     }
 });
 
+//User follows or unfollows someone
+app.post('/follow', verifyToken, async (req, res) => {
+    const { user_id, followed_id } = req.body;
+
+    try {
+        const connection = await mysql.createConnection(dbConfig);
+        const [result] = await connection.execute('SELECT * FROM following WHERE user_id = ? AND following_user_id = ?', [user_id, followed_id]);
+        if (result.length == 0) {
+            const [result] = await connection.execute('INSERT INTO following (user_id, following_user_id) VALUES (?, ?)', [user_id, followed_id]);
+            connection.end();
+            res.status(200).json({ following: true });
+        }
+        else {
+            const connection = await mysql.createConnection(dbConfig);
+            const [result] = await connection.execute('DELETE FROM following WHERE user_id = ? AND following_user_id = ?', [user_id, followed_id]);
+            connection.end();
+            res.status(200).json({ following: false });
+        }
+    } catch (error) {
+        res.status(500).json({ "error": 'Database error' + error });
+    }
+});
+
+app.get('/checkIfFollows/:user_id/:followed_id', verifyToken, async (req, res) => {
+    const { user_id, followed_id } = req.params;
+
+    try {
+        let result;
+        const connection = await mysql.createConnection(dbConfig);
+        [result] = await connection.execute('SELECT * FROM following WHERE user_id = ? AND following_user_id = ?', [user_id, followed_id]);
+        connection.end();
+        if (result.length == 0) return res.status(200).json({ following: false });
+
+        res.status(200).json({ following: true });
+    } catch (error) {
+        res.status(500).json({ "error": 'Database error' + error });
+    }
+});
+
+app.get('/recommendedUsers/:user_id', verifyToken, async (req, res) => {
+    const { user_id } = req.params;
+
+    try {
+        let recommendedUsers = [];
+        const connection = await mysql.createConnection(dbConfig);
+        const [rows] = await connection.execute('SELECT * FROM users WHERE id != ? AND id IN (SELECT user_id FROM following WHERE following_user_id = ? ORDER BY RAND())', [user_id, user_id]);
+        for (const row of rows) {
+            let [auxRows] = await connection.execute('SELECT * FROM users WHERE id != ? AND id IN (SELECT user_id FROM following WHERE following_user_id = ? ORDER BY RAND())', [row.id, row.id]);
+
+            auxRows.forEach((auxRow) => {
+                if (auxRow.id != user_id && !recommendedUsers.includes(auxRow)) {
+                    recommendedUsers.push(auxRow);
+                }
+            });
+        }
+
+        if (recommendedUsers.length < 16) {
+            let [auxRows] = await connection.execute('SELECT * FROM users WHERE id != ? AND id NOT IN (SELECT user_id FROM following WHERE following_user_id = ?) ORDER BY RAND()', [user_id, user_id]);
+            auxRows.forEach((auxRow) => {
+                if (auxRow.id != user_id && !recommendedUsers.includes(auxRow)) {
+                    recommendedUsers.push(auxRow);
+                }
+            });
+        }
+        if (recommendedUsers.length > 16) {
+            recommendedUsers = recommendedUsers.sort(() => Math.random() - 0.5);
+            recommendedUsers = recommendedUsers.slice(0, 16);
+        }
+        connection.end();
+        res.status(200).json(recommendedUsers);
+    } catch (error) {
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
 // This Routes its for statistics
 app.get('/typesUsers', async (req, res) => {
     try {
@@ -1323,88 +1398,3 @@ server.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
 
-//User follows or unfollows someone
-app.post('/follow', verifyToken, async (req, res) => {
-    const { user_id, followed_id } = req.body;
-
-    try {
-        const connection = await mysql.createConnection(dbConfig);
-        const [result] = await connection.execute('SELECT * FROM following WHERE user_id = ? AND following_user_id = ?', [user_id, followed_id]);
-        if(result.length == 0){
-            const [result] = await connection.execute('INSERT INTO following (user_id, following_user_id) VALUES (?, ?)', [user_id, followed_id]);
-            connection.end();
-            res.status(200).json({ following:true });
-        }
-        else{
-            const connection = await mysql.createConnection(dbConfig);
-            const [result] = await connection.execute('DELETE FROM following WHERE user_id = ? AND following_user_id = ?', [user_id, followed_id]);
-            connection.end();
-            res.status(200).json({ following: false });
-        }
-    } catch (error) {
-        res.status(500).json({ "error": 'Database error'+ error });
-    }
-});
-
-app.get('/checkIfFollows/:user_id/:followed_id', verifyToken, async (req, res) => {
-    const { user_id, followed_id } = req.params;
-
-    try {
-        let result;
-        console.log("user_id",user_id);
-        console.log("followed_id",followed_id);
-        const connection = await mysql.createConnection(dbConfig);
-         [result] = await connection.execute('SELECT * FROM following WHERE user_id = ? AND following_user_id = ?', [user_id, followed_id]);
-        connection.end();
-        console.log(result)
-        if (result.length == 0) return res.status(200).json({ following: false });
-
-        res.status(200).json({ following: true });
-    } catch (error) {
-        res.status(500).json({ "error": 'Database error'+ error });
-    }
-});
-
-app.get('/recommendedUsers/:user_id', verifyToken, async (req, res) => {
-    const { user_id } = req.params;
-
-    try {
-        let recommendedUsers = [];
-        const connection = await mysql.createConnection(dbConfig);
-        const [rows] = await connection.execute('SELECT * FROM users WHERE id != ? AND id IN (SELECT user_id FROM following WHERE following_user_id = ? ORDER BY RAND())', [user_id, user_id]);
-        console.log("Yo sigo a",rows);
-        for (const row of rows) {
-            let [auxRows] = await connection.execute('SELECT * FROM users WHERE id != ? AND id IN (SELECT user_id FROM following WHERE following_user_id = ? ORDER BY RAND())', [row.id, row.id]);
-            console.log(row.id, "sigue a", auxRows);
-            auxRows.forEach((auxRow) => {
-            console.log("auxRow", auxRow);
-            console.log(auxRow.id != user_id);
-            console.log(!recommendedUsers.includes(auxRow));
-            if (auxRow.id != user_id && !recommendedUsers.includes(auxRow)) {
-                recommendedUsers.push(auxRow);
-                console.log("recomendado", auxRow);
-            }
-            });
-        }
-        console.log("me han recomendado", recommendedUsers);
-        console.log("hay", recommendedUsers.length, "usuarios recomendados");
-        if(recommendedUsers.length < 16){
-            let [auxRows]=await connection.execute('SELECT * FROM users WHERE id != ? AND id NOT IN (SELECT user_id FROM following WHERE following_user_id = ?) ORDER BY RAND()', [user_id, user_id]);
-             auxRows.forEach((auxRow) => {
-                if(auxRow.id != user_id && !recommendedUsers.includes(auxRow)){
-                    recommendedUsers.push(auxRow);
-                }
-            });
-        }
-            if(recommendedUsers.length > 16){
-                recommendedUsers = recommendedUsers.sort(() => Math.random() - 0.5);
-                recommendedUsers = recommendedUsers.slice(0,16);
-            }
-        connection.end();
-
-        console.log("Los usuarios que estan siendo recomendados són", recommendedUsers);
-        res.status(200).json(recommendedUsers);
-    } catch (error) {
-        res.status(500).json({ error: 'Database error' });
-    }
-});

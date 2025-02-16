@@ -6,6 +6,7 @@
     >
       <Loading />
     </div>
+
     <div v-else>
       <div
         v-if="selectedPost"
@@ -36,6 +37,7 @@
             </g>
           </svg>
         </button>
+
         <div
           v-if="
             selectedPost.reports === 0 ||
@@ -80,6 +82,7 @@
             </div>
           </main>
         </div>
+        
         <div class="p-4 bg-containersTheme">
           <h3 class="text-lg font-bold text-textThemeColor">{{ $t("viewPost.comentaris") }}</h3>
           <div class="border-t-2 border-buttonColorPrimary px-4 p-4 mb-2 sm:mb-0">
@@ -277,7 +280,7 @@
             (a, b) => new Date(b.created_at) - new Date(a.created_at)
             )"
           :key="post.id"
-          class="max-w-3xl mx-auto bg-containersTheme shadow-lg rounded-lg overflow-hidden mt-6"
+          class="max-w-3xl mx-auto shadow-lg rounded-lg overflow-hidden mt-6"
         >
         <div class="max-w-3xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden mt-6 dark:bg-gray-800">
           <div v-if="post.reports === 0">
