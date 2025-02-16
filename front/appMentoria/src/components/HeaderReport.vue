@@ -1,7 +1,7 @@
 <template>
     <div class="flex justify-center mt-12">
-      <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 w-full max-w-4xl">
-        <h2 class="text-xl font-bold text-center mb-6 text-gray-800 dark:text-gray-100">
+      <div class="bg-containersTheme shadow-lg rounded-lg p-6 w-full max-w-4xl">
+        <h2 class="text-xl font-bold text-center mb-6 text-textThemeColor">
             {{ $t("headerReport.title") }}
         </h2>
         <div class="flex justify-center space-x-4">

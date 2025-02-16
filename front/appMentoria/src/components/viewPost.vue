@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="loading" class="flex items-center justify-center min-h-screen bg-bgTheme">
+    <div v-if="loading" class="max-w-full mx-auto bg-bgTheme shadow-lg rounded-lg overflow-auto mt-6">
       <Loading />
     </div>
 
@@ -26,24 +26,24 @@
           <header class="flex items-center p-4 border-b bg-containersTheme">
             <img :src="getAuthorProfile(selectedPost.user_id)" alt="Avatar" class="w-12 h-12 rounded-full mr-4" />
             <div>
-              <h2 class="font-bold text-lg text-textThemeColor">
+              <h2 class="font-bold text-lg text-textThemeColor text-wrap">
                 {{ getAuthorName(selectedPost.user_id) }}
               </h2>
-              <p class="text-gray-500 text-sm text-textThemeColor mb-6">
+              <p class="text-gray-500 text-sm text-textThemeColor mb-6 text-wrap">
                 {{ getAuthorHandle(selectedPost.user_id) }} ·
                 {{ timeSince(selectedPost.created_at) }}
               </p>
             </div>
           </header>
 
-          <main class="p-4 space-y-4 bg-containersTheme">
-            <h1 class="text-xl font-bold text-textThemeColor">{{ selectedPost.title }}</h1>
-            <p class="text-textThemeColor text-lg whitespace-pre-liner">
+          <main class="p-4 space-y-4 bg-containersTheme text-wrap">
+            <h1 class="text-xl font-bold text-textThemeColor text-wrap">{{ selectedPost.title }}</h1>
+            <p class="text-textThemeColor text-lg whitespace-pre-liner text-wrap">
               {{ selectedPost.description }}
             </p>
 
             <div v-if="selectedPost.image != null" class="rounded-lg overflow-hidden">
-              <img :src="`${community_url}${selectedPost.image}`" alt="Post Image" class="w-full" />
+              
             </div>
           </main>
         </div>
@@ -193,11 +193,7 @@
               </footer>
             </div>
           </div>
-          <div v-if="index % 10 == 0 || (posts.length <= 10 && index == posts.length - 1 && index == posts.length - 1)">
-            <div class="w-full max-w-3xl mx-auto  shadow-lg rounded-lg overflow-hidden mt-6">
-              <RecommendedProfiles />
-            </div>
-          </div>
+          
         </div>
       </div>
     </div>
@@ -348,3 +344,10 @@ onMounted(async () => {
   }
 });
 </script>
+<style scooped>
+.text-wrap {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+</style>

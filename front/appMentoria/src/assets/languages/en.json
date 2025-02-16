@@ -352,5 +352,13 @@
         "gacha": "Gacha",
         "games": "Games",
         "addPost" : "Add Post"
+    },
+    "titlesSettings": {
+        "configuration": "Configuration",
+        "language": "Language",
+        "notifications": "Notifications",
+        "styles": "Styles",
+        "enableNotifications": "Enable Notifications"
     }
+
 }

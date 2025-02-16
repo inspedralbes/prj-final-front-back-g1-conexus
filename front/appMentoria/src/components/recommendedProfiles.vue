@@ -28,6 +28,7 @@ let user=useAppStore().getUser();
 
 const carouselConfig = {
   itemsToShow: window.innerWidth <= 768 ? 1 : 2.5,
+  width: window.innerWidth <= 768 ? 'auto' : 1,
   wrapAround: true,
   gap: 20,
 };
@@ -53,6 +54,7 @@ onMounted(async () => {
 <style>
 .container{
   z-index: 0;
+  
 }
 .custom-carousel {
   display: block;

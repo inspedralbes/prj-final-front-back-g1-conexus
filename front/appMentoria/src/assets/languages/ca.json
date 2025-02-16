@@ -357,5 +357,12 @@
         "gacha": "Gacha",
         "games": "Jocs",
         "addPost" : "Afegir publicació"
+    },
+    "titlesSettings": {
+        "configuration": "Configuració",
+        "language": "Idioma",
+        "notifications": "Notificacions",
+        "styles": "Estils",
+        "enableNotifications": "Activar notificacions"
     }
 }

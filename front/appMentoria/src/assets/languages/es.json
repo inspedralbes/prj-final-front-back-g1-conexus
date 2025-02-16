@@ -343,7 +343,6 @@
         "request": "Peticiones",
         "share": "Compartir"
     },
-
     "navBarWeb": {
         "main": "Principal",
         "oferts": "Ofertas",
@@ -353,5 +352,12 @@
         "gacha": "Gacha",
         "games": "Juegos",
         "addPost": "Añadir post"
+    },
+    "titlesSettings": {
+        "configuration": "Configuración",
+        "language": "Idioma",
+        "notifications": "Notificaciones",
+        "styles": "Estilos",
+        "enableNotifications": "Habilitar notificaciones"
     }
 }

@@ -1,10 +1,9 @@
 <template>
-    <div>
-      <div
+    <div
         v-if="selectedChatId === false"
         v-for="chat in chats"
         :key="chat._id"
-        class="chat-item overflow-y-auto "
+        class="chat-item overflow-y-auto bg-containersTheme border border-buttonColorPrimary py-2 px-4"
       >
           <div
             style="display: flex; align-items: center"
@@ -27,6 +26,7 @@
               :src="getAuthorProfile(chat.users[0] === userId ? chat.users[1] : chat.users[0])"
               alt="Profile Image"
               style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px"
+              class="bg-buttonColorPrimary"
             />
             <div>
               <h3 v-if="chat.users[0] === userId">
@@ -48,7 +48,7 @@
             </div>
       </div>
     </div>
-  </div>
+  
     <viewChatContent
       v-if="selectedChatId !== false"
       :chatData="chats.find((chat) => chat._id === selectedChatId)"
@@ -133,9 +133,7 @@ onMounted(() => {
 
 <style scoped>
 .chat-item {
-  margin-bottom: 1rem;
   padding: 1rem;
-  border: 2px solid #ccc;
   border-radius: 8px;
   margin: 10px;
   cursor: pointer;
@@ -144,10 +142,9 @@ onMounted(() => {
 .overlay {
   position: absolute;
   top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: white;
+  right: 0;
+  width: 100vw;
+  height: 100vh;
   z-index: 10;
 }
 </style>

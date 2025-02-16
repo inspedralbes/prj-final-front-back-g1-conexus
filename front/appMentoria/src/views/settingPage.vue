@@ -2,7 +2,7 @@
   <div class="flex flex-col min-h-screen bg-backgroundLight dark:bg-backgroundDark">
     <div class="flex flex-col lg:flex-row">
       <div class="flex-grow lg:ml-60 p-6">
-        <h1 class="border-b pb-4 text-3xl font-semibold text-gray-400">Configuración</h1>
+        <h1 class="border-b pb-4 text-3xl font-semibold text-gray-400">{{ $t("titlesSettings.configuration") }}</h1>
         <div class="flex flex-col sm:flex-row sm:space-x-4 mt-6">
           <button @click="section = 'idioma'" 
                   class="mt-2 sm:mt-0 cursor-pointer border-b-2 px-4 py-2 font-semibold w-full sm:w-auto text-left sm:text-center">

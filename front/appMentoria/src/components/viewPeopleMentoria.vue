@@ -1,7 +1,7 @@
 <template>
   <div class="max-w-xs sm:max-w-sm rounded overflow-hidden shadow-custom mx-auto my-4 bg-containersTheme">
     <div class="relative">
-      <img class="w-full object-cover clippy" :src="`${imageBanner}${user.banner}`" alt="User Image">
+      <img class="w-[400px] h-[220px] object-cover clippy" :src="`${imageBanner}${user.banner}`" alt="User Image">
       <div
         class="clippy absolute bottom-0 left-0 top-0 right-0 bg-blue-700 bg-opacity-50 p-2 sm:p-4 text-textThemeColor flex flex-col justify-end items-center">
       </div>

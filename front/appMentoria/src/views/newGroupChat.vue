@@ -1,12 +1,12 @@
 <template>
     <div class="flex flex-col min-h-screen">
-        <Header class="fixed top-0 left-0 right-0 z-10"></Header>
         <NavBarWeb class="hidden lg:fixed lg:top-0 lg:left-0 lg:h-screen lg:w-60 lg:block"></NavBarWeb>
         <NavBarApp 
         class="fixed bottom-0 left-0 right-0 w-full lg:hidden ">
         </NavBarApp>
-        <main class="flex-grow my-20 p-4">
-            <div>
+        <main class="flex-grow p-4">
+            <h1 class="py-5 text-4xl font-bold text-textThemeColor">Crear Nueva Grupo</h1>
+            <div class="border-buttonColorPrimary border-2 p-4 rounded-lg">
                 <h2 class="text-lg font-semibold mb-2 rounded-md">Llista de usuaris</h2>
 
                 <input 

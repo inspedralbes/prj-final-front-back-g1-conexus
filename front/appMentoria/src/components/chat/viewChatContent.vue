@@ -1,21 +1,21 @@
 <template>
-  <div class="flex flex-col h-screen dark:bg-neutral-900 z-3000 relative">
-    <div class="flex sm:items-center justify-between py-2 border-b-2 border-gray-200">
+  <div class="flex flex-col h-screen z-3000 relative ">
+    <div class="flex sm:items-center justify-between py-2 border-b-2 border-buttonColorTertiary bg-bgTheme">
       <div class="relative flex items-center space-x-4">
         <div class="relative ps-5">
-            <img v-if="chatPersons === 2" :src="updateProfile(otherUser)" alt="" class="w-10 sm:w-16 h-10 sm:h-16 rounded-full" />
+            <img v-if="chatPersons === 2" :src="updateProfile(otherUser)" alt="" class="w-10 sm:w-16 h-10 sm:h-16 rounded-full bg-buttonColorPrimary" />
         </div>
         <div class="flex flex-col leading-tight">
           <div class="text-2xl mt-1 flex items-center">
-          <span v-if="chatPersons === 2" class="text-gray-700 mr-3 dark:text-white">{{ otherUser.name }}</span>
-          <span v-if="chatPersons > 2" class="text-gray-700 mr-3 dark:text-white">{{ chatName }}</span>
+          <span v-if="chatPersons === 2" class="text-textThemeColor mr-3">{{ otherUser.name }}</span>
+          <span v-if="chatPersons > 2" class="text-textThemeColor mr-3">{{ chatName }}</span>
           </div>
-          <span v-if="chatPersons === 2" class="text-lg text-gray-600 dark:text-white">{{ otherUser.email.split("@")[0] }}</span>
-          <span v-if="chatPersons > 2" class="text-lg text-gray-600 dark:text-white">{{ nameUsersChat }}</span>
+          <span v-if="chatPersons === 2" class="text-lg text-textThemeColor">{{ otherUser.email.split("@")[0] }}</span>
+          <span v-if="chatPersons > 2" class="text-lg text-textThemeColor">{{ nameUsersChat }}</span>
         </div>
       </div>
-      <div class="flex items-center space-x-2 pr-4">
-        <button @click="$emit('closeChat')" type="button" class="inline-flex items-center justify-center rounded-lg h-10 w-10 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300 focus:outline-none">
+      <div class="flex items-center space-x-2 pr-4 ">
+        <button @click="$emit('closeChat')" type="button" class="inline-flex items-center justify-center rounded-lg h-10 w-10 transition duration-500 ease-in-out text-buttonColorPrimary hover:bg-gray-300 focus:outline-none">
           <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
             <path d="M5 1H4L0 5L4 9H5V6H11C12.6569 6 14 7.34315 14 9C14 10.6569 12.6569 12 11 12H4V14H11C13.7614 14 16 11.7614 16 9C16 6.23858 13.7614 4 11 4H5V1Z" fill="currentColor"></path>
           </svg>
@@ -23,12 +23,12 @@
       </div>
     </div>
 
-    <div id="messages" ref="messageContainer" class="flex flex-col space-y-4 p-3 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch flex-grow h-full">
+<div id="messages" ref="messageContainer" class="flex flex-col space-y-4 p-3 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch flex-grow h-full bg-containersTheme">
   <div v-for="(interaction, index) in interactions" :key="index" class="chat-message">
     <div :class="Number(interaction.userId) === currentUser ? 'flex items-end justify-end' : 'flex items-end'">
       <div :class="Number(interaction.userId) === currentUser ? 'flex flex-col space-y-2 text-xs max-w-xs mx-2 order-1 items-end' : 'flex flex-col space-y-2 text-xs max-w-xs mx-2 order-2 items-start'">
         <div>
-          <span :class="Number(interaction.userId) === currentUser ? 'px-4 py-2 rounded-lg inline-block rounded-br-none bg-blue-600 text-white' : 'px-4 py-2 rounded-lg inline-block rounded-bl-none bg-gray-300 text-gray-600'">
+          <span :class="Number(interaction.userId) === currentUser ? 'px-4 py-2 rounded-lg inline-block rounded-br-none bg-buttonColorPrimary text-textThemeColor' : 'px-4 py-2 rounded-lg inline-block rounded-bl-none bg-gray-300 text-gray-600'">
             <p v-if="Number(interaction.userId) !== currentUser && chatPersons > 2"><strong>{{ users.find(user => user.id === Number(interaction.userId)).name }}</strong></p>
             <p>{{ interaction.message }}</p>
             <p><small>{{ new Date(interaction.timestamp).toLocaleString() }}</small></p>
@@ -41,12 +41,12 @@
           </span>
         </div>
       </div>
-          <img :src="updateProfile(interaction.userId)" alt="Profile" class="w-6 h-6 rounded-full" :class="Number(interaction.userId) === currentUser ? 'order-2' : 'order-1'" />
+          <img :src="updateProfile(interaction.userId)" alt="Profile" class="w-6 h-6 rounded-full bg-buttonColorSecondary" :class="Number(interaction.userId) === currentUser ? 'order-2' : 'order-1'" />
         </div>
       </div>
     </div>
 
-    <div class="border-t-2 border-gray-200 px-4 p-4 mb-2 sm:mb-0">
+    <div class="border-t-2 border-buttonColorTertiary px-4 p-4 mb-2 sm:mb-0 bg-containersTheme">
       <div class="relative flex">
         <template v-if="isChatReported">
           <input type="text" 
@@ -59,11 +59,11 @@
       <input ref="messageInput" 
         type="text" 
         placeholder="Write your message!" 
-        class="w-full focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-600 pl-5 pr-20 bg-gray-200 rounded-md py-3 dark:bg-gray-800 dark:text-white" />
+        class="w-full focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-600 pl-5 pr-20 bg-gray-200 rounded-md py-3" />
       <div class="absolute right-0 items-center inset-y-0 flex">
         <button @click="sendMessageInMongoNow" 
           type="button" 
-          class="inline-flex items-center justify-center rounded-full h-10 w-10 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300 focus:outline-none mr-4">
+          class="inline-flex items-center justify-center rounded-full h-10 w-10 transition duration-500 ease-in-out text-bgTheme hover:bg-gray-300 focus:outline-none mr-4">
           <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#999999">
             <path d="M20.7639 12H10.0556M3 8.00003H5.5M4 12H5.5M4.5 16H5.5M9.96153 12.4896L9.07002 15.4486C8.73252 16.5688 8.56376 17.1289 8.70734 17.4633C8.83199 17.7537 9.08656 17.9681 9.39391 18.0415C9.74792 18.1261 10.2711 17.8645 11.3175 17.3413L19.1378 13.4311C20.059 12.9705 20.5197 12.7402 20.6675 12.4285C20.7961 12.1573 20.7961 11.8427 20.6675 11.5715C20.5197 11.2598 20.059 11.0295 19.1378 10.5689L11.3068 6.65342C10.2633 6.13168 9.74156 5.87081 9.38789 5.95502C9.0808 6.02815 8.82627 6.24198 8.70128 6.53184C8.55731 6.86569 8.72427 7.42461 9.05819 8.54246L9.96261 11.5701C10.0137 11.7411 10.0392 11.8266 10.0493 11.9137C10.0583 11.991 10.0582 12.069 10.049 12.1463C10.0387 12.2334 10.013 12.3188 9.96153 12.4896Z" stroke="#999999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
           </svg>

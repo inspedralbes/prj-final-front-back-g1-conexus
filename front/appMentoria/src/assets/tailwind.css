@@ -54,7 +54,7 @@
   --text-primary: #f59e0b;
   --button-secondary: #ffcd36;
   --button-primary: #f59e0b;
-  --button-tertiary: #f9c74f;
+  --button-tertiary: #f3ca6b;
 }
 
 .color-green {
@@ -62,7 +62,7 @@
   --text-primary: #00b341;
   --button-secondary: #00d14d;
   --button-primary: #00b341;
-  --button-tertiary: #00e25f;
+  --button-tertiary: #37da7b;
 }
 
 .color-blue {
@@ -70,5 +70,5 @@
   --text-primary: #00a9e0;
   --button-secondary: #00c2f0;
   --button-primary: #00a9e0;
-  
+  --button-tertiary: #60e1f8;
 }
