@@ -359,5 +359,11 @@
         "notifications": "Notificaciones",
         "styles": "Estilos",
         "enableNotifications": "Habilitar notificaciones"
+    },
+    "settings": {
+        "fontSize": "Tamaño de la fuente",
+        "Aa": "Aa",
+        "color": "Color",
+        "backgroundImatge": "Imagen de fondo"
     }
 }

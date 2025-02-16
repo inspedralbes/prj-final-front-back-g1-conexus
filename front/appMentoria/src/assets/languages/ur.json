@@ -350,5 +350,12 @@
         "gacha": "گاچا",
         "games": "کھیل",
         "addPost": "پوسٹ شامل کریں"
+    },
+    "titlesSettings": {
+        "configuration": "ترتیبات",
+        "language": "زبان",
+        "notifications": "اطلاعات",
+        "styles": "سٹائل",
+        "enableNotifications": "اطلاعات کو فعال کریں"
     }
 }

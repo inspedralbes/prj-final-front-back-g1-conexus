@@ -359,6 +359,12 @@
         "notifications": "Notifications",
         "styles": "Styles",
         "enableNotifications": "Enable Notifications"
+    },
+    "settings": {
+        "fontSizes": "Font Sizes",
+        "Aa": "Aa",
+        "color": "Color",
+        "backgroundImatge": "Background Image"
     }
 
 }

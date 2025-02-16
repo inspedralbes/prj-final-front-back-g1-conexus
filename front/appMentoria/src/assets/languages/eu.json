@@ -352,5 +352,16 @@
         "gacha": "Gacha",
         "games": "Jokoak",
         "addPost": "Posta gehitu"
+    },
+    "titlesSettings": {
+        "configuration": "Konfigurazioa",
+        "language": "Hizkuntza",
+        "notifications": "Jakinarazpenak",
+        "styles": "Estiloak",
+        "enableNotifications": "Jakinarazpenak gaitu"
+    },
+    "settings": {
+        "fontSize": "Letren tamaina",   
+        "Aa": "Aa"
     }
 }

@@ -351,5 +351,12 @@
         "gacha": "扭蛋",
         "games": "游戏",
         "addPost": "添加帖子"
+    },
+    "titlesSettings": {
+        "configuration": "配置",
+        "language": "语言",
+        "notifications": "通知",
+        "styles": "风格",
+        "enableNotifications": "启用通知"
     }
 }

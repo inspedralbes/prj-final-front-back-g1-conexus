@@ -353,5 +353,12 @@
         "gacha": "Gacha",
         "games": "Xogos",
         "addPost": "Engadir publicación"
+    },
+    "titlesSettings": {
+        "configuration": "Configuración",
+        "language": "Lingua",
+        "notifications": "Notificacións",
+        "styles": "Estilos",
+        "enableNotifications": "Activar notificacións"
     }
 }

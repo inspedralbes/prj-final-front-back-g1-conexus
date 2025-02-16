@@ -1,19 +1,36 @@
 <template>
   <div>
-    <div v-if="loading" class="max-w-full mx-auto bg-bgTheme shadow-lg rounded-lg overflow-auto mt-6">
+    <div
+      v-if="loading"
+      class="max-w-full mx-auto bg-bgTheme shadow-lg rounded-lg overflow-auto mt-6"
+    >
       <Loading />
     </div>
 
     <div>
-      <div v-if="selectedPost" class="max-w-3xl mx-auto bg-bgTheme shadow-lg rounded-lg overflow-hidden mt-6">
+      <div
+        v-if="selectedPost"
+        class="max-w-3xl mx-auto bg-bgTheme shadow-lg rounded-lg overflow-hidden mt-6"
+      >
         <button @click="goMain" class="py-2 px-4 fixed top-0 left-0 mt-3 ml-4 z-20">
-          <svg width="20" height="20" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 16 16"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+            <g
+              id="SVGRepo_tracerCarrier"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            ></g>
             <g id="SVGRepo_iconCarrier">
               <path
                 d="M5 1H4L0 5L4 9H5V6H11C12.6569 6 14 7.34315 14 9C14 10.6569 12.6569 12 11 12H4V14H11C13.7614 14 16 11.7614 16 9C16 6.23858 13.7614 4 11 4H5V1Z"
-                fill="#ffffff"></path>
+                fill="#ffffff"
+              ></path>
             </g>
           </svg>
         </button>
@@ -41,57 +58,107 @@
             </div>
           </header>
 
-          <main class="p-4 space-y-4 bg-containersTheme ">
-            <h1 class="text-xl font-bold text-textThemeColor text-wrap">{{ selectedPost.title }}</h1>
-            <p
-              class="text-textThemeColor text-lg whitespace-pre-liner text-wrap"
-            >
+          <main class="p-4 space-y-4 bg-containersTheme">
+            <h1 class="text-xl font-bold text-textThemeColor text-wrap">
+              {{ selectedPost.title }}
+            </h1>
+            <p class="text-textThemeColor text-lg whitespace-pre-liner text-wrap">
               {{ selectedPost.description }}
             </p>
 
-            <div v-if="selectedPost.image != null" class="rounded-lg overflow-hidden">
-              
-            </div>
+            <div
+              v-if="selectedPost.image != null"
+              class="rounded-lg overflow-hidden"
+            ></div>
           </main>
         </div>
 
         <div class="p-4 bg-containersTheme">
-          <h3 class="text-lg font-bold text-textThemeColor">{{ $t("viewPost.comentaris") }}</h3>
+          <h3 class="text-lg font-bold text-textThemeColor">
+            {{ $t("viewPost.comentaris") }}
+          </h3>
           <div class="border-t-2 border-buttonColorPrimary px-4 p-4 mb-2 sm:mb-0">
             <div class="relative flex">
-              <input ref="commentInput" type="text" placeholder="Escriu un comentari!"
-                class="w-full focus:outline-none focus:placeholder-textThemeColor text-textThemeColor placeholder-textThemeColor pl-5 pr-20 bg-bgTheme rounded-md py-3 border-2 border-buttonColorPrimary" />
+              <input
+                ref="commentInput"
+                type="text"
+                placeholder="Escriu un comentari!"
+                class="w-full focus:outline-none focus:placeholder-textThemeColor text-textThemeColor placeholder-textThemeColor pl-5 pr-20 bg-bgTheme rounded-md py-3 border-2 border-buttonColorPrimary"
+              />
               <div class="absolute right-0 items-center inset-y-0 flex">
-                <button v-if="!loadingComment[null]" @click="sendCommentInMongo(null)" type="button"
-                  class="inline-flex items-center justify-center rounded-full h-10 w-10 transition duration-500 ease-in-out text-textThemeColor hover:bg-buttonColorPrimary focus:outline-none mr-4">
-                  <svg viewBox="0 -0.5 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <button
+                  v-if="!loadingComment[null]"
+                  @click="sendCommentInMongo(null)"
+                  type="button"
+                  class="inline-flex items-center justify-center rounded-full h-10 w-10 transition duration-500 ease-in-out text-textThemeColor hover:bg-buttonColorPrimary focus:outline-none mr-4"
+                >
+                  <svg
+                    viewBox="0 -0.5 25 25"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
                     <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                    <g
+                      id="SVGRepo_tracerCarrier"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    ></g>
                     <g id="SVGRepo_iconCarrier">
-                      <path fill-rule="evenodd" clip-rule="evenodd"
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
                         d="M14.734 15.8974L19.22 12.1374C19.3971 11.9927 19.4998 11.7761 19.4998 11.5474C19.4998 11.3187 19.3971 11.1022 19.22 10.9574L14.734 7.19743C14.4947 6.9929 14.1598 6.94275 13.8711 7.06826C13.5824 7.19377 13.3906 7.47295 13.377 7.78743V9.27043C7.079 8.17943 5.5 13.8154 5.5 16.9974C6.961 14.5734 10.747 10.1794 13.377 13.8154V15.3024C13.3888 15.6178 13.5799 15.8987 13.8689 16.0254C14.158 16.1521 14.494 16.1024 14.734 15.8974Z"
-                        stroke="#999999" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                        stroke="#999999"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      ></path>
                     </g>
                   </svg>
                 </button>
-                <button v-if="loadingComment[null]"
-                  class="inline-flex items-center justify-center rounded-full h-10 w-10 transition duration-500 ease-in-out text-textThemeColor hover:bg-gray-300 focus:outline-none mr-4">
-                  <svg class="animate-spin h-4 w-4 text-gray-800 dark:text-gray-200" xmlns="http://www.w3.org/2000/svg"
-                    fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                <button
+                  v-if="loadingComment[null]"
+                  class="inline-flex items-center justify-center rounded-full h-10 w-10 transition duration-500 ease-in-out text-textThemeColor hover:bg-gray-300 focus:outline-none mr-4"
+                >
+                  <svg
+                    class="animate-spin h-4 w-4 text-gray-800 dark:text-gray-200"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      class="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      stroke-width="4"
+                    ></circle>
+                    <path
+                      class="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v8H4z"
+                    ></path>
                   </svg>
                 </button>
               </div>
             </div>
           </div>
           <ul>
-            <li v-for="comment in getCommentsWithPostId(selectedPost.id).filter(
-              (comment) =>
-                (!comment.commentReply_id && comment.reported === 0) ||
-                comment.text_ia === 0
-            )" :key="comment.id" class="border-b py-2 flex items-start space-x-4 m-4 text-textThemeColor">
-              <img :src="getAuthorProfile(comment.user_id)" alt="Avatar" class="w-8 h-8 rounded-full" />
+            <li
+              v-for="comment in getCommentsWithPostId(selectedPost.id).filter(
+                (comment) =>
+                  (!comment.commentReply_id && comment.reported === 0) ||
+                  comment.text_ia === 0
+              )"
+              :key="comment.id"
+              class="border-b py-2 flex items-start space-x-4 m-4 text-textThemeColor"
+            >
+              <img
+                :src="getAuthorProfile(comment.user_id)"
+                alt="Avatar"
+                class="w-8 h-8 rounded-full"
+              />
               <div>
                 <div class="flex items-center space-x-2">
                   <h4 class="font-bold text-textThemeColor bg-containersTheme">
@@ -102,11 +169,22 @@
                   }}</span>
                 </div>
                 <p style="word-break: break-word">{{ comment.comment }}</p>
-                <div v-if="getCommentsInComments(comment.id).length" class="ml-8 mt-2 space-y-2 text-textThemeColor">
-                  <div v-for="reply in getCommentsInComments(comment.id).filter(
-                    (reply) => reply.reported === 0 || reply.text_ia === 0
-                  )" :key="reply.id" class="flex items-start space-x-4 mb-4 mr-10 text-textThemeColor">
-                    <img :src="getAuthorProfile(reply.user_id)" alt="Avatar" class="w-8 h-8 rounded-full" />
+                <div
+                  v-if="getCommentsInComments(comment.id).length"
+                  class="ml-8 mt-2 space-y-2 text-textThemeColor"
+                >
+                  <div
+                    v-for="reply in getCommentsInComments(comment.id).filter(
+                      (reply) => reply.reported === 0 || reply.text_ia === 0
+                    )"
+                    :key="reply.id"
+                    class="flex items-start space-x-4 mb-4 mr-10 text-textThemeColor"
+                  >
+                    <img
+                      :src="getAuthorProfile(reply.user_id)"
+                      alt="Avatar"
+                      class="w-8 h-8 rounded-full"
+                    />
                     <div>
                       <div class="flex items-center space-x-2 text-textThemeColor">
                         <h4 class="font-bold text-textThemeColor bg-containersTheme">
@@ -121,29 +199,67 @@
                   </div>
                 </div>
                 <div class="relative flex mb-4 mr-5 text-textThemeColor">
-                  <input type="text" placeholder="Escriu un comentari!" v-model="replyInputs[comment.id]"
+                  <input
+                    type="text"
+                    placeholder="Escriu un comentari!"
+                    v-model="replyInputs[comment.id]"
                     class="w-3/4 focus:outline-none focus:placeholder-bgTheme text-textThemeColor placeholder-textThemeColor pl-3 pr-16 bg-bgTheme rounded-md py-2 border-2 border-buttonColorPrimary"
-                    style="width: 100%" />
+                    style="width: 100%"
+                  />
                   <div class="absolute right-0 items-center inset-y-0 flex">
-                    <button v-if="!loadingComment[comment.id]" @click="sendCommentInMongo(comment.id)" type="button"
-                      class="inline-flex items-center justify-center rounded-full h-10 w-10 transition duration-500 ease-in-out text-textThemeColor hover:bg-buttonColorPrimary focus:outline-none mr-4">
-                      <svg viewBox="0 -0.5 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <button
+                      v-if="!loadingComment[comment.id]"
+                      @click="sendCommentInMongo(comment.id)"
+                      type="button"
+                      class="inline-flex items-center justify-center rounded-full h-10 w-10 transition duration-500 ease-in-out text-textThemeColor hover:bg-buttonColorPrimary focus:outline-none mr-4"
+                    >
+                      <svg
+                        viewBox="0 -0.5 25 25"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                        <g
+                          id="SVGRepo_tracerCarrier"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        ></g>
                         <g id="SVGRepo_iconCarrier">
-                          <path fill-rule="evenodd" clip-rule="evenodd"
+                          <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
                             d="M14.734 15.8974L19.22 12.1374C19.3971 11.9927 19.4998 11.7761 19.4998 11.5474C19.4998 11.3187 19.3971 11.1022 19.22 10.9574L14.734 7.19743C14.4947 6.9929 14.1598 6.94275 13.8711 7.06826C13.5824 7.19377 13.3906 7.47295 13.377 7.78743V9.27043C7.079 8.17943 5.5 13.8154 5.5 16.9974C6.961 14.5734 10.747 10.1794 13.377 13.8154V15.3024C13.3888 15.6178 13.5799 15.8987 13.8689 16.0254C14.158 16.1521 14.494 16.1024 14.734 15.8974Z"
-                            stroke="#999999" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                            stroke="#999999"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          ></path>
                         </g>
                       </svg>
                     </button>
-                    <button v-if="loadingComment[comment.id]"
-                      class="inline-flex items-center justify-center rounded-full h-10 w-10 transition duration-500 ease-in-out text-textThemeColor hover:bg-buttonColorPrimary focus:outline-none mr-4">
-                      <svg class="animate-spin h-4 w-4 text-gray-800 dark:text-gray-200"
-                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
-                        </circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                    <button
+                      v-if="loadingComment[comment.id]"
+                      class="inline-flex items-center justify-center rounded-full h-10 w-10 transition duration-500 ease-in-out text-textThemeColor hover:bg-buttonColorPrimary focus:outline-none mr-4"
+                    >
+                      <svg
+                        class="animate-spin h-4 w-4 text-gray-800 dark:text-gray-200"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          class="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          stroke-width="4"
+                        ></circle>
+                        <path
+                          class="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8v8H4z"
+                        ></path>
                       </svg>
                     </button>
                   </div>
@@ -155,14 +271,24 @@
       </div>
 
       <div v-else>
-        <div v-for="(post, index) in posts.sort(
-          (a, b) => new Date(b.created_at) - new Date(a.created_at)
-        )" :key="post.id" class="max-w-3xl mx-auto bg-bgTheme rounded-lg overflow-hidden mt-6">
+        <div
+          v-for="(post, index) in posts.sort(
+            (a, b) => new Date(b.created_at) - new Date(a.created_at)
+          )"
+          :key="post.id"
+          class="max-w-3xl mx-auto bg-bgTheme rounded-lg overflow-hidden mt-6"
+        >
           <div class="max-w-3xl mx-auto shadow-lg rounded-lg overflow-hidden mt-6">
-            <div v-if="post.reports === 0"
-              class="lg:max-w-3xl lg:mx-auto lg:shadow-lg lg:rounded-lg lg:overflow-hidden lg:p-0 lg:space-y-4 lg:bg-containersTheme">
+            <div
+              v-if="post.reports === 0"
+              class="lg:max-w-3xl lg:mx-auto lg:shadow-lg lg:rounded-lg lg:overflow-hidden lg:p-0 lg:space-y-4 lg:bg-containersTheme"
+            >
               <header class="flex items-center p-4 border-b border-buttonColorPrimary">
-                <img :src="getAuthorProfile(post.user_id)" alt="Avatar" class="w-12 h-12 rounded-full mr-4" />
+                <img
+                  :src="getAuthorProfile(post.user_id)"
+                  alt="Avatar"
+                  class="w-12 h-12 rounded-full mr-4"
+                />
                 <div>
                   <h2 class="font-bold text-lg text-textThemeColor">
                     {{ getAuthorName(post.user_id) }}
@@ -180,19 +306,36 @@
                   {{ post.description }}
                 </p>
 
-                <div v-if="post.image != null" class="rounded-lg overflow-hidden ">
-                  <img :src="`${community_url}${post.image}`" alt="Post Image" class="w-full" />
+                <div v-if="post.image != null" class="rounded-lg overflow-hidden">
+                  <img
+                    :src="`${community_url}${post.image}`"
+                    alt="Post Image"
+                    class="w-full"
+                  />
                 </div>
               </main>
 
-              <footer class="p-4 border-t flex bg-containersTheme border-buttonColorPrimary">
+              <footer
+                class="p-4 border-t flex bg-containersTheme border-buttonColorPrimary"
+              >
                 <div class="flex justify-around w-full text-textThemeColor">
-                  <button class="flex items-center space-x-1 hover:text-buttonColorSecondary"
-                    @click="showPostWithComments(post)">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                      stroke="currentColor" class="size-6">
-                      <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.076-4.076a1.526 1.526 0 0 1 1.037-.443 48.282 48.282 0 0 0 5.68-.494c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
+                  <button
+                    class="flex items-center space-x-1 hover:text-buttonColorSecondary"
+                    @click="showPostWithComments(post)"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="size-6"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.076-4.076a1.526 1.526 0 0 1 1.037-.443 48.282 48.282 0 0 0 5.68-.494c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
+                      />
                     </svg>
                     <span>{{ getCommentsWithPostId(post.id).length }}</span>
                   </button>
@@ -200,7 +343,6 @@
               </footer>
             </div>
           </div>
-          
         </div>
       </div>
     </div>
@@ -210,7 +352,10 @@
 <script setup>
 import { ref, onMounted, defineProps } from "vue";
 import { getUsers } from "../services/communicationsScripts/mainManager";
-import { getCommunityComments, postCommunityComments } from "@/services/communicationsScripts/communityManager";
+import {
+  getCommunityComments,
+  postCommunityComments,
+} from "@/services/communicationsScripts/communityManager";
 import socketBack from "../services/socketsScripts/socketBack.js";
 import { useAppStore } from "@/stores/index";
 import Loading from "@/components/Loading.vue"; // Import the Loading component
@@ -267,9 +412,7 @@ const getCommentsWithPostId = (postId) => {
 };
 
 const getCommentsInComments = (commentid) => {
-  return comments.value.filter(
-    (comment) => comment.commentReply_id === commentid
-  );
+  return comments.value.filter((comment) => comment.commentReply_id === commentid);
 };
 
 const sendCommentInMongo = async (ID) => {
@@ -339,7 +482,7 @@ onMounted(async () => {
   console.log("ViewPost mounted");
   console.log(props.posts);
   users.value = await getUsers();
-  console.log('users :', users.value);
+  console.log("users :", users.value);
   comments.value = await getCommunityComments();
   socketBack.on("updateComments", async () => {
     console.log("New comment received");
@@ -351,7 +494,7 @@ onMounted(async () => {
   }
 });
 </script>
-<style scooped>
+<style scoped>
 .text-wrap {
   word-wrap: break-word;
   overflow-wrap: break-word;

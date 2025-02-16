@@ -8,7 +8,7 @@
         class="p-4 border-b flex flex-col md:flex-row justify-between items-center dark:border-gray-600"
       >
         <h2 class="text-lg font-semibold text-gray-700 dark:text-white">
-          {{$t("myPublications.title")}}
+          {{ $t("myPublications.title") }}
         </h2>
       </div>
 
@@ -38,8 +38,8 @@
     </div>
   </div>
 </template>
-  
-  <script setup>
+
+<script setup>
 import { ref, onMounted } from "vue";
 import { getMyPublicationsInCommunity } from "@/services/communicationsScripts/communityManager";
 import { useAppStore } from "@/stores/index";
@@ -60,10 +60,7 @@ const fetchPublications = async () => {
 
     const data = await getMyPublicationsInCommunity(user_id);
     if (!Array.isArray(data)) {
-      console.error(
-        "Error: La respuesta del servidor no es una lista válida.",
-        data
-      );
+      console.error("Error: La respuesta del servidor no es una lista válida.", data);
       return;
     }
 

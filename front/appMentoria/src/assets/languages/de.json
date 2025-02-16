@@ -361,5 +361,11 @@
         "notifications": "Benachrichtigungen",
         "styles": "Stile",
         "enableNotifications": "Benachrichtigungen aktivieren"
+    },
+    "settings": {
+        "fontSize": "Schriftgröße",
+        "Aa": "Aa",
+        "color": "Farbe",
+        "backgroundImatge": "Hintergrundbild"
     }
 }

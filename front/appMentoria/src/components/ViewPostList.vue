@@ -20,6 +20,9 @@ const message = route.state?.message;
 const fetchPosts = async () => {
   try {
     posts.value = await getCommunityPublication();
+    console.log("post", posts.value);
+    console.log("aaaaaaaa");
+    console.log("message", message);
   } catch (err) {
     console.error("Error al obtener los posts");
   }

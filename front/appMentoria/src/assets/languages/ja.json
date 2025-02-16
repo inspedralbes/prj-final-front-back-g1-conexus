@@ -352,5 +352,12 @@
         "gacha": "ガチャ",
         "games": "ゲーム",
         "addPost": "投稿を追加"
+    },
+    "titlesSettings": {
+        "configuration": "設定",
+        "language": "言語",
+        "notifications": "通知",
+        "styles": "スタイル",
+        "enableNotifications": "通知を有効にする"
     }
 }
