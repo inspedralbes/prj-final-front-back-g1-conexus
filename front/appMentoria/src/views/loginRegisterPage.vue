@@ -67,7 +67,7 @@
 
             <div class="my-12 border-b text-center">
               <div
-                class="leading-none px-2 inline-block text-sm text-textThemeColor tracking-wide font-medium bg-bgTheme transform translate-y-1/2"
+                class="leading-none px-2 inline-block text-sm bg-containersTheme text-textThemeColor tracking-wide font-medium transform translate-y-1/2"
               >
                 {{ $t("LoginRegisterPage.logIn") }}
               </div>

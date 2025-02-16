@@ -1,9 +1,8 @@
 <template>
   <div class="flex flex-col min-h-screen">
-    <main class="flex-grow"> 
+    <div class="flex-grow"> 
       <ViewPostList></ViewPostList>
-    </main>
-
+    </div>
     <div
       v-if="showModal"
       class="fixed inset-0 flex items-center justify-center bg-containersTheme bg-opacity-50"

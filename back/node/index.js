@@ -97,7 +97,7 @@ app.post('/loginAPI', async (req, res) => {
                     userLogin.class_name = className;
 
                     const [following] = await connection.execute('SELECT * FROM following WHERE user_id = ?', [userLogin.id]);
-                    const [followers] = await connection.execute('SELECT * FROM following WHERE following_id = ?', [userLogin.id]);
+                    const [followers] = await connection.execute('SELECT * FROM following WHERE following_user_id = ?', [userLogin.id]);
                     userLogin.following = following;
                     userLogin.followers = followers;
                 } else {

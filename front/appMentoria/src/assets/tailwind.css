@@ -38,6 +38,7 @@
   --text-primary: #b500ea;
   --button-secondary: #bf54df;
   --button-primary: #b500ea;
+  --button-tertiary: #d88af0;
 }
 
 .color-pink {
@@ -45,6 +46,7 @@
   --text-primary: #ec4899;
   --button-secondary: #f06ab3;
   --button-primary: #ec4899;
+  --button-tertiary: #f6a8d1;
 }
 
 .color-yellow {
@@ -52,6 +54,7 @@
   --text-primary: #f59e0b;
   --button-secondary: #ffcd36;
   --button-primary: #f59e0b;
+  --button-tertiary: #f9c74f;
 }
 
 .color-green {
@@ -59,6 +62,7 @@
   --text-primary: #00b341;
   --button-secondary: #00d14d;
   --button-primary: #00b341;
+  --button-tertiary: #00e25f;
 }
 
 .color-blue {
@@ -66,4 +70,5 @@
   --text-primary: #00a9e0;
   --button-secondary: #00c2f0;
   --button-primary: #00a9e0;
+  
 }

@@ -5,7 +5,7 @@
     >
       <!-- Header con Filtros -->
       <div
-        class="p-4 border-b flex flex-col md:flex-row justify-between items-center border-textThemeColor"
+        class="p-4 border-b flex flex-col md:flex-row justify-between items-center border-buttonColorPrimary"
       >
         <h2 class="text-lg font-semibold text-textThemeColor">
           {{$t("notificationList.title")}}
@@ -17,7 +17,7 @@
             class="px-3 py-1 text-sm rounded-md"
             :class="
               filter === 'all'
-                ? 'bg-gray-400 text-black dark:bg-gray-800 dark:text-black'
+                ? 'bg-gray-400 text-textThemeColor dark:bg-gray-800 dark:text-black'
                 : 'bg-gray-200 dark:bg-gray-600 dark:text-black'
             "
             @click="filter = 'all'"
@@ -28,7 +28,7 @@
             class="px-3 py-1 text-sm rounded-md"
             :class="
               filter === 'Comentari'
-                ? 'bg-blue-400 text-white dark:bg-blue-700 dark:text-black'
+                ? 'bg-blue-400 text-whtextThemeColorite dark:bg-blue-700 dark:text-black'
                 : 'bg-blue-200 dark:bg-blue-700 dark:text-black'
             "
             @click="filter = 'Comentari'"
@@ -39,7 +39,7 @@
             class="px-3 py-1 text-sm rounded-md text-textThemeColor"
             :class="
               filter.includes('Petició') || filter.includes('Publicació')
-                ? 'bg-red-400 text-white dark:bg-red-700 dark:text-black'
+                ? 'bg-red-400 text-textThemeColor dark:bg-red-700 dark:text-black'
                 : 'bg-red-200 dark:bg-red-700 dark:text-black'
             "
             @click="togglePublicationsFilter"
@@ -50,7 +50,7 @@
             class="px-3 py-1 text-sm rounded-md"
             :class="
               filter === 'Chat'
-                ? 'bg-green-400 text-black dark:bg-emerald-700 dark:text-black'
+                ? 'bg-green-400 text-textThemeColor dark:bg-emerald-700 dark:text-black'
                 : 'bg-green-200 dark:bg-emerald-400 dark:text-black'
             "
             @click="filter = 'Chat'"

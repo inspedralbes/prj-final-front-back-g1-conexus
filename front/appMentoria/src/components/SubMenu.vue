@@ -4,7 +4,7 @@
       <div class="relative inline-block text-left dropdown">
         <span class="rounded-md shadow-sm">
           <button
-            class="flex items-center justify-between w-full px-4 py-3 text-sm font-medium text-textThemeColor transition-all duration-200 rounded-lg hover:bg-buttonColorPrimary shadow-custom dark:shadow-customDark">
+            class="bg-buttonColorTertiary flex items-center justify-between w-full px-4 py-3 text-sm font-medium text-textThemeColor transition-all duration-200 rounded-lg hover:bg-buttonColorPrimary">
             <img class="flex-shrink-0 object-cover w-9 h-9 mr-3 rounded-full" :src="`${profile}`" alt="User Photo" />
             {{ name }}
             <svg class="w-5 h-5 ml-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -14,9 +14,9 @@
           </button>
         </span>
         <div
-          class="opacity-0 invisible dropdown-menu transition-all duration-300 transform origin-bottom-right translate-y-2 scale-95">
+          class="opacity-0 invisible dropdown-menu transition-all duration-300 transform origin-bottom-right translate-y-2 scale-95 z-10 ">
           <div
-            class="absolute -right-90 bottom-full mb-12 w-56 origin-bottom-right bg-containersTheme border border-buttonColorPrimary divide-y divide-gray-100 rounded-md shadow-lg outline-none"
+            class="bg-containersTheme absolute left-7 bottom-full mb-12 w-56 origin-bottom-right border border-buttonColorPrimary divide-y divide-gray-100 rounded-md shadow-lg outline-none"
             aria-labelledby="headlessui-menu-button-1" id="headlessui-menu-items-117" role="menu">
             <div class="px-4 py-3">
               <p class="text-sm leading-5 text-textThemeColor">{{ $t("subMenu.hi") }}</p>
@@ -24,7 +24,7 @@
                 {{ name }}
               </p>
             </div>
-            <div class="py-1">
+            <div class="py-1">                    
               <button @click="$router.push('/myprofile')" tabindex="0"
                 class="text-textThemeColor flex justify-between w-full px-4 py-2 text-sm leading-5 text-left" role="menuitem">
                 {{ $t("subMenu.profile") }}
@@ -56,7 +56,7 @@
             </div>
             <div class="py-1">
               <div class="flex justify-between px-4 py-2 text-textThemeColor">
-                <span class="text-textThemeColor">
+                <span class="text-textThemeColor ">
                   <svg @click="handleLogout" width="40" height="40" fill="#000000" viewBox="-9 0 32 32" version="1.1" class="text-textThemeColor"
                     xmlns="http://www.w3.org/2000/svg">
                     <g id="SVGRepo_bgCarrier" stroke-width="0" class="text-textThemeColor"></g>

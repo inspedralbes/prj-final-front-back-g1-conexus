@@ -12,6 +12,7 @@ export default {
         textColorPrimary: 'var(--text-primary)',
         buttonColorPrimary: 'var(--button-primary)',
         buttonColorSecondary: 'var(--button-secondary)',
+        buttonColorTertiary: 'var(--button-tertiary)'
       },
       boxShadow: {
         custom: 'var(--box-shadow)',

@@ -7,7 +7,7 @@
       <Loading />
     </div>
 
-    <div v-else>
+    <div>
       <div
         v-if="selectedPost"
         class="max-w-3xl mx-auto bg-bgTheme shadow-lg rounded-lg overflow-hidden mt-6"
@@ -62,11 +62,9 @@
             </div>
           </header>
 
-          <main class="p-4 space-y-4 bg-containersTheme ">
+          <main class="p-4 space-y-4 bg-containersTheme">
             <h1 class="text-xl font-bold text-textThemeColor">{{ selectedPost.title }}</h1>
-            <p
-              class="text-textThemeColor text-lg whitespace-pre-liner"
-            >
+            <p class="text-textThemeColor text-lg whitespace-pre-liner">
               {{ selectedPost.description }}
             </p>
 
@@ -282,8 +280,8 @@
           :key="post.id"
           class="max-w-3xl mx-auto shadow-lg rounded-lg overflow-hidden mt-6"
         >
-        <div class="max-w-3xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden mt-6 dark:bg-gray-800">
-          <div v-if="post.reports === 0">
+        <div class="max-w-3xl mx-auto shadow-lg rounded-lg overflow-hidden mt-6 dark:bg-gray-800 ">
+          <div v-if="post.reports === 0" class="lg:max-w-3xl lg:mx-auto lg:shadow-lg lg:rounded-lg lg:overflow-hidden lg:mt-6 lg:dark:bg-gray-800 lg:p-4 lg:space-y-4 lg:border-t lg:bg-containersTheme lg:border-buttonColorPrimary">
             <header class="flex items-center p-4 border-b border-buttonColorPrimary">
               <img
                 :src="getAuthorProfile(post.user_id)"
@@ -344,11 +342,11 @@
             </footer>
           </div>
         </div>
-          <div v-if="index % 10 == 0 || (posts.length <= 10 && index == posts.length - 1 && index == posts.length - 1)">
+          <!-- <div v-if="index % 10 == 0 || (posts.length <= 10 && index == posts.length - 1 && index == posts.length - 1)">
             <div class="max-w-3xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden mt-6 dark:bg-gray-800">
               <RecommendedProfiles/>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
