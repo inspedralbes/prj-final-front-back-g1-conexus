@@ -119,6 +119,7 @@
         "preview": "预览:",
         "publish": "发布",
         "publishing": "发布中...",
+        "imagePreview": "图片预览",
         "notAllFields": "请填写所有字段并上传图片。",
         "error": "发布帖子时发生错误:"
     },

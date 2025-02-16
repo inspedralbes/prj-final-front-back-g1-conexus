@@ -114,6 +114,7 @@
         "preview": "Preview:",
         "publish": "Publish",
         "publishing": "Publishing...",
+        "imagePreview": "Image Preview",
         "notAllFields": "Please complete all fields and upload an image.",
         "error": "An error occurred while publishing the post:"
     },

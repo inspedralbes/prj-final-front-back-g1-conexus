@@ -1,15 +1,13 @@
 <template>
   <li
-    class="flex items-center justify-between p-4 bg-white dark:bg-gray-800 dark:text-white rounded-lg"
+    class="flex items-center justify-between p-4 bg-containersTheme text-textThemeColor rounded-lg"
   >
     <!-- Información de la notificación -->
     <div class="flex items-center">
       <span class="text-2xl mr-4">{{ icon }}</span>
       <div>
         <p class="text-sm font-semibold">{{ name }}</p>
-        <p
-          class="text-gray-600 dark:text-gray-400 text-xs mt-1 font-medium leading-tight"
-        >
+        <p class="text-textThemeColor text-xs mt-1 font-medium leading-tight">
           {{ message }}
         </p>
       </div>

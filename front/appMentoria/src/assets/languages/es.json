@@ -120,6 +120,7 @@
         "preview": "Vista previa:",
         "publish": "Publicar",
         "publishing": "Publicando...",
+        "imagePreview": "Vista previa de la imagen",
         "notAllFields": "Por favor, completa todos los campos y sube una imagen.",
         "error": "Ha ocurrido un error al publicar la publicación"
     },

@@ -119,6 +119,7 @@
         "preview": "Aurrebista:",
         "publish": "Argitaratu",
         "publishing": "Argitaratzen...",
+        "imagePreview": "Irudiaren aurrebista",
         "notAllFields": "Mesedez, bete eremu guztiak eta igo irudi bat.",
         "error": "Errore bat gertatu da post argitaratzean:"
     },

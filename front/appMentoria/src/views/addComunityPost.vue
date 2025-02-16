@@ -22,10 +22,10 @@
     <main
       class="flex-grow flex items-center justify-center pt-20 pb-20 mx-4 overflow-auto bg-bgTheme"
     >
-      <div
-        class="max-w-xl w-full bg-containersTheme p-6 rounded-lg shadow-md"
-      >
-        <h1 class="text-2xl font-bold mb-4 text-center">{{$t("AddComunityPost.create")}}</h1>
+      <div class="max-w-xl w-full bg-containersTheme p-6 rounded-lg shadow-md">
+        <h1 class="text-2xl font-bold mb-4 text-center">
+          {{ $t("AddComunityPost.create") }}
+        </h1>
 
         <!-- Campo del título -->
         <div class="mb-4 bg-containersTheme text-textThemeColor">
@@ -33,7 +33,7 @@
             for="title"
             class="block text-sm font-medium text-textThemeColor"
           >
-            {{$t("AddComunityPost.title")}}:
+            {{ $t("AddComunityPost.title") }}:
           </label>
           <input
             id="title"
@@ -50,7 +50,7 @@
             for="description"
             class="block text-sm font-medium text-textThemeColor mb-2"
           >
-            {{ $t('AddComunityPost.description') }}
+            {{ $t("AddComunityPost.description") }}
           </label>
           <textarea
             id="description"
@@ -67,7 +67,7 @@
             for="image-upload"
             class="block text-sm font-medium text-textThemeColor mb-2"
           >
-            {{ $t('AddComunityPost.postImage') }}
+            {{ $t("AddComunityPost.postImage") }}
           </label>
           <input
             id="image-upload"
@@ -81,7 +81,7 @@
         <!-- Vista previa de la imagen -->
         <div v-if="imagePreview" class="mb-4">
           <p class="text-sm font-medium text-textThemeColor mb-2">
-            {{ $t('AddComunityPost.imagePreview') }}
+            {{ $t("AddComunityPost.imagePreview") }}
           </p>
           <img
             :src="imagePreview"
