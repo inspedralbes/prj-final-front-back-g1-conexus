@@ -8,6 +8,7 @@ export default {
         containersTheme: 'var(--containers)',
         bgTheme: 'var(--background)',
         textThemeColor: 'var(--text-color)',
+        textThemeColorInverse: 'var(--text-inverse)',
         bgColorPrimary: 'var(--bg-primary)',
         textColorPrimary: 'var(--text-primary)',
         buttonColorPrimary: 'var(--button-primary)',
@@ -16,13 +17,13 @@ export default {
       },
       boxShadow: {
         custom: 'var(--box-shadow)',
+      },
+      scrollbar: {
+        track: 'var(--background)',
+        thumb: 'var(--bg-primary)',
+        thumbHover: 'var(--bg-primary-hover)',
+      },
     },
-    scrollbar: {
-      track: 'var(--background)',
-      thumb: 'var(--bg-primary)',
-      thumbHover: 'var(--bg-primary-hover)',
-    },
-  },
   },
   plugins: [],
   content: [

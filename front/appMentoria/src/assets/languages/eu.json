@@ -18,13 +18,12 @@
         "email": "Posta elektronikoa:",
         "phone": "Telefonoa:",
         "save": "Aldaketak gorde",
-        "description":"Deskribapena:",
-        "academicTitle":"Titulazio akademikoa:",
-        "SocialMedia":"Sare sozialak",
-        "languages":"Hizkuntzak",
-        "softwareSkills":"Software trebetasunak",
-        "english":"Ingelesa"
-
+        "description": "Deskribapena:",
+        "academicTitle": "Titulazio akademikoa:",
+        "SocialMedia": "Sare sozialak",
+        "languages": "Hizkuntzak",
+        "softwareSkills": "Software trebetasunak",
+        "english": "Ingelesa"
     },
     "formAvailability": {
         "title": "Eskuragarritasun ordutegia editatu",
@@ -41,7 +40,7 @@
         "saturday": "Larunbata",
         "sunday": "Igandea"
     },
-    "PersonalInfo":{
+    "PersonalInfo": {
         "titlePage": "Informazio pertsonala",
         "nameAndSurname": "Izena eta abizenak",
         "desc": "Deskribapena",
@@ -361,7 +360,9 @@
         "enableNotifications": "Jakinarazpenak gaitu"
     },
     "settings": {
-        "fontSize": "Letren tamaina",   
-        "Aa": "Aa"
+        "fontSize": "Letren tamaina",
+        "Aa": "Aa",
+        "color": "Kolorea",
+        "backgroundImatge": "Atzeko irudia"
     }
 }

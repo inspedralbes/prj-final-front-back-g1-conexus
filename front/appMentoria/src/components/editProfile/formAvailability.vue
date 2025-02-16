@@ -1,33 +1,54 @@
 <template>
-  <div class="dark:bg-gray-800 bg-white p-6 rounded-xl shadow-lg shadow-black/30 my-4">
-    <h2 class="text-2xl font-semibold border-b border-gray-600 pb-4 mb-4">
+  <div class="bg-bgTheme p-6 rounded-xl shadow-lg shadow-black/30 my-4">
+    <h2
+      class="text-2xl text-textThemeColor font-semibold border-b border-bgColorPrimary pb-4 mb-4"
+    >
       {{ $t("formAvailability.title") }}
     </h2>
-    <form class="border-b border-gray-600 pb-4 mb-4">
+    <form class="border-b border-bgColorPrimary pb-4 mb-4">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div
           v-for="day in availabilities"
           :key="day.day"
-          class="flex flex-col items-start p-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-md"
+          class="flex flex-col items-start p-4 bg-containersTheme rounded-lg shadow-md"
         >
-          <h3 class="text-lg font-medium mb-2">{{ day.day }}</h3>
+          <h3 class="text-lg text-font-medium text-textThemeColor mb-2">
+            {{ day.day }}
+          </h3>
           <label class="flex items-center mb-2">
             <input type="checkbox" v-model="day.enabled" class="mr-2" />
-            <span>{{ $t("formAvailability.enable") }}</span>
+            <span class="text-textThemeColor">{{
+              $t("formAvailability.enable")
+            }}</span>
           </label>
           <div v-if="day.enabled" class="flex flex-col space-y-2">
             <label class="flex flex-col">
-              <span class="text-sm">{{ $t("formAvailability.startTime") }}</span>
-              <select v-model="day.startTime" class="mt-1 p-2 border rounded-lg">
-                <option v-for="hour in filteredStartTimes(day.endTime)" :value="hour">
+              <span class="text-sm text-textThemeColor">{{
+                $t("formAvailability.startTime")
+              }}</span>
+              <select
+                v-model="day.startTime"
+                class="mt-1 p-2 border border-bgColorPrimary bg-bgTheme rounded-lg"
+              >
+                <option
+                  v-for="hour in filteredStartTimes(day.endTime)"
+                  :value="hour"
+                  class="text-textThemeColor"
+                >
                   {{ hour }}
                 </option>
               </select>
             </label>
             <label class="flex flex-col">
               <span class="text-sm">{{ $t("formAvailability.endTime") }}</span>
-              <select v-model="day.endTime" class="mt-1 p-2 border rounded-lg">
-                <option v-for="hour in filteredEndTimes(day.startTime)" :value="hour">
+              <select
+                v-model="day.endTime"
+                class="mt-1 p-2 border border-bgColorPrimary bg-bgTheme rounded-lg"
+              >
+                <option
+                  v-for="hour in filteredEndTimes(day.startTime)"
+                  :value="hour"
+                >
                   {{ hour }}
                 </option>
               </select>
@@ -38,7 +59,7 @@
     </form>
     <button
       @click="saveChanges()"
-      class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
+      class="bg-buttonColorPrimary text-textThemeColor py-2 px-4 rounded-lg hover:bg-buttonColorSecondary"
     >
       {{ $t("formAvailability.save") }}
     </button>
@@ -224,19 +245,19 @@ async function saveChanges() {
 function translateDay(day) {
   switch (day) {
     case t("formAvailability.monday"):
-      return "Dilluns";
+      return "monday";
     case t("formAvailability.tuesday"):
-      return "Dimarts";
+      return "tuesday";
     case t("formAvailability.wednesday"):
-      return "Dimecres";
+      return "wednesday";
     case t("formAvailability.thursday"):
-      return "Dijous";
+      return "thursday";
     case t("formAvailability.friday"):
-      return "Divendres";
+      return "friday";
     case t("formAvailability.saturday"):
-      return "Dissabte";
+      return "saturday";
     case t("formAvailability.sunday"):
-      return "Diumenge";
+      return "sunday";
   }
 }
 
@@ -269,7 +290,10 @@ onMounted(() => {
   user.value = appStore.getUser();
 
   console.log(user.value.availability);
-  if (user.value.availability === undefined || user.value.availability === null) {
+  if (
+    user.value.availability === undefined ||
+    user.value.availability === null
+  ) {
     user.value.availability = [];
   }
   if (user.value.availability.length === 0) {

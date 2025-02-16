@@ -18,13 +18,12 @@
         "email": "Email:",
         "phone": "Telefone:",
         "save": "Guardar mudanças",
-        "description":"Descrição:",
-        "academicTitle":"Título acadêmico:",
-        "SocialMedia":"Redes sociais",
-        "languages":"Idiomas",
-        "softwareSkills":"Habilidades em software",
-        "english":"Inglês"
-
+        "description": "Descrição:",
+        "academicTitle": "Título acadêmico:",
+        "SocialMedia": "Redes sociais",
+        "languages": "Idiomas",
+        "softwareSkills": "Habilidades em software",
+        "english": "Inglês"
     },
     "formAvailability": {
         "title": "Editar Horário de Disponibilidade",
@@ -359,5 +358,11 @@
         "notifications": "Notificações",
         "styles": "Estilos",
         "enableNotifications": "Ativar notificações"
+    },
+    "settings": {
+        "fontSize": "Tamanho da fonte",
+        "Aa": "Aa",
+        "color": "Cor",
+        "backgroundImatge": "Imagem de fundo"
     }
 }

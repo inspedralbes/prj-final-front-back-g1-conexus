@@ -18,12 +18,12 @@
         "email": "ای میل:",
         "phone": "فون:",
         "save": "تبدیلیاں محفوظ کریں",
-        "description":"تفصیل:",
-        "academicTitle":"اکیڈمک عنوان:",
-        "SocialMedia":"سوشل میڈیا",
-        "languages":"زبانیں",
-        "softwareSkills":"سافٹ ویئر کی مہارتیں",
-        "english":"انگریزی"
+        "description": "تفصیل:",
+        "academicTitle": "اکیڈمک عنوان:",
+        "SocialMedia": "سوشل میڈیا",
+        "languages": "زبانیں",
+        "softwareSkills": "سافٹ ویئر کی مہارتیں",
+        "english": "انگریزی"
     },
     "formAvailability": {
         "title": "دستیابی کا شیڈول ایڈٹ کریں",
@@ -40,7 +40,7 @@
         "saturday": "ہفتہ",
         "sunday": "اتوار"
     },
-    "PersonalInfo":{
+    "PersonalInfo": {
         "titlePage": "ذاتی معلومات",
         "nameAndSurname": "نام اور کنیت",
         "desc": "تفصیل",
@@ -357,5 +357,11 @@
         "notifications": "اطلاعات",
         "styles": "سٹائل",
         "enableNotifications": "اطلاعات کو فعال کریں"
+    },
+    "settings": {
+        "fontSizes": "فونٹ سائز",
+        "Aa": "Aa",
+        "color": "رنگ",
+        "backgroundImatge": "پس منظر کی تصویر"
     }
 }

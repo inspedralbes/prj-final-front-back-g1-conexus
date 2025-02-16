@@ -18,13 +18,12 @@
         "email": "メールアドレス:",
         "phone": "電話:",
         "save": "変更を保存",
-        "description":"説明:",
-        "academicTitle":"学位:",
-        "SocialMedia":"ソーシャルメディア",
-        "languages":"言語",
-        "softwareSkills":"ソフトウェアスキル",
-        "english":"英語"
-
+        "description": "説明:",
+        "academicTitle": "学位:",
+        "SocialMedia": "ソーシャルメディア",
+        "languages": "言語",
+        "softwareSkills": "ソフトウェアスキル",
+        "english": "英語"
     },
     "formAvailability": {
         "title": "利用可能時間を編集",
@@ -359,5 +358,11 @@
         "notifications": "通知",
         "styles": "スタイル",
         "enableNotifications": "通知を有効にする"
+    },
+    "settings": {
+        "fontSize": "フォントサイズ",
+        "Aa": "Aa",
+        "color": "色",
+        "backgroundImatge": "背景画像"
     }
 }

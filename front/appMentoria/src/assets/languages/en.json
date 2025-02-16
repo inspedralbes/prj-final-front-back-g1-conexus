@@ -1,5 +1,4 @@
 {
-    
     "editProfile": {
         "title": "Edit Banner and Profile",
         "fullName": "Full Name",
@@ -13,14 +12,13 @@
         "email": "Email:",
         "phone": "Phone:",
         "save": "Save changes",
-        "description":"Description:",
-        "academicTitle":"Academic Title:",
-        "SocialMedia":"Social Media",
-        "languages":"Languages",
-        "softwareSkills":"Software Skills",
-        "english":"English",
+        "description": "Description:",
+        "academicTitle": "Academic Title:",
+        "SocialMedia": "Social Media",
+        "languages": "Languages",
+        "softwareSkills": "Software Skills",
+        "english": "English",
         "noAvailability": "No Availability"
-
     },
     "formAvailability": {
         "title": "Edit Availability Schedule",
@@ -55,7 +53,7 @@
         "email": "Email:",
         "phone": "Phone:",
         "softwareSkills": "Software Skills",
-        "developingSoftwareSkills": "Learning skills...", 
+        "developingSoftwareSkills": "Learning skills...",
         "languages": "Languages",
         "noLanguages": "No languages yet...",
         "edit": "Edit"
@@ -255,7 +253,7 @@
     },
     "requestPost": {
         "title": "Add a Request:",
-        "uploadImage": "Upload an Image:",    
+        "uploadImage": "Upload an Image:",
         "availability": "Available:",
         "addAvailability": "+ Add Availability",
         "selectDay": "Select a Day",
@@ -342,7 +340,6 @@
         "request": "Requests",
         "share": "Share"
     },
-    
     "navBarWeb": {
         "main": "Main",
         "oferts": "Oferts",
@@ -351,7 +348,7 @@
         "chat": "Chat",
         "gacha": "Gacha",
         "games": "Games",
-        "addPost" : "Add Post"
+        "addPost": "Add Post"
     },
     "titlesSettings": {
         "configuration": "Configuration",
@@ -361,10 +358,9 @@
         "enableNotifications": "Enable Notifications"
     },
     "settings": {
-        "fontSizes": "Font Sizes",
+        "fontSize": "Font Sizes",
         "Aa": "Aa",
         "color": "Color",
         "backgroundImatge": "Background Image"
     }
-
 }

@@ -1,30 +1,29 @@
-{ 
+{
     "mainPage": {
         "allow": "Permitir Notificaciones",
         "questionPermission": "¿Quieres recibir notificaciones para enterarte de eventos o actualizaciones?",
         "acceptedPermission": "Permitir",
         "rejectedPermission": "Bloquear"
     },
-"editProfile":{
-    "title": "Editar Banner y Perfil",
-    "fullName":"Nombre completo",
-    "city":"Ciudad",
-    "bannerimg":"Imaagen de banner",
-    "profileimg":"Imagen de perfil",
-    "save":"Guardar cambios"
-},   
-"formPersonal": {
+    "editProfile": {
+        "title": "Editar Banner y Perfil",
+        "fullName": "Nombre completo",
+        "city": "Ciudad",
+        "bannerimg": "Imaagen de banner",
+        "profileimg": "Imagen de perfil",
+        "save": "Guardar cambios"
+    },
+    "formPersonal": {
         "title": "Editar Información Personal",
         "email": "Correo electrónico:",
         "phone": "Teléfono:",
         "save": "Guardar cambios",
-        "description":"Descripción:",
-        "academicTitle":"Título académico:",
-        "SocialMedia":"Redes sociales",
-        "languages":"Idiomas",
-        "softwareSkills":"Habilidades en software",
-        "english":"Inglés"
-
+        "description": "Descripción:",
+        "academicTitle": "Título académico:",
+        "SocialMedia": "Redes sociales",
+        "languages": "Idiomas",
+        "softwareSkills": "Habilidades en software",
+        "english": "Inglés"
     },
     "formAvailability": {
         "title": "Editar Horario de Disponibilidad",
@@ -42,29 +41,29 @@
         "sunday": "Domingo",
         "noAvailability": "Sin disponibilidad"
     },
-"PersonalInfo":{
-    "titlePage": "Información personal",
-    "nameAndSurname": "Nombre y apellidos",
-    "desc": "Descripción",
-    "noDesc": "Este usuario no ha añadido ninguna descripción.",
-    "socialMedia": "Redes sociales",
-    "githubProfile": "Perfil de Github",
-    "LinkedinProfile": "Perfil de Linkedin",
-    "TwitterProfile": "Perfil de Twitter",
-    "InstagramProfile": "Perfil de Instagram",
-    "FacebookProfile": "Perfil de Facebook",
-    "location": "Ubicación",
-    "title": "Título",
-    "studying": "Estudiando...",
-    "contact": "Contacto",
-    "email": "Correo electrónico:",
-    "phone": "Teléfono:",
-    "softwareSkills": "Habilidades en software",
-    "developingSoftwareSkills": "Aprendiendo habilidades...",
-    "languages": "Idiomas",
-    "noLanguages": "Aún no hay...",
-    "edit": "Editar"
-},
+    "PersonalInfo": {
+        "titlePage": "Información personal",
+        "nameAndSurname": "Nombre y apellidos",
+        "desc": "Descripción",
+        "noDesc": "Este usuario no ha añadido ninguna descripción.",
+        "socialMedia": "Redes sociales",
+        "githubProfile": "Perfil de Github",
+        "LinkedinProfile": "Perfil de Linkedin",
+        "TwitterProfile": "Perfil de Twitter",
+        "InstagramProfile": "Perfil de Instagram",
+        "FacebookProfile": "Perfil de Facebook",
+        "location": "Ubicación",
+        "title": "Título",
+        "studying": "Estudiando...",
+        "contact": "Contacto",
+        "email": "Correo electrónico:",
+        "phone": "Teléfono:",
+        "softwareSkills": "Habilidades en software",
+        "developingSoftwareSkills": "Aprendiendo habilidades...",
+        "languages": "Idiomas",
+        "noLanguages": "Aún no hay...",
+        "edit": "Editar"
+    },
     "chatContent": {
         "writeMessage": "Escribe un mensaje..."
     },
@@ -97,19 +96,19 @@
         "follow": "Seguir",
         "chat": "Chat"
     },
-    "LoginRegisterPage":{
-        "subTitle":"Correo {'@'}inspedralbes.cat",
-        "accessGoogle":"Acceder con Google",
-        "accessGithub":"Acceder con Github",
-        "logIn":"O inicia sesión",
-        "mailPlaceholder":"Correo electrónico",
-        "passwordPlaceholder":"Contraseña",
-        "loginButton":"Inicia sesión",
-        "projectBy":"Proyecto realizado por el equipo de",
-        "withTheHelpOf":", con la ayuda de",
-        "error":"Ha ocurrido un error al iniciar sesión",
-        "errorFields":"Error al iniciar sesión, comprueba los datos introducidos",
-        "invalidMail":"Error al iniciar sesión, el correo no es válido"
+    "LoginRegisterPage": {
+        "subTitle": "Correo {'@'}inspedralbes.cat",
+        "accessGoogle": "Acceder con Google",
+        "accessGithub": "Acceder con Github",
+        "logIn": "O inicia sesión",
+        "mailPlaceholder": "Correo electrónico",
+        "passwordPlaceholder": "Contraseña",
+        "loginButton": "Inicia sesión",
+        "projectBy": "Proyecto realizado por el equipo de",
+        "withTheHelpOf": ", con la ayuda de",
+        "error": "Ha ocurrido un error al iniciar sesión",
+        "errorFields": "Error al iniciar sesión, comprueba los datos introducidos",
+        "invalidMail": "Error al iniciar sesión, el correo no es válido"
     },
     "AddComunityPost": {
         "create": "Crear una publicación",

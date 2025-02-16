@@ -20,6 +20,7 @@
   --containers: var(--containers-light);
   --background: var(--background-light);
   --text-color: #111827;
+  --text-inverse: #f3f4f6;
   --font-familyTitle: var(--font-familyTitle);
   --font-familyText: var(--font-familyText);
 }
@@ -29,6 +30,7 @@
   --containers: var(--containers-dark);
   --background: var(--background-dark);
   --text-color: #f3f4f6;
+  --text-inverse: #111827;
   --font-familyTitle: var(--font-familyTitle);
   --font-familyText: var(--font-familyText);
 }

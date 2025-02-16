@@ -18,13 +18,12 @@
         "email": "Correo electrónico:",
         "phone": "Teléfono:",
         "save": "Gardar cambios",
-        "description":"Descrición:",
-        "academicTitle":"Título académico:",
-        "SocialMedia":"Redes sociais",
-        "languages":"Idiomas",
-        "softwareSkills":"Habilidades en software",
-        "english":"Inglés"
-
+        "description": "Descrición:",
+        "academicTitle": "Título académico:",
+        "SocialMedia": "Redes sociais",
+        "languages": "Idiomas",
+        "softwareSkills": "Habilidades en software",
+        "english": "Inglés"
     },
     "formAvailability": {
         "title": "Editar Horario de Dispoñibilidade",
@@ -336,7 +335,7 @@
         "saturday": "Sábado",
         "sunday": "Domingo",
         "edit": "Editar",
-        "noAvailability":"Sense disponibilitat"
+        "noAvailability": "Sense disponibilitat"
     },
     "menu": {
         "comunity": "Comunidade",
@@ -360,5 +359,11 @@
         "notifications": "Notificacións",
         "styles": "Estilos",
         "enableNotifications": "Activar notificacións"
+    },
+    "settings": {
+        "fontSize": "Tamaño da fonte",
+        "Aa": "Aa",
+        "color": "Cor",
+        "backgroundImatge": "Imaxe de fondo"
     }
 }

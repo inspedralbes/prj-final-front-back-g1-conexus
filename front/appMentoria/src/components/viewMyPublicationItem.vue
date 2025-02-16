@@ -1,7 +1,5 @@
 <template>
-  <li
-    class="flex flex-col p-4 bg-white dark:bg-gray-800 dark:text-white rounded-lg shadow-md mb-4"
-  >
+  <li class="flex flex-col p-4 bg-containersTheme rounded-lg shadow-md mb-4">
     <!-- Información de la publicación -->
     <div class="flex items-center mb-4">
       <span v-if="fullImageUrl" class="mr-4">
@@ -13,7 +11,7 @@
       </span>
       <div class="flex-1">
         <p
-          class="text-lg font-semibold text-gray-800 dark:text-white"
+          class="text-lg font-semibold text-textThemeColor"
           :class="isReported ? 'font-bold text-red-500' : ''"
         >
           <span v-if="isReported" class="text-red-500">*</span>
@@ -21,19 +19,19 @@
           <span v-if="isReported" class="text-red-500">*</span>
         </p>
         <p
-          class="text-gray-600 dark:text-gray-400 text-sm mt-1 leading-tight"
+          class="text-textThemeColor text-sm mt-1 leading-tight"
           :class="isReported ? 'italic' : ''"
         >
           <span v-if="isReported" class="text-red-500">*</span>
           {{ description }}
           <span v-if="isReported" class="text-red-500">*</span>
         </p>
-        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+        <p class="text-xs text-textThemeColor mt-1">
           <span :class="text_ia === 0 ? 'text-yellow-500' : 'text-green-500'">
             {{ textIaStatus }}
           </span>
         </p>
-        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+        <p class="text-xs text-textThemeColor mt-1">
           <span :class="image_ia === 0 ? 'text-yellow-500' : 'text-green-500'">
             {{ imageIaStatus }}
           </span>
@@ -42,23 +40,25 @@
           v-if="availability !== null"
           class="text-xs text-gray-500 dark:text-gray-400 mt-2"
         >
-
-          {{ $t("ViewMyPublicationItem.availability") }} {{ availability ? $t("ViewMyPublicationItem.available"): $t("ViewMyPublicationItem.notAvailable") }}
+          {{ $t("ViewMyPublicationItem.availability") }}
+          {{
+            availability
+              ? $t("ViewMyPublicationItem.available")
+              : $t("ViewMyPublicationItem.notAvailable")
+          }}
         </p>
         <p v-if="isReported" class="text-xs text-red-500 font-medium mt-2">
-        {{ $t("ViewMyPublicationItem.reports") }} {{ reports }}
+          {{ $t("ViewMyPublicationItem.reports") }} {{ reports }}
         </p>
       </div>
     </div>
 
     <!-- Línea de separación -->
-    <hr class="border-gray-300 dark:border-gray-600 mb-4" />
+    <hr class="border-textColorPrimary mb-4" />
 
     <!-- Pie de publicación: Usuario, likes o acciones opcionales -->
-    <div
-      class="flex justify-between items-center text-xs text-gray-500 dark:text-gray-400"
-    >
-      <span>{{$t("ViewMyPublicationItem.date")}} {{ created_at }} </span>
+    <div class="flex justify-between items-center text-xs text-textThemeColor">
+      <span>{{ $t("ViewMyPublicationItem.date") }} {{ created_at }} </span>
 
       <!-- Icono de estado IA: reloj si ambos son 0, cruz roja si tiene reportes, tick verde si no tiene reportes -->
       <span v-if="isProcessing" class="text-yellow-500" title="En proceso"

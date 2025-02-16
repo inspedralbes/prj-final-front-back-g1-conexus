@@ -20,6 +20,8 @@ services:
       - ./back/microprocessos_api:/usr/src/app
       - ./back/node/services:/usr/src/node/services
       - ./back/node/middleware:/usr/src/node/middleware
+      - ./back/node/services/community/upload:/usr/src/node/community/upload
+      - ./back/node/services/employmentexchange/upload:/usr/src/node/employmentexchange/upload
     working_dir: /usr/src/app
     ports:
       - 3001:3001
@@ -32,8 +34,9 @@ services:
       - 3008:3008
       - 3013:4000
     links:
-     - tr-final-mysql
-     - tr-final-mongodb
+      - tr-final-mysql
+      - tr-final-mongodb
+
   tr-final-mongodb:
     image: mongo
     restart: always

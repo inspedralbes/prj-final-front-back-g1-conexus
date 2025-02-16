@@ -69,7 +69,7 @@ onMounted(async () => {
     appElement.classList.add(`color-${colorPreference}`);
     console.log("Color preference:", colorPreference);
   } else {
-    const color = 'yellow';
+    const color = "yellow";
     const appElement = document.getElementById("app");
     appElement.classList.add(`color-${color}`);
   }
@@ -82,7 +82,7 @@ onMounted(async () => {
     appElement.classList.add(`theme-${themePreference}`);
     console.log("Theme preference:", themePreference);
   } else {
-    const theme = 'light';
+    const theme = "light";
     const appElement = document.getElementById("app");
     appElement.classList.add(`theme-${theme}`);
   }
@@ -101,36 +101,64 @@ onMounted(async () => {
 });
 
 // Watch for changes in selectedColor and selectedTheme
-watch(() => appStore.selectedColor, (newColor) => {
-  const colors = appStore.getColors();
-  const appElement = document.getElementById("app");
-  appElement.classList.remove(...colors.map((t) => `color-${t}`));
-  appElement.classList.add(`color-${newColor}`);
-});
+watch(
+  () => appStore.selectedColor,
+  (newColor) => {
+    const colors = appStore.getColors();
+    const appElement = document.getElementById("app");
+    appElement.classList.remove(...colors.map((t) => `color-${t}`));
+    appElement.classList.add(`color-${newColor}`);
+  }
+);
 
-watch(() => appStore.selectedTheme, (newTheme) => {
-  const themes = appStore.getThemes();
-  const appElement = document.getElementById("app");
-  appElement.classList.remove(...themes.map((t) => `theme-${t}`));
-  appElement.classList.add(`theme-${newTheme}`);
-});
+watch(
+  () => appStore.selectedTheme,
+  (newTheme) => {
+    const themes = appStore.getThemes();
+    const appElement = document.getElementById("app");
+    appElement.classList.remove(...themes.map((t) => `theme-${t}`));
+    appElement.classList.add(`theme-${newTheme}`);
+  }
+);
 </script>
 
 <template>
   <div id="app" class="bg-bgTheme text-textThemeColor">
     <div v-if="!isLoading" class="min-h-screen hidden md:flex">
-      <NavBarWeb v-if="route.name !== 'login'" class="hidden md:flex md:flex-col md:h-screen md:w-60 fixed"></NavBarWeb>
-      <div :class="['flex-1 overflow-auto ', route.name !== 'login' ? 'ml-60 mb-4' : '']">
-        <RouterView/> 
+      <NavBarWeb
+        v-if="route.name !== 'login'"
+        class="hidden md:flex md:flex-col md:h-screen md:w-60 fixed"
+      ></NavBarWeb>
+      <div
+        :class="[
+          'flex-1 overflow-auto ',
+          route.name !== 'login' ? 'ml-60 mb-4' : '',
+        ]"
+      >
+        <RouterView />
       </div>
     </div>
-    <div v-if="!isLoading" class="flex flex-col relative min-h-screen md:hidden items-center justify-center">
-      <div :class="['flex-1 w-full overflow-auto flex items-center justify-center ', route.name !== 'login' ? 'mb-28' : '']">
-        <RouterView/>
+    <div
+      v-if="!isLoading"
+      class="flex flex-col relative min-h-screen md:hidden items-center justify-center"
+    >
+      <div
+        :class="[
+          'flex-1 w-full overflow-auto flex items-center justify-center ',
+          route.name !== 'login' ? 'mb-28' : '',
+        ]"
+      >
+        <RouterView />
       </div>
-      <NavBarApp v-if="route.name !== 'login'" class="fixed bottom-0 left-0 right-0 w-full md:hidden z-10"></NavBarApp>
+      <NavBarApp
+        v-if="route.name !== 'login'"
+        class="fixed bottom-0 left-0 right-0 w-full md:hidden z-10"
+      ></NavBarApp>
     </div>
-    <div v-else class="flex items-center justify-center min-h-screen bg-bgTheme text-textThemeColor">
+    <div
+      v-else
+      class="flex items-center justify-center min-h-screen bg-bgTheme text-textThemeColor"
+    >
       <Loading />
     </div>
   </div>

@@ -18,13 +18,12 @@
         "email": "电子邮件:",
         "phone": "电话:",
         "save": "保存更改",
-        "description":"描述:",
-        "academicTitle":"学术头衔:",
-        "SocialMedia":"社交媒体",
-        "languages":"语言",
-        "softwareSkills":"软件技能",
-        "english":"英语"
-
+        "description": "描述:",
+        "academicTitle": "学术头衔:",
+        "SocialMedia": "社交媒体",
+        "languages": "语言",
+        "softwareSkills": "软件技能",
+        "english": "英语"
     },
     "formAvailability": {
         "title": "编辑可用时间表",
@@ -358,5 +357,11 @@
         "notifications": "通知",
         "styles": "风格",
         "enableNotifications": "启用通知"
+    },
+    "settings": {
+        "fontSize": "字体大小",
+        "Aa": "Aa",
+        "color": "颜色",
+        "backgroundImatge": "背景图片"
     }
 }

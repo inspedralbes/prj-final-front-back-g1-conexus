@@ -1,10 +1,8 @@
 <template>
   <div
-    class="container mx-auto p-3 sm:p-4 bg-white dark:bg-gray-700 shadow rounded-lg"
+    class="container mx-auto p-3 sm:p-4 bg-containersTheme shadow rounded-lg"
   >
-    <h1
-      class="text-lg sm:text-xl font-bold mb-3 text-gray-900 dark:text-gray-100"
-    >
+    <h1 class="text-lg sm:text-xl font-bold mb-3 text-textThemeColor">
       {{ $t("ViewReportPublicacio.title") }}
     </h1>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -12,7 +10,7 @@
         v-for="report in reports"
         :key="report.id"
         :class="[
-          'bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-300 rounded-lg p-5 mb-6 shadow-md',
+          'bg-bgTheme border border-buttonColorPrimary rounded-lg p-5 mb-6 shadow-md',
           { 'dark:shadow-white': true },
         ]"
         :style="{
@@ -22,15 +20,15 @@
       >
         <div class="flex flex-wrap justify-between mb-4">
           <div class="w-1/2 sm:w-1/2 mb-4">
-            <p class="text-lg font-semibold text-gray-900 dark:text-gray-300">
+            <p class="text-lg font-semibold text-textThemeColor">
               {{ $t("ViewReportPublicacio.reportN") }}:
             </p>
-            <p class="text-gray-700 dark:text-gray-400 text-base">
+            <p class="text-textThemeColor text-base">
               {{ report.id }}
             </p>
           </div>
           <div class="w-full md:w-1/2 mb-4 md:mb-0">
-            <p class="text-base font-semibold text-gray-900 dark:text-gray-300">
+            <p class="text-base font-semibold text-textThemeColor">
               {{ $t("ViewReportPublicacio.status") }}
             </p>
             <select
@@ -38,78 +36,84 @@
               @change="updateReportStatus(report.id, report.status)"
               :class="{
                 'bg-yellow-200 dark:bg-yellow-600': report.status === 'pending',
-                'bg-blue-200 dark:bg-blue-800': report.status === 'revising',
+                'bg-blue-200': report.status === 'revising',
                 'bg-green-200 dark:bg-green-600': report.status === 'revised',
-                'appearance-none bg-gray-100 dark:bg-gray-600 dark:text-gray-900 border border-gray-300 dark:border-gray-600 text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 p-2 w-full md:w-32 shadow-sm': true,
+                'appearance-none bg-containersTheme border border-buttonColorPrimary text-bgTheme text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 p-2 w-full md:w-32 shadow-sm': true,
               }"
             >
-              <option value="pending">{{ $t("ViewReportPublicacio.pending") }}</option>
-              <option value="revising">{{ $t("ViewReportPublicacio.reviewing") }}</option>
-              <option value="revised">{{ $t("ViewReportPublicacio.reviewed") }}</option>
+              <option value="pending">
+                {{ $t("ViewReportPublicacio.pending") }}
+              </option>
+              <option value="revising">
+                {{ $t("ViewReportPublicacio.reviewing") }}
+              </option>
+              <option value="revised">
+                {{ $t("ViewReportPublicacio.reviewed") }}
+              </option>
             </select>
           </div>
           <div class="w-full sm:w-1/3 mt-1">
-            <p class="text-base font-semibold text-gray-900 dark:text-gray-300">
+            <p class="text-base font-semibold text-textThemeColor">
               {{ $t("ViewReportPublicacio.date") }}:
             </p>
-            <p class="text-gray-700 dark:text-gray-400 text-sm mt-1">
+            <p class="text-textThemeColor text-sm mt-1">
               {{ report.created_at }}
             </p>
           </div>
         </div>
         <div class="mb-6">
-          <p class="text-base font-semibold text-gray-900 dark:text-gray-300">
+          <p class="text-base font-semibold text-textThemeColor">
             {{ $t("ViewReportPublicacio.userReporting") }}:
           </p>
-          <p class="text-gray-700 dark:text-gray-300 text-sm">
+          <p class="text-textThemeColor text-sm">
             {{ report.reporting_user_name }}
           </p>
-          <p class="text-xs text-gray-500 dark:text-gray-400">
+          <p class="text-xs text-textThemeColor">
             {{ report.reporting_user_email }}
           </p>
         </div>
         <div class="mb-6">
-          <p class="text-base font-semibold text-gray-900 dark:text-gray-300">
+          <p class="text-base font-semibold text-textThemeColor">
             {{ $t("ViewReportPublicacio.userPost") }}:
           </p>
-          <p class="text-gray-700 dark:text-gray-300 text-sm">
+          <p class="text-textThemeColor text-sm">
             {{ report.publication_user_name }}
           </p>
-          <p class="text-xs text-gray-500 dark:text-gray-400">
+          <p class="text-xs text-textThemeColor">
             {{ report.publication_user_email }}
           </p>
         </div>
         <div class="mb-6">
-          <p class="text-base font-semibold text-gray-900 dark:text-gray-300">
+          <p class="text-base font-semibold text-textThemeColor">
             {{ $t("ViewReportPublicacio.postTitle") }}
           </p>
-          <p class="text-gray-700 dark:text-gray-400 text-sm">
+          <p class="text-textThemeColor text-sm">
             {{ report.title }}
           </p>
         </div>
         <div class="mb-6">
-          <p class="text-base font-semibold text-gray-900 dark:text-gray-300">
+          <p class="text-base font-semibold text-textThemeColor">
             {{ $t("ViewReportPublicacio.postDescription") }}
           </p>
-          <p class="text-gray-700 dark:text-gray-400 text-sm">
+          <p class="text-textThemeColor text-sm">
             {{ report.description }}
           </p>
         </div>
         <div class="mb-6">
-          <p class="text-basee font-semibold text-gray-900 dark:text-gray-300">
+          <p class="text-basee font-semibold text-textThemeColor">
             {{ $t("ViewReportPublicacio.report") }}:
           </p>
-          <p class="text-gray-700 dark:text-gray-400 text-sm">
+          <p class="text-textThemeColor text-sm">
             {{ report.report }}
           </p>
         </div>
         <div class="mb-6">
-          <p class="text-base font-semibold text-gray-900 dark:text-gray-300">
+          <p class="text-base font-semibold text-textThemeColor">
             {{ $t("ViewReportPublicacio.reportedImage") }}:
           </p>
           <select
             v-model="report.selectedImage"
-            class="appearance-none bg-gray-100 dark:bg-gray-400 dark:text-gray-800 border border-gray-300 dark:border-gray-600 text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 p-2 w-full shadow-sm"
+            class="appearance-none bg-bgTheme border border-buttonColorPrimary text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 p-2 w-full shadow-sm"
           >
             <option :value="null">Selecciona una imatge</option>
             <option :value="`${communityUrl}${report.image}`">
