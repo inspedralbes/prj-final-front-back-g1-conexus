@@ -64,7 +64,7 @@ import {
   chatButton,
   fetchChats,
 } from "../services/communicationsScripts/chatManager.js";
-import { getUsers } from "../services/communicationsScripts/mainmanager.js";
+import { getUsers } from "../services/communicationsScripts/mainManager.js";
 import NavBarApp from "@/components/navBar/NavBarApp.vue";
 import Header from "@/components/Header.vue";
 import NavBarWeb from "@/components/navBar/NavBarWeb.vue";
