@@ -25,4 +25,4 @@
 ![pantallesAdmin](https://github.com/user-attachments/assets/6e5f3627-4436-48b8-a774-f1658542d77c)
 
 ## URL de producció:
-* https://conexushub.cat
+* http://www.conexushub.cat
