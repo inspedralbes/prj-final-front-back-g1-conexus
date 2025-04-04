@@ -119,6 +119,7 @@
         "preview": "Pré-visualização:",
         "publish": "Publicar",
         "publishing": "Publicando...",
+        "imagePreview": "Pré-visualização da imagem",
         "notAllFields": "Por favor, complete todos os campos e carregue uma imagem.",
         "error": "Ocorreu um erro ao publicar a postagem:"
     },

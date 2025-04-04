@@ -5,7 +5,6 @@
         "acceptedPermission": "Permetre",
         "rejectedPermission": "Bloquejar"
     },
-    
     "editProfile": {
         "title": "Editar Banner i Perfil",
         "fullName": "Nom complet",
@@ -19,13 +18,12 @@
         "email": "Correu electrònic:",
         "phone": "Telèfon:",
         "save": "Guardar canvis",
-        "description":"Descripció:",
-        "academicTitle":"Títol acadèmic:",
-        "SocialMedia":"Xarxes socials",
-        "languages":"Idiomes",
-        "softwareSkills":"Habilitats en programari",
-        "english":"Anglès"
-
+        "description": "Descripció:",
+        "academicTitle": "Títol acadèmic:",
+        "SocialMedia": "Xarxes socials",
+        "languages": "Idiomes",
+        "softwareSkills": "Habilitats en programari",
+        "english": "Anglès"
     },
     "formAvailability": {
         "title": "Editar Horari de Disponibilitat",
@@ -42,11 +40,11 @@
         "saturday": "Dissabte",
         "sunday": "Diumenge"
     },
-    "PersonalInfo":{
+    "PersonalInfo": {
         "titlePage": "Informació personal",
         "nameAndSurname": "Nom i cognoms",
         "desc": "Descripció",
-        "noDesc":"Aquest usuari no ha afegit cap descripció.",
+        "noDesc": "Aquest usuari no ha afegit cap descripció.",
         "socialMedia": "Xarxes socials",
         "githubProfile": "Perfil de Github",
         "LinkedinProfile": "Perfil de Linkedin",
@@ -59,11 +57,11 @@
         "contact": "Contacte",
         "email": "Correu electrònic:",
         "phone": "Telèfon:",
-        "softwareSkills":"Habilitats en programari",
-        "developingSoftwareSkills":"Aprenent habilitats...",
-        "languages":"Idiomes",
-        "noLanguages":"Encara no hi han...",
-        "edit":"Editar"
+        "softwareSkills": "Habilitats en programari",
+        "developingSoftwareSkills": "Aprenent habilitats...",
+        "languages": "Idiomes",
+        "noLanguages": "Encara no hi han...",
+        "edit": "Editar"
     },
     "chatContent": {
         "writeMessage": "Escriu un missatge..."
@@ -121,6 +119,7 @@
         "preview": "Vista prèvia:",
         "publish": "Publicar",
         "publishing": "Publicant...",
+        "imagePreview": "Vista prèvia de la imatge",
         "notAllFields": "Si us plau, completa tots els camps i puja una imatge.",
         "error": "Ha ocorregut un error al publicar la publicació:"
     },
@@ -340,7 +339,7 @@
         "saturday": "Dissabte",
         "sunday": "Diumenge",
         "edit": "Editar",
-        "noAvailability":"Sense disponibilitat"
+        "noAvailability": "Sense disponibilitat"
     },
     "menu": {
         "comunity": "Comunitat",
@@ -356,7 +355,7 @@
         "chat": "Xat",
         "gacha": "Gacha",
         "games": "Jocs",
-        "addPost" : "Afegir publicació"
+        "addPost": "Afegir publicació"
     },
     "titlesSettings": {
         "configuration": "Configuració",

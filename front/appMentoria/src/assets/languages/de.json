@@ -58,7 +58,7 @@
         "email": "E-Mail:",
         "phone": "Telefon:",
         "softwareSkills": "Softwarekenntnisse",
-        "developingSoftwareSkills":"Fähigkeiten erlernen...",
+        "developingSoftwareSkills": "Fähigkeiten erlernen...",
         "languages": "Sprachen",
         "noLanguages": "Noch keine...",
         "edit": "Bearbeiten"
@@ -119,6 +119,7 @@
         "preview": "Vorschau:",
         "publish": "Veröffentlichen",
         "publishing": "Veröffentlichen...",
+        "imagePreview": "Bildvorschau",
         "notAllFields": "Bitte fülle alle Felder aus und lade ein Bild hoch.",
         "error": "Beim Veröffentlichen des Beitrags ist ein Fehler aufgetreten:"
     },
@@ -325,7 +326,6 @@
         "publish": "Veröffentlichen"
     },
     "calendar": {
-        
         "title": "Verfügbarkeitsplan",
         "day": "Tag",
         "availability": "Verfügbare Stunden",

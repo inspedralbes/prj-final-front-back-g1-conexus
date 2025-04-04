@@ -8,43 +8,43 @@
         class="p-4 border-b flex flex-col md:flex-row justify-between items-center border-buttonColorPrimary"
       >
         <h2 class="text-lg font-semibold text-textThemeColor">
-          {{$t("notificationList.title")}}
+          {{ $t("notificationList.title") }}
         </h2>
 
         <!-- Botones Filtros -->
         <div class="flex space-x-2 mt-4 md:mt-0">
           <button
-            class="px-3 py-1 text-sm rounded-md"
+            class="px-3 py-1 text-sm rounded-md border-2 border-textColorPrimary"
             :class="
               filter === 'all'
-                ? 'bg-gray-400 text-textThemeColor dark:bg-gray-800 dark:text-black'
-                : 'bg-gray-200 dark:bg-gray-600 dark:text-black'
+                ? 'text-textColorPrimary'
+                : 'border-textColorPrimary'
             "
             @click="filter = 'all'"
           >
-            {{$t("notificationList.all")}}
+            {{ $t("notificationList.all") }}
           </button>
           <button
-            class="px-3 py-1 text-sm rounded-md"
+            class="px-3 py-1 text-sm rounded-md border-2 border-textColorPrimary"
             :class="
               filter === 'Comentari'
-                ? 'bg-blue-400 text-whtextThemeColorite dark:bg-blue-700 dark:text-black'
-                : 'bg-blue-200 dark:bg-blue-700 dark:text-black'
+                ? 'text-textColorPrimary'
+                : 'border-textColorPrimary'
             "
             @click="filter = 'Comentari'"
           >
-            {{$t("notificationList.comments")}}
+            {{ $t("notificationList.comments") }}
           </button>
           <button
-            class="px-3 py-1 text-sm rounded-md text-textThemeColor"
+            class="px-3 py-1 text-sm rounded-md border-2 border-textColorPrimary"
             :class="
               filter.includes('Petició') || filter.includes('Publicació')
-                ? 'bg-red-400 text-textThemeColor dark:bg-red-700 dark:text-black'
-                : 'bg-red-200 dark:bg-red-700 dark:text-black'
+                ? 'text-textColorPrimary'
+                : 'border-textColorPrimary'
             "
             @click="togglePublicationsFilter"
           >
-            {{$t("notificationList.publications")}}
+            {{ $t("notificationList.publications") }}
           </button>
           <!-- <button
             class="px-3 py-1 text-sm rounded-md"
@@ -91,7 +91,7 @@
         v-if="filteredNotifications.length === 0"
         class="p-4 text-center text-textThemeColor"
       >
-       {{ $t("notificationList.noNotifications") }}
+        {{ $t("notificationList.noNotifications") }}
       </div>
     </div>
   </div>
