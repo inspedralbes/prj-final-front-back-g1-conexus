@@ -32,4 +32,3 @@ export default {
     "./components/**/*.{vue,js,ts,jsx,tsx}",
   ]
 }
-
