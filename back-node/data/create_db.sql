@@ -78,8 +78,8 @@ CREATE TABLE IF NOT EXISTS assistance(
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (course_id) REFERENCES courses(id)
 )
--- Table 8: lostAndFound (depends on users and typeslostAndFound)
-CREATE TABLE IF NOT EXISTS lostAndFound (
+-- Table 8: lostObjects (depends on users and typeslostAndFound)
+CREATE TABLE IF NOT EXISTS lostObjects (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS response(
     comment TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (lostAndFound_id) REFERENCES lostAndFound(id)
+    FOREIGN KEY (lostAndFound_id) REFERENCES lostObjects(id)
 );
 
 -- Table 9: rooms
@@ -149,6 +149,6 @@ CREATE TABLE IF NOT EXISTS reports (
 --     revised BOOLEAN DEFAULT 0,
 --     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 --     FOREIGN KEY (user_id) REFERENCES users(id),
---     FOREIGN KEY (publication_id) REFERENCES lostAndFound(id),
+--     FOREIGN KEY (publication_id) REFERENCES lostObjects(id),
 --     FOREIGN KEY (comment_id) REFERENCES comments(id)
 -- );
