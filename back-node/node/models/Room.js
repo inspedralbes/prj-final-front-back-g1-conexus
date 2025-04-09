@@ -17,7 +17,7 @@ export default (sequelize) => {
         room_hours_available: {
             type: DataTypes.JSON,
             allowNull: false,
-           
+            
         },
         room_description: {
             type: DataTypes.STRING,
