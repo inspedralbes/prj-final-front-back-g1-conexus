@@ -1,5 +1,5 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database'); // Asegúrate de que este archivo apunta a tu configuración de Sequelize
+import { DataTypes } from 'sequelize';
+import sequelize from '../config/database';
 
 const UserCourse = sequelize.define('UserCourse', {
     id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true,},

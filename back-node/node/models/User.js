@@ -1,5 +1,6 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+import { DataTypes } from 'sequelize';
+import sequelize from '../config/database';
+
 const User = sequelize.define('User', {
     id: {type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true,},
     typesUsers_id: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 1, references: { model: 'typesUsers', key: 'id', },},
@@ -10,6 +11,7 @@ const User = sequelize.define('User', {
     profile: { type: DataTypes.STRING(255), allowNull: true,},
     department_id: { type: DataTypes.INTEGER, allowNull: true, references: { model: 'departments', key: 'id',},},
     created_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW,},
-    description: { type: DataTypes.TEXT, allowNull: true, defaultValue: null,},});
+    description: { type: DataTypes.TEXT, allowNull: true, defaultValue: null,},
+});
 
 export default User;
