@@ -1,42 +1,36 @@
-import { DataTypes } from "sequelize";
+import { DataTypes } from 'sequelize';
+import sequelize from '../config/database'; // Asegúrate de que este archivo apunta a tu configuración de Sequelize
 
-export default (sequelize) => {
-  return sequelize.define(
-    "Response",
-    {
-      id: {
+const Response = sequelize.define('Response', {
+    id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
-      },
-      user_id: {
+    },
+    user_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: "users",
-          key: "id",
+            model: 'users', // Nombre de la tabla referenciada
+            key: 'id',
         },
-      },
-      lostAndFound_id: {
+    },
+    lostAndFound_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: "lost_objects",
-          key: "id",
+            model: 'lostObjects', // Nombre de la tabla referenciada
+            key: 'id',
         },
-      },
-      comment: {
-        type: DataTypes.STRING,
+    },
+    comment: {
+        type: DataTypes.TEXT,
         allowNull: false,
-      },
-      createdAt: {
+    },
+    created_at: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,
-      },
     },
-    {
-      tableName: "responses",
-      timestamps: false,
-    }
-  );
-};
+});
+
+export default Response;
