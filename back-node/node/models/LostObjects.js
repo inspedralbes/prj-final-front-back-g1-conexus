@@ -9,7 +9,6 @@ const LostObject = sequelize.define('LostObject', {
     user_id: { type: DataTypes.INTEGER, allowNull: false, references: { model: 'users', key: 'id',}, },
     created_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW, },
     expired_at: { type: DataTypes.DATE, allowNull: true, },
-    typeslostAndFound_id: { type: DataTypes.INTEGER, allowNull: true, references: { model: 'typeslostAndFound', key: 'id',}, },
 });
 
 export default LostObject;
