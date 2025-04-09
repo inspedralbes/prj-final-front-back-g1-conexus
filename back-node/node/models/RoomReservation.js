@@ -1,46 +1,40 @@
-// Import DataTypes from sequelize
-
 import { DataTypes } from 'sequelize';
+import sequelize from '../config/database'; // Asegúrate de que este archivo apunta a tu configuración de Sequelize
 
-export default (sequelize) => {
-    return sequelize.define('Room_reservation', {
-        id: {
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
-            primaryKey: true,
+const RoomReservation = sequelize.define('RoomReservation', {
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+    },
+    user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'users', // Nombre de la tabla referenciada
+            key: 'id',
         },
-        user_id: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            references: {
-                model: 'users', // Name of the target table
-                key: 'id', // Key in the target table
-            },
-            
+    },
+    room_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'rooms', // Nombre de la tabla referenciada
+            key: 'id',
         },
-        room_id: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            references: {
-                model: 'rooms', // Name of the target table
-                key: 'id', // Key in the target table
-            },
-           
-        },
-        start_time: {
-            type: DataTypes.DATE,
-            allowNull: false,
-        },
-        end_time: {
-            type: DataTypes.DATE,
-            allowNull: false,
-        },
-        createdAt: {
-            type: DataTypes.DATE,
-            defaultValue: DataTypes.NOW,
-        },
-    }, {
-        tableName: 'room_reservations',
-        timestamps: false,
-    });
-};
+    },
+    start_time: {
+        type: DataTypes.DATE,
+        allowNull: false,
+    },
+    end_time: {
+        type: DataTypes.DATE,
+        allowNull: false,
+    },
+    created_at: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
+    },
+});
+
+export default RoomReservation;
