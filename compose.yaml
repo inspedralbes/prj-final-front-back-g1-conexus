@@ -1,0 +1,81 @@
+services:
+  conexus-hub-front:
+    build:
+      context: ./front-vue
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./front-vue:/app
+      - /app/node_modules
+    working_dir: /app
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true  
+      - HOST=0.0.0.0
+    env_file:
+      - .env
+    restart: unless-stopped
+    networks:
+        - conexus-hub-network
+
+  conexus-hub-back:
+    build:
+      context: ./back-node/node
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+      - "3002:3002"
+      - "3003:3003"
+      - "3004:3004"
+      - "3005:3005"
+      - "3006:3006"
+    volumes:
+      - ./back-node/node:/app
+      - /app/node_modules
+    working_dir: /app
+    environment:
+      - NODE_ENV=development
+    env_file:
+      - .env
+    depends_on:
+      - conexus-hub-mysql
+    restart: unless-stopped
+    networks:
+      - conexus-hub-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "conexus-hub-mysql"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  conexus-hub-mysql:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=conexus-hub
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
+    volumes:
+      - conexus-hub-mysql-data:/var/lib/mysql
+    restart: unless-stopped
+    networks:
+      - conexus-hub-network
+
+  conexus-hub-adminer:
+    image: adminer
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    networks:
+      - conexus-hub-network
+
+volumes:
+  conexus-hub-mysql-data:
+  
+networks:
+  conexus-hub-network:
+    driver: bridge

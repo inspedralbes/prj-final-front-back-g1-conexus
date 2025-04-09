@@ -8,10 +8,10 @@ COPY package*.json ./
 
 RUN npm install
 
-RUN npm install -g nodemon
-
 COPY . .
 
-EXPOSE 3000
+EXPOSE 5173
+
+ENV NODE_ENV=development
 
 CMD ["npm", "run", "dev"]
