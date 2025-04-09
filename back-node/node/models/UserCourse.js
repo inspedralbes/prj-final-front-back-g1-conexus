@@ -1,32 +1,11 @@
-// Import DataTypes from sequelize
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/database'); // Asegúrate de que este archivo apunta a tu configuración de Sequelize
 
-import { DataTypes } from 'sequelize';
+const UserCourse = sequelize.define('UserCourse', {
+    id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true,},
+    user_id: { type: DataTypes.INTEGER, allowNull: false, references: { model: 'users', key: 'id', }, },
+    course_id: { type: DataTypes.INTEGER, allowNull: false, references: { model: 'courses', key: 'id',},},
+    created_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW,},
+});
 
-export default (sequelize) => {
-    return sequelize.define('UserCourse', {
-        id: {
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
-            primaryKey: true,
-        },
-        user_id: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            references: {
-                model: 'users', // Name of the target table
-                key: 'id', // Key in the target table
-            },
-        },
-        course_id: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            references: {
-                model: 'courses', // Name of the target table
-                key: 'id', // Key in the target table
-            },
-        },
-    }, {
-        tableName: 'UserCourse',
-        timestamps: false,
-    });
-};
+export default UserCourse;

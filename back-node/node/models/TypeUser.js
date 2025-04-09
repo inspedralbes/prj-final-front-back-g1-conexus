@@ -1,22 +1,9 @@
-// Import DataTypes from sequelize
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/database'); // Asegúrate de que este archivo apunta a tu configuración de Sequelize
 
-import { DataTypes } from 'sequelize';
+const TypesUser = sequelize.define('TypesUser', {
+    id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true,},
+    name: { type: DataTypes.STRING(255), allowNull: false,},
+});
 
-export default (sequelize) => {
-    return sequelize.define('TypesUser', {
-        id: {
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
-            primaryKey: true,
-        },
-        name: {
-            type: DataTypes.TEXT,
-            allowNull: false,
-           
-            
-        },
-    }, {
-        tableName: 'typesUsers',
-        timestamps: false,
-    });
-};
+export default TypesUser;
