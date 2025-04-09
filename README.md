@@ -1,8 +1,7 @@
-# Transversals - Mentories
+# Transversals - Conexus Hub
 
 ## Equip format per:
 * Sara Martínez
-* Climent Fernández
 * Rubén Lora 
 * Julie Villegas
 * Eric Gómez

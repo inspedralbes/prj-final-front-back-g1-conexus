@@ -1,7 +1,0 @@
-# Ignore node_modules directory
-node_modules/
-
-# Ignore middleware directory
-middleware/node_modules
-
-middleware/.env
