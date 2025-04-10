@@ -3,7 +3,7 @@ import bodyParser from "body-parser";
 import { sequelize } from "./models/index.js";
 import dotenv from "dotenv";
 import cors from "cors";
-import { verifyTokenMiddleware } from "./token.js";
+// import { verifyTokenMiddleware } from "./token.js";
 import path from "path";
 
 import { fileURLToPath } from "url";
