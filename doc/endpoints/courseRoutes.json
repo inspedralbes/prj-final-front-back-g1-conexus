@@ -1,0 +1,125 @@
+{
+    "endpoints": [
+        {
+            "method": "GET",
+            "path": "/api/courses",
+            "description": "Recuperar una lista de todos los cursos",
+            "responses": {
+                "200": {
+                    "description": "Lista de cursos",
+                    "content": {
+                        "application/json": {
+                            "example": [
+                                {
+                                    "id": 1,
+                                    "course_name": "Programación Web",
+                                    "course_hours_available": {
+                                        "monday": [
+                                            "09:00-11:00",
+                                            "14:00-16:00"
+                                        ]
+                                    },
+                                    "course_description": "Curso de desarrollo web",
+                                    "course_teacher_id": 1,
+                                    "course_department_id": 1
+                                },
+                                {
+                                    "id": 2,
+                                    "course_name": "Programación Web",
+                                    "course_hours_available": {
+                                        "monday": [
+                                            "09:00-11:00",
+                                            "14:00-16:00"
+                                        ]
+                                    },
+                                    "course_description": "Curso de desarrollo web",
+                                    "course_teacher_id": 1,
+                                    "course_department_id": 1
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "method": "POST",
+            "path": "/api/courses",
+            "description": "Crear un nuevo curso",
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "example": {
+                            "course_name": "Programación Web",
+                            "course_hours_available": {
+                                "monday": [
+                                    "09:00-11:00",
+                                    "14:00-16:00"
+                                ]
+                            },
+                            "course_description": "Curso de desarrollo web",
+                            "course_teacher_id": 1,
+                            "course_department_id": 1
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "201": {
+                    "description": "Curso creado exitosamente"
+                }
+            }
+        },
+        {
+            "method": "GET",
+            "path": "/api/courses/{id}",
+            "description": "Obtener un curso específico por ID",
+            "responses": {
+                "200": {
+                    "description": "Detalles del curso"
+                },
+                "404": {
+                    "description": "Curso no encontrado"
+                }
+            }
+        },
+        {
+            "method": "PUT",
+            "path": "/api/courses/{id}",
+            "description": "Actualizar un curso",
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "example": {
+                            "course_name": "Programación Web Avanzada",
+                            "course_description": "Curso avanzado de desarrollo web"
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "Curso actualizado"
+                },
+                "404": {
+                    "description": "Curso no encontrado"
+                }
+            }
+        },
+        {
+            "method": "DELETE",
+            "path": "/api/courses/{id}",
+            "description": "Eliminar un curso",
+            "responses": {
+                "204": {
+                    "description": "Curso eliminado"
+                },
+                "404": {
+                    "description": "Curso no encontrado"
+                }
+            }
+        }
+    ]
+}

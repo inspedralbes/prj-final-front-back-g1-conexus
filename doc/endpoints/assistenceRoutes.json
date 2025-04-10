@@ -1,0 +1,93 @@
+{
+    "endpoints": [
+        {
+            "method": "GET",
+            "path": "/api/assistences",
+            "description": "Recuperar una lista de todas las asistencias",
+            "responses": {
+                "200": {
+                    "description": "Lista de asistencias",
+                    "content": {
+                        "application/json": {
+                            "example": [
+                                {
+                                    "id": 1,
+                                    "user_id": 1,
+                                    "course_id": 1,
+                                    "hour": "2024-03-20T10:00:00Z",
+                                    "assisted": "yes"
+                                },
+                                {
+                                    "id": 2,
+                                    "user_id": 2,
+                                    "course_id": 2,
+                                    "hour": "2024-03-20T10:00:00Z",
+                                    "assisted": "unjustified"
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "method": "POST",
+            "path": "/api/assistences",
+            "description": "Registrar una nueva asistencia",
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "example": {
+                            "user_id": 1,
+                            "course_id": 1,
+                            "hour": "2024-03-20T10:00:00Z",
+                            "assisted": "yes"
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "201": {
+                    "description": "Asistencia creada exitosamente"
+                }
+            }
+        },
+        {
+            "method": "GET",
+            "path": "/api/assistences/{id}",
+            "description": "Obtener una asistencia específica por ID",
+            "responses": {
+                "200": {
+                    "description": "Detalles de la asistencia"
+                },
+                "404": {
+                    "description": "Asistencia no encontrada"
+                }
+            }
+        },
+        {
+            "method": "PUT",
+            "path": "/api/assistences/{id}",
+            "description": "Actualizar una asistencia",
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "example": {
+                            "assisted": "justified"
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "Asistencia actualizada"
+                },
+                "404": {
+                    "description": "Asistencia no encontrada"
+                }
+            }
+        }
+    ]
+}

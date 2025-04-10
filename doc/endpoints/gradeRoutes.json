@@ -1,0 +1,96 @@
+{
+    "endpoints": [
+        {
+            "method": "GET",
+            "path": "/api/grades",
+            "description": "Recuperar una lista de todas las calificaciones",
+            "responses": {
+                "200": {
+                    "description": "Lista de calificaciones",
+                    "content": {
+                        "application/json": {
+                            "example": [
+                                {
+                                    "id": 1,
+                                    "user_id": 1,
+                                    "course_id": 1,
+                                    "grade": 8.5
+                                },
+                                {
+                                    "id": 2,
+                                    "user_id": 2,
+                                    "course_id": 2,
+                                    "grade": 7.0
+                                },
+                                {
+                                    "id": 3,
+                                    "user_id": 3,
+                                    "course_id": 1,
+                                    "grade": 9.0
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "method": "POST",
+            "path": "/api/grades",
+            "description": "Crear una nueva calificación",
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "example": {
+                            "user_id": 1,
+                            "course_id": 1,
+                            "grade": 8.5
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "201": {
+                    "description": "Calificación creada exitosamente"
+                }
+            }
+        },
+        {
+            "method": "GET",
+            "path": "/api/grades/{id}",
+            "description": "Obtener una calificación específica por ID",
+            "responses": {
+                "200": {
+                    "description": "Detalles de la calificación"
+                },
+                "404": {
+                    "description": "Calificación no encontrada"
+                }
+            }
+        },
+        {
+            "method": "PUT",
+            "path": "/api/grades/{id}",
+            "description": "Actualizar una calificación",
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "example": {
+                            "grade": 9.0
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "Calificación actualizada"
+                },
+                "404": {
+                    "description": "Calificación no encontrada"
+                }
+            }
+        }
+    ]
+}

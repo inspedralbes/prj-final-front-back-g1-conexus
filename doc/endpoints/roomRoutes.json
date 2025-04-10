@@ -1,0 +1,118 @@
+{
+    "endpoints": [
+        {
+            "method": "GET",
+            "path": "/api/rooms",
+            "description": "Recuperar una lista de todas las salas",
+            "responses": {
+                "200": {
+                    "description": "Lista de salas",
+                    "content": {
+                        "application/json": {
+                            "example": [
+                                {
+                                    "id": 1,
+                                    "room_name": "Sala de Conferencias",
+                                    "room_hours_available": {
+                                        "monday": [
+                                            "09:00-12:00",
+                                            "14:00-17:00"
+                                        ]
+                                    },
+                                    "room_description": "Sala equipada para conferencias"
+                                },
+                                {
+                                    "id": 2,
+                                    "room_name": "Sala de Reuniones",
+                                    "room_hours_available": {
+                                        "monday": [
+                                            "10:00-13:00"
+                                        ]
+                                    },
+                                    "room_description": "Sala equipada para reuniones"
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "method": "POST",
+            "path": "/api/rooms",
+            "description": "Crear una nueva sala",
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "example": {
+                            "room_name": "Sala de Conferencias",
+                            "room_hours_available": {
+                                "monday": [
+                                    "09:00-12:00",
+                                    "14:00-17:00"
+                                ]
+                            },
+                            "room_description": "Sala equipada para conferencias"
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "201": {
+                    "description": "Sala creada exitosamente"
+                }
+            }
+        },
+        {
+            "method": "GET",
+            "path": "/api/rooms/{id}",
+            "description": "Obtener una sala específica por ID",
+            "responses": {
+                "200": {
+                    "description": "Detalles de la sala"
+                },
+                "404": {
+                    "description": "Sala no encontrada"
+                }
+            }
+        },
+        {
+            "method": "PUT",
+            "path": "/api/rooms/{id}",
+            "description": "Actualizar una sala",
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "example": {
+                            "room_name": "Sala de Conferencias Actualizada",
+                            "room_description": "Sala equipada para conferencias con nueva tecnología"
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "Sala actualizada"
+                },
+                "404": {
+                    "description": "Sala no encontrada"
+                }
+            }
+        },
+        {
+            "method": "DELETE",
+            "path": "/api/rooms/{id}",
+            "description": "Eliminar una sala",
+            "responses": {
+                "204": {
+                    "description": "Sala eliminada"
+                },
+                "404": {
+                    "description": "Sala no encontrada"
+                }
+            }
+        }
+    ]
+}

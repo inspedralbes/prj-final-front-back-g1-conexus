@@ -1,0 +1,139 @@
+{
+    "endpoints": [
+        {
+            "method": "GET",
+            "path": "/api/departments",
+            "description": "Recuperar una lista de todos los departamentos",
+            "responses": {
+                "200": {
+                    "description": "Lista de departamentos",
+                    "content": {
+                        "application/json": {
+                            "example": [
+                                {
+                                    "id": 1,
+                                    "name": "Informática"
+                                },
+                                {
+                                    "id": 2,
+                                    "name": "Administración"
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "method": "POST",
+            "path": "/api/departments",
+            "description": "Crear un nuevo departamento",
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "example": {
+                            "name": "Informática"
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "201": {
+                    "description": "Departamento creado exitosamente",
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "id": 1,
+                                "name": "Informática"
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Error interno del servidor"
+                }
+            }
+        },
+        {
+            "method": "GET",
+            "path": "/api/departments/{id}",
+            "description": "Obtener un departamento específico por ID",
+            "parameters": [
+                {
+                    "id": 1
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Detalles del departamento",
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "id": 1,
+                                "name": "Informática"
+                            }
+                        }
+                    }
+                },
+                "404": {
+                    "description": "Departamento no encontrado"
+                }
+            }
+        },
+        {
+            "method": "PUT",
+            "path": "/api/departments/{id}",
+            "description": "Actualizar un departamento",
+            "parameters": [
+                {
+                    "id": 1
+                }
+            ],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "example": {
+                            "name": "Informática y Sistemas"
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "Departamento actualizado",
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "id": 1,
+                                "name": "Informática y Sistemas"
+                            }
+                        }
+                    }
+                },
+                "404": {
+                    "description": "Departamento no encontrado"
+                }
+            }
+        },
+        {
+            "method": "DELETE",
+            "path": "/api/departments/{id}",
+            "description": "Eliminar un departamento",
+            "parameters": [
+                {
+                    "id": 1
+                }
+            ],
+            "responses": {
+                "204": {
+                    "description": "Departamento eliminado exitosamente"
+                },
+                "404": {
+                    "description": "Departamento no encontrado"
+                }
+            }
+        }
+    ]
+}
