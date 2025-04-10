@@ -22,8 +22,8 @@ router.post("/", async (req, res) => {
         const { user_id, course_id, hour, assisted } = req.body;
         const assistance = await Assistence.create({ user_id, course_id, hour, assisted });
         res.json(assistance);
-
-    } catch (error) {
+    }
+    catch (error) {
         res.status(500).json({ message: error.message });
     }
 });

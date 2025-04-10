@@ -1,5 +1,5 @@
 import express from "express";
-import User from "../models/User";
+import User from "../models/User.js";
 
 const router = express.Router();
 
@@ -15,6 +15,7 @@ router.get("/", async (req, res) => {
 
 // Crear un nuevo usuario
 router.post("/", async (req, res) => {
+    console.log(req.body);
     try {
         const { typesUsers_id, name, email, password, banner, profile, department_id, description } = req.body;
         const user = await User.create({ typesUsers_id, name, email, password, banner, profile, department_id, description });

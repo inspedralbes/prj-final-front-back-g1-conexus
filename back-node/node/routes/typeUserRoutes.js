@@ -1,24 +1,43 @@
 import express from "express";
-import RoomReservation from "../models/RoomReservation";
+import TypeUser from "../models/TypeUser.js";
 
 const router = express.Router();
 
 // Obtener todas las reservas de habitaciones
 router.get("/", async (req, res) => {
     try {
-        const reservations = await RoomReservation.findAll();
-        res.json(reservations);
+        const typeUsers = await TypeUser.findAll();
+        res.json(typeUsers);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 });
 
+router.get("/:id", async (req, res) => {
+    try {
+        const typeUser = await TypeUser.findByPk(req.params.id);
+        res.json(typeUser);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
 // Crear una nueva reserva de habitación
 router.post("/", async (req, res) => {
+    console.log(req.body);
     try {
-        const { user_id, room_id, start_time, end_time } = req.body;
-        const reservation = await RoomReservation.create({ user_id, room_id, start_time, end_time });
-        res.json(reservation);
+        const { name } = req.body;
+        const typeUser = await TypeUser.create({ name });
+        res.json(typeUser);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+router.put("/:id", async (req, res) => {
+    try {
+        const { name } = req.body;
+        const typeUser = await TypeUser.update({ name }, { where: { id: req.params.id } });
+        res.json(typeUser);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -28,14 +47,14 @@ router.post("/", async (req, res) => {
 router.delete("/:id", async (req, res) => {
     try {
         const { id } = req.params;
-        const reservation = await RoomReservation.findByPk(id);
+        const typeUsers = await TypeUser.findByPk(id);
 
-        if (!reservation) {
-            return res.status(404).json({ message: "Reserva no encontrada" });
+        if (!typeUsers) {
+            return res.status(404).json({ message: "Tipo de usuario no encontrado" });
         }
 
-        await reservation.destroy();
-        res.json({ message: "Reserva eliminada correctamente" });
+        await typeUsers.destroy();
+        res.json({ message: "Tipo de usuario eliminado correctamente" });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

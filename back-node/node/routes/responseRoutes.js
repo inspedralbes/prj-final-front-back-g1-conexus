@@ -1,11 +1,11 @@
 import express from "express";
-import Responses from "../models/Responses.js";
+import Response from "../models/Response.js";
 
 const router = express.Router();
 
 // GET /responses - Obtenir totes les respostes
 router.get("/", async (req, res) => {
-    const responses = await Responses.findAll();
+    const responses = await Response.findAll();
     res.json(responses);
 });
 
@@ -13,7 +13,7 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
     const { id } = req.params;
     try {
-        const response = await Responses.findOne({ where: { id } });
+        const response = await Response.findOne({ where: { id } });
         if (!response) {
             return res.status(404).json({ message: "Resposta no trobada" });
         }
@@ -42,7 +42,7 @@ router.post("/", async (req, res) => {
          * @param {string} responseData.comment - El contingut de la resposta.
          * @returns {Promise<Object>} L'objecte de la resposta acabada de crear.
          */
-        const newResponse = await Responses.create({ user_id, lostAndFound_id, comment });
+        const newResponse = await Response.create({ user_id, lostAndFound_id, comment });
         res.status(201).json(newResponse);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -53,7 +53,7 @@ router.post("/", async (req, res) => {
 router.put("/:id", async (req, res) => {
     const { id } = req.params;
     try {
-        const response = await Responses.findOne({ where: { id } });
+        const response = await Response.findOne({ where: { id } });
         if (!response) {
             return res.status(404).json({ message: "Resposta no trobada" });
         }
@@ -68,7 +68,7 @@ router.put("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
     const { id } = req.params;
     try {
-        const response = await Responses.findOne({ where: { id } });
+        const response = await Response.findOne({ where: { id } });
         if (!response) {
             return res.status(404).json({ message: "Resposta no trobada" });
         }

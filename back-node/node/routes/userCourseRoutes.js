@@ -1,5 +1,5 @@
 import express from "express";
-import UserCourse from "../models/UserCourse";
+import UserCourse from "../models/UserCourse.js";
 
 const router = express.Router();
 

@@ -23,6 +23,7 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
+    console.log(req.body);
     try {
         const { course_name, course_hours_available, course_description, course_teacher_id, course_department_id } = req.body;
         const course = await Course.create({ course_name, course_hours_available, course_description, course_teacher_id, course_department_id });
