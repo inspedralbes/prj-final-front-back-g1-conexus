@@ -1,15 +1,15 @@
 import { DataTypes } from 'sequelize';
-import sequelize from '../config/database';
+import sequelize from '../config/database.js';
 
 const Course = sequelize.define('Course', {
-    id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true,},
-    course_name: { type: DataTypes.TEXT, allowNull: false,},
+    id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true, },
+    course_name: { type: DataTypes.TEXT, allowNull: false, },
     course_hours_available: { type: DataTypes.JSON, allowNull: true, defaultValue: null, },
     course_description: { type: DataTypes.TEXT, allowNull: false, },
-    course_teacher_id: { type: DataTypes.INTEGER, allowNull: false, references: { model: 'users', key: 'id', }, },
-    course_department_id: { type: DataTypes.INTEGER, allowNull: false, references: { model: 'departments', key: 'id', }, },
+    course_teacher_id: { type: DataTypes.INTEGER, allowNull: false },
+    course_department_id: { type: DataTypes.INTEGER, allowNull: false },
     course_created_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW, },
-    course_updated_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW,},
+    course_updated_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW, },
 });
 
 export default Course;

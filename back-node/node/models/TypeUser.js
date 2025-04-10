@@ -1,9 +1,9 @@
 import { DataTypes } from 'sequelize';
-import sequelize from '../config/database';
+import sequelize from '../config/database.js';
 
-const TypesUser = sequelize.define('TypesUser', {
-    id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true,},
-    name: { type: DataTypes.STRING(255), allowNull: false,},
+const TypeUser = sequelize.define('TypeUser', {
+    id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true, },
+    name: { type: DataTypes.STRING(255), allowNull: false, },
 });
 
-export default TypesUser;
+export default TypeUser;

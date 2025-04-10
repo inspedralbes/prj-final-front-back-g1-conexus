@@ -2,10 +2,8 @@ import sequelize from "../config/database.js";
 import User from "./User.js";
 import Room from "./Room.js";
 import LostObject from "./LostObjects.js";
-import Incident from "./Incident.js";
 import Grade from "./Grade.js";
 import Assistance from "./Assistence.js";
-import Canteen from "./Canteen.js";
 import RoomReservation from "./RoomReservation.js";
 import TypeUser from "./TypeUser.js";
 import Response from "./Response.js";
@@ -84,7 +82,20 @@ User.hasMany(Report, { foreignKey: 'user_id' });
 Report.belongsTo(Room, { foreignKey: 'room_id' });
 Room.hasMany(Report, { foreignKey: 'room_id' });
 
-// Sync database
+// Sync database in correct order
+// await TypeUser.sync();
+// await Department.sync();
+// await User.sync();
+// await Room.sync();
+// await Course.sync();
+// await UserCourse.sync();
+// await Grade.sync();
+// await Assistance.sync();
+// await LostObject.sync();
+// await Response.sync();
+// await RoomReservation.sync();
+// await Report.sync();
+
 await sequelize.sync();
 
 export {
@@ -92,10 +103,8 @@ export {
     User,
     Room,
     LostObject,
-    Incident,
     Grade,
     Assistance,
-    Canteen,
     RoomReservation,
     TypeUser,
     Response,
