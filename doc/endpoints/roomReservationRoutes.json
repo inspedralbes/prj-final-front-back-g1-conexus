@@ -1,0 +1,179 @@
+{
+  "endpoints": [
+    {
+      "method": "GET",
+      "path": "/api/roomRservations",
+      "description": "Recuperar una llista de tots les reserves d'aules",
+      "responses": {
+        "200": {
+          "description": "Una llista de les reserves d'aules",
+          "content": {
+            "application/json": {
+              "example": [
+                {
+                  "id": 1,
+                  "user_id": 1,
+                  "room_id": 1,
+                  "start_time": "2023-10-01T10:00:00",
+                  "end_time": "2023-10-01T12:00:00"
+                },
+                {
+                  "id": 2,
+                  "user_id": 2,
+                  "room_id": 2,
+                  "start_time": "2023-10-02T14:00:00",
+                  "end_time": "2023-10-02T16:00:00"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/roomReservations",
+      "description": "Informar d'una nova reserva d'aula",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "example": {
+              "user_id": 1,
+              "room_id": 1,
+              "start_time": "2023-10-01T10:00:00",
+              "end_time": "2023-10-01T12:00:00"
+            }
+          }
+        }
+      },
+
+      "responses": {
+        "201": {
+          "content": {
+            "application/json": {
+              "example": {
+                "id": 1,
+                "user_id": 1,
+                "room_id": 1,
+                "start_time": "2023-10-01T10:00:00",
+                "end_time": "2023-10-01T12:00:00"
+              }
+            }
+          }
+        },
+        "500": {
+          "message": "Error intern del servidor"
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/roomReservations/{id}",
+      "description": "Recuperar els detalls d'una reserva d'aula específica per ID",
+      "parameters": [
+        {
+          "id": 1
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Detalls de la reserva d'aula",
+          "content": {
+            "application/json": {
+              "example": {
+                "id": 1,
+                "user_id": 1,
+                "room_id": 1,
+                "start_time": "2023-10-01T10:00:00",
+                "end_time": "2023-10-01T12:00:00"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Reserva no trobada"
+        },
+        "500": {
+          "description": "Error intern del servidor"
+        }
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/roomReservations/{id}",
+      "description": "Eliminar una reserva per ID",
+      "parameters": [
+        {
+          "id": 1
+        }
+      ],
+      "responses": {
+        "204": {
+          "description": "Reserva eliminada correctament"
+        },
+        "404": {
+          "description": "Reserva no trobada"
+        }
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/roomReservations/{id}",
+      "description": "Actualitzar una reserva per ID",
+      "parameters": [
+        {
+          "id": 1
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "example": {
+                "room_id": 1,
+                "start_time": "2023-10-01T10:00:00",
+                "end_time": "2023-10-01T12:00:00"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Reserva actualitzada",
+          "content": {
+            "application/json": {
+              "example": {
+                "id": 1,
+                "user_id": 1,
+                "room_id": 1,
+                "start_time": "2023-10-01T10:00:00",
+                "end_time": "2023-10-01T12:00:00"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Reserva no trobada",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Reserva no trobada"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Error intern del servidor",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Error intern del servidor"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

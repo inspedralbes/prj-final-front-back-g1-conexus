@@ -6,8 +6,10 @@ const router = express.Router();
 // GET /lost-objects - Obtenir tots els objectes perduts
 router.get("/", async (req, res) => {
   const LostObjects = await LostObjects.findAll();
+  //return the LostObjects array
   res.json(LostObjects);
 });
+
 // GET /lost-objects/:id - Obtenir un objecte perdut per ID
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
@@ -16,6 +18,7 @@ router.get("/:id", async (req, res) => {
     if (!lostObject) {
       return res.status(404).json({ message: "Lost object not found" });
     }
+    //return the lostObject object
     res.json(lostObject);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -31,7 +34,7 @@ router.post("/", async (req, res) => {
      * @async
      * @function
      * @returns {Promise<Object>} Retorna una promesa que resol amb l'objecte perdut creat.
-     * @property {string} title - El títol de l'objecte perdut.
+     * @property {string} title - El títol del post de l'objecte perdut.
      * @property {string} description - La descripció de l'objecte perdut.
      * @property {string} image - La URL de la imatge de l'objecte perdut.
      * @property {number} user_id - L'identificador de l'usuari que ha creat l'objecte perdut.
@@ -44,6 +47,7 @@ router.post("/", async (req, res) => {
       user_id,
       expired_at,
     });
+    //return the new lostObject object
     res.status(201).json(newLostObject);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -58,6 +62,7 @@ router.put("/:id", async (req, res) => {
       return res.status(404).json({ message: "Lost object not found" });
     }
     await lostObject.update(req.body);
+    //return the updated lostObject object
     res.json(lostObject);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -72,6 +77,7 @@ router.delete("/:id", async (req, res) => {
       return res.status(404).json({ message: "Lost object not found" });
     }
     await lostObject.destroy();
+    // return 204 indicating the successful deletion
     res.status(204).send();
   } catch (error) {
     res.status(500).json({ message: error.message });

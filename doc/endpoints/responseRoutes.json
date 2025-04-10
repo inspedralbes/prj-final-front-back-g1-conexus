@@ -1,0 +1,171 @@
+{
+  "endpoints": [
+    {
+      "method": "GET",
+      "path": "/api/responses",
+      "description": "Recuperar una llista de tots les respostes informàtiques",
+      "responses": {
+        "200": {
+          "description": "Una llista dels responses",
+          "content": {
+            "application/json": {
+              "example": [
+                {
+                  "id": 1,
+                  "user_id": 1,
+                  "comment": "Oh, es meva!",
+                  "lostAndFound_id": 1
+                },
+                {
+                  "id": 2,
+                  "user_id": 2,
+                  "comment": "L'he deixada a secretaria",
+                  "lostAndFound_id": 2
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/responses",
+      "description": "Informar d'una nova resposta informàtica",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "example": {
+              "user_id": 1,
+              "comment": "Oh, es meva!",
+              "lostAndFound_id": 1
+            }
+          }
+        }
+      },
+
+      "responses": {
+        "201": {
+          "content": {
+            "application/json": {
+              "example": {
+                "id": 1,
+                "user_id": 1,
+                "comment": "Oh, es meva!",
+                "lostAndFound_id": 1
+              }
+            }
+          }
+        },
+        "500": {
+          "message": "Error intern del servidor"
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/responses/{id}",
+      "description": "Recuperar els detalls d'una resposta informàtica específica per ID",
+      "parameters": [
+        {
+          "id": 1
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Detalls de l'objecte perdut",
+          "content": {
+            "application/json": {
+              "example": {
+                "id": 1,
+                "user_id": 1,
+                "comment": "Oh, es meva!",
+                "lostAndFound_id": 1
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Resposta no trobada"
+        },
+        "500": {
+          "description": "Error intern del servidor"
+        }
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/responses/{id}",
+      "description": "Eliminar una resposta per ID",
+      "parameters": [
+        {
+          "id": 1
+        }
+      ],
+      "responses": {
+        "204": {
+          "description": "Resposta eliminada correctament"
+        },
+        "404": {
+          "description": "Resposta no trobada"
+        }
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/responses/{id}",
+      "description": "Actualitzar una resposta per ID",
+      "parameters": [
+        {
+          "id": 1
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "example": {
+              "comment": "L'he deixada a secretaria"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Resposta actualitzada",
+          "content": {
+            "application/json": {
+              "example": {
+                "id": 1,
+                "lostAndFound_id": 1,
+                "user_id": 1,
+                "comment": "L'he deixada a secretaria"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Resposta no trobada",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Resposta no trobada"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Error intern del servidor",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Error intern del servidor"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

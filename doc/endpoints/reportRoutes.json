@@ -1,0 +1,186 @@
+{
+  "endpoints": [
+    {
+      "method": "GET",
+      "path": "/api/reports",
+      "description": "Recuperar una llista de tots les incidencies informàtiques",
+      "responses": {
+        "200": {
+          "description": "Una llista dels reports",
+          "content": {
+            "application/json": {
+              "example": [
+                {
+                  "id": 1,
+                  "user_id": 1,
+                  "report": "La impressora de la planta baixa no funciona",
+                  "image": "file",
+                  "status": "open",
+                  "room_id": 1
+                },
+                {
+                  "id": 2,
+                  "user_id": 2,
+                  "report": "El projector de la sala d'estudi no funciona",
+                  "image": "file",
+                  "status": "closed",
+                  "room_id": 2
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/reports",
+      "description": "Informar d'una nova incidència informàtica",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "example": {
+              "user_id": 1,
+              "report": "La impressora de la planta baixa no funciona",
+              "image": "file",
+              "room_id": 1
+            }
+          }
+        }
+      },
+
+      "responses": {
+        "201": {
+          "content": {
+            "application/json": {
+              "example": {
+                "id": 1,
+                "user_id": 1,
+                "report": "La impressora de la planta baixa no funciona",
+                "image": "./images/report1.jpg",
+                "status": "open",
+                "room_id": 1
+              }
+            }
+          }
+        },
+        "500": {
+          "message": "Error intern del servidor"
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/reports/{id}",
+      "description": "Recuperar els detalls d'una incidència informàtica específica per ID",
+      "parameters": [
+        {
+          "id": 1
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Detalls de l'objecte perdut",
+          "content": {
+            "application/json": {
+              "example": {
+                "id": 1,
+                "user_id": 1,
+                "report": "La impressora de la planta baixa no funciona",
+                "image": "./images/report1.jpg",
+                "status": "open",
+                "room_id": 1
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Incidencia no trobada"
+        },
+        "500": {
+          "description": "Error intern del servidor"
+        }
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/reports/{id}",
+      "description": "Eliminar una incidéncia per ID",
+      "parameters": [
+        {
+          "id": 1
+        }
+      ],
+      "responses": {
+        "204": {
+          "description": "Incidència eliminada correctament"
+        },
+        "404": {
+          "description": "Incidència no trobada"
+        }
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/reports/{id}",
+      "description": "Actualitzar una incidéncia per ID",
+      "parameters": [
+        {
+          "id": 1
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "example": {
+                "user_id": 1,
+                "report": "La impressora de la planta baixa no funciona",
+                "image": "file",
+                "status": "closed",
+                "room_id": 1
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Incidència actualitzada",
+          "content": {
+            "application/json": {
+              "example": {
+                 "id": 1,
+                "user_id": 1,
+                "report": "La impressora de la planta baixa no funciona",
+                "image": "./images/report1.jpg",
+                "status": "closed",
+                "room_id": 1
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Incidència no trobada",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Incidència no trobada"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Error intern del servidor",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Error intern del servidor"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}
