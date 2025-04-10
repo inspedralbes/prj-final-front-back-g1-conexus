@@ -7,10 +7,14 @@ import departmentRoutes from "./routes/departmentRoutes.js";
 import gradeRoutes from "./routes/gradeRoutes.js";
 import dotenv from "dotenv";
 import cors from "cors";
-import { verifyTokenMiddleware } from "./token.js";
+// import { verifyTokenMiddleware } from "./token.js";
 import path from "path";
 
 import { fileURLToPath } from "url";
+import lostObjectRoutes from "./routes/lostObjectRoutes.js";
+import reportRoutes from "./routes/reportRoutes.js";
+import responseRoutes from "./routes/responseRoutes.js";
+import roomReservationRoutes from "./routes/roomReservationRoutes.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -28,6 +32,10 @@ app.use("/api/courses", courseRoutes);
 app.use("/api/departments", departmentRoutes);
 app.use("/api/grades", gradeRoutes);
 
+app.use("/lost-objects", lostObjectRoutes);
+app.use("/reports", reportRoutes);
+app.use("/responses", responseRoutes);
+app.use("/room-reservations", roomReservationRoutes);
 sequelize.sync().then(() => {
     console.log("Database synced");
     app.listen(PORT, () => {

@@ -2,8 +2,10 @@ import sequelize from "../config/database.js";
 import User from "./User.js";
 import Room from "./Room.js";
 import LostObject from "./LostObjects.js";
+// import Incident from "./Incident.js";
 import Grade from "./Grade.js";
 import Assistance from "./Assistence.js";
+// import Canteen from "./Canteen.js";
 import RoomReservation from "./RoomReservation.js";
 import TypeUser from "./TypeUser.js";
 import Response from "./Response.js";
@@ -103,8 +105,10 @@ export {
     User,
     Room,
     LostObject,
+    // Incident,
     Grade,
     Assistance,
+    // Canteen,
     RoomReservation,
     TypeUser,
     Response,

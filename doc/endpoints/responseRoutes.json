@@ -2,27 +2,25 @@
   "endpoints": [
     {
       "method": "GET",
-      "path": "/api/roomRservations",
-      "description": "Recuperar una llista de tots les reserves d'aules",
+      "path": "/api/responses",
+      "description": "Recuperar una llista de tots les respostes informàtiques",
       "responses": {
         "200": {
-          "description": "Una llista de les reserves d'aules",
+          "description": "Una llista dels responses",
           "content": {
             "application/json": {
               "example": [
                 {
                   "id": 1,
                   "user_id": 1,
-                  "room_id": 1,
-                  "start_time": "2023-10-01T10:00:00",
-                  "end_time": "2023-10-01T12:00:00"
+                  "comment": "Oh, es meva!",
+                  "lostAndFound_id": 1
                 },
                 {
                   "id": 2,
                   "user_id": 2,
-                  "room_id": 2,
-                  "start_time": "2023-10-02T14:00:00",
-                  "end_time": "2023-10-02T16:00:00"
+                  "comment": "L'he deixada a secretaria",
+                  "lostAndFound_id": 2
                 }
               ]
             }
@@ -32,17 +30,16 @@
     },
     {
       "method": "POST",
-      "path": "/api/roomReservations",
-      "description": "Informar d'una nova reserva d'aula",
+      "path": "/api/responses",
+      "description": "Informar d'una nova resposta informàtica",
       "requestBody": {
         "required": true,
         "content": {
           "application/json": {
             "example": {
               "user_id": 1,
-              "room_id": 1,
-              "start_time": "2023-10-01T10:00:00",
-              "end_time": "2023-10-01T12:00:00"
+              "comment": "Oh, es meva!",
+              "lostAndFound_id": 1
             }
           }
         }
@@ -55,9 +52,8 @@
               "example": {
                 "id": 1,
                 "user_id": 1,
-                "room_id": 1,
-                "start_time": "2023-10-01T10:00:00",
-                "end_time": "2023-10-01T12:00:00"
+                "comment": "Oh, es meva!",
+                "lostAndFound_id": 1
               }
             }
           }
@@ -69,8 +65,8 @@
     },
     {
       "method": "GET",
-      "path": "/api/roomReservations/{id}",
-      "description": "Recuperar els detalls d'una reserva d'aula específica per ID",
+      "path": "/api/responses/{id}",
+      "description": "Recuperar els detalls d'una resposta informàtica específica per ID",
       "parameters": [
         {
           "id": 1
@@ -78,21 +74,20 @@
       ],
       "responses": {
         "200": {
-          "description": "Detalls de la reserva d'aula",
+          "description": "Detalls de l'objecte perdut",
           "content": {
             "application/json": {
               "example": {
                 "id": 1,
                 "user_id": 1,
-                "room_id": 1,
-                "start_time": "2023-10-01T10:00:00",
-                "end_time": "2023-10-01T12:00:00"
+                "comment": "Oh, es meva!",
+                "lostAndFound_id": 1
               }
             }
           }
         },
         "404": {
-          "description": "Reserva no trobada"
+          "description": "Resposta no trobada"
         },
         "500": {
           "description": "Error intern del servidor"
@@ -101,8 +96,8 @@
     },
     {
       "method": "DELETE",
-      "path": "/api/roomReservations/{id}",
-      "description": "Eliminar una reserva per ID",
+      "path": "/api/responses/{id}",
+      "description": "Eliminar una resposta per ID",
       "parameters": [
         {
           "id": 1
@@ -110,17 +105,17 @@
       ],
       "responses": {
         "204": {
-          "description": "Reserva eliminada correctament"
+          "description": "Resposta eliminada correctament"
         },
         "404": {
-          "description": "Reserva no trobada"
+          "description": "Resposta no trobada"
         }
       }
     },
     {
       "method": "PUT",
-      "path": "/api/roomReservations/{id}",
-      "description": "Actualitzar una reserva per ID",
+      "path": "/api/responses/{id}",
+      "description": "Actualitzar una resposta per ID",
       "parameters": [
         {
           "id": 1
@@ -131,34 +126,31 @@
         "content": {
           "application/json": {
             "example": {
-                "room_id": 1,
-                "start_time": "2023-10-01T10:00:00",
-                "end_time": "2023-10-01T12:00:00"
+              "comment": "L'he deixada a secretaria"
             }
           }
         }
       },
       "responses": {
         "200": {
-          "description": "Reserva actualitzada",
+          "description": "Resposta actualitzada",
           "content": {
             "application/json": {
               "example": {
                 "id": 1,
+                "lostAndFound_id": 1,
                 "user_id": 1,
-                "room_id": 1,
-                "start_time": "2023-10-01T10:00:00",
-                "end_time": "2023-10-01T12:00:00"
+                "comment": "L'he deixada a secretaria"
               }
             }
           }
         },
         "404": {
-          "description": "Reserva no trobada",
+          "description": "Resposta no trobada",
           "content": {
             "application/json": {
               "example": {
-                "message": "Reserva no trobada"
+                "message": "Resposta no trobada"
               }
             }
           }
