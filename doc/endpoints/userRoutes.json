@@ -1,0 +1,263 @@
+{
+  "endpoints": [
+    {
+      "method": "GET",
+      "path": "/api/users",
+      "description": "Obtener todos los usuarios",
+      "responses": {
+        "200": {
+          "description": "Lista de todos los usuarios",
+          "content": {
+            "application/json": {
+              "example": [
+                {
+                  "id": 1,
+                  "typesUsers_id": 1,
+                  "name": "John Doe",
+                  "email": "john.doe@example.com",
+                  "banner": "path/to/banner.jpg",
+                  "profile": "path/to/profile.jpg",
+                  "department_id": 1,
+                  "description": "Profesor de matemáticas",
+                  "created_at": "2024-04-09T15:30:00Z"
+                },
+                {
+                  "id": 2,
+                  "typesUsers_id": 2,
+                  "name": "Jane Smith",
+                  "email": "jane.smith@example.com",
+                  "banner": "path/to/banner2.jpg",
+                  "profile": "path/to/profile2.jpg",
+                  "department_id": 2,
+                  "description": "Estudiante de informática",
+                  "created_at": "2024-04-09T16:45:00Z"
+                }
+              ]
+            }
+          }
+        },
+        "500": {
+          "description": "Error interno del servidor",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Error al obtener los usuarios"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/users",
+      "description": "Crear un nuevo usuario",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "example": {
+              "typesUsers_id": 1,
+              "name": "Nuevo Usuario",
+              "email": "nuevo.usuario@example.com",
+              "password": "contraseña123",
+              "banner": "path/to/banner.jpg",
+              "profile": "path/to/profile.jpg",
+              "department_id": 1,
+              "description": "Descripción del usuario"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Usuario creado exitosamente",
+          "content": {
+            "application/json": {
+              "example": {
+                "id": 3,
+                "typesUsers_id": 1,
+                "name": "Nuevo Usuario",
+                "email": "nuevo.usuario@example.com",
+                "banner": "path/to/banner.jpg",
+                "profile": "path/to/profile.jpg",
+                "department_id": 1,
+                "description": "Descripción del usuario",
+                "created_at": "2024-04-10T10:00:00Z"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Error interno del servidor",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Error al crear el usuario"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/users/{id}",
+      "description": "Obtener un usuario específico por ID",
+      "parameters": [
+        {
+          "id": 1
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Detalles del usuario",
+          "content": {
+            "application/json": {
+              "example": {
+                "id": 1,
+                "typesUsers_id": 1,
+                "name": "John Doe",
+                "email": "john.doe@example.com",
+                "banner": "path/to/banner.jpg",
+                "profile": "path/to/profile.jpg",
+                "department_id": 1,
+                "description": "Profesor de matemáticas",
+                "created_at": "2024-04-09T15:30:00Z"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Usuario no encontrado",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Usuario no encontrado"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Error interno del servidor",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Error al obtener el usuario"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/users/{id}",
+      "description": "Actualizar un usuario por ID",
+      "parameters": [
+        {
+          "id": 1
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "example": {
+              "typesUsers_id": 1,
+              "name": "John Doe Actualizado",
+              "email": "john.doe.updated@example.com",
+              "password": "nuevacontraseña123",
+              "banner": "path/to/new_banner.jpg",
+              "profile": "path/to/new_profile.jpg",
+              "department_id": 2,
+              "description": "Profesor senior de matemáticas"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Usuario actualizado correctamente",
+          "content": {
+            "application/json": {
+              "example": {
+                "id": 1,
+                "typesUsers_id": 1,
+                "name": "John Doe Actualizado",
+                "email": "john.doe.updated@example.com",
+                "banner": "path/to/new_banner.jpg",
+                "profile": "path/to/new_profile.jpg",
+                "department_id": 2,
+                "description": "Profesor senior de matemáticas",
+                "created_at": "2024-04-09T15:30:00Z"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Usuario no encontrado",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Usuario no encontrado"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Error interno del servidor",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Error al actualizar el usuario"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/users/{id}",
+      "description": "Eliminar un usuario por ID",
+      "parameters": [
+        {
+          "id": 1
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Usuario eliminado correctamente",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Usuario eliminado correctamente"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Usuario no encontrado",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Usuario no encontrado"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Error interno del servidor",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Error al eliminar el usuario"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

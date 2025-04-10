@@ -1,0 +1,131 @@
+{
+  "endpoints": [
+    {
+      "method": "GET",
+      "path": "/api/user-courses",
+      "description": "Obtener todas las relaciones usuario-curso",
+      "responses": {
+        "200": {
+          "description": "Lista de todas las relaciones usuario-curso",
+          "content": {
+            "application/json": {
+              "example": [
+                {
+                  "id": 1,
+                  "user_id": 1,
+                  "course_id": 1,
+                  "created_at": "2024-04-09T15:30:00Z"
+                },
+                {
+                  "id": 2,
+                  "user_id": 2,
+                  "course_id": 1,
+                  "created_at": "2024-04-09T16:45:00Z"
+                },
+                {
+                  "id": 3,
+                  "user_id": 1,
+                  "course_id": 2,
+                  "created_at": "2024-04-09T17:00:00Z"
+                }
+              ]
+            }
+          }
+        },
+        "500": {
+          "description": "Error interno del servidor",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Error al obtener las relaciones usuario-curso"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/user-courses",
+      "description": "Crear una nueva relación usuario-curso",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "example": {
+              "user_id": 1,
+              "course_id": 1
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Relación usuario-curso creada exitosamente",
+          "content": {
+            "application/json": {
+              "example": {
+                "id": 4,
+                "user_id": 1,
+                "course_id": 1,
+                "created_at": "2024-04-10T10:00:00Z"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Error interno del servidor",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Error al crear la relación usuario-curso"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/user-courses/{id}",
+      "description": "Eliminar una relación usuario-curso por ID",
+      "parameters": [
+        {
+          "id": 1
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Relación usuario-curso eliminada correctamente",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Relación usuario-curso eliminada correctamente"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Relación usuario-curso no encontrada",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Relación usuario-curso no encontrada"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Error interno del servidor",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Error al eliminar la relación usuario-curso"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

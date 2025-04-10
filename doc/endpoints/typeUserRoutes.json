@@ -1,0 +1,230 @@
+{
+  "endpoints": [
+    {
+      "method": "GET",
+      "path": "/api/type-users",
+      "description": "Obtener todos los tipos de usuario",
+      "responses": {
+        "200": {
+          "description": "Lista de todos los tipos de usuario",
+          "content": {
+            "application/json": {
+              "example": [
+                {
+                  "id": 1,
+                  "name": "Administrador",
+                  "created_at": "2024-04-09T15:30:00Z",
+                  "updated_at": "2024-04-09T15:30:00Z"
+                },
+                {
+                  "id": 2,
+                  "name": "Profesor",
+                  "created_at": "2024-04-09T15:30:00Z",
+                  "updated_at": "2024-04-09T15:30:00Z"
+                },
+                {
+                  "id": 3,
+                  "name": "Estudiante",
+                  "created_at": "2024-04-09T15:30:00Z",
+                  "updated_at": "2024-04-09T15:30:00Z"
+                }
+              ]
+            }
+          }
+        },
+        "500": {
+          "description": "Error interno del servidor",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Error al obtener los tipos de usuario"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/type-users",
+      "description": "Crear un nuevo tipo de usuario",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "example": {
+              "name": "Nuevo Tipo"
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Tipo de usuario creado exitosamente",
+          "content": {
+            "application/json": {
+              "example": {
+                "id": 4,
+                "name": "Nuevo Tipo",
+                "created_at": "2024-04-10T10:00:00Z",
+                "updated_at": "2024-04-10T10:00:00Z"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Error interno del servidor",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Error al crear el tipo de usuario"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/type-users/{id}",
+      "description": "Obtener un tipo de usuario específico por ID",
+      "parameters": [
+        {
+          "id": 1
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Detalles del tipo de usuario",
+          "content": {
+            "application/json": {
+              "example": {
+                "id": 1,
+                "name": "Administrador",
+                "created_at": "2024-04-09T15:30:00Z",
+                "updated_at": "2024-04-09T15:30:00Z"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Tipo de usuario no encontrado",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Tipo de usuario no encontrado"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Error interno del servidor",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Error al obtener el tipo de usuario"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/type-users/{id}",
+      "description": "Actualizar un tipo de usuario por ID",
+      "parameters": [
+        {
+          "id": 1
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "example": {
+              "name": "Administrador Senior"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Tipo de usuario actualizado",
+          "content": {
+            "application/json": {
+              "example": {
+                "id": 1,
+                "name": "Administrador Senior",
+                "created_at": "2024-04-09T15:30:00Z",
+                "updated_at": "2024-04-10T11:00:00Z"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Tipo de usuario no encontrado",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Tipo de usuario no encontrado"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Error interno del servidor",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Error al actualizar el tipo de usuario"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/type-users/{id}",
+      "description": "Eliminar un tipo de usuario por ID",
+      "parameters": [
+        {
+          "id": 1
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Tipo de usuario eliminado correctamente",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Tipo de usuario eliminado correctamente"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Tipo de usuario no encontrado",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Tipo de usuario no encontrado"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Error interno del servidor",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Error al eliminar el tipo de usuario"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}
