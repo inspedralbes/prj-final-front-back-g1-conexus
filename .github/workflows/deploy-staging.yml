@@ -1,0 +1,95 @@
+name: Deploy to Staging
+
+on:
+  push:
+    branches: [ develop ]
+
+env:
+  DOCKER_IMAGE_FRONT: ${{ secrets.DOCKER_USERNAME }}/conexus-hub-front
+  DOCKER_IMAGE_BACK: ${{ secrets.DOCKER_USERNAME }}/conexus-hub-back
+  TAG: staging
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push frontend image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./front-vue
+          push: true
+          tags: ${{ env.DOCKER_IMAGE_FRONT }}:${{ env.TAG }}
+          build-args: |
+            VITE_API_URL=${{ secrets.STAGING_API_URL }}
+
+      - name: Build and push backend image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./back-node/node
+          push: true
+          tags: ${{ env.DOCKER_IMAGE_BACK }}:${{ env.TAG }}
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy to staging server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.STAGING_SSH_HOST }}
+          username: ${{ secrets.STAGING_SSH_USERNAME }}
+          key: ${{ secrets.STAGING_SSH_PRIVATE_KEY }}
+          script: |
+            # Create .env file with staging environment variables
+            cat > /opt/conexus-hub/staging/.env << EOL
+            VITE_API_URL=${{ secrets.STAGING_API_URL }}
+            DB_HOST=${{ secrets.STAGING_DB_HOST }}
+            DB_USER=${{ secrets.STAGING_DB_USER }}
+            DB_PASSWORD=${{ secrets.STAGING_DB_PASSWORD }}
+            DB_NAME=${{ secrets.STAGING_DB_NAME }}
+            JWT_SECRET=${{ secrets.STAGING_JWT_SECRET }}
+            MYSQL_ROOT_PASSWORD=${{ secrets.STAGING_MYSQL_ROOT_PASSWORD }}
+            EOL
+
+            # Start Portainer
+            cd ../Dockers/Portainer
+            echo "Starting Portainer..."
+            docker compose -f docker-compose.prod.yml up -d
+
+            # Start Nginx
+            cd ../Nginx
+            echo "Starting Nginx..."
+            docker compose -f docker-compose.prod.yml up -d
+
+            # Start main services
+            cd ../..
+            echo "Starting services..."
+            docker compose -f docker-compose.prod.yml up -d
+
+            # Build frontend
+            cd ../front/appMentoria
+            rm -rf dist
+            cp .env.prod .env
+            pnpm install
+            pnpm run build
+
+            # Restart Nginx containers
+            docker restart nginx-db-1
+            docker restart nginx-app-1
+
+            echo "All Started!" 
