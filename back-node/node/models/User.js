@@ -1,5 +1,6 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../config/database.js';
+import { hashPassword } from '../routes/userRoutes.js';
 
 const User = sequelize.define('User', {
     id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true, },
@@ -12,6 +13,11 @@ const User = sequelize.define('User', {
     department_id: { type: DataTypes.INTEGER, allowNull: true },
     created_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW, },
     description: { type: DataTypes.TEXT, allowNull: true, defaultValue: null, },
+});
+
+
+User.beforeCreate(async (user) => {
+    user.password = await hashPassword(user.password);
 });
 
 export default User;
