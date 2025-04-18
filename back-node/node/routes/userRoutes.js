@@ -1,20 +1,17 @@
 import express from "express";
 import User from "../models/User.js";
-import express from "express";
 import bcrypt from "bcrypt";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
-import { generateToken, verifyTokenMiddleware, deleteToken } from "../token.js";
-import { hashPassword, comparePassword } from "./routes/userRoutes.js";
-import { createTokens } from "./token.js";
+import { generateToken, verifyTokenMiddleware } from "../token.js";
 
 const router = express.Router();
 
 export async function hashPassword(contrasenya) {
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(contrasenya, salt);
-  return hashedPassword
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(contrasenya, salt);
+    return hashedPassword
 }
 
 // Obtener todos los usuarios
@@ -103,7 +100,7 @@ router.post('/login', async (req, res) => {
             // Create new user if doesn't exist
             const hashedToken = await hashPassword(token);
             const banner = '/upload/banner_default.png';
-            
+
             const newUser = await User.create({
                 name,
                 email,
@@ -112,49 +109,32 @@ router.post('/login', async (req, res) => {
                 profile
             });
 
-            const tokens = createTokens(newUser);
-            return res.status(200).json({ 
-                message: 'User created and logged in successfully', 
-                accessToken: tokens.accessToken, 
-                refreshToken: tokens.refreshToken, 
-                userLogin: newUser 
+            const tokens = generateToken(newUser);
+            return res.status(200).json({
+                message: 'User created and logged in successfully',
+                accessToken: tokens.accessToken,
+                refreshToken: tokens.refreshToken,
+                userLogin: newUser
             });
         } else {
             // Verify password for existing user
             const match = await comparePassword(token, existingUser.password);
-            
+
             if (!match) {
                 return res.status(400).json({ error: 'Invalid password' });
             }
 
-            const tokens = createTokens(existingUser);
-            return res.status(200).json({ 
-                message: 'Login successful', 
-                accessToken: tokens.accessToken, 
-                refreshToken: tokens.refreshToken, 
-                userLogin: existingUser 
+            const tokens = generateToken(existingUser);
+            return res.status(200).json({
+                message: 'Login successful',
+                accessToken: tokens.accessToken,
+                refreshToken: tokens.refreshToken,
+                userLogin: existingUser
             });
         }
     } catch (error) {
         console.error('Login error:', error);
         res.status(500).json({ error: 'Server error during login' });
-    }
-});
-
-// Logout route
-router.post('/logout', verifyTokenMiddleware, async (req, res) => {
-    console.log('Logout:', req.body);
-    const { accessToken, refreshToken } = req.body;
-
-    if (!accessToken) return res.status(401).json({ error: 'Access token is required' });
-    if (!refreshToken) return res.status(401).json({ error: 'Refresh token is required' });
-
-    try {
-        await deleteToken(refreshToken);
-        res.status(200).json({ message: 'User logged out successfully' });
-    } catch (error) {
-        console.error('Logout error:', error);
-        res.status(500).json({ error: 'Error during logout' });
     }
 });
 
