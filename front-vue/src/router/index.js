@@ -31,7 +31,24 @@ const router = createRouter({
     {
       path: '/teacher',
       name: 'teacher',
-      component: () => import('@/views/Teachers/index.vue')
+      component: () => import('@/views/Teachers/index.vue'),
+      children: [
+        { 
+          path: 'assistence',
+          name: 'assistence',
+          component: () => import('@/views/Teachers/assistence.vue')
+        },
+        {
+          path: 'grades',
+          name: 'grades',
+          component: () => import('@/views/Teachers/grades.vue')
+        },
+        {
+          path: 'roomReservation',
+          name: 'roomReservation',
+          component: () => import('@/views/Teachers/roomReservation.vue')
+        }
+      ]
     },
     {
       path: '/technicians',
@@ -42,13 +59,13 @@ const router = createRouter({
       path: '/admin',
       name: 'admin',
       component: () => import('@/views/Admin/index.vue'),
-      children: [
-        {
-          // path: 'feedback',
-          // name: 'adminFeedback',
-          // component: () => import('@/views/admin/FeedbackView.vue')
-        }
-      ]
+      // children: [
+      //   {
+      //     // path: 'feedback',
+      //     // name: 'adminFeedback',
+      //     // component: () => import('@/views/admin/FeedbackView.vue')
+      //   }
+      // ]
     }
   ],
 })

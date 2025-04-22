@@ -14,33 +14,29 @@
             <div class="text-center mb-8">
                 <h2
                     class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
-                    High Link
+                    Conexus
                 </h2>
             </div>
             <nav class="space-y-2">
-                <router-link to="/"
+                <router-link to="/canteen"
                     class="flex items-center p-2 text-gray-300 hover:bg-slate-800/50 rounded-lg transition-colors duration-300">
-                    <span>Home</span>
+                    <span>Canteen</span>
                 </router-link>
-                <router-link to="/howToPlay"
+                <router-link to="/chat"
                     class="flex items-center p-2 text-gray-300 hover:bg-slate-800/50 rounded-lg transition-colors duration-300">
-                    <span>How To Play</span>
+                    <span>Chat</span>
                 </router-link>
-                <router-link to="/aboutUs"
+                <router-link to="/teacher/assistence"
                     class="flex items-center p-2 text-gray-300 hover:bg-slate-800/50 rounded-lg transition-colors duration-300">
-                    <span>About Us</span>
+                    <span>Assistence</span>
                 </router-link>
-                <router-link to="/contact"
+                <router-link to="/teacher/grades"
                     class="flex items-center p-2 text-gray-300 hover:bg-slate-800/50 rounded-lg transition-colors duration-300">
-                    <span>Contact</span>
+                    <span>Grades</span>
                 </router-link>
-                <router-link to="/gallery"
+                <router-link to="/teacher/roomReservation"
                     class="flex items-center p-2 text-gray-300 hover:bg-slate-800/50 rounded-lg transition-colors duration-300">
-                    <span>Gallery</span>
-                </router-link>
-                <router-link to="/stats"
-                    class="flex items-center p-2 text-gray-300 hover:bg-slate-800/50 rounded-lg transition-colors duration-300">
-                    <span>Stats</span>
+                    <span>Reservation Rooms</span>
                 </router-link>
             </nav>
         </aside>
@@ -51,25 +47,25 @@
                 <!-- Brand Name -->
                 <router-link to="/"
                     class="text-white text-2xl font-bold hover:text-gray-300 transition-colors duration-300">
-                    High Link
+                    Conexus
                 </router-link>
 
                 <!-- Navigation Links -->
                 <div class="flex space-x-6">
-                    <router-link to="/howToPlay" class="text-white hover:text-gray-300 transition-colors duration-300">
-                        How To Play
+                    <router-link to="/canteen" class="text-white hover:text-gray-300 transition-colors duration-300">
+                        Canteen
                     </router-link>
-                    <router-link to="/aboutUs" class="text-white hover:text-gray-300 transition-colors duration-300">
-                        About Us
+                    <router-link to="/chat" class="text-white hover:text-gray-300 transition-colors duration-300">
+                        Chat
                     </router-link>
-                    <router-link to="/contact" class="text-white hover:text-gray-300 transition-colors duration-300">
-                        Contact
+                    <router-link to="/teacher/assistence" class="text-white hover:text-gray-300 transition-colors duration-300">
+                        Assistence
                     </router-link>
-                    <router-link to="/gallery" class="text-white hover:text-gray-300 transition-colors duration-300">
-                        Gallery
+                    <router-link to="/teacher/grades" class="text-white hover:text-gray-300 transition-colors duration-300">
+                        Grades
                     </router-link>
-                    <router-link to="/stats" class="text-white hover:text-gray-300 transition-colors duration-300">
-                        Stats
+                    <router-link to="/teacher/roomReservation" class="text-white hover:text-gray-300 transition-colors duration-300">
+                        Reservation Rooms
                     </router-link>
                 </div>
             </div>

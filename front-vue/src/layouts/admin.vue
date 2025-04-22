@@ -113,104 +113,99 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import { ref, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useAppStore } from '@/stores/index.js';
-import { login as loginAPI } from '@/services/communicationsScripts/mainManager.js';
+import { loginAPI } from '@/services/communicationsScripts/mainManager.js';
 
-export default {
-    name: 'AdminLayout',
-    setup() {
-        const router = useRouter();
-        const route = useRoute();
-        const appStore = useAppStore();
+const router = useRouter();
+const route = useRoute();
+const appStore = useAppStore();
 
-        // Reactive state for login status
-        const isLoggedIn = computed(() => !!appStore.getToken());
+// Reactive state for login status
+const isLoggedIn = computed(() => !!appStore.getToken());
 
-        console.log('Logged in:', isLoggedIn.value);
+console.log('Logged in:', isLoggedIn.value);
 
-        // Reactive state for sidebar visibility on mobile
-        const isSidebarOpen = ref(false);
+// Reactive state for sidebar visibility on mobile
+const isSidebarOpen = ref(false);
 
-        // Login form data
-        const loginForm = ref({
-            email: '',
-            password: '',
+// Login form data
+const loginForm = ref({
+    email: '',
+    password: '',
+});
+
+// Simulate login function
+const login = async () => {
+    try {
+        const response = await loginAPI({
+            email: loginForm.value.email,
+            password: loginForm.value.password
         });
 
-        // Simulate login function
-        const login = async () => {
-            try {
-                const { user, token } = await loginAPI(loginForm.value.email, loginForm.value.password);
+        if (response.error) {
+            alert(response.error);
+            return;
+        }
 
-                // Check if the user is an admin
-                if (!user.admin) {
-                    alert('You do not have permission to access the admin panel.');
-                    return; // Stop further execution
-                }
+        const { user, token } = response;
 
-                // Save user and token to the store and localStorage
-                appStore.setUser(user);
-                appStore.setToken(token);
-                localStorage.setItem('token', token);
-                localStorage.setItem('user', JSON.stringify(user));
+        // Check if the user is an admin
+        if (!user.admin) {
+            alert('You do not have permission to access the admin panel.');
+            return;
+        }
 
-                console.log('Logged in successfully');
-            } catch (error) {
-                alert('Invalid email or password');
-            }
-        };
+        // Save user and token to the store and localStorage
+        appStore.setUser(user);
+        appStore.setToken(token);
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(user));
 
-        // Logout function
-        const logout = () => {
-            if (appStore.logout()) {
-                console.log('Logged out');
-                router.push('/'); // Redirect to the home page
-            }
-        };
-
-        // Toggle sidebar on mobile
-        const toggleSidebar = () => {
-            isSidebarOpen.value = !isSidebarOpen.value;
-        };
-
-        // Get current page title based on the route
-        const currentPageTitle = computed(() => {
-            switch (route.path) {
-                case '/admin/feedback':
-                    return 'Comments';
-                case '/admin/config-game':
-                    return 'Game Configuration';
-                case '/admin/config-users':
-                    return 'User Configuration';
-                default:
-                    return 'Admin Panel';
-            }
-        });
-
-        onMounted(() => {
-            const token = localStorage.getItem('token');
-            const user = JSON.parse(localStorage.getItem('user'));
-
-            if (token && user) {
-                appStore.setToken(token);
-                appStore.setUser(user);
-            }
-        });
-
-        return {
-            isLoggedIn,
-            isSidebarOpen,
-            loginForm,
-            currentPageTitle,
-            login,
-            logout,
-            toggleSidebar
-        };
+        console.log('Logged in successfully');
+    } catch (error) {
+        alert('Invalid email or password');
     }
 };
+
+// Logout function
+const logout = () => {
+    if (appStore.logout()) {
+        console.log('Logged out');
+        router.push('/'); // Redirect to the home page
+    }
+};
+
+// Toggle sidebar on mobile
+const toggleSidebar = () => {
+    isSidebarOpen.value = !isSidebarOpen.value;
+};
+
+// Get current page title based on the route
+const currentPageTitle = computed(() => {
+    switch (route.path) {
+        case '/admin/feedback':
+            return 'Comments';
+        case '/admin/config-game':
+            return 'Game Configuration';
+        case '/admin/config-users':
+            return 'User Configuration';
+        default:
+            return 'Admin Panel';
+    }
+});
+
+onMounted(() => {
+    const token = localStorage.getItem('token');
+    const user = JSON.parse(localStorage.getItem('user'));
+
+    if (token && user) {
+        appStore.setToken(token);
+        appStore.setUser(user);
+    }
+});
 </script>
 
 <style scoped>
