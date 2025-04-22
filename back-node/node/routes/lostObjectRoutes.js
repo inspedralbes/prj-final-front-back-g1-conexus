@@ -5,7 +5,7 @@ const router = express.Router();
 
 // GET /lost-objects - Obtenir tots els objectes perduts
 router.get("/", async (req, res) => {
-  const LostObjects = await LostObjects.findAll();
+  const LostObjects = await LostObjects.findAll({ order: [["createdAt", "DESC"]] });
   //return the LostObjects array
   res.json(LostObjects);
 });

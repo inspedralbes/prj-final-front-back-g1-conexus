@@ -10,6 +10,64 @@ router.get("/", async (req, res) => {
     res.json(reports);
 });
 
+// Get /reports/user/:user_id - Obtenir informes per ID d'usuari
+router.get("/user/:user_id", async (req, res) => {
+    const { user_id } = req.params;
+    try {
+        const reports = await Reports.findAll({ where: { user_id } });
+        if (!reports) {
+            return res.status(404).json({ message: "No s'han trobat informes per a aquest usuari" });
+        }
+        //retornar l'array d'informes
+        res.json(reports);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+//Get /reports/room/:room_id - Obtenir informes per ID d'habitació
+router.get("/room/:room_id", async (req, res) => {
+    const { room_id } = req.params;
+    try {
+        const reports = await Reports.findAll({ where: { room_id } });
+        if (!reports) {
+            return res.status(404).json({ message: "No s'han trobat informes per a aquesta habitació" });
+        }
+        //retornar l'array d'informes
+        res.json(reports);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+//Get /reports/finished - Obtenir informes acabats
+router.get("/finished", async (req, res) => {
+    try {
+        const reports = await Reports.findAll({ where: { finished: true } });
+        if (!reports) {
+            return res.status(404).json({ message: "No s'han trobat informes acabats" });
+        }
+        //retornar l'array d'informes acabats
+        res.json(reports);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+//Get /reports/not-finished - Obtenir informes no acabats
+router.get("/not-finished", async (req, res) => {
+    try {
+        const reports = await Reports.findAll({ where: { finished: false } });
+        if (!reports) {
+            return res.status(404).json({ message: "No s'han trobat informes no acabats" });
+        }
+        //retornar l'array d'informes no acabats
+        res.json(reports);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
 // GET /reports/:id - Obtenir un informe per ID
 router.get("/:id", async (req, res) => {
     const { id } = req.params;

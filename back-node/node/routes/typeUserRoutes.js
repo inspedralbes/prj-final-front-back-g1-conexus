@@ -26,6 +26,12 @@ router.post("/", async (req, res) => {
     console.log(req.body);
     try {
         const { name } = req.body;
+        // Verificar si el tipo de usuario ya existe
+        const existingTypeUser = await TypeUser.findOne({ where: { name } });
+        if (existingTypeUser) {
+            return res.status(400).json({ message: "El tipo de usuario ya existe" });
+        }
+        // Crear el nuevo tipo de usuario
         const typeUser = await TypeUser.create({ name });
         res.json(typeUser);
     } catch (error) {
