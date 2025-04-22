@@ -1,4 +1,4 @@
-import { useAppStore } from "@/stores/appStore";
+import { useAppStore } from "@/stores/index";
 
 const BACK_URL = import.meta.env.VITE_BACK_URL;
 

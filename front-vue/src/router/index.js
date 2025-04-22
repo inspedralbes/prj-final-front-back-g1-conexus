@@ -4,7 +4,51 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      
+      path: '/',
+      name: 'home',
+      component: () => import('@/views/index.vue')
+    },
+    {
+      path: '/canteen',
+      name: 'canteen', 
+      component: () => import('@/views/Canteen/index.vue')
+    },
+    {
+      path: '/chat',
+      name: 'chat',
+      component: () => import('@/views/Chats/index.vue')
+    },
+    {
+      path: '/profile',
+      name: 'profile',
+      component: () => import('@/views/Profiles/index.vue')
+    },
+    {
+      path: '/student',
+      name: 'student',
+      component: () => import('@/views/Students/index.vue')
+    },
+    {
+      path: '/teacher',
+      name: 'teacher',
+      component: () => import('@/views/Teachers/index.vue')
+    },
+    {
+      path: '/technicians',
+      name: 'technicians',
+      component: () => import('@/views/Technicians/index.vue')
+    },
+    {
+      path: '/admin',
+      name: 'admin',
+      component: () => import('@/views/Admin/index.vue'),
+      children: [
+        {
+          // path: 'feedback',
+          // name: 'adminFeedback',
+          // component: () => import('@/views/admin/FeedbackView.vue')
+        }
+      ]
     }
   ],
 })
