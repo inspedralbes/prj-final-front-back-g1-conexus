@@ -103,6 +103,19 @@ router.post("/assingTeacher", async (req, res) => {
   }
 });
 
+// Get all courses from a teacher_id
+router.get("/teacher/:teacher_id", async (req, res) => {
+  try {
+    const { teacher_id } = req.params;
+    const courses = await Course.findAll({
+      where: { course_teacher_id: teacher_id },
+    });
+    res.json(courses);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 async function checkIfUserIsTeacher(teacher_id) {
     const user = await User.findByPk(teacher_id);
     if (!user) {

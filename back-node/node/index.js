@@ -34,7 +34,7 @@ app.use(cors());
 app.use("/api/assistences", assistenceRoutes);
 app.use("/api/courses", courseRoutes);
 app.use("/api/departments", departmentRoutes);
-app.use("/api/grades", gradeRoutes);
+
 
 app.use("/api/lost-objects", lostObjectRoutes);
 app.use("/api/reports", reportRoutes);
@@ -45,7 +45,7 @@ app.use("/api/rooms", roomRoutes);
 app.use("/api/type-users", typeUserRoutes);
 app.use("/api/user-courses", userCourseRoutes);
 app.use("/api/users", userRoutes);
-app.use("/api/tasks", taskRoutes);
+
 
 sequelize.sync().then(() => {
     console.log("Database synced");
