@@ -1,34 +1,46 @@
 name: Deploy to Production
+run-name: ${{ github.actor }} is deploying to production 🚀
 
 on:
   push:
     branches: [116-refer-producció]
 
 jobs:
-  Deploy:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Connect and deploy
+      - name: Setup SSH key
         run: |
-          echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > key.pem
-          chmod 600 key.pem
-          
-          ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
-            # Entrar al proyecto
+          echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > ~/prod_key.pem
+          chmod 600 ~/prod_key.pem
+
+      - name: Deploy to Production Server
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
+            echo "🚀 Iniciando despliegue remoto..."
+
+            # 1. Actualizar sistema
+            sudo apt update && sudo apt upgrade -y
+
+            # 2. Instalar dependencias necesarias
+            sudo apt install -y git docker.io docker-compose
+
+            # 3. Asegurar que Docker esté corriendo
+            sudo systemctl enable docker
+            sudo systemctl start docker
+
+            # 4. Crear carpeta del proyecto si no existe
             cd ~/conexus
 
-            # Detener los contenedores anteriores
-            docker-compose -f docker-compose.prod.yml down || true
-            docker-compose -f docker-compose.nginx.yml down || true
-
-            # Actualizar el repo (si es necesario hacer pull aquí)
-            git pull origin 116-refer-producció
-
-            # Arrancar los servicios
+            # 5. Levantar Nginx Proxy Manager
             docker-compose -f docker-compose.nginx.yml up -d
-            docker-compose -f docker-compose.prod.yml up -d
+
+            # 6. Levantar el resto del proyecto
+            docker-compose -f docker-compose.prod.yml up -d --build
+
+            echo "✅ Despliegue completado."
           EOF
