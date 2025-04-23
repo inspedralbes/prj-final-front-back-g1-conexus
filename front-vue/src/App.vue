@@ -23,11 +23,11 @@ const layout = computed(() => {
   switch (true) {
     case path.startsWith('/admin'):
       return AdminLayout;
-    case path.startsWith('/teacher'):
+    case path.startsWith('/teachers'):
       return TeachersLayout;
-    case path.startsWith('/student'):
+    case path.startsWith('/students'):
       return StudentsLayout;
-    case path.startsWith('/technician'):
+    case path.startsWith('/technicians'):
       return TechniciansLayout;
     default:
       return DefaultLayout;

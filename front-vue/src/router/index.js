@@ -24,12 +24,12 @@ const router = createRouter({
       component: () => import('@/views/Profiles/index.vue')
     },
     {
-      path: '/student',
+      path: '/students',
       name: 'student',
       component: () => import('@/views/Students/index.vue')
     },
     {
-      path: '/teacher',
+      path: '/teachers',
       name: 'teacher',
       component: () => import('@/views/Teachers/index.vue'),
       children: [

@@ -20,11 +20,15 @@
             <nav class="space-y-2">
                 <router-link to="/canteen"
                     class="flex items-center p-2 text-gray-300 hover:bg-slate-800/50 rounded-lg transition-colors duration-300">
-                    <span>Menjador</span>
+                    <span>Cantina</span>
                 </router-link>
-                <router-link to="/chat"
+                <router-link to="/chats"
                     class="flex items-center p-2 text-gray-300 hover:bg-slate-800/50 rounded-lg transition-colors duration-300">
-                    <span>Xat</span>
+                    <span>Xats</span>
+                </router-link>
+                <router-link to="/incidents"
+                    class="flex items-center p-2 text-gray-300 hover:bg-slate-800/50 rounded-lg transition-colors duration-300">
+                    <span>Incidències</span>
                 </router-link>
                 <router-link to="/teacher/assistence"
                     class="flex items-center p-2 text-gray-300 hover:bg-slate-800/50 rounded-lg transition-colors duration-300">
@@ -64,10 +68,13 @@
                 <!-- Enllaços de Navegació -->
                 <div class="flex space-x-6 items-center">
                     <router-link to="/canteen" class="text-white hover:text-gray-300 transition-colors duration-300">
-                        Menjador
+                        Cantina
                     </router-link>
-                    <router-link to="/chat" class="text-white hover:text-gray-300 transition-colors duration-300">
-                        Xat
+                    <router-link to="/chats" class="text-white hover:text-gray-300 transition-colors duration-300">
+                        Xats
+                    </router-link>
+                    <router-link to="/incidents" class="text-white hover:text-gray-300 transition-colors duration-300">
+                        Incidències
                     </router-link>
                     <router-link to="/teacher/assistence"
                         class="text-white hover:text-gray-300 transition-colors duration-300">
@@ -143,7 +150,7 @@ const checkAuthStatus = () => {
 
     // Si no està autenticat i no està a la pàgina d'inici, redirigeix
     if (!isLoggedIn.value && route.path !== '/') {
-        router.push('/');
+        // router.push('/');
     }
 };
 
@@ -155,16 +162,18 @@ const logout = () => {
     // Aquí hauries de fer la lògica per tancar sessió
     localStorage.removeItem('token');
     isLoggedIn.value = false;
-    router.push('/');
+    //router.push('/');
 };
 
 // Obtenir el títol de la pàgina actual basat en la ruta
 const currentPageTitle = computed(() => {
     switch (route.path) {
         case '/canteen':
-            return 'Menjador';
-        case '/chat':
-            return 'Xat';
+            return 'Cantina';
+        case '/chats':
+            return 'Xats';
+        case '/incidents':
+            return 'Incidències';
         case '/teacher/assistence':
             return 'Assistència';
         case '/teacher/grades':
