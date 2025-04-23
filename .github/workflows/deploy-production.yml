@@ -18,7 +18,7 @@ jobs:
           echo "Host: ${{ secrets.PROD_SSH_HOST }}"
           echo "Username: ${{ secrets.PROD_SSH_USERNAME }}"
 
-      - name: conexió al servidor
+      - name: conexió al servidor maquina prod
         run: |
           echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > ~/prod_key.pem
           chmod 600 ~/prod_key.pem
