@@ -1,33 +1,34 @@
 name: Deploy to Production
-run-name: ${{ github.actor }} is deploying to production
 
 on:
   push:
-    branches: [ 116-refer-producció ]
+    branches: [116-refer-producció]
 
 jobs:
-  Stop-docker-compose:
+  Deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Verificar secretos
+      - name: Connect and deploy
         run: |
-          echo "Verificando secretos..."
-          echo "Host: ${{ secrets.PROD_SSH_HOST }}"
-          echo "Username: ${{ secrets.PROD_SSH_USERNAME }}"
+          echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > key.pem
+          chmod 600 key.pem
+          
+          ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
+            # Entrar al proyecto
+            cd ~/conexus
 
-      - name: conexió al servidor maquina prod
-        run: |
-          echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > ~/prod_key.pem
-          chmod 600 ~/prod_key.pem
-          
-          HOST="${{ secrets.PROD_SSH_HOST }}"
-          USER="${{ secrets.PROD_SSH_USERNAME }}"
-          
-          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/prod_key.pem "${USER}@${HOST}" "pwd && ls"
+            # Detener los contenedores anteriores
+            docker-compose -f docker-compose.prod.yml down || true
+            docker-compose -f docker-compose.nginx.yml down || true
 
-      - run: echo "🍏 This job's status is ${{ job.status }}."
-          
-  
+            # Actualizar el repo (si es necesario hacer pull aquí)
+            git pull origin 116-refer-producció
+
+            # Arrancar los servicios
+            docker-compose -f docker-compose.nginx.yml up -d
+            docker-compose -f docker-compose.prod.yml up -d
+          EOF
