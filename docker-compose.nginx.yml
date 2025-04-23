@@ -1,6 +1,6 @@
 version: '3'
 services:
-  app:
+  nginx:
     image: jc21/nginx-proxy-manager:latest
     restart: unless-stopped
     ports:
@@ -13,13 +13,14 @@ services:
       - /etc/letsencrypt:/etc/letsencrypt
       - /root/prj-final-front-back-g1-conexus/front-vue/dist:/data/web
 
+  #base de datos para almacenar configuraciones de nginx proxy inverso, redirecciones, configuraciones ssl, users y permisos, dominios, logs...
   db:
     image: jc21/mariadb-aria:latest
     environment:
-      MYSQL_ROOT_PASSWORD: "HUqWbWyUDo20SE"
-      MYSQL_DATABASE: "npm"
-      MYSQL_USER: "npm"
-      MYSQL_PASSWORD: "HUqWbWyUDo20SE"
+      MYSQL_ROOT_PASSWORD: "Fkz£681ep6^"
+      MYSQL_DATABASE: "nginx"
+      MYSQL_USER: "nginx_db"
+      MYSQL_PASSWORD: "Fkz£681ep6^"
     ports:
       - 4306:4306
     volumes:

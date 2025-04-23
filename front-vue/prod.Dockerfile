@@ -6,12 +6,10 @@ RUN apk add --no-cache bash
 
 COPY package*.json ./
 
-RUN npm install
+RUN npm ci --only=production
 
 COPY . .
 
 EXPOSE 5173
 
-ENV NODE_ENV=development
-
-CMD ["npm", "run", "dev"]
+CMD ["node", "index.js"]
