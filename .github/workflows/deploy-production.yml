@@ -34,7 +34,7 @@ jobs:
             sudo systemctl start docker
 
             # 4. Crear carpeta del proyecto si no existe
-            cd ~/conexus
+            cd /opt/conexus
 
             # 5. Levantar Nginx Proxy Manager
             docker-compose -f docker-compose.nginx.yml up -d
