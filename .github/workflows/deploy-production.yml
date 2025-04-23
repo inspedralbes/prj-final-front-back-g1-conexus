@@ -26,7 +26,8 @@ jobs:
           HOST="${{ secrets.PROD_SSH_HOST }}"
           USER="${{ secrets.PROD_SSH_USERNAME }}"
           
-          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/prod_key.pem "${USER}@${HOST}" "cd conexus && ls"
+          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/prod_key.pem "${USER}@${HOST}" "pwd && ls"
+
       - run: echo "🍏 This job's status is ${{ job.status }}."
           
   
