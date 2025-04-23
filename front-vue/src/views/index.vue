@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-screen flex items-center justify-center bg-gray-900 p-4">
+    <div class="min-h-screen flex items-center justify-center p-4">
         <div class="w-full max-w-md bg-gray-800 rounded-xl shadow-xl overflow-hidden animate-fade-in">
             <!-- Header -->
             <div class="bg-gradient-to-r from-blue-600 to-indigo-700 p-6 text-center">
@@ -10,48 +10,6 @@
 
             <!-- Formulario -->
             <div class="p-8">
-                <!-- Inputs -->
-                <div class="space-y-5">
-                    <div>
-                        <label for="email" class="block text-sm font-medium text-gray-300 mb-1">Correo
-                            Institucional</label>
-                        <input type="email" id="email" v-model="email" placeholder="usuario@institucion.edu"
-                            class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            required>
-                    </div>
-
-                    <div>
-                        <label for="password" class="block text-sm font-medium text-gray-300 mb-1">Contraseña</label>
-                        <input type="password" id="password" v-model="password" placeholder="••••••••"
-                            class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            required>
-                    </div>
-
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <input id="remember-me" type="checkbox"
-                                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-600 rounded bg-gray-700">
-                            <label for="remember-me" class="ml-2 block text-sm text-gray-300">Recordar sesión</label>
-                        </div>
-                        <a href="#" class="text-sm text-blue-400 hover:text-blue-300">¿Olvidó su contraseña?</a>
-                    </div>
-                </div>
-
-                <!-- Botón de Login -->
-                <button @click="handleLogin"
-                    class="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200">
-                    Iniciar Sesión
-                </button>
-
-                <!-- Separador -->
-                <div class="relative my-6">
-                    <div class="absolute inset-0 flex items-center">
-                        <div class="w-full border-t border-gray-600"></div>
-                    </div>
-                    <div class="relative flex justify-center text-sm">
-                        <span class="px-2 bg-gray-800 text-gray-400">O continuar con</span>
-                    </div>
-                </div>
 
                 <!-- Botón Google -->
                 <button @click="signInWithGoogle"
@@ -72,12 +30,6 @@
                     </svg>
                     <span>Continuar con Google</span>
                 </button>
-
-                <!-- Footer -->
-                <div class="mt-6 text-center text-sm text-gray-400">
-                    ¿No tiene una cuenta? <a href="#" class="text-blue-400 hover:text-blue-300 font-medium">Solicitar
-                        acceso</a>
-                </div>
             </div>
         </div>
     </div>
