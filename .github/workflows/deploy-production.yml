@@ -1,26 +1,23 @@
 name: Deploy to Production
+run-name: ${{ github.actor }} is deploying to production
 
 on:
   push:
-    branches: [ main ]
+    branches: [ 116-refer-producció ]
 
 jobs:
-  deploy:
+  Stop-docker-compose:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Deploy to production server
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.PROD_SSH_HOST }}
-          username: ${{ secrets.PROD_SSH_USERNAME }}
-          password: ${{ secrets.PROD_SSH_PASSWORD }}
-          script: |
-            # Execute build script
-            cd Scripts
-            ./buildApp.sh
+      - name: conexió al servidor i parada de docker compose
+        run: |
+          echo "${{ secrets.PROD_SECRET_KEY }}" > ~/prod_key.pem
+          chmod 600 ~/prod_key.pem
 
-            # Execute docker deployment script
-            ./deployDockers.sh 
+          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/prod_key.pem ${{ secrets.PROD_USERNAME }}@${{ secrets.PROD_HOST }} "cd conexus && docker compose down"
+      - run: echo "🍏 This job's status is ${{ job.status }}."
+          
+  
