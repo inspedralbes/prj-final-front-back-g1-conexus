@@ -12,12 +12,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Verificar secretos
+        run: |
+          echo "Verificando secretos..."
+          echo "Host: ${{ secrets.PROD_SSH_HOST }}"
+          echo "Username: ${{ secrets.PROD_SSH_USERNAME }}"
+
       - name: conexió al servidor
         run: |
           echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > ~/prod_key.pem
           chmod 600 ~/prod_key.pem
           
-          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} "cd conexus && ls"
+          HOST="${{ secrets.PROD_SSH_HOST }}"
+          USER="${{ secrets.PROD_SSH_USERNAME }}"
+          
+          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/prod_key.pem "${USER}@${HOST}" "cd conexus && ls"
       - run: echo "🍏 This job's status is ${{ job.status }}."
           
   
