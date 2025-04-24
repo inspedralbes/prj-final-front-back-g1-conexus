@@ -53,7 +53,15 @@ const router = createRouter({
     {
       path: '/technicians',
       name: 'technicians',
-      component: () => import('@/views/Technicians/index.vue')
+      component: () => import('@/views/Technicians/index.vue'),
+      children: [
+        {
+          path: 'incidents',
+          name: 'incidents',
+          component: () => import('@/views/Technicians/viewReports.vue')
+
+        },
+      ] 
     },
     {
       path: '/admin',

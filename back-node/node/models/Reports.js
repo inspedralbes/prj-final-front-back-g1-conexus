@@ -1,5 +1,6 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../config/database.js';
+import Room from './Room.js';
 
 const Report = sequelize.define('Report', {
     id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
@@ -10,5 +11,7 @@ const Report = sequelize.define('Report', {
     room_id: { type: DataTypes.INTEGER, allowNull: false },
     created_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
 });
+
+Report.belongsTo(Room  , { foreignKey: 'room_id'});
 
 export default Report;

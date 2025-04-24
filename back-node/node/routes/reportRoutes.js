@@ -1,13 +1,30 @@
 import express from "express";
 import Reports from "../models/Reports.js";
+import User from "../models/User.js";
+import Room from "../models/Room.js";
 
 const router = express.Router();
 
 // GET /reports - Obtenir tots els informes
 router.get("/", async (req, res) => {
-    const reports = await Reports.findAll();
-    //retornar l'array d'informes
-    res.json(reports);
+    try{
+        const reports = await Reports.findAll({
+            include: [
+                {
+                    model: User,
+                    attributes: ["id", "name", "email"],
+                },
+                {
+                    model: Room,
+                    attributes: ["id", "room_name"],
+                }
+            ],
+        });
+        //retornar l'array d'informes
+        res.json(reports);
+    }catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 });
 
 // Get /reports/user/:user_id - Obtenir informes per ID d'usuari
