@@ -2,8 +2,22 @@ import express from "express";
 import Reports from "../models/Reports.js";
 import User from "../models/User.js";
 import Room from "../models/Room.js";
+import multer from 'multer';
+import path from 'path';
 
 const router = express.Router();
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/');
+    },
+    filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, uniqueSuffix + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({ storage: storage });
 
 // GET /reports - Obtenir tots els informes
 router.get("/", async (req, res) => {
@@ -101,9 +115,12 @@ router.get("/:id", async (req, res) => {
 });
 
 // POST /reports - Crear un nou informe
-router.post("/", async (req, res) => {
+router.post("/", upload.single('image'), async (req, res) => {
     try {
-        const { user_id, report,  image, room_id } = req.body;
+        // Parse the JSON string from the data field
+        const reportData = JSON.parse(req.body.data);
+        const { user_id, report, room_id } = reportData;
+        const image = req.file ? req.file.path : null;
 
         if (!user_id || !report || !room_id) {
             return res.status(400).json({ message: "user_id, report i room_id són obligatoris" });
@@ -121,10 +138,16 @@ router.post("/", async (req, res) => {
          * @param {number} reportData.room_id - L'ID de l'habitació associada amb l'informe.
          * @returns {Promise<Object>} L'objecte del nou informe creat.
          */
-        const newReport = await Reports.create({ user_id, report, image, room_id });
-        //retornar l'objecte del nou informe
+        const newReport = await Reports.create({ 
+            user_id, 
+            report, 
+            image, 
+            room_id 
+        });
+        
         res.status(201).json(newReport);
     } catch (error) {
+        console.error('Error creating report:', error);
         res.status(500).json({ message: error.message });
     }
 });

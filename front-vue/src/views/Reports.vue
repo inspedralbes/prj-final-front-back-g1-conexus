@@ -2,7 +2,7 @@
   <div class="reports-container">
     <h1>Create New Report</h1>
     
-    <form @submit.prevent="submitReport" class="report-form">
+    <form @submit.prevent="submitReport" class="report-form" enctype="multipart/form-data">
       <div class="form-group">
         <label for="report">Report Description</label>
         <textarea
@@ -25,26 +25,16 @@
         />
       </div>
 
+      <!-- Nuevo campo para subir imágenes -->
       <div class="form-group">
-        <label for="image">Image URL (Optional)</label>
+        <label for="upload-image">Upload Image</label>
         <input
-          type="text"
-          id="image"
-          v-model="reportData.image"
-          placeholder="Enter image URL"
+          type="file"
+          id="upload-image"
+          @change="handleFileUpload"
           class="form-control"
         />
       </div>
-
-      <div class="form-group">
-        <label for="status">Status</label>
-        <select id="status" v-model="reportData.status" class="form-control">
-          <option value="pending">Pending</option>
-          <option value="revising">Revising</option>
-          <option value="revised">Revised</option>
-        </select>
-      </div>
-
       <button type="submit" class="submit-btn" :disabled="isSubmitting">
         {{ isSubmitting ? 'Submitting...' : 'Submit Report' }}
       </button>
@@ -68,45 +58,68 @@ export default {
         report: '',
         room_id: null,
         image: '',
-        status: 'pending'
       },
+      imageFile: null,
       isSubmitting: false,
       message: null
     };
   },
   methods: {
+    handleFileUpload(event) {
+      // Manejar la selección del archivo
+      this.imageFile = event.target.files[0];
+    },
     async submitReport() {
-  this.isSubmitting = true;
-  this.message = null;
+      this.isSubmitting = true;
+      this.message = null;
 
-  try {
-    // Asigna directamente el ID del usuario como 1
-    this.reportData.user_id = 1;
+      try {
+        const formData = new FormData();
+        
+        // Create a single object with all the report data
+        const reportData = {
+          user_id: 1,
+          report: this.reportData.report,
+          room_id: this.reportData.room_id
+        };
 
-    await createReport(this.reportData);
+        console.log('Report Data Object:', reportData);
 
-    this.message = {
-      type: 'success',
-      text: 'Report submitted successfully!'
-    };
 
-    // Reset form
-    this.reportData = {
-      report: '',
-      room_id: null,
-      image: '',
-      status: 'pending'
-    };
-  } catch (error) {
-    this.message = {
-      type: 'error',
-      text: 'Error submitting report. Please try again.'
-    };
-    console.error('Error submitting report:', error);
-  } finally {
-    this.isSubmitting = false;
-  }
-}
+        formData.append('data', JSON.stringify(reportData));
+        
+        if (this.imageFile) {
+          formData.append('image', this.imageFile);
+        }
+
+        const response = await createReport(formData);
+        console.log('Server Response:', response);
+
+        this.message = {
+          type: 'success',
+          text: 'Report submitted successfully!'
+        };
+
+        this.reportData = {
+          report: '',
+          room_id: null,
+          image: '',
+        };
+        this.imageFile = null;
+      } catch (error) {
+        console.error('Error details:', {
+          message: error.message,
+          stack: error.stack
+        });
+        this.message = {
+          type: 'error',
+          text: 'Error submitting report: ' + error.message
+        };
+        console.error('Error submitting report:', error);
+      } finally {
+        this.isSubmitting = false;
+      }
+    }
   }
 };
 </script>

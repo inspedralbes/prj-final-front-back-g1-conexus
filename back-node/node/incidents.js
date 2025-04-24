@@ -20,7 +20,7 @@ const PORT = process.env.NODE_INCIDENT_PORT || 3001;
 
 app.use(bodyParser.json());
 app.use(cors());
-
+app.use('/uploads', express.static('uploads'));
 app.use("/api/reports", reportRoutes);
 
 sequelize.sync().then(() => {

@@ -36,10 +36,7 @@ export const createReport = async (reportData) => {
     try {
         const response = await fetch(`${API_URL}api/reports`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(reportData),
+            body: reportData,
         });
         return await handleResponse(response);
     } catch (error) {
