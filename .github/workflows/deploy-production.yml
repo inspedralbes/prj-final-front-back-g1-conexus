@@ -34,7 +34,7 @@ jobs:
             sudo systemctl start docker
 
             
-  DOCKER-COMMANDS:
+  SECRETS-GITHUB:
     needs: [CONEXIO-SERVIDOR]
     runs-on: ubuntu-latest
     steps:
@@ -61,6 +61,40 @@ jobs:
           echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> /opt/conexus/.env
           echo "NODE_SECRET_KEY_TOKEN=${{ secrets.NODE_SECRET_KEY_TOKEN}}" >> /opt/conexus/.env
 
+          # Añadir variables del contenedor nginx db
+          echo "NGINX_DB_ROOT_PASSWORD=${{ secrets.NGINX_DB_ROOT_PASSWORD }}" >> .env.prod
+          echo "NGINX_DB_USER=${{ secrets.NGINX_DB_USER }}" >> .env.prod
+          echo "NGINX_DB_PASSWORD=${{ secrets.NGINX_DB_PASSWORD }}" >> .env.prod
+
           echo "✅ .env completat!"
           
           EOF
+  
+  DEPLOY-PORTAINER-NGINX:
+    needs: [SECRETS-GITHUB]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Levantar contenedores de Portainer y Nginx
+        run: | 
+          echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > ~/prod_key.pem
+          chmod 600 ~/prod_key.pem
+
+          ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
+          echo "🚢 Levantando contenedores Docker..."
+
+          cd /opt/conexus
+
+          # Levantar Portainer
+          if [ -f docker-compose-portainer.yml ]; then
+            echo "🔧 Levantando Portainer..."
+            docker compose -f docker-compose.portainer.yml up -d
+          fi
+
+          if [ -f docker-compose-nginx.yml ]; then
+            echo "🔧 Levantando NGINX Proxy Manager..."
+            docker compose -f docker-compose-nginx.yml up -d
+          fi
+
+          echo "🎉 Despliegue completado"
+          EOF
+      
