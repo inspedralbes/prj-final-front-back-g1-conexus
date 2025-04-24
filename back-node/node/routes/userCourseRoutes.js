@@ -1,5 +1,6 @@
 import express from "express";
 import UserCourse from "../models/UserCourse.js";
+import User from "../models/User.js";
 
 const router = express.Router();
 
@@ -54,5 +55,27 @@ router.delete("/:id", async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 });
+
+// Obtener una relación usuario-curso por ID del curso
+router.get("/course/:course_id", async (req, res) => {
+    try {
+        const { course_id } = req.params;
+        const userCourses = await UserCourse.findAll({ where: { course_id } });
+        
+        if (!userCourses) {
+            return res.status(404).json({ message: "No se encontraron relaciones para este curso" });
+        }
+        for (const userCourse of userCourses) {
+            const user = await User.findByPk(userCourse.user_id, { attributes: ['name'] });
+            userCourse.name = user ? user.name : null;
+            console.log("---------------------------" + userCourse.name);
+        }
+        console.log("+++++++++++++++++", userCourses);
+        res.json(userCourses);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
 
 export default router;

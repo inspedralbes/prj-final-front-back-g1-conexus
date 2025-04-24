@@ -35,7 +35,7 @@ router.post("/", async (req, res) => {
         //check if the hour and user is already in the database
         const hourExists = await Assistence.findOne({ where: { hour, user_id } });
         if (hourExists) {
-            return res.status(400).json({ message: "L'usuari ja té una assistència a aquesta hora" });
+            Assistence.update({ assisted }, { where: {  hour, user_id } });  
         }
         
         const assistance = await Assistence.create({ user_id, course_id, hour, assisted });
@@ -70,5 +70,24 @@ router.delete("/:id", async (req, res) => {
     }
 });
 
+// Get all assistance from a course
+router.get("/course/:id", async (req, res) => {
+    try {
+        const assistance = await Assistence.findAll({ where: { course_id: req.params.id } });
+        res.json(assistance);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Get all assistance from a day
+router.get("/day/:id", async (req, res) => {
+    try {
+        const assistance = await Assistence.findAll({ where: { day: req.params.id } });
+        res.json(assistance);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
 export default router;
 

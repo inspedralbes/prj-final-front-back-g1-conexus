@@ -1,11 +1,11 @@
 import express from 'express';
 import cors from 'cors';
-import { sequelize } from '../models/index.js';
-import gradeRoutes from '../routes/gradeRoutes.js';
+import { sequelize } from "./models/index.js";
+import gradeRoutes from './routes/gradeRoutes.js';
 import dotenv from 'dotenv';
-import path from 'path';
+// Removed unused 'path' import
 import bodyParser from 'body-parser';
-import taskRoutes from '../routes/taskRoutes.js';
+import taskRoutes from './routes/taskRoutes.js';
 
 dotenv.config();
 
@@ -20,4 +20,7 @@ sequelize.sync().then(() => {
     app.listen(PORT, () => {
         console.log(`Server running on port ${PORT}`);
     });
+});
+app.get('/', (_, res) => {
+    res.send('Hello World!');
 });

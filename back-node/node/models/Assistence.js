@@ -6,7 +6,8 @@ const Assistence = sequelize.define('Assistence', {
     user_id: { type: DataTypes.INTEGER, allowNull: false },
     course_id: { type: DataTypes.INTEGER, allowNull: false },
     hour: { type: DataTypes.DATE, allowNull: false },
-    assisted: { type: DataTypes.ENUM('yes', 'unjustified', 'justified'), defaultValue: 'unjustified' },
+    day: { type: DataTypes.DATE, allowNull: false },
+    assisted: { type: DataTypes.ENUM('yes', 'unjustified', 'justified','not selected','late'), defaultValue: 'unjustified' },
 });
 
 export default Assistence;

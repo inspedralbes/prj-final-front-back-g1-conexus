@@ -1,0 +1,114 @@
+<template>
+    <div class="attendance-view">
+        <h1>Attendance View</h1>
+        <div dayPicker class="day-picker">
+            <label for="date">Data:</label>
+            <input type="date" id="date"  v-model="selectedDate" />
+            <label for="hour" v-if="thereIsClassThatDay()">Hora:</label>
+            <select id="hour" v-model="selectedHour" v-if="thereIsClassThatDay()" @change="updateSelectedHour">
+                <option v-for="hour in hoursAvailable[selectedDate && new Date(selectedDate).toLocaleString('en-US', { weekday: 'long' }).toLowerCase()] || []" :key="hour">{{ hour }}</option>
+            </select>
+
+            <h1 v-else>No hi ha clase aquest dia</h1>
+        </div>
+        <div class="attendance-list">
+            <table v-if="attendance!=null && hoursAvailable!=null && thereIsClassAtThatHour()">
+                <tr>
+                    <th>Nom</th>
+                    <th>Status</th>
+                </tr>
+                <tr v-for="student in students" :key="index">
+                    <td>{{ student.name }}</td>
+                    <td>
+                        <select v-model="student.attendance" @change="sendUpdateAtendance(student.id, student.status)">
+                            <option value="not selected">No seleccionat</option>
+                            <option value="unjustified">Falta</option>
+                            <option value="late">Retard</option>
+                            <option value="yes">Present</option>
+                            <option value="justified">Falta justificada</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+</template>
+<script setup>
+import { useRoute } from 'vue-router'
+import { userData } from '@/stores/userData.js'
+import { onMounted, ref } from 'vue'
+import { getHoursOfCourse,  getAlumns } from '@/services/mainComManager.js'
+import {getAttendanceFromCourse,updateAttendance} from '@/services/attendanceComManager.js'
+const selectedDate = ref(new Date().toISOString().substr(0, 10))
+const attendance = ref([])
+const hoursAvailable = ref([])
+const selectedHour=ref(null)
+const students=ref([]);
+onMounted(async () => {
+    const route = useRoute()
+    const courseId = route.params.courseId
+
+    hoursAvailable.value = await getHoursOfCourse(courseId)
+    // attendance.value = await getAttendanceFromCourse(courseId, new Date().toISOString())
+    console.log(attendance.value)
+    students.value = await getAlumns(courseId)
+    // students.forEach(student => {
+    //     student.attendance="not selected"
+    // });
+    console.log(students.value)
+    students.value.forEach(student => {
+        // const attendanceRecord = attendance.value.find(record => record.student_id === student.id);
+        // if (attendanceRecord) {
+        //     student.attendance = attendanceRecord.status;
+        // } else {
+            student.attendance = "not selected";
+        // }
+    });
+})
+
+function thereIsClassThatDay() {
+    console.log("Selected date: ", selectedDate.value)
+    console.log("Hours available: ", hoursAvailable.value)
+    const dayOfWeek = new Date(selectedDate.value).toLocaleString('en-US', { weekday: 'long' }).toLowerCase();
+    switch (dayOfWeek) {
+        case 'monday':
+            return hoursAvailable.value.monday!=null;
+        case 'tuesday':
+            return hoursAvailable.value.tuesday!=null;
+        case 'wednesday':
+            return hoursAvailable.value.wednesday!=null;
+        case 'thursday':
+            return hoursAvailable.value.thursday!=null;
+        case 'friday':
+            return hoursAvailable.value.friday!=null;
+        case 'saturday':
+            return hoursAvailable.value.saturday!=null;
+        case 'sunday':
+            return hoursAvailable.value.sunday!=null;
+        default:
+            return false;
+    }
+}
+
+function thereIsClassAtThatHour() {
+    const dayOfWeek = new Date(selectedDate.value).toLocaleString('en-US', { weekday: 'long' }).toLowerCase();
+    const selectedHourValue = selectedHour.value;
+    return (
+        hoursAvailable.value[dayOfWeek] &&
+        hoursAvailable.value[dayOfWeek].some(hourRange => hourRange.includes(selectedHourValue))
+    );
+}
+
+function sendUpdateAtendance(id, status) {
+    const route = useRoute()
+    const courseId = route.params.courseId
+    updateAttendance(courseId, id, status).then(() => {
+        console.log("Actualitzat")
+    }).catch((error) => {
+        console.log(error)
+    })
+
+}
+</script>
+<style scoped></style>
