@@ -76,38 +76,37 @@ export default {
   },
   methods: {
     async submitReport() {
-      this.isSubmitting = true;
-      this.message = null;
+  this.isSubmitting = true;
+  this.message = null;
 
-      try {
-        // Add current user ID from your auth system
-        const userData = JSON.parse(localStorage.getItem('userData'));
-        this.reportData.user_id = userData.id;
+  try {
+    // Asigna directamente el ID del usuario como 1
+    this.reportData.user_id = 1;
 
-        await createReport(this.reportData);
-        
-        this.message = {
-          type: 'success',
-          text: 'Report submitted successfully!'
-        };
+    await createReport(this.reportData);
 
-        // Reset form
-        this.reportData = {
-          report: '',
-          room_id: null,
-          image: '',
-          status: 'pending'
-        };
-      } catch (error) {
-        this.message = {
-          type: 'error',
-          text: 'Error submitting report. Please try again.'
-        };
-        console.error('Error submitting report:', error);
-      } finally {
-        this.isSubmitting = false;
-      }
-    }
+    this.message = {
+      type: 'success',
+      text: 'Report submitted successfully!'
+    };
+
+    // Reset form
+    this.reportData = {
+      report: '',
+      room_id: null,
+      image: '',
+      status: 'pending'
+    };
+  } catch (error) {
+    this.message = {
+      type: 'error',
+      text: 'Error submitting report. Please try again.'
+    };
+    console.error('Error submitting report:', error);
+  } finally {
+    this.isSubmitting = false;
+  }
+}
   }
 };
 </script>

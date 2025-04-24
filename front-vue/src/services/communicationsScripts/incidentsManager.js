@@ -12,7 +12,7 @@ const handleResponse = async (response) => {
 // Get all reports
 export const getAllReports = async () => {
     try {
-        const response = await fetch(`${API_URL}/reports`);
+        const response = await fetch(`${API_URL}api/reports`);
         return await handleResponse(response);
     } catch (error) {
         console.error('Error fetching reports:', error);
@@ -23,7 +23,7 @@ export const getAllReports = async () => {
 // Get a single report by ID
 export const getReportById = async (id) => {
     try {
-        const response = await fetch(`${API_URL}/reports/${id}`);
+        const response = await fetch(`${API_URL}api/reports/${id}`);
         return await handleResponse(response);
     } catch (error) {
         console.error(`Error fetching report ${id}:`, error);
@@ -34,7 +34,7 @@ export const getReportById = async (id) => {
 // Create a new report
 export const createReport = async (reportData) => {
     try {
-        const response = await fetch(`${API_URL}/reports`, {
+        const response = await fetch(`${API_URL}api/reports`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -51,7 +51,7 @@ export const createReport = async (reportData) => {
 // Update a report
 export const updateReport = async (id, reportData) => {
     try {
-        const response = await fetch(`${API_URL}/reports/${id}`, {
+        const response = await fetch(`${API_URL}api/reports/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -68,7 +68,7 @@ export const updateReport = async (id, reportData) => {
 // Delete a report
 export const deleteReport = async (id) => {
     try {
-        const response = await fetch(`${API_URL}/reports/${id}`, {
+        const response = await fetch(`${API_URL}api/reports/${id}`, {
             method: 'DELETE',
         });
         await handleResponse(response);
@@ -82,7 +82,7 @@ export const deleteReport = async (id) => {
 // Get reports by user ID
 export const getReportsByUserId = async (userId) => {
     try {
-        const response = await fetch(`${API_URL}/reports/user/${userId}`);
+        const response = await fetch(`${API_URL}api/reports/user/${userId}`);
         return await handleResponse(response);
     } catch (error) {
         console.error(`Error fetching reports for user ${userId}:`, error);
@@ -93,7 +93,7 @@ export const getReportsByUserId = async (userId) => {
 // Get reports by room ID
 export const getReportsByRoomId = async (roomId) => {
     try {
-        const response = await fetch(`${API_URL}/reports/room/${roomId}`);
+        const response = await fetch(`${API_URL}api/reports/room/${roomId}`);
         return await handleResponse(response);
     } catch (error) {
         console.error(`Error fetching reports for room ${roomId}:`, error);
@@ -104,7 +104,7 @@ export const getReportsByRoomId = async (roomId) => {
 // Get finished reports
 export const getFinishedReports = async () => {
     try {
-        const response = await fetch(`${API_URL}/reports/finished`);
+        const response = await fetch(`${API_URL}api/reports/finished`);
         return await handleResponse(response);
     } catch (error) {
         console.error('Error fetching finished reports:', error);
@@ -115,7 +115,7 @@ export const getFinishedReports = async () => {
 // Get not finished reports
 export const getNotFinishedReports = async () => {
     try {
-        const response = await fetch(`${API_URL}/reports/not-finished`);
+        const response = await fetch(`${API_URL}api/reports/not-finished`);
         return await handleResponse(response);
     } catch (error) {
         console.error('Error fetching not finished reports:', error);
