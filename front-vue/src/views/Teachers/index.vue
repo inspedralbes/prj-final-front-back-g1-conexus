@@ -23,7 +23,7 @@
                     </div>
                     <h3 class="text-xl font-semibold text-gray-800 mb-2">Gestión Académica</h3>
                     <p class="text-gray-600 mb-4 text-sm">Administración de cursos, horarios y calificaciones</p>
-                    <router-link to="/academico" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                    <router-link to="/" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
                         Acceder <span aria-hidden="true">→</span>
                     </router-link>
                 </div>
@@ -39,7 +39,7 @@
                     </div>
                     <h3 class="text-xl font-semibold text-gray-800 mb-2">Gestión de Estudiantes</h3>
                     <p class="text-gray-600 mb-4 text-sm">Registro y seguimiento de alumnos</p>
-                    <router-link to="/estudiantes" class="text-green-600 hover:text-green-800 text-sm font-medium">
+                    <router-link to="/" class="text-green-600 hover:text-green-800 text-sm font-medium">
                         Acceder <span aria-hidden="true">→</span>
                     </router-link>
                 </div>
@@ -55,7 +55,7 @@
                     </div>
                     <h3 class="text-xl font-semibold text-gray-800 mb-2">Administración</h3>
                     <p class="text-gray-600 mb-4 text-sm">Gestión financiera y recursos institucionales</p>
-                    <router-link to="/administracion" class="text-purple-600 hover:text-purple-800 text-sm font-medium">
+                    <router-link to="/" class="text-purple-600 hover:text-purple-800 text-sm font-medium">
                         Acceder <span aria-hidden="true">→</span>
                     </router-link>
                 </div>

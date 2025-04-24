@@ -19,6 +19,11 @@ const router = createRouter({
       component: () => import('@/views/Chats/index.vue')
     },
     {
+      path: '/incidents',
+      name: 'incidents',
+      component: () => import('@/views/Incidents/index.vue')
+    },
+    {
       path: '/profile',
       name: 'profile',
       component: () => import('@/views/Profiles/index.vue')
@@ -26,13 +31,40 @@ const router = createRouter({
     {
       path: '/students',
       name: 'student',
-      component: () => import('@/views/Students/index.vue')
+      component: () => import('@/views/Students/index.vue'),
+      children: [
+        { 
+          path: 'assistence',
+          name: 'assistence',
+          component: () => import('@/views/Teachers/assistence.vue')
+        },
+        {
+          path: 'grades',
+          name: 'grades',
+          component: () => import('@/views/Teachers/grades.vue')
+        }
+      ]
     },
     {
       path: '/teachers',
       name: 'teacher',
       component: () => import('@/views/Teachers/index.vue'),
       children: [
+        {
+          path: 'canteen',
+          name: 'canteen',
+          component: () => import('@/views/Canteen/index.vue')
+        },
+        {
+          path: 'chats',
+          name: 'chats',
+          component: () => import('@/views/Chats/index.vue')
+        },
+        {
+          path: 'incidents',
+          name: 'incidents',
+          component: () => import('@/views/Incidents/index.vue')
+        },
         { 
           path: 'assistence',
           name: 'assistence',

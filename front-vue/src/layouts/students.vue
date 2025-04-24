@@ -14,25 +14,25 @@
             <div class="text-center mb-8">
                 <h2
                     class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
-                    Zona Estudiant
+                    Conexus
                 </h2>
             </div>
             <nav class="space-y-2">
-                <router-link to="/student/grades"
+                <router-link to="/students/grades"
                     class="flex items-center p-2 text-gray-300 hover:bg-slate-800/50 rounded-lg transition-colors duration-300">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                     <span>Notes</span>
                 </router-link>
-                <router-link to="/student/assistence"
+                <router-link to="/students/assistence"
                     class="flex items-center p-2 text-gray-300 hover:bg-slate-800/50 rounded-lg transition-colors duration-300">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                     </svg>
                     <span>Assistència</span>
                 </router-link>
-                <router-link to="/student/incidents"
+                <router-link to="/students/incidents"
                     class="flex items-center p-2 text-gray-300 hover:bg-slate-800/50 rounded-lg transition-colors duration-300">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -59,18 +59,18 @@
                 <!-- Nom de la Marca -->
                 <router-link to="/student"
                     class="text-white text-2xl font-bold hover:text-gray-300 transition-colors duration-300">
-                    Zona Estudiant
+                    Conexus
                 </router-link>
 
                 <!-- Enllaços de Navegació -->
                 <div class="flex space-x-6 items-center">
-                    <router-link to="/student/grades" class="text-white hover:text-gray-300 transition-colors duration-300">
+                    <router-link to="/students/grades" class="text-white hover:text-gray-300 transition-colors duration-300">
                         Notes
                     </router-link>
-                    <router-link to="/student/assistence" class="text-white hover:text-gray-300 transition-colors duration-300">
+                    <router-link to="/students/assistence" class="text-white hover:text-gray-300 transition-colors duration-300">
                         Assistència
                     </router-link>
-                    <router-link to="/student/incidents" class="text-white hover:text-gray-300 transition-colors duration-300">
+                    <router-link to="/students/incidents" class="text-white hover:text-gray-300 transition-colors duration-300">
                         Incidències
                     </router-link>
                     <button @click="logout"
@@ -113,11 +113,11 @@ const isSidebarOpen = ref(false);
 // Obtenir el títol de la pàgina actual basat en la ruta
 const currentPageTitle = computed(() => {
     switch (route.path) {
-        case '/student/grades':
+        case '/students/grades':
             return 'Notes';
-        case '/student/assistence':
+        case '/students/assistence':
             return 'Assistència';
-        case '/student/incidents':
+        case '/students/incidents':
             return 'Incidències';
         default:
             return 'Zona Estudiant';
