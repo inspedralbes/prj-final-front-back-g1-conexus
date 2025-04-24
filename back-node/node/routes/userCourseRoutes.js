@@ -67,9 +67,9 @@ router.get("/course/:course_id", async (req, res) => {
         }
         const userCoursesWithNames = await Promise.all(userCourses.map(async (userCourse) => {
             const user = await User.findByPk(userCourse.user_id, { attributes: ['name'] });
-            return { ...userCourse.toJSON(), name: user ? user.name : null };
+            return { user_id: userCourse.user_id, course_id: userCourse.course_id, name: user ? user.name : null };
         }));
-        console.log("+++++++++++++++++", userCoursesWithNames);
+        // console.log("+++++++++++++++++", userCoursesWithNames);
         res.json(userCoursesWithNames);
     } catch (error) {
         res.status(500).json({ message: error.message });

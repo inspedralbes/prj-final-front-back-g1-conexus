@@ -87,7 +87,9 @@ function goToAssistance(courseId) {
 .course-item button:disabled:active {
     background-color: #ccc;
 }
-
+*{
+    font-family: 'Arial', sans-serif;
+}
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .course-list {

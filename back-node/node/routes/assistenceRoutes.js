@@ -1,6 +1,8 @@
 import express from "express";
 import Assistence from "../models/Assistence.js";
-
+import User from "../models/User.js";
+import UserCourse from "../models/UserCourse.js";
+import Course from "../models/Course.js";
 const router = express.Router();
 
 router.get("/", async (req, res) => {
@@ -19,26 +21,41 @@ router.get("/:id", async (req, res) => {
 
 router.post("/", async (req, res) => {
     try {
-        const { user_id, course_id, hour, assisted } = req.body;
+        console.log("req.body", req.body);
+        console.log("user_id", req.body.user_id);
+        console.log("course_id", req.body.course_id);
+        console.log("hour", req.body.hour);
+        console.log("assisted", req.body.assisted);
+        console.log("day", req.body.day);
+        let { user_id, course_id, hour,day, assisted } = req.body;
         if (!user_id || !course_id || !hour || !assisted) {
             return res.status(400).json({ message: "user_id, course_id, hour i assisted són obligatoris" });
         }
+        course_id = parseInt(course_id);
+        user_id = parseInt(user_id);
         //check if the user_id and course_id exist in the database
-        const user = await Assistence.findOne({ where: { user_id } });
-        const course = await Assistence.findOne({ where: { course_id } });
+        const user = await User.findOne({ where: { id:user_id } });
+        const course = await Course.findOne({ where: { id:course_id } });
         if (!user) {
             return res.status(404).json({ message: "user_id no trobat" });
         }
         if (!course) {
             return res.status(404).json({ message: "course_id no trobat" });
         }
-        //check if the hour and user is already in the database
-        const hourExists = await Assistence.findOne({ where: { hour, user_id } });
-        if (hourExists) {
-            Assistence.update({ assisted }, { where: {  hour, user_id } });  
+        //check if the user is on the course
+        const userCourse = await UserCourse.findOne({ where: { user_id, course_id } });
+        if (!userCourse) {
+            return res.status(404).json({ message: "user_id no està inscrit al course_id" });
         }
-        
-        const assistance = await Assistence.create({ user_id, course_id, hour, assisted });
+        //check if the hour and user is already in the database
+        const hourExists = await Assistence.findOne({ where: { hour, user_id,day } });
+        if (hourExists) {
+            Assistence.update({ assisted }, { where: {  hour, user_id,day } });  
+        }
+        else{
+
+            const assistance = await Assistence.create({ user_id, course_id, hour, assisted,day });
+        }
         res.json(assistance);
     }
     catch (error) {
@@ -81,13 +98,17 @@ router.get("/course/:id", async (req, res) => {
 });
 
 // Get all assistance from a day
-router.get("/day/:id", async (req, res) => {
-    try {
-        const assistance = await Assistence.findAll({ where: { day: req.params.id } });
+router.get("/course/:courseId/day/:day", async (req, res) => {
+   try {
+        const { courseId, day } = req.params;
+        const assistance = await Assistence.findAll({ where: { course_id: courseId, day } });
         res.json(assistance);
-    } catch (error) {
+    }
+    catch (error) {
         res.status(500).json({ message: error.message });
     }
 });
+
+
 export default router;
 

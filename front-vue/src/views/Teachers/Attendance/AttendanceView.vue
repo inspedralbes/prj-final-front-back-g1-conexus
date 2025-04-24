@@ -1,9 +1,9 @@
 <template>
     <div class="attendance-view">
-        <h1>Attendance View</h1>
+        <h1 class="pageTitle">Asistencia al curs {{ hoursAvailable.course_name }} </h1>
         <div dayPicker class="day-picker">
             <label for="date">Data:</label>
-            <input type="date" id="date"  v-model="selectedDate" />
+            <input type="date" id="date"  v-model="selectedDate" @change="getAttendanceOfTheDay()"/>
             <label for="hour" v-if="thereIsClassThatDay()">Hora:</label>
             <select id="hour" v-model="selectedHour" v-if="thereIsClassThatDay()" @change="updateSelectedHour">
                 <option v-for="hour in hoursAvailable[selectedDate && new Date(selectedDate).toLocaleString('en-US', { weekday: 'long' }).toLowerCase()] || []" :key="hour">{{ hour }}</option>
@@ -14,13 +14,15 @@
         <div class="attendance-list">
             <table v-if="attendance!=null && hoursAvailable!=null && thereIsClassAtThatHour()">
                 <tr>
+                    <th>ID</th>
                     <th>Nom</th>
                     <th>Status</th>
                 </tr>
                 <tr v-for="student in students" :key="index">
+                    <td>{{ student.user_id }}</td>
                     <td>{{ student.name }}</td>
                     <td>
-                        <select v-model="student.attendance" @change="sendUpdateAtendance(student.id, student.status)">
+                        <select v-model="student.attendance" @change="sendUpdateAtendance(student.user_id, student.attendance)">
                             <option value="not selected">No seleccionat</option>
                             <option value="unjustified">Falta</option>
                             <option value="late">Retard</option>
@@ -37,17 +39,19 @@
 <script setup>
 import { useRoute } from 'vue-router'
 import { userData } from '@/stores/userData.js'
-import { onMounted, ref } from 'vue'
+import { h, onMounted, ref } from 'vue'
 import { getHoursOfCourse,  getAlumns } from '@/services/mainComManager.js'
-import {getAttendanceFromCourse,updateAttendance} from '@/services/attendanceComManager.js'
+import {getAttendanceFromDay,updateAttendance} from '@/services/attendanceComManager.js'
 const selectedDate = ref(new Date().toISOString().substr(0, 10))
 const attendance = ref([])
 const hoursAvailable = ref([])
 const selectedHour=ref(null)
 const students=ref([]);
+const route = useRoute()
+const courseId = route.params.courseId
 onMounted(async () => {
-    const route = useRoute()
-    const courseId = route.params.courseId
+ 
+   
 
     hoursAvailable.value = await getHoursOfCourse(courseId)
     // attendance.value = await getAttendanceFromCourse(courseId, new Date().toISOString())
@@ -57,15 +61,24 @@ onMounted(async () => {
     //     student.attendance="not selected"
     // });
     console.log(students.value)
-    students.value.forEach(student => {
-        // const attendanceRecord = attendance.value.find(record => record.student_id === student.id);
-        // if (attendanceRecord) {
-        //     student.attendance = attendanceRecord.status;
-        // } else {
-            student.attendance = "not selected";
-        // }
-    });
+    getAttendanceOfTheDay()
 })
+async function getAttendanceOfTheDay() {
+    const date = new Date(selectedDate.value).toISOString()
+    const data=await getAttendanceFromDay(courseId, date)
+    students.value.forEach(student => {
+        student.attendance = "not selected";
+    });
+    data.forEach(record => {
+        if(record.hour==selectedHour.value){
+            students.value.forEach(student => {
+                if (student.id == record.student_id) {
+                    student.attendance = record.status;
+                }
+            });
+        }
+    });
+}
 
 function thereIsClassThatDay() {
     console.log("Selected date: ", selectedDate.value)
@@ -101,9 +114,11 @@ function thereIsClassAtThatHour() {
 }
 
 function sendUpdateAtendance(id, status) {
-    const route = useRoute()
-    const courseId = route.params.courseId
-    updateAttendance(courseId, id, status).then(() => {
+    let adaptedSelectedHour = selectedHour.value.split(" ")[0]
+    let adaptedSelectedDate = selectedDate.value.split("T")[0]
+    console.log("Selected date: ", adaptedSelectedDate)
+    console.log("Selected hour: ", adaptedSelectedHour)
+    updateAttendance(courseId, id,adaptedSelectedHour,status,adaptedSelectedDate).then(() => {
         console.log("Actualitzat")
     }).catch((error) => {
         console.log(error)
@@ -111,4 +126,72 @@ function sendUpdateAtendance(id, status) {
 
 }
 </script>
-<style scoped></style>
+<style scoped>
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 20px;
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+th {
+    background-color: #f2f2f2;
+    text-align: left;
+}
+td {
+    text-align: left;
+}
+.pageTitle {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+.day-picker {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+label {
+    margin-bottom: 5px;
+}
+select {
+    margin-bottom: 10px;
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+.attendance-list {
+    margin-top: 20px;
+}
+.attendance-list table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.attendance-list th, .attendance-list td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+.attendance-list th {
+    background-color: #f2f2f2;
+    text-align: left;
+}
+.attendance-list td {
+    text-align: left;
+}
+.attendance-list tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+.attendance-list tr:hover {
+    background-color: #f1f1f1;
+}
+.attendance-list select {
+    width: 100%;
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+*{
+    font-family: 'Arial', sans-serif;
+}
+</style>

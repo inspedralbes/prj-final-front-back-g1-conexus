@@ -59,6 +59,8 @@ export const getHoursOfCourse = async (courseId) => {
             })
         );
         data.course_hours_available = processedHours;
+        processedHours.course_id = data.course_id;
+        processedHours.course_name = data.course_name;
         return processedHours;
     } catch (error) {
         console.error('Error fetching courses:', error);
@@ -76,4 +78,5 @@ export const getAlumns=async (courseId) => {
     .then(response => response.json())
     .catch(error => console.error('Error fetching courses:', error));
 }
+
 

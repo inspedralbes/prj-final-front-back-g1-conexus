@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     description TEXT DEFAULT NULL,
     FOREIGN KEY (typesUsers_id) REFERENCES typesUsers(id),
-    FOREIGN KEY (departments_id) REFERENCES departments(id),
+    FOREIGN KEY (department_id) REFERENCES departments(id)
 );
 
 -- Table 4: courses
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS courses(
     course_name TEXT NOT NULL,
     course_hours_available JSON DEFAULT NULL,
     course_description TEXT NOT NULL,
-    course_teacher_id INT NOT NULL,
+    course_teacher_id INT DEFAULT NULL,
     course_department_id INT NOT NULL,
     course_created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     course_updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -65,19 +65,20 @@ CREATE TABLE IF NOT EXISTS grades(
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (course_id) REFERENCES courses(id)
-)
+);
 
 -- Table 7: assistance (depends on users and courses)
 CREATE TABLE IF NOT EXISTS assistance(
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    course_id INT NOT NULL,
-    hour DATETIME NOT NULL,
-    assisted ENUM('yes', 'unjustified', 'justified') DEFAULT 'unjustified',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (course_id) REFERENCES courses(id)
-)
+     user_id INT NOT NULL,
+     course_id INT NOT NULL,
+     hour DATETIME NOT NULL,
+     day INT NOT NULL,
+     assisted ENUM('yes', 'unjustified', 'justified', 'not selected', 'late') DEFAULT 'unjustified',
+     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+     FOREIGN KEY (user_id) REFERENCES users(id),
+     FOREIGN KEY (course_id) REFERENCES courses(id)
+);
 -- Table 8: lostObjects (depends on users and typeslostAndFound)
 CREATE TABLE IF NOT EXISTS lostObjects (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -87,7 +88,7 @@ CREATE TABLE IF NOT EXISTS lostObjects (
     user_id INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     expired_at DATE,
-    FOREIGN KEY (typeslostAndFound_id) REFERENCES typeslostAndFound(id),
+    -- FOREIGN KEY (typeslostAndFound_id) REFERENCES typeslostAndFound(id),
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
@@ -107,8 +108,8 @@ CREATE TABLE IF NOT EXISTS rooms(
     id INT AUTO_INCREMENT PRIMARY KEY,
     room_name TEXT NOT NULL,
     room_hours_available JSON DEFAULT NULL,
-    room_description TEXT NOT NULL,
-)
+    room_description TEXT NOT NULL
+);
 
 -- Table 10: roomsReservations (depends on users and rooms)
 CREATE TABLE IF NOT EXISTS roomReservation(
@@ -120,7 +121,7 @@ CREATE TABLE IF NOT EXISTS roomReservation(
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (room_id) REFERENCES rooms(id)
-)
+);
 
 -- Table 11: reportsUsers (depends on users)
 CREATE TABLE IF NOT EXISTS reports (
@@ -132,7 +133,7 @@ CREATE TABLE IF NOT EXISTS reports (
     room_id INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (room_id) REFERENCES room(id)
+    FOREIGN KEY (room_id) REFERENCES rooms(id)
 );
 
 
