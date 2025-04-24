@@ -6,7 +6,7 @@ on:
     branches: [116-refer-producció]
 
 jobs:
-  deploy:
+  CONEXIO-SERVIDOR:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,33 +18,20 @@ jobs:
           echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > ~/prod_key.pem
           chmod 600 ~/prod_key.pem
 
-      - name: Deploy to Production Server
+      - name: Conect to SHH i actualizaciones
         run: |
-          ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
-            echo "🚀 Iniciando despliegue remoto..."
+          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
+            echo "🚀 Iniciando actualizaciones e instalar dependencies..."
 
-            # 1. Actualizar sistema
+            # Actualizar sistema
             sudo apt update && sudo apt upgrade -y
 
-            # 2. Instalar dependencias necesarias
+            # Instalar dependencias necesarias
             sudo apt install -y git docker.io docker-compose
 
-            # 3. Asegurar que Docker esté corriendo
+            # Asegurar que Docker esté corriendo
             sudo systemctl enable docker
             sudo systemctl start docker
-
-            # 4. Crear carpeta del proyecto en /opt si no existe
-            if [ ! -d "/opt/conexus" ]; then
-              sudo mkdir -p /opt/conexus
-            fi
-            cd /opt/conexus
-
-            # 5. Clonar o actualizar el repositorio
-            if [ ! -d ".git" ]; then
-              git clone https://github.com/TU_USUARIO/TU_REPO.git .
-            else
-              git pull origin 116-refer-producció
-            fi
 
             # Verificar si los archivos docker-compose existen
             if [ ! -f "./docker-compose.nginx.yml" ]; then
@@ -56,17 +43,32 @@ jobs:
               exit 1
             fi
 
-            # 6. Levantar Portainer
-            echo "🛠️ Levantando Portainer... "
-            docker-compose -f ./docker-compose.portainer.yml up -d
+            
+  DOCKER-COMMANDS:
+    needs: [CONEXIO-SERVIDOR]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obtener variables de entorno
+        uses: actions/checkout@v4
 
-            # 7. Levantar Nginx
-            echo "🛠️ Levantando Nginx Proxy Manager... "
-            docker-compose -f docker-compose.nginx.yml up -d
+      - name: Update docker compose
+        run: | 
+          echo "Afegir variables d'entorn al .env"
+          echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > ~/prod_key.pem
+          chmod 600 ~/prod_key.pem
 
-            # 8. Levantar el resto del proyecto
-            echo "🛠️ Levantando el resto de los servicios..."
-            docker-compose -f docker-compose.prod.yml up -d --build
+          # Copiar .env.prod al servidor y renombrarlo .env
+          scp -o StrictHostKeyChecking=no -i ~/prod_key.pem .env.prod ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/.env
+          
+          # Conectarse por SSH y añadir las variables sensibles
+          ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} <<EOF
+          echo "🔐 Afegint secrets al fitxer .env..."
 
-            echo "✅ Despliegue completado."
+          echo "MYSQL_USER=${{ secrets.MYSQL_DB_USER }}" >> /opt/conexus/.env
+          echo "MYSQL_PASSWORD=${{ secrets.MYSQL_DB_PASSWORD }}" >> /opt/conexus/.env
+          echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> /opt/conexus/.env
+          echo "NODE_SECRET_KEY_TOKEN=${{ secrets.NODE_SECRET_KEY_TOKEN}}" >> /opt/conexus/.env
+
+          echo "✅ .env completat!"
+          
           EOF
