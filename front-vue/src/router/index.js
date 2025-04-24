@@ -33,15 +33,20 @@ const router = createRouter({
       name: 'student',
       component: () => import('@/views/Students/index.vue'),
       children: [
+        {
+          path: 'incidents',
+          name: 'student-incidents',
+          component: () => import('@/views/Incidents/index.vue')
+        },
         { 
           path: 'assistence',
-          name: 'assistence',
-          component: () => import('@/views/Teachers/assistence.vue')
+          name: 'student-assistence',
+          component: () => import('@/views/Students/assistence.vue')
         },
         {
           path: 'grades',
-          name: 'grades',
-          component: () => import('@/views/Teachers/grades.vue')
+          name: 'student-grades',
+          component: () => import('@/views/Students/grades.vue')
         }
       ]
     },
@@ -52,32 +57,32 @@ const router = createRouter({
       children: [
         {
           path: 'canteen',
-          name: 'canteen',
+          name: 'teacher-canteen',
           component: () => import('@/views/Canteen/index.vue')
         },
         {
           path: 'chats',
-          name: 'chats',
+          name: 'teacher-chats',
           component: () => import('@/views/Chats/index.vue')
         },
         {
           path: 'incidents',
-          name: 'incidents',
+          name: 'teacher-incidents',
           component: () => import('@/views/Incidents/index.vue')
         },
         { 
           path: 'assistence',
-          name: 'assistence',
+          name: 'teacher-assistence',
           component: () => import('@/views/Teachers/assistence.vue')
         },
         {
           path: 'grades',
-          name: 'grades',
+          name: 'teacher-grades',
           component: () => import('@/views/Teachers/grades.vue')
         },
         {
           path: 'roomReservation',
-          name: 'roomReservation',
+          name: 'teacher-roomReservation',
           component: () => import('@/views/Teachers/roomReservation.vue')
         }
       ]
