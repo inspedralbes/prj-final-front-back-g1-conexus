@@ -47,6 +47,8 @@ jobs:
           echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > ~/prod_key.pem
           chmod 600 ~/prod_key.pem
 
+          echo "" >> .env.prod
+
           # Copiar .env.prod al servidor y renombrarlo .env
           scp -o StrictHostKeyChecking=no -i ~/prod_key.pem .env.prod ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/.env
           
