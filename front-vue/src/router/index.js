@@ -18,6 +18,11 @@ const router = createRouter({
           name: 'student-incidents',
           component: () => import('@/views/Incidents/index.vue')
         },
+        {
+          path: 'lost-objects',
+          name: 'student-lost-objects',
+          component: () => import('@/views/Students/lost-objects.vue')
+        },
         { 
           path: 'assistence',
           name: 'student-assistence',
@@ -49,6 +54,11 @@ const router = createRouter({
           path: 'incidents',
           name: 'teacher-incidents',
           component: () => import('@/views/Incidents/index.vue')
+        },
+        {
+          path: 'lost-objects',
+          name: 'teacher-lost-objects',
+          component: () => import('@/views/Teachers/lost-objects.vue')
         },
         { 
           path: 'assistence',
@@ -88,6 +98,11 @@ const router = createRouter({
           component: () => import('@/views/Incidents/index.vue')
         },
         {
+          path: 'lost-objects',
+          name: 'technician-lost-objects',
+          component: () => import('@/views/Technicians/lost-objects.vue')
+        },
+        {
           path: 'assignations',
           name: 'technician-assignations',
           component: () => import('@/views/Incidents/assignations.vue')
@@ -103,13 +118,33 @@ const router = createRouter({
       path: '/admin',
       name: 'admin',
       component: () => import('@/views/Admin/index.vue'),
-      // children: [
-      //   {
-      //     // path: 'feedback',
-      //     // name: 'adminFeedback',
-      //     // component: () => import('@/views/admin/FeedbackView.vue')
-      //   }
-      // ]
+      children: [
+        {
+          path: 'config-users',
+          name: 'admin-config-users',
+          component: () => import('@/views/Admin/users.vue')
+        },
+        {
+          path: 'config-rooms',
+          name: 'admin-config-rooms',
+          component: () => import('@/views/Admin/rooms.vue')
+        },
+        {
+          path: 'config-servers',
+          name: 'admin-config-servers',
+          component: () => import('@/views/Admin/servers.vue')
+        },
+        {
+          path: 'config-lost-objects',
+          name: 'admin-config-lost-objects',
+          component: () => import('@/views/Admin/lost-objects.vue')
+        },
+        {
+          path: 'config-incidents',
+          name: 'admin-config-incidents',
+          component: () => import('@/views/Admin/incidents.vue')
+        },
+      ]
     }
   ],
 })
