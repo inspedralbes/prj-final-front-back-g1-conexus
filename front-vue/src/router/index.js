@@ -9,26 +9,6 @@ const router = createRouter({
       component: () => import('@/views/index.vue')
     },
     {
-      path: '/canteen',
-      name: 'canteen', 
-      component: () => import('@/views/Canteen/index.vue')
-    },
-    {
-      path: '/chat',
-      name: 'chat',
-      component: () => import('@/views/Chats/index.vue')
-    },
-    {
-      path: '/incidents',
-      name: 'incidents',
-      component: () => import('@/views/Incidents/index.vue')
-    },
-    {
-      path: '/profile',
-      name: 'profile',
-      component: () => import('@/views/Profiles/index.vue')
-    },
-    {
       path: '/students',
       name: 'student',
       component: () => import('@/views/Students/index.vue'),
@@ -90,7 +70,34 @@ const router = createRouter({
     {
       path: '/technicians',
       name: 'technicians',
-      component: () => import('@/views/Technicians/index.vue')
+      component: () => import('@/views/Technicians/index.vue'),
+      children: [
+        {
+          path: 'canteen',
+          name: 'technician-canteen',
+          component: () => import('@/views/Canteen/index.vue')
+        },
+        {
+          path: 'chats',
+          name: 'technician-chats',
+          component: () => import('@/views/Chats/index.vue')
+        },
+        {
+          path: 'incidents',
+          name: 'technician-incidents',
+          component: () => import('@/views/Incidents/index.vue')
+        },
+        {
+          path: 'assignations',
+          name: 'technician-assignations',
+          component: () => import('@/views/Incidents/assignations.vue')
+        },
+        {
+          path: 'solutions',
+          name: 'technician-solutions',
+          component: () => import('@/views/Incidents/solutions.vue')
+        },
+      ]
     },
     {
       path: '/admin',
