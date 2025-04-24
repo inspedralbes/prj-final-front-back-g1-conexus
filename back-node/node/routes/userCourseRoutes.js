@@ -65,13 +65,12 @@ router.get("/course/:course_id", async (req, res) => {
         if (!userCourses) {
             return res.status(404).json({ message: "No se encontraron relaciones para este curso" });
         }
-        for (const userCourse of userCourses) {
+        const userCoursesWithNames = await Promise.all(userCourses.map(async (userCourse) => {
             const user = await User.findByPk(userCourse.user_id, { attributes: ['name'] });
-            userCourse.name = user ? user.name : null;
-            console.log("---------------------------" + userCourse.name);
-        }
-        console.log("+++++++++++++++++", userCourses);
-        res.json(userCourses);
+            return { ...userCourse.toJSON(), name: user ? user.name : null };
+        }));
+        console.log("+++++++++++++++++", userCoursesWithNames);
+        res.json(userCoursesWithNames);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
