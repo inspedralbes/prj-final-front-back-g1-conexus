@@ -33,16 +33,6 @@ jobs:
             sudo systemctl enable docker
             sudo systemctl start docker
 
-            # Verificar si los archivos docker-compose existen
-            if [ ! -f "./docker-compose.nginx.yml" ]; then
-              echo "No se encuentra el archivo docker-compose.nginx.yml"
-              exit 1
-            fi
-            if [ ! -f "./docker-compose.prod.yml" ]; then
-              echo "No se encuentra el archivo docker-compose.prod.yml"
-              exit 1
-            fi
-
             
   DOCKER-COMMANDS:
     needs: [CONEXIO-SERVIDOR]
