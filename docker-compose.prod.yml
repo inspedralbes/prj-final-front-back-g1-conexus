@@ -41,8 +41,8 @@ services:
   conexus-hub-mysql:
     image: mysql:5.7
     environment:
-      - MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      - MYSQL_DATABASE: conexus-hub
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=conexus-hub
     volumes:
       - mysql-data:/var/lib/mysql
       - ./back-node/data/create_db.sql:/docker-entrypoint-initdb.d/create.sql

@@ -19,10 +19,10 @@ services:
   db:
     image: jc21/mariadb-aria:latest
     environment:
-      MYSQL_NGINX_ROOT_PASSWORD: ${NGINX_DB_ROOT_PASSWORD}
-      MYSQL_NGINX_DATABASE: nginx
-      MYSQL_NGINX_USER: ${NGINX_DB_USER}
-      MYSQL_NGINX_PASSWORD: ${NGINX_DB_PASSWORD}
+      - MYSQL_NGINX_ROOT_PASSWORD=${NGINX_DB_ROOT_PASSWORD}
+      - MYSQL_NGINX_DATABASE=nginx
+      - MYSQL_NGINX_USER=${NGINX_DB_USER}
+      - MYSQL_NGINX_PASSWORD=${NGINX_DB_PASSWORD}
     ports:
       - 4306:4306
     volumes:
