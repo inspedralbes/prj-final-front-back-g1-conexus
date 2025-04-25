@@ -5,8 +5,8 @@
             <button @click="goToMenu()">Volver al menú</button>
             <button @click="goToCreateTask()">Crear nueva tarea</button>
             <div>
-                <label>
-                    <input type="checkbox" v-model="hideClosed" />
+                <label >
+                    <input type="checkbox" @click="changeFilter()"/>
                     Ocultar tasques tancades
                 </label>
             </div>
@@ -15,10 +15,13 @@
                     <th>Tasca</th>
                     <th>Tancada</th>
                 </tr>
-                <tr v-for="task in tasks" :key="task.id" v-if="!hideClosed || (hideClosed && !task.task_ended)">
-                    <td>{{ task.task_name }}</td>
-                    <td>{{ task.task_ended ? 'Sí' : 'No' }}</td>
-                </tr>
+                
+                    <tr v-for="task in filteredTasks" :key="task.id">
+                        <td>{{ task.task_name }}</td>
+                        <td>{{ task.task_ended ? 'Sí' : 'No' }}</td>
+                        <td><button @click="goToEvaluar(task.id)">Evaluar</button></td>
+                    </tr>
+       
             </table>
 
         </div>
@@ -26,7 +29,8 @@
 </template>
 <script setup>
 import { useRoute } from 'vue-router'
-import { userData } from '@/stores/userData.js'
+// Removed unused import
+import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { onMounted, ref } from 'vue'
 import { getTasksFromCourse } from '@/services/gradesComManager.js'
@@ -35,18 +39,31 @@ const tasks = ref([]);
 const courseId = ref(null)
 const hideClosed = ref(false)
 const router = useRouter()
+
+
+const filteredTasks = computed(() => {
+    return tasks.value.filter(task => !hideClosed.value || !task.task_ended);
+});
+
 onMounted(async () => {
-   
     courseId.value = route.params.courseId
-    tasks.value= await getTasksFromCourse(courseId.value)
-})
+    tasks.value = await getTasksFromCourse(courseId.value)
+}
+)
 
 function goToCreateTask() {
     router.push({ name: 'createTask', params: { courseId: courseId.value } })
 }
 
+function changeFilter() {
+    hideClosed.value = !hideClosed.value
+}
 function goToMenu() {
-    router.push({ name: 'home'})
+    router.push({ name: 'home' })
+}
+
+function goToEvaluar(taskId) {
+    router.push({ name: 'evaluate', params: { taskId: taskId, courseId: courseId.value } })
 }
 </script>
 <style scoped>

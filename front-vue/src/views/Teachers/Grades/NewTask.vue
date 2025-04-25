@@ -1,6 +1,7 @@
 <template>
     <div class="container">
         <h1>Nova Tasca</h1>
+        <button @click="goBack()">Tornar</button>
         <div class="form-group">
             <label for="taskName">Nom de la tasca:</label>
             <input type="text" id="task_name" v-model="task_name" />
@@ -36,6 +37,9 @@ function sendCreateTask() {
     createTask(task).then(() => {
         router.push({ name: 'grades', params: { courseId: courseId.value } })
     })
+}
+function goBack() {
+    router.push({ name: 'grades', params: { courseId: courseId.value } })
 }
 </script>
 <style scoped></style>

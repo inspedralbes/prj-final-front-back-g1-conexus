@@ -31,6 +31,11 @@ const router = createRouter({
       path: "/Grades/:courseId/CreateTask",
       name: "createTask",
       component: () => import('../views/Teachers/Grades/NewTask.vue'),
+    },
+    {
+      path: "/Grades/:courseId/Task/:taskId",
+      name: "evaluate",
+      component: () => import('../views/Teachers/Grades/EvaluateTask.vue'),
     }
   ],
 })
