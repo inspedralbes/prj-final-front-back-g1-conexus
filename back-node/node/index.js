@@ -19,7 +19,7 @@ import roomRoutes from "./routes/roomRoutes.js";
 import typeUserRoutes from "./routes/typeUserRoutes.js";
 import userCourseRoutes from "./routes/userCourseRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
-
+import taskRoutes from "./routes/taskRoutes.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -45,7 +45,7 @@ app.use("/api/rooms", roomRoutes);
 app.use("/api/type-users", typeUserRoutes);
 app.use("/api/user-courses", userCourseRoutes);
 app.use("/api/users", userRoutes);
-
+app.use("/api/tasks", taskRoutes);
 
 sequelize.sync().then(() => {
     console.log("Database synced");

@@ -27,6 +27,15 @@ router.get("/:id", async (req, res) => {
 router.post("/", async (req, res) => {
     try {
         const { room_name, room_hours_available, room_description } = req.body;
+        if (!room_name || !room_hours_available || !room_description) {
+            return res.status(400).json({ message: "room_name, room_hours_available i room_description són obligatoris" });
+        }
+        //check if the room_name already exists in the database
+        const roomExists = await Room.findOne({ where: { room_name } });
+        if (roomExists) {
+            return res.status(400).json({ message: "Ja hi ha una sala amb aquest nom" });
+        }
+        //check if the room_hours_available is a number
         const room = await Room.create({ room_name, room_hours_available, room_description });
         res.status(201).json(room);
     } catch (error) {
@@ -37,6 +46,9 @@ router.post("/", async (req, res) => {
 router.put("/:id", async (req, res) => {
     try {
         const { room_name, room_hours_available, room_description } = req.body;
+        if(await Room.findOne({ where: { room_name } })) {
+            return res.status(400).json({ message: "Ja hi ha una sala amb aquest nom" });
+        }
         const room = await Room.update({ room_name, room_hours_available, room_description }, { where: { id: req.params.id } });
         res.json(room);
     } catch (error) {
