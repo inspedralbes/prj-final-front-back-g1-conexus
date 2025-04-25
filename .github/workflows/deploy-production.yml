@@ -138,7 +138,9 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
 
           cd /opt/conexus
-
+          if [ -d ./back-node] then sudo rm -r ./back-node
+          fi 
+          mkdir back-node
 
           EOF
 
