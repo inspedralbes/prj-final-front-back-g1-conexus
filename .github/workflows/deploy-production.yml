@@ -115,14 +115,14 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
           cd /opt/conexus 
 
-          if [ -d ./front-vue]; then 
+          if [ -d ./front-vue ]; then 
             sudo rm -r ./front-vue
           fi 
           mkdir front-vue
           
           EOF
 
-          scp -r -o StrictHostKeyChecking=no -i ~/prod_key.pem front-vue/dist ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus
+          scp -r -o StrictHostKeyChecking=no -i ~/prod_key.pem front-vue/dist/* ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/front-vue
 
   BUILD-BACKEND:
     needs: [CONEXIO-SERVIDOR, SECRETS-GITHUB]
