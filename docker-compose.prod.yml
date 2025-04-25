@@ -5,7 +5,7 @@ services:
     build:
       dockerfile: ./back-node/node/prod.Dockerfile
       context: ./back-node/node
-    command: sh -c "cp .env.prod .env && pnpm install && pnpm run dev"
+    command: sh -c "npm install && npm run dev"
     working_dir: /usr/src/app
     volumes:
       - ./back-node/node:/app
