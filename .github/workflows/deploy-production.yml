@@ -146,7 +146,7 @@ jobs:
 
           EOF
 
-          scp -r -o StrictHostKeyChecking=no -i ~/prod_key.pem back-node ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/back-node
+          scp -r -o StrictHostKeyChecking=no -i ~/prod_key.pem back-node ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus
   
   START-DOCKER-COMPOSE-PRINCIPAL:
     needs: [BUILD-FRONTEND, START-PORTAINER-NGINX]
