@@ -3,10 +3,11 @@ const API_URL = import.meta.env.VITE_INCIDENT_URL;
 // Helper function to handle fetch responses
 const handleResponse = async (response) => {
     if (!response.ok) {
-        const error = await response.json();
+        const error = await response.json().catch(() => ({}));
         throw new Error(error.message || 'Error en la solicitud');
     }
-    return response.json();
+    const text = await response.text();
+    return text ? JSON.parse(text) : {};
 };
 
 // Get all reports
