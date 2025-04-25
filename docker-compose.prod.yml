@@ -4,7 +4,7 @@ services:
   conexus-hub-back:
     build:
       dockerfile: ./back-node/node/prod.Dockerfile
-      context: .
+      context: ./back-node/node
     command: sh -c "cp .env.prod .env && pnpm install && pnpm run dev"
     working_dir: /usr/src/app
     volumes:
@@ -30,7 +30,7 @@ services:
   conexus-hub-front:
     build:
       dockerfile: ./front-vue/prod.Dockerfile
-      context: .
+      context: ./front-vue
     volumes:
       - ./front-vue/dist:/usr/share/nginx/html:ro
     networks:
