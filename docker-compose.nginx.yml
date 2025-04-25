@@ -12,8 +12,7 @@ services:
       - /data/nginxproxymanager/data:/data
       - /etc/letsencrypt:/etc/letsencrypt
     networks:
-      proxy:
-        external: true
+      - proxy
 
   #base de datos para almacenar configuraciones de nginx proxy inverso, redirecciones, configuraciones ssl, users y permisos, dominios, logs...
   db:
@@ -27,3 +26,7 @@ services:
       - 4306:4306
     volumes:
       - /data/mariadb:/var/lib/mysql
+
+networks:
+  proxy:
+    external: true
