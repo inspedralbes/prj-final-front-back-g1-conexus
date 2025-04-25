@@ -18,7 +18,7 @@ jobs:
           echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > ~/prod_key.pem
           chmod 600 ~/prod_key.pem
 
-      - name: Conect to SHH i actualizaciones
+      - name: Conect to SHH i actualizaciones servidor
         run: |
           ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
             echo "🚀 Iniciando actualizaciones e instalar dependencies..."
