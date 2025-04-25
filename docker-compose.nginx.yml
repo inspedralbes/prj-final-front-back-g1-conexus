@@ -11,14 +11,16 @@ services:
       - /data/nginxproxymanager/config.json:/app/config/production.json
       - /data/nginxproxymanager/data:/data
       - /etc/letsencrypt:/etc/letsencrypt
-      - /root/prj-final-front-back-g1-conexus/front-vue/dist:/data/web
+    networks:
+      proxy:
+        external: true
 
   #base de datos para almacenar configuraciones de nginx proxy inverso, redirecciones, configuraciones ssl, users y permisos, dominios, logs...
   db:
     image: jc21/mariadb-aria:latest
     environment:
       MYSQL_NGINX_ROOT_PASSWORD: ${NGINX_DB_ROOT_PASSWORD}
-      MYSQL_NGINX_DATABASE: ${NGINX_DB_NAME}
+      MYSQL_NGINX_DATABASE: nginx
       MYSQL_NGINX_USER: ${NGINX_DB_USER}
       MYSQL_NGINX_PASSWORD: ${NGINX_DB_PASSWORD}
     ports:

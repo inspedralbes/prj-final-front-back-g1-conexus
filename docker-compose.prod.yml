@@ -27,11 +27,22 @@ services:
       - conexus-hub-mysql
       # - conexus-hub-mongo
 
+  conexus-hub-front:
+    build:
+      dockerfile: ./front-vue/prod.Dockerfile
+      context: .
+    volumes:
+      - ./front-vue/dist:/usr/share/nginx/html:ro
+    networks:
+      - conexus-hub-network
+      - proxy
+    restart: always
+
   conexus-hub-mysql:
     image: mysql:5.7
     environment:
-      - MYSQL_ROOT_PASSWORD=conexus-hub
-      - MYSQL_DATABASE=conexus-hub
+      - MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE: conexus-hub
     volumes:
       - mysql-data:/var/lib/mysql
       - ./back-node/data/create_db.sql:/docker-entrypoint-initdb.d/create.sql
@@ -90,3 +101,5 @@ volumes:
 networks:
   conexus-hub-network:
     driver: bridge
+  proxy:
+    external: true
