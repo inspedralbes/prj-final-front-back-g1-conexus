@@ -18,11 +18,6 @@ const router = createRouter({
           name: 'student-incidents',
           component: () => import('@/views/Incidents/index.vue')
         },
-        {
-          path: 'lost-objects',
-          name: 'student-lost-objects',
-          component: () => import('@/views/Students/lost-objects.vue')
-        },
         { 
           path: 'assistence',
           name: 'student-assistence',
