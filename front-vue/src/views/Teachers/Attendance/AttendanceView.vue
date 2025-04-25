@@ -1,5 +1,6 @@
 <template>
     <div class="attendance-view">
+        <button @click="goToMenu()">Tornar al menu</button>
         <h1 class="pageTitle">Asistencia al curs {{ hoursAvailable.course_name }} </h1>
         <div dayPicker class="day-picker">
             <label for="date">Data:</label>
@@ -38,10 +39,12 @@
 </template>
 <script setup>
 import { useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { userData } from '@/stores/userData.js'
 import { h, onMounted, ref } from 'vue'
 import { getHoursOfCourse,  getAlumns } from '@/services/mainComManager.js'
 import {getAttendanceFromDay,updateAttendance} from '@/services/attendanceComManager.js'
+
 const selectedDate = ref(new Date().toISOString().substr(0, 10))
 const attendance = ref([])
 const hoursAvailable = ref([])
@@ -49,6 +52,7 @@ const selectedHour=ref(null)
 const students=ref([]);
 const route = useRoute()
 const courseId = route.params.courseId
+const router=useRouter()
 onMounted(async () => {
  
    
@@ -78,6 +82,10 @@ async function getAttendanceOfTheDay() {
             });
         }
     });
+}
+
+function goToMenu() {
+    router.push({ name: 'home'})
 }
 
 function thereIsClassThatDay() {

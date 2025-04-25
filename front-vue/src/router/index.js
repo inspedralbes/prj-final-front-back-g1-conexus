@@ -26,6 +26,11 @@ const router = createRouter({
       path: '/Grades/:courseId',
       name: 'grades',
       component: () => import('../views/Teachers/Grades/GradesView.vue'),
+    },
+    {
+      path: "/Grades/:courseId/CreateTask",
+      name: "createTask",
+      component: () => import('../views/Teachers/Grades/NewTask.vue'),
     }
   ],
 })

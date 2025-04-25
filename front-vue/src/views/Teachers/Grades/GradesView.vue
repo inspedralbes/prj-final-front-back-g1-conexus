@@ -1,0 +1,73 @@
+<template>
+    <div class="container">
+        <div class="row">
+            <h1>Registro de Notas</h1>
+            <button @click="goToMenu()">Volver al menú</button>
+            <button @click="goToCreateTask()">Crear nueva tarea</button>
+            <div>
+                <label>
+                    <input type="checkbox" v-model="hideClosed" />
+                    Ocultar tasques tancades
+                </label>
+            </div>
+            <table>
+                <tr>
+                    <th>Tasca</th>
+                    <th>Tancada</th>
+                </tr>
+                <tr v-for="task in tasks" :key="task.id" v-if="!hideClosed || (hideClosed && !task.task_ended)">
+                    <td>{{ task.task_name }}</td>
+                    <td>{{ task.task_ended ? 'Sí' : 'No' }}</td>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+</template>
+<script setup>
+import { useRoute } from 'vue-router'
+import { userData } from '@/stores/userData.js'
+import { useRouter } from 'vue-router'
+import { onMounted, ref } from 'vue'
+import { getTasksFromCourse } from '@/services/gradesComManager.js'
+const route = useRoute()
+const tasks = ref([]);
+const courseId = ref(null)
+const hideClosed = ref(false)
+const router = useRouter()
+onMounted(async () => {
+   
+    courseId.value = route.params.courseId
+    tasks.value= await getTasksFromCourse(courseId.value)
+})
+
+function goToCreateTask() {
+    router.push({ name: 'createTask', params: { courseId: courseId.value } })
+}
+
+function goToMenu() {
+    router.push({ name: 'home'})
+}
+</script>
+<style scoped>
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 20px;
+}
+
+th,
+td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+th {
+    background-color: #f2f2f2;
+    text-align: left;
+}
+
+td {
+    text-align: left;
+}
+</style>

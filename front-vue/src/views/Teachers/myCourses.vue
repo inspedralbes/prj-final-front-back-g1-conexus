@@ -7,7 +7,7 @@
                 <p>{{ course.course_description }}</p>
                 <div class="Buttons">
                     <button @click="goToAssistance(course.id)">Asistencia</button>
-                    <button @click="">Avaluació</button>
+                    <button @click="goToGrades(course.id)">Avaluació</button>
                 </div>
             </div>
         </div>
@@ -26,6 +26,10 @@ onMounted(async () => {
     courses.value = await getCoursesFromUser(store.userId)
     console.log(courses.value)
 })
+
+function goToGrades(courseId) {
+    route.push({ name: 'grades', params: { courseId } })
+}   
 
 function goToAssistance(courseId) {
 
