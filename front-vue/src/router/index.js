@@ -90,7 +90,7 @@ const router = createRouter({
         {
           path: 'incidents',
           name: 'technician-incidents',
-          component: () => import('@/views/Technicians/incidents.vue') //viewreports.vue
+          component: () => import('@/views/Technicians/incidents.vue')
         },
         {
           path: 'lost-objects',
@@ -140,11 +140,6 @@ const router = createRouter({
           component: () => import('@/views/Admin/incidents.vue')
         },
       ]
-    },
-    {
-      path: '/reports',
-      name: 'reports',
-      component: () => import('@/views/Reports.vue') //esto va en incidents index.vue
     }
   ],
 })

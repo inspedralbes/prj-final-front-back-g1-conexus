@@ -1,6 +1,6 @@
 <template>
-    <div class="min-h-screen bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center p-4">
-        <div class="w-full max-w-md bg-slate-700/50 backdrop-blur-sm rounded-xl shadow-xl overflow-hidden animate-fade-in border border-slate-600/30">
+    <div class="min-h-screen flex items-center justify-center ">
+        <div class="w-full max-w-lg bg-slate-700/50 backdrop-blur-sm rounded-xl shadow-xl overflow-hidden animate-fade-in border border-slate-600/30">
             <!-- Capçalera -->
             <div class="bg-gradient-to-r from-blue-500 to-indigo-600 p-6 text-center">
                 <h1 class="text-2xl font-bold text-white">Accés al Sistema</h1>
