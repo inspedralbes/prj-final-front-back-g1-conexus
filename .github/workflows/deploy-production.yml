@@ -115,7 +115,8 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
           cd /opt/conexus 
 
-          if [ -d ./front-vue] then sudo rm -r ./front-vue
+          if [ -d ./front-vue]; then 
+            sudo rm -r ./front-vue
           fi 
           mkdir front-vue
           
@@ -138,8 +139,9 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
 
           cd /opt/conexus
-          if [ -d ./back-node] then sudo rm -r ./back-node
-          fi 
+          if [ -d ./back-node ]; then
+            sudo rm -r ./back-node
+          fi
           mkdir back-node
 
           EOF
