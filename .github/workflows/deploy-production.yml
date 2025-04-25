@@ -70,7 +70,7 @@ jobs:
     needs: [SECRETS-GITHUB]
     runs-on: ubuntu-latest
     steps:
-      - name: Levantar contenedores de Portainer y Nginx
+      - name: Levantar contenedor de Portainer y Nginx
         run: | 
           echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > ~/prod_key.pem
           chmod 600 ~/prod_key.pem
