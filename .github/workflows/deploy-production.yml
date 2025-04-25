@@ -26,14 +26,10 @@ jobs:
             # Actualizar sistema
             sudo apt update && sudo apt upgrade -y
 
-            # Instalar dependencias necesarias
-            sudo apt install -y git docker.io docker-compose
-
             # Asegurar que Docker esté corriendo
             sudo systemctl enable docker
             sudo systemctl start docker
-
-            
+     
   SECRETS-GITHUB:
     needs: [CONEXIO-SERVIDOR]
     runs-on: ubuntu-latest
@@ -87,19 +83,19 @@ jobs:
           # Levantar Portainer
           if [ -f docker-compose.portainer.yml ]; then
             echo "🔧 Levantando Portainer..."
-            docker compose -f docker-compose.portainer.yml up -d
+            docker-compose -f docker-compose.portainer.yml up -d
           fi
 
           if [ -f docker-compose.nginx.yml ]; then
             echo "🔧 Levantando NGINX Proxy Manager..."
-            docker compose -f docker-compose.nginx.yml up -d
+            docker-compose -f docker-compose.nginx.yml up -d
           fi
 
           echo "🎉 Despliegue completado"
           EOF
 
   BUILD-FRONTEND:
-    needs: [CONEXIO-SERVIDOR]
+    needs: [CONEXIO-SERVIDOR, SECRETS-GITHUB, START-PORTAINER-NGINX]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -115,8 +111,39 @@ jobs:
         run: |
           echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > ~/prod_key.pem
           chmod 600 ~/prod_key.pem
+          
+          ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
+          cd /opt/conexus 
+
+          if [ -d ./front-vue] then sudo rm -r ./front-vue
+          fi 
+          mkdir front-vue
+          
+          EOF
+
           scp -r -o StrictHostKeyChecking=no -i ~/prod_key.pem front-vue/dist ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/front-vue
-      
+
+  BUILD-BACKEND:
+    needs: [CONEXIO-SERVIDOR, SECRETS-GITHUB]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Copiar carpeta node y data al servidor remoto
+        run: | 
+          echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > ~/prod_key.pem
+          chmod 600 ~/prod_key.pem
+
+          ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
+
+          cd /opt/conexus
+
+
+          EOF
+
+          scp -r -o StrictHostKeyChecking=no -i ~/prod_key.pem back-node ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/back-node
+  
   START-DOCKER-COMPOSE-PRINCIPAL:
     needs: [BUILD-FRONTEND, START-PORTAINER-NGINX]
     runs-on: ubuntu-latest
@@ -134,7 +161,7 @@ jobs:
             if [ -f docker-compose.prod.yml ]; then
               echo "🔧 Levantando Backend y Frontend..."
 
-              docker compose -f docker-compose.prod.yml up -d --build
+              docker-compose -f docker-compose.prod.yml up -d --build
             else
               echo "❌ No se encontró el archivo docker-compose.prod.yml"
               exit 1
