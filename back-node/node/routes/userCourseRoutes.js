@@ -16,6 +16,20 @@ router.get("/", async (req, res) => {
 // Crear una nueva relación usuario-curso
 router.post("/", async (req, res) => {
     try {
+        if (!req.body.user_id || !req.body.course_id) {
+            return res.status(400).json({ message: "user_id y course_id son obligatorios" });
+        }
+        // Verificar si la relación ya existe
+        const existingUserCourse = await UserCourse.findOne({
+            where: {
+                user_id: req.body.user_id,
+                course_id: req.body.course_id,
+            },
+        });
+        if (existingUserCourse) {
+            return res.status(400).json({ message: "La relación usuario-curso ya existe" });
+        }
+        // Crear la nueva relación
         const { user_id, course_id } = req.body;
         const userCourse = await UserCourse.create({ user_id, course_id });
         res.json(userCourse);

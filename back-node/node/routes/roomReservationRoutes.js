@@ -82,7 +82,36 @@ router.post("/", async (req, res) => {
           message: "user_id, room_id, start_time i end_time són obligatoris",
         });
     }
-
+    if( new Date(start_time) >= new Date(end_time) ) {
+      return res.status(400).json({ message: "La data d'inici ha de ser anterior a la data de finalització" });
+    }
+    if( new Date(start_time) < new Date() ) {
+      return res.status(400).json({ message: "La data d'inici no pot ser anterior a la data actual" });
+    }
+    // Comprovar si la sala ja està reservada en el rang de dates especificat
+    const existingReservation = await RoomReservation.findOne({
+      where: {
+        room_id,
+        [Op.or]: [
+          {
+            start_time: {
+              [Op.between]: [start_time, end_time],
+            },
+          },
+          {
+            end_time: {
+              [Op.between]: [start_time, end_time],
+            },
+          },
+        ],
+      },
+    });
+    if (existingReservation) {
+      return res
+        .status(400)
+        .json({ message: "La sala ja està reservada en aquest horari" });
+    }
+    // Crear una nova reserva d'habitació
     const newReservation = await RoomReservation.create({
       user_id,
       room_id,

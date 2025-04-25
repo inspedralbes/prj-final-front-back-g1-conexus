@@ -11,6 +11,7 @@ import Department from "./Department.js";
 import Report from "./Reports.js";
 import Course from "./Course.js";
 import UserCourse from "./UserCourse.js";
+import Task from "./Task.js";
 
 // Define relationships
 
@@ -42,9 +43,13 @@ Course.hasMany(UserCourse, { foreignKey: 'course_id' });
 Grade.belongsTo(User, { foreignKey: 'user_id' });
 User.hasMany(Grade, { foreignKey: 'user_id' });
 
-// Grade - Course relationship (Many-to-One)
-Grade.belongsTo(Course, { foreignKey: 'course_id' });
-Course.hasMany(Grade, { foreignKey: 'course_id' });
+//Task - Course relationship (Many-to-One)
+Task.belongsTo(Course, { foreignKey: 'course_id' });
+Course.hasMany(Task, { foreignKey: 'course_id' });
+
+// Grade - Task relationship (Many-to-One)
+Grade.belongsTo(Task, { foreignKey: 'task_id' });
+Task.hasMany(Grade, { foreignKey: 'task_id' });
 
 // Assistance - User relationship (Many-to-One)
 Assistance.belongsTo(User, { foreignKey: 'user_id' });
