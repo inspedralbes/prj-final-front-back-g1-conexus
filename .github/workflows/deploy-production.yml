@@ -58,9 +58,9 @@ jobs:
           echo "NODE_SECRET_KEY_TOKEN=${{ secrets.NODE_SECRET_KEY_TOKEN}}" >> /opt/conexus/.env
 
           # Añadir variables del contenedor nginx db
-          echo "NGINX_DB_ROOT_PASSWORD=${{ secrets.NGINX_DB_ROOT_PASSWORD }}" >> .env.prod
-          echo "NGINX_DB_USER=${{ secrets.NGINX_DB_USER }}" >> .env.prod
-          echo "NGINX_DB_PASSWORD=${{ secrets.NGINX_DB_PASSWORD }}" >> .env.prod
+          echo "NGINX_DB_ROOT_PASSWORD=${{ secrets.NGINX_DB_ROOT_PASSWORD }}" >> /opt/conexus/.env
+          echo "NGINX_DB_USER=${{ secrets.NGINX_DB_USER }}" >> /opt/conexus/.env
+          echo "NGINX_DB_PASSWORD=${{ secrets.NGINX_DB_PASSWORD }}" >> /opt/conexus/.env
 
           echo "✅ .env completat!"
           
