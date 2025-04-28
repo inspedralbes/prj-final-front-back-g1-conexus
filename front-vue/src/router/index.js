@@ -21,14 +21,24 @@ const router = createRouter({
         { 
           path: 'assistence',
           name: 'student-assistence',
-          component: () => import('@/views/Students/assistence.vue')
+          component: () => import('@/views/Students/courseSelectorAttendance.vue')
         },
         {
           path: 'grades',
           name: 'student-grades',
-          component: () => import('@/views/Students/grades.vue')
+          component: () => import('@/views/Students/courseSelectorGrades.vue')
         }
       ]
+    },
+    {
+      path: '/students/:id/grades',
+      name: 'grades-from-course-student',
+      component: () => import('@/views/Students/grades.vue'),
+    },
+    {
+      path: '/students/:id/assistence',
+      name: 'assistence-from-course-student',
+      component: () => import('@/views/Students/assistence.vue'),
     },
     {
       path: '/teachers',

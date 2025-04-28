@@ -1,6 +1,6 @@
 import express from "express";
 import UserCourse from "../models/UserCourse.js";
-
+import Course from "../models/Course.js";
 const router = express.Router();
 
 // Obtener todas las relaciones usuario-curso
@@ -50,6 +50,28 @@ router.delete("/:id", async (req, res) => {
 
         await userCourse.destroy();
         res.json({ message: "Relación usuario-curso eliminada correctamente" });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Obtener cursos por ID de usuario
+router.get("/user/:userId", async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const userCourses = await UserCourse.findAll({
+            where: { user_id: userId },
+        });
+        const userCoursesWithNames = await Promise.all(
+            userCourses.map(async (userCourse) => {
+            const course = await Course.findOne({ where: { id: userCourse.course_id } });
+            return { 
+                ...userCourse.toJSON(), 
+                course_name: course ? course.course_name : "Curso no encontrado" 
+            };
+            })
+        );
+        res.json(userCoursesWithNames);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
