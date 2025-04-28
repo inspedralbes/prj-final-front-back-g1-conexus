@@ -93,7 +93,7 @@ jobs:
             mkdir front-vue
             
             EOF
-            # Subir los archivos generados en el dist al servidor
+            # Subir los archivos generados en dist al servidor
             
             scp -r -o StrictHostKeyChecking=no -i ~/prod_key.pem front-vue/dist/* ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/front-vue
         
