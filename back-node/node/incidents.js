@@ -8,8 +8,6 @@ import { sequelize } from './models/index.js';
 
 import reportRoutes from "./routes/reportRoutes.js";
 
-
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
