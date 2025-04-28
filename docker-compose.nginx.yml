@@ -14,7 +14,6 @@ services:
     networks:
       - proxy
 
-  #base de datos para almacenar configuraciones de nginx proxy inverso, redirecciones, configuraciones ssl, users y permisos, dominios, logs...
   db:
     image: jc21/mariadb-aria:latest
     environment:
@@ -29,4 +28,4 @@ services:
 
 networks:
   proxy:
-    external: true
+    driver: bridge # No es necesario 'external: true', Docker creará la red automáticamente

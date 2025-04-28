@@ -80,10 +80,6 @@ jobs:
 
           cd /opt/conexus
 
-          echo "🔧 Creando red proxy..."
-          docker network create proxy
-          docker network inspect proxy
-
           # Parar y eliminar contenedores antiguos y huérfanos
           if [ -f docker-compose.portainer.yml ]; then
             docker-compose -f docker-compose.portainer.yml down --remove-orphans
