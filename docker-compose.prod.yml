@@ -94,7 +94,7 @@ volumes:
   conexus-hub-image:
   mysql-data:
   portainer_data:
-  mongo-data:
+    # mongo-data:
 
 
 networks:

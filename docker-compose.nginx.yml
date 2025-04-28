@@ -13,6 +13,7 @@ services:
       - /etc/letsencrypt:/etc/letsencrypt
     networks:
       - proxy
+      - conexus-hub-network
 
   db:
     image: jc21/mariadb-aria:latest
@@ -29,3 +30,6 @@ services:
 networks:
   proxy:
     driver: bridge # No es necesario 'external: true', Docker creará la red automáticamente
+  conexus-hub-network:
+    # Definir esta red externa para conexión con otros servicios
+    external: true
