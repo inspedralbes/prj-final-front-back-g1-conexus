@@ -160,6 +160,8 @@ router.post('/loginDB', async (req, res) => {
         // Check if user exists
         const existingUser = await User.findOne({ where: { email } });
 
+        console.log('Existing user:', existingUser);
+
         if (!existingUser) {
             return res.status(404).json({ error: 'User not found' });
             console.log('User not found');
@@ -183,7 +185,7 @@ router.post('/loginDB', async (req, res) => {
         });
     } catch (error) {
         console.error('Login error:', error);
-        // res.status(500).json({ error: 'Server error during login' });
+        res.status(500).json({ error: 'Server error during login' });
     }
 });
 

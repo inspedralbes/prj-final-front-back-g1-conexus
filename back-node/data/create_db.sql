@@ -1,22 +1,20 @@
--- Create the database
-CREATE DATABASE IF NOT EXISTS conexushub;
-
--- Use the database
-USE conexushub;
-
 -- Table 1: departments
 CREATE TABLE IF NOT EXISTS Departments (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
+    name VARCHAR(255) NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- Table 2: typesUsers
 CREATE TABLE IF NOT EXISTS TypesUsers (
-    id INT AUTO_INCREMENT PRIMARY KEY ,
-    name VARCHAR(255) NOT NULL
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Table 3: users 
+-- Table 3: users
 CREATE TABLE IF NOT EXISTS Users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     typesUsers_id INT DEFAULT 1,
@@ -26,6 +24,8 @@ CREATE TABLE IF NOT EXISTS Users (
     profile VARCHAR(255),
     department_id INT,
     description TEXT DEFAULT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (typesUsers_id) REFERENCES TypesUsers(id),
     FOREIGN KEY (department_id) REFERENCES Departments(id)
 );
@@ -38,6 +38,8 @@ CREATE TABLE IF NOT EXISTS Courses (
     course_description TEXT NOT NULL,
     course_teacher_id INT,
     course_department_id INT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (course_teacher_id) REFERENCES Users(id),
     FOREIGN KEY (course_department_id) REFERENCES Departments(id)
 );
@@ -47,6 +49,8 @@ CREATE TABLE IF NOT EXISTS UsersCourses (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     course_id INT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES Users(id),
     FOREIGN KEY (course_id) REFERENCES Courses(id)
 );
@@ -57,6 +61,8 @@ CREATE TABLE IF NOT EXISTS Tasks (
     course_id INT NOT NULL,
     task_name TEXT NOT NULL,
     task_description TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (course_id) REFERENCES Courses(id)
 );
 
@@ -66,6 +72,8 @@ CREATE TABLE IF NOT EXISTS Grades (
     user_id INT NOT NULL,
     task_id INT NOT NULL,
     grade FLOAT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES Users(id),
     FOREIGN KEY (task_id) REFERENCES Tasks(id)
 );
@@ -77,6 +85,8 @@ CREATE TABLE IF NOT EXISTS Assistance (
     course_id INT NOT NULL,
     hour DATETIME NOT NULL,
     assisted ENUM('yes', 'unjustified', 'justified') DEFAULT 'unjustified',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES Users(id),
     FOREIGN KEY (course_id) REFERENCES Courses(id)
 );
@@ -88,6 +98,8 @@ CREATE TABLE IF NOT EXISTS LostObjects (
     description TEXT NOT NULL,
     image VARCHAR(255) NULL,
     user_id INT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES Users(id)
 );
 
@@ -97,6 +109,8 @@ CREATE TABLE IF NOT EXISTS Response (
     user_id INT NOT NULL,
     lostAndFound_id INT NOT NULL,
     comment TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES Users(id),
     FOREIGN KEY (lostAndFound_id) REFERENCES LostObjects(id)
 );
@@ -106,7 +120,9 @@ CREATE TABLE IF NOT EXISTS Rooms (
     id INT AUTO_INCREMENT PRIMARY KEY,
     room_name TEXT NOT NULL,
     room_hours_available JSON DEFAULT NULL,
-    room_description TEXT NOT NULL
+    room_description TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- Table 12: roomReservations
@@ -116,6 +132,8 @@ CREATE TABLE IF NOT EXISTS RoomReservations (
     room_id INT NOT NULL,
     start_time DATETIME NOT NULL,
     end_time DATETIME NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES Users(id),
     FOREIGN KEY (room_id) REFERENCES Rooms(id)
 );
@@ -128,6 +146,8 @@ CREATE TABLE IF NOT EXISTS Reports (
     status ENUM('pending', 'revising', 'revised') DEFAULT 'pending',
     image TEXT,
     room_id INT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES Users(id),
     FOREIGN KEY (room_id) REFERENCES Rooms(id)
 );
