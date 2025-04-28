@@ -1,6 +1,7 @@
 <template>
     <div class="min-h-screen flex items-center justify-center ">
-        <div class="w-full max-w-lg bg-slate-700/50 backdrop-blur-sm rounded-xl shadow-xl overflow-hidden animate-fade-in border border-slate-600/30">
+        <div
+            class="w-full max-w-lg bg-slate-700/50 backdrop-blur-sm rounded-xl shadow-xl overflow-hidden animate-fade-in border border-slate-600/30">
             <!-- Capçalera -->
             <div class="bg-gradient-to-r from-blue-500 to-indigo-600 p-6 text-center">
                 <h1 class="text-2xl font-bold text-white">Accés al Sistema</h1>
@@ -40,51 +41,145 @@
                 </div>
 
                 <!-- Accés amb correu i contrasenya -->
-                <form @submit.prevent="handleLogin" class="space-y-4">
+                <div class="space-y-4">
                     <div>
-                        <label for="email" class="block text-sm font-medium text-slate-300 mb-1">Correu electrònic</label>
-                        <input type="email" id="email" v-model="email" placeholder="el-teu@correu.cat" required
+                        <label for="email" class="block text-sm font-medium text-slate-300 mb-1">Correu
+                            electrònic</label>
+                        <input type="email" id="email" v-model="userLogin.email" placeholder="el-teu@correu.cat"
+                            required
                             class="w-full px-4 py-2 bg-slate-800/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
                     </div>
 
                     <div>
                         <label for="password" class="block text-sm font-medium text-slate-300 mb-1">Contrasenya</label>
-                        <input type="password" id="password" v-model="password" placeholder="La teva contrasenya" required
+                        <input type="password" id="password" v-model="userLogin.password"
+                            placeholder="La teva contrasenya" required
                             class="w-full px-4 py-2 bg-slate-800/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
                     </div>
 
                     <div class="flex items-center">
-                        <input id="remember-me" type="checkbox" 
+                        <input id="remember-me" type="checkbox"
                             class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-600 rounded bg-slate-800/50">
                         <label for="remember-me" class="ml-2 block text-sm text-slate-300">
                             Recorda'm
                         </label>
                     </div>
 
-                    <button type="submit"
+                    <button @click="signInWithApp"
                         class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg shadow transition duration-200">
                         Inicia sessió
                     </button>
-                </form>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, reactive } from 'vue';
+import { initializeApp } from "firebase/app";
+import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { loginAPI, loginDB } from '@/services/communicationsScripts/mainManager.js';
 
-const email = ref('');
-const password = ref('');
+const apikey = import.meta.env.VITE_FIREBASE_API_KEY;
 
-const signInWithGoogle = () => {
-    // Implementació de Google Auth
+// Firebase configuration
+const firebaseConfig = {
+    apiKey: apikey,
+    authDomain: "tr2-dam-mentories.firebaseapp.com",
+    projectId: "tr2-dam-mentories",
+    storageBucket: "tr2-dam-mentories.firebaseapp.com",
+    messagingSenderId: "338164475859",
+    appId: "1:338164475859:web:e69d1ef2426b26d9e0f126",
+    measurementId: "G-KTW22GCCFB",
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+// State and methods
+const message = ref("");
+const messageType = ref("");
+
+const userLogin = reactive({
+    email: "",
+    password: "",
+});
+
+const userAPIs = reactive({
+    email: "",
+    name: "",
+    password: "",
+    profile: "",
+});
+
+const signInWithGoogle = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+        const result = await signInWithPopup(auth, provider);
+
+        userAPIs.password = result.user.uid;
+        userAPIs.email = result.user.email;
+        userAPIs.name = result.user.displayName;
+        userAPIs.profile = result.user.photoURL;
+
+        // validateAndLogin(userAPIs);
+    } catch (error) {
+        message.value = $t("LoginRegisterPage.error");
+        messageType.value = "error";
+    }
     console.log('Iniciant amb Google');
 };
 
-const handleLogin = () => {
-    // Lògica de login normal
+const signInWithApp = async () => {
+    let succes = false;
+    let profileURL = ref("");
+
+    try {
+        const response = await loginDB(userLogin);
+
+        if (response.error) {
+            return;
+        } else {
+            succes = true;
+        }
+
+        let user = response.userLogin;
+        let profile = user.profile;
+
+        if (profile.includes("/upload/", 0)) {
+            profileURL.value = `${import.meta.env.VITE_URL_BACK}${user.profile}`;
+        } else {
+            profileURL.value = user.profile;
+        }
+
+        user.profile = profileURL.value;
+
+        useAppStore().setAccessToken(response.accessToken);
+        useAppStore().setUser(user);
+
+        localStorage.setItem("user", JSON.stringify(user.email));
+        localStorage.setItem("accessToken", response.accessToken);
+    } catch (error) {
+        message.value = $t("LoginRegisterPage.errorFields");
+        messageType.value = "error";
+    } finally {
+        if (succes) {
+            router.push({ name: "main" });
+        }
+    }
     console.log('Login amb:', email.value, password.value);
+};
+
+const checkEmailType = (email) => {
+    // Regular expression to check if email starts with 'a' followed by exactly two numbers
+    const regex = /^a\d{2}/;
+    
+    if (regex.test(email)) {
+        return 1;
+    }
+    return 0;
 };
 </script>
 
@@ -98,6 +193,7 @@ const handleLogin = () => {
         opacity: 0;
         transform: translateY(12px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -105,7 +201,9 @@ const handleLogin = () => {
 }
 
 /* Transicions suaus */
-button, input, a {
+button,
+input,
+a {
     transition: all 0.2s ease;
 }
 

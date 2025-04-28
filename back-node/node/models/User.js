@@ -8,7 +8,6 @@ const User = sequelize.define('User', {
     name: { type: DataTypes.STRING(255), allowNull: false, },
     email: { type: DataTypes.STRING(255), allowNull: false, unique: true, },
     password: { type: DataTypes.STRING(255), allowNull: false, },
-    banner: { type: DataTypes.STRING(255), allowNull: true, },
     profile: { type: DataTypes.STRING(255), allowNull: true, },
     department_id: { type: DataTypes.INTEGER, allowNull: true },
     created_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW, },
