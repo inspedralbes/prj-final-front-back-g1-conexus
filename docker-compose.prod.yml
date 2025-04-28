@@ -28,7 +28,7 @@ services:
 
   conexus-hub-front:
     build:
-      dockerfile: ./front-vue/prod.Dockerfile
+      dockerfile: prod.Dockerfile
       context: ./front-vue
     volumes:
       - ./front-vue/dist:/usr/share/nginx/html:ro
