@@ -26,17 +26,6 @@ services:
       - conexus-hub-mysql
       # - conexus-hub-mongo
 
-  conexus-hub-front:
-    build:
-      dockerfile: ./front-vue/prod.Dockerfile
-      context: ./front-vue
-    volumes:
-      - ./front-vue/dist:/usr/share/nginx/html:ro
-    networks:
-      - conexus-hub-network
-      - proxy
-    restart: always
-
   conexus-hub-mysql:
     image: mysql:5.7
     environment:
