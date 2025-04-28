@@ -56,7 +56,7 @@ services:
       - "3306:3306"
     environment:
       - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=conexus-hub
+      - MYSQL_DATABASE=conexushub
       - MYSQL_USER=user
       - MYSQL_PASSWORD=password
     volumes:
