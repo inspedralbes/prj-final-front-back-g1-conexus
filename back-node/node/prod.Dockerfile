@@ -1,12 +1,14 @@
 FROM node:18-alpine3.20
 
+ENV NODE_ENV=production
+
 WORKDIR /app
 
 # Copiar solo los archivos necesarios para la instalación de dependencias
-COPY package*.json ./
+COPY package*.json package-lock.json ./
 
 # Instalar dependencias de producción
-RUN npm ci --only=production
+RUN npm ci --omit=dev
 
 # Copiar el resto del código
 COPY . .
