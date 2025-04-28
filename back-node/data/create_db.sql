@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS Courses (
     course_name TEXT NOT NULL,
     course_hours_available JSON DEFAULT NULL,
     course_description TEXT NOT NULL,
-    course_teacher_id INT,
+    course_teacher_id INT DEFAULT NULL,
     course_department_id INT NOT NULL,
     course_created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     course_updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -73,22 +73,23 @@ CREATE TABLE IF NOT EXISTS Grades (
     grade FLOAT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES Users(id),
-    FOREIGN KEY (task_id) REFERENCES Tasks(id)
+    FOREIGN KEY (course_id) REFERENCES Courses(id)
 );
 
 -- Table 8: assistance
 CREATE TABLE IF NOT EXISTS Assistance (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    course_id INT NOT NULL,
-    hour DATETIME NOT NULL,
-    assisted ENUM('yes', 'unjustified', 'justified') DEFAULT 'unjustified',
-    FOREIGN KEY (user_id) REFERENCES Users(id),
-    FOREIGN KEY (course_id) REFERENCES Courses(id)
+     user_id INT NOT NULL,
+     course_id INT NOT NULL,
+     hour DATETIME NOT NULL,
+     day INT NOT NULL,
+     assisted ENUM('yes', 'unjustified', 'justified', 'not selected', 'late') DEFAULT 'unjustified',
+     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+     FOREIGN KEY (user_id) REFERENCES Users(id),
+     FOREIGN KEY (course_id) REFERENCES Courses(id)
 );
-
--- Table 9: lostObjects
-CREATE TABLE IF NOT EXISTS LostObjects (
+-- Table 8: lostObjects (depends on users and typeslostAndFound)
+CREATE TABLE IF NOT EXISTS lostObjects (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
