@@ -107,7 +107,7 @@ jobs:
           chmod 600 ~/prod_key.pem
 
           # Copiar el prod.Dockerfile al servidor en la carpeta front-vue
-          scp -o StrictHostKeyChecking=no -i ~/prod_key.pem prod.Dockerfile ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/front-vue/prod.Dockerfile
+          scp -o StrictHostKeyChecking=no -i ~/prod_key.pem front-vue/prod.Dockerfile ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/front-vue/prod.Dockerfile
 
       - name: Levantar contenedor de Portainer
         run: |
