@@ -23,7 +23,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
             echo "🚀 Iniciando actualizaciones e instalar dependencies..."
 
-            # Actualizar sistema
+            # Actualizar sistema maquina producción
             sudo apt update && sudo apt upgrade -y
 
             # Asegurar que Docker esté corriendo
@@ -93,7 +93,7 @@ jobs:
 
           echo "🎉 Despliegue completado"
           EOF
-
+  
   BUILD-FRONTEND:
     needs: [CONEXIO-SERVIDOR, SECRETS-GITHUB, START-PORTAINER-NGINX]
     runs-on: ubuntu-latest
