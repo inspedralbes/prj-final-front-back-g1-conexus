@@ -9,7 +9,11 @@ const Report = sequelize.define('Report', {
     status: { type: DataTypes.ENUM('pending', 'revising', 'revised'), defaultValue: 'pending' },
     image: { type: DataTypes.TEXT, allowNull: true },
     room_id: { type: DataTypes.INTEGER, allowNull: false },
-    created_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
+    createdAt: { field: 'created_at', type: DataTypes.DATE },
+    updatedAt: { field: 'updated_at', type: DataTypes.DATE },
+}, {    
+    tableName: 'Reports',
+    timestamps: true,
 });
 
 Report.belongsTo(Room  , { foreignKey: 'room_id'});

@@ -45,8 +45,7 @@ app.use("/api/room-reservations", roomReservationRoutes);
 app.use("/api/rooms", roomRoutes);
 app.use("/api/type-users", typeUserRoutes);
 app.use("/api/user-courses", userCourseRoutes);
-app.use("/api/users", userRoutes);
-
+app.use("/api/user", userRoutes);
 
 sequelize.sync().then(() => {
     console.log("Database synced");

@@ -7,8 +7,11 @@ const LostObject = sequelize.define('LostObject', {
     description: { type: DataTypes.TEXT, allowNull: false, },
     image: { type: DataTypes.STRING(255), allowNull: true, },
     user_id: { type: DataTypes.INTEGER, allowNull: false },
-    created_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW, },
-    expired_at: { type: DataTypes.DATE, allowNull: true, }
+    createdAt: { field: 'created_at', type: DataTypes.DATE },
+    updatedAt: { field: 'updated_at', type: DataTypes.DATE },
+}, {
+    tableName: 'LostObjects',
+    timestamps: true,
 });
 
 export default LostObject;

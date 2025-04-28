@@ -7,7 +7,11 @@ const Task = sequelize.define('Task', {
     task_name: { type: DataTypes.TEXT, allowNull: false, },
     task_description: { type: DataTypes.TEXT, allowNull: false, },
     task_ended: { type: DataTypes.BOOLEAN, defaultValue: false, },
-    created_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW, },
+    createdAt: { field: 'created_at', type: DataTypes.DATE },
+    updatedAt: { field: 'updated_at', type: DataTypes.DATE },
+}, {
+    tableName: 'Tasks',
+    timestamps: true,
 });
 
 export default Task;

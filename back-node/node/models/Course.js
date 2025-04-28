@@ -8,6 +8,10 @@ const Course = sequelize.define('Course', {
     course_description: { type: DataTypes.TEXT, allowNull: false, },
     course_teacher_id: { type: DataTypes.INTEGER, allowNull: true },
     course_department_id: { type: DataTypes.INTEGER, allowNull: false },
+    createdAt: { field: 'created_at', type: DataTypes.DATE },
+    updatedAt: { field: 'updated_at', type: DataTypes.DATE },
+}, {
+    tableName: 'Courses',
+    timestamps: true,
 });
-
 export default Course;
