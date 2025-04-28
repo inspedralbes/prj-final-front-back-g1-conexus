@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import HomeView from '../views/Teachers/myCourses.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -137,7 +138,7 @@ const router = createRouter({
         {
           path: 'config-servers',
           name: 'admin-config-servers',
-          component: () => import('@/views/Admin/servers.vue')
+          // component: () => import('@/views/Admin/servers.vue')
         },
         {
           path: 'config-lost-objects',
@@ -150,6 +151,26 @@ const router = createRouter({
           component: () => import('@/views/Admin/incidents.vue')
         },
       ]
+    },
+    {
+      path: '/Attendance/:courseId',
+      name: 'attendance',
+      component: () => import('../views/Teachers/Attendance/AttendanceView.vue'),
+    },
+    {
+      path: '/Grades/:courseId',
+      name: 'grades',
+      component: () => import('../views/Teachers/Grades/GradesView.vue'),
+    },
+    {
+      path: "/Grades/:courseId/CreateTask",
+      name: "createTask",
+      component: () => import('../views/Teachers/Grades/NewTask.vue'),
+    },
+    {
+      path: "/Grades/:courseId/Task/:taskId",
+      name: "evaluate",
+      component: () => import('../views/Teachers/Grades/EvaluateTask.vue'),
     }
   ],
 })
