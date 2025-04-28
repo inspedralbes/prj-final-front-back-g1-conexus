@@ -65,69 +65,65 @@ jobs:
           echo "✅ .env completat!"
           
           EOF
-  
-  START-PORTAINER-NGINX:
-    needs: [SECRETS-GITHUB]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Levantar contenedores de Portainer y Nginx
-        run: |
-          echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > ~/prod_key.pem
-          chmod 600 ~/prod_key.pem
 
-          ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
-          echo "🚢 Limpiando contenedores antiguos..."
+  BUILD-AND-DEPLOY-PORTAINER-NGINX-FRONTEND:
+      needs: [CONEXIO-SERVIDOR, SECRETS-GITHUB]
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
 
-          cd /opt/conexus
+        - name: Instalar dependencias y construir frontend
+          run: |
+            cd front-vue
+            npm install
+            npm run build
 
-          if [ -f docker-compose.nginx.yml ]; then
-            docker-compose -f docker-compose.nginx.yml down --remove-orphans
-          fi
+        - name: Subir los archivos de frontend construidos al servidor remoto y crear carpeta front-vue
+          run: |
+            echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > ~/prod_key.pem
+            chmod 600 ~/prod_key.pem
 
-          echo "🔧 Levantando Portainer..."
-          if [ -f docker-compose.portainer.yml ]; then
-            docker-compose -f docker-compose.portainer.yml up -d
-          fi
+            ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
+            cd /opt/conexus 
 
-          echo "🔧 Levantando NGINX Proxy Manager..."
-          if [ -f docker-compose.nginx.yml ]; then
-            docker-compose -f docker-compose.nginx.yml up -d
-          fi
+            if [ -d ./front-vue ]; then 
+              sudo rm -r ./front-vue
+            fi 
+            mkdir front-vue
+            
+            EOF
+            # Subir los archivos generados en dist al servidor
+            
+            scp -r -o StrictHostKeyChecking=no -i ~/prod_key.pem front-vue/dist/* ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/front-vue
+        
+        - name: Levantar contenedores de Portainer, NGINX Proxy Manager y Frontend
+          run: |
+              echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > ~/prod_key.pem
+              chmod 600 ~/prod_key.pem
+    
+              ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
+              echo "🚢 Limpiando contenedores antiguos..."
+    
+              cd /opt/conexus
 
-          echo "🎉 Despliegue completado"
-          EOF
-  
-  BUILD-FRONTEND:
-    needs: [CONEXIO-SERVIDOR, SECRETS-GITHUB, START-PORTAINER-NGINX]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+              if [ -f docker-compose.nginx.yml ]; then
+                docker-compose -f docker-compose.nginx.yml down --remove-orphans
+              fi
 
-      - name: Instalar dependencias y construir frontend
-        run: |
-          cd front-vue
-          npm install
-          npm run build
+              echo "🔧 Levantando Portainer..."
+              if [ -f docker-compose.portainer.yml ]; then
+                docker-compose -f docker-compose.portainer.yml up -d
+              fi
 
-      - name: Copiar carpeta dist al servidor remoto
-        run: |
-          echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > ~/prod_key.pem
-          chmod 600 ~/prod_key.pem
-          
-          ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
-          cd /opt/conexus 
+              echo "🔧 Levantando NGINX Proxy Manager..."
+              if [ -f docker-compose.nginx.yml ]; then
+                docker-compose -f docker-compose.nginx.yml up -d
+              fi
 
-          if [ -d ./front-vue ]; then 
-            sudo rm -r ./front-vue
-          fi 
-          mkdir front-vue
-          
-          EOF
+              echo "🎉 Despliegue completado"
+              EOF
 
-          scp -r -o StrictHostKeyChecking=no -i ~/prod_key.pem front-vue/dist/* ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/front-vue
-
-          scp -o StrictHostKeyChecking=no -i ~/prod_key.pem front-vue/prod.Dockerfile ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/front-vue
   BUILD-BACKEND:
     needs: [CONEXIO-SERVIDOR, SECRETS-GITHUB]
     runs-on: ubuntu-latest
@@ -153,7 +149,7 @@ jobs:
           scp -r -o StrictHostKeyChecking=no -i ~/prod_key.pem back-node/* ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/back-node
   
   START-DOCKER-COMPOSE-PRINCIPAL:
-    needs: [BUILD-FRONTEND, START-PORTAINER-NGINX]
+    needs: [BUILD-AND-DEPLOY-PORTAINER-NGINX-FRONTEND, BUILD-BACKEND]
     runs-on: ubuntu-latest
     steps:
       - name: Conectar a la máquina de producción y levantar contenedores

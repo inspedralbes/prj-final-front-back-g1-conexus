@@ -1,5 +1,6 @@
 version: '3'
 services:
+  # Nginx Proxy Manager (para gestión de proxys)
   nginx:
     image: jc21/nginx-proxy-manager:latest
     restart: unless-stopped
@@ -15,6 +16,7 @@ services:
       - proxy
       - conexus-hub-network
 
+  # Base de datos MariaDB para Nginx Proxy Manager
   db:
     image: jc21/mariadb-aria:latest
     environment:
@@ -26,10 +28,26 @@ services:
       - 4306:4306
     volumes:
       - /data/mariadb:/var/lib/mysql
+    networks:
+      - conexus-hub-network
+
+  # Frontend con Nginx
+  conexus-hub-front:
+    image: nginx:stable-alpine
+    container_name: conexus-hub-front
+    ports:
+      - "80:80"
+    volumes:
+      - /opt/conexus/front-vue:/usr/share/nginx/html:ro
+      - /opt/conexus/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - proxy
+      - conexus-hub-network
+    restart: always
 
 networks:
+  # Definimos las redes para que puedan comunicarse entre sí
   proxy:
-    driver: bridge # No es necesario 'external: true', Docker creará la red automáticamente
+    driver: bridge
   conexus-hub-network:
-    # Definir esta red externa para conexión con otros servicios
-    external: true
+    external: true # Red externa ya definida (si ya existe en tu entorno)
