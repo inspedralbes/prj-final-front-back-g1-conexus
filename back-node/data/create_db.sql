@@ -6,8 +6,8 @@ CREATE TABLE IF NOT EXISTS Departments (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Table 2: typesUsers
-CREATE TABLE IF NOT EXISTS TypesUsers (
+-- Table 2: typeUsers
+CREATE TABLE IF NOT EXISTS TypeUsers (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS TypesUsers (
 -- Table 3: users
 CREATE TABLE IF NOT EXISTS Users (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    typesUsers_id INT DEFAULT 1,
+    typeUsers_id INT DEFAULT 1,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS Users (
     description TEXT DEFAULT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (typesUsers_id) REFERENCES TypesUsers(id),
+    FOREIGN KEY (typeUsers_id) REFERENCES TypeUsers(id),
     FOREIGN KEY (department_id) REFERENCES Departments(id)
 );
 
@@ -41,11 +41,11 @@ CREATE TABLE IF NOT EXISTS Courses (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (course_teacher_id) REFERENCES Users(id),
-    FOREIGN KEY (course_department_id) REFERENCES Departments(id)
+    FOREIGN KEY (course_department_id) REFERENCES Departtments(id)
 );
 
--- Table 5: usersCourses
-CREATE TABLE IF NOT EXISTS UsersCourses (
+-- Table 5: userCourses
+CREATE TABLE IF NOT EXISTS UserCourses (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     course_id INT NOT NULL,
@@ -103,8 +103,8 @@ CREATE TABLE IF NOT EXISTS LostObjects (
     FOREIGN KEY (user_id) REFERENCES Users(id)
 );
 
--- Table 10: response
-CREATE TABLE IF NOT EXISTS Response (
+-- Table 10: responses
+CREATE TABLE IF NOT EXISTS Responses (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     lostAndFound_id INT NOT NULL,
