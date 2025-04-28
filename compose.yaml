@@ -61,6 +61,9 @@ services:
       - MYSQL_PASSWORD=password
     volumes:
       - conexus-hub-mysql-data:/var/lib/mysql
+      - ./back-node/data/create_db.sql:/docker-entrypoint-initdb.d/create.sql
+      - ./back-node/data/insert_db.sql:/docker-entrypoint-initdb.d/inserts.sql
+
     restart: unless-stopped
     networks:
       - conexus-hub-network

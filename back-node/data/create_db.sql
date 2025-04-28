@@ -1,10 +1,10 @@
 -- Create the database
-CREATE DATABASE IF NOT EXISTS conexus;
+CREATE DATABASE IF NOT EXISTS conexus-hub;
 
 -- Use the database
-USE conexus;
+USE conexus-hub;
 
--- Table 1: classes
+-- Table 1: departments
 CREATE TABLE IF NOT EXISTS departments (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL
@@ -23,22 +23,21 @@ CREATE TABLE IF NOT EXISTS users (
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
-    banner VARCHAR(255),
     profile VARCHAR(255),
     department_id INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     description TEXT DEFAULT NULL,
     FOREIGN KEY (typesUsers_id) REFERENCES typesUsers(id),
-    FOREIGN KEY (departments_id) REFERENCES departments(id),
+    FOREIGN KEY (department_id) REFERENCES departments(id)
 );
 
 -- Table 4: courses
-CREATE TABLE IF NOT EXISTS courses(
+CREATE TABLE IF NOT EXISTS courses (
     id INT AUTO_INCREMENT PRIMARY KEY,
     course_name TEXT NOT NULL,
     course_hours_available JSON DEFAULT NULL,
     course_description TEXT NOT NULL,
-    course_teacher_id INT NOT NULL,
+    course_teacher_id INT,
     course_department_id INT NOT NULL,
     course_created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     course_updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -46,8 +45,8 @@ CREATE TABLE IF NOT EXISTS courses(
     FOREIGN KEY (course_department_id) REFERENCES departments(id)
 );
 
--- Table 5: usersCourses (depends on users and courses)
-CREATE TABLE IF NOT EXISTS usersCourses(
+-- Table 5: usersCourses
+CREATE TABLE IF NOT EXISTS usersCourses (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     course_id INT NOT NULL,
@@ -56,29 +55,39 @@ CREATE TABLE IF NOT EXISTS usersCourses(
     FOREIGN KEY (course_id) REFERENCES courses(id)
 );
 
--- Table 6: grades (depends on users and courses)
-CREATE TABLE IF NOT EXISTS grades(
+-- Table 6: tasks
+CREATE TABLE IF NOT EXISTS tasks (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    course_id INT NOT NULL,
+    task_name TEXT NOT NULL,
+    task_description TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (course_id) REFERENCES courses(id)
+);
+
+-- Table 7: grades
+CREATE TABLE IF NOT EXISTS grades (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
-    course_id INT NOT NULL,
+    task_id INT NOT NULL,
     grade FLOAT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (course_id) REFERENCES courses(id)
-)
+    FOREIGN KEY (task_id) REFERENCES tasks(id)
+);
 
--- Table 7: assistance (depends on users and courses)
-CREATE TABLE IF NOT EXISTS assistance(
+-- Table 8: assistance
+CREATE TABLE IF NOT EXISTS assistance (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     course_id INT NOT NULL,
     hour DATETIME NOT NULL,
     assisted ENUM('yes', 'unjustified', 'justified') DEFAULT 'unjustified',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (course_id) REFERENCES courses(id)
-)
--- Table 8: lostObjects (depends on users and typeslostAndFound)
+);
+
+-- Table 9: lostObjects
 CREATE TABLE IF NOT EXISTS lostObjects (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
@@ -87,12 +96,11 @@ CREATE TABLE IF NOT EXISTS lostObjects (
     user_id INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     expired_at DATE,
-    FOREIGN KEY (typeslostAndFound_id) REFERENCES typeslostAndFound(id),
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
--- Table 8.1: response
-CREATE TABLE IF NOT EXISTS response(
+-- Table 10: response
+CREATE TABLE IF NOT EXISTS response (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     lostAndFound_id INT NOT NULL,
@@ -102,16 +110,16 @@ CREATE TABLE IF NOT EXISTS response(
     FOREIGN KEY (lostAndFound_id) REFERENCES lostObjects(id)
 );
 
--- Table 9: rooms
-CREATE TABLE IF NOT EXISTS rooms(
+-- Table 11: rooms
+CREATE TABLE IF NOT EXISTS rooms (
     id INT AUTO_INCREMENT PRIMARY KEY,
     room_name TEXT NOT NULL,
     room_hours_available JSON DEFAULT NULL,
-    room_description TEXT NOT NULL,
-)
+    room_description TEXT NOT NULL
+);
 
--- Table 10: roomsReservations (depends on users and rooms)
-CREATE TABLE IF NOT EXISTS roomReservation(
+-- Table 12: roomReservations
+CREATE TABLE IF NOT EXISTS roomReservations (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     room_id INT NOT NULL,
@@ -120,9 +128,9 @@ CREATE TABLE IF NOT EXISTS roomReservation(
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (room_id) REFERENCES rooms(id)
-)
+);
 
--- Table 11: reportsUsers (depends on users)
+-- Table 13: reports
 CREATE TABLE IF NOT EXISTS reports (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
@@ -132,23 +140,5 @@ CREATE TABLE IF NOT EXISTS reports (
     room_id INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (room_id) REFERENCES room(id)
+    FOREIGN KEY (room_id) REFERENCES rooms(id)
 );
-
-
--- Table 13: notifications (depends on users)
--- CREATE TABLE IF NOT EXISTS notifications (
---     id INT AUTO_INCREMENT PRIMARY KEY,
---     user_id INT NOT NULL,
---     description TEXT NULL,
---     chat_id VARCHAR(255) NULL,
---     report_id INT NULL,
---     publication_id INT NULL,
---     request_id INT NULL,
---     comment_id INT NULL,
---     revised BOOLEAN DEFAULT 0,
---     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
---     FOREIGN KEY (user_id) REFERENCES users(id),
---     FOREIGN KEY (publication_id) REFERENCES lostObjects(id),
---     FOREIGN KEY (comment_id) REFERENCES comments(id)
--- );
