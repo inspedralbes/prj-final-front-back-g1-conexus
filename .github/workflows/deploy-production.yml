@@ -80,17 +80,9 @@ jobs:
 
           cd /opt/conexus
 
-          # Parar y eliminar contenedores antiguos y huérfanos
-          if [ -f docker-compose.portainer.yml ]; then
-            docker-compose -f docker-compose.portainer.yml down --remove-orphans
-          fi
-
           if [ -f docker-compose.nginx.yml ]; then
             docker-compose -f docker-compose.nginx.yml down --remove-orphans
           fi
-
-          # Limpiar volúmenes e imágenes no usadas
-          docker system prune -af --volumes
 
           echo "🔧 Levantando Portainer..."
           if [ -f docker-compose.portainer.yml ]; then
