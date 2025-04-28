@@ -7,7 +7,6 @@ const RoomReservation = sequelize.define('RoomReservation', {
     room_id: { type: DataTypes.INTEGER, allowNull: false },
     start_time: { type: DataTypes.DATE, allowNull: false, },
     end_time: { type: DataTypes.DATE, allowNull: false, },
-    created_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW, },
 });
 
 export default RoomReservation;

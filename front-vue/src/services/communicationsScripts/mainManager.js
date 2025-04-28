@@ -1,10 +1,10 @@
 import { useAppStore } from "@/stores/index";
 
-const BACK_URL = import.meta.env.VITE_BACK_URL;
+const BACK_URL = import.meta.env.VITE_BACKEND_URL;
 
 export const checkUser = async (user) => {
     try {
-        const response = await fetch(`${BACK_URL}/api/user/checkUser`, {
+        const response = await fetch(`${BACK_URL}api/user/checkUser`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -25,7 +25,7 @@ export const checkUser = async (user) => {
 
 export const loginAPI = async (user) => {
     try {
-        const response = await fetch(`${BACK_URL}/api/user/login`, {
+        const response = await fetch(`${BACK_URL}api/user/login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -46,7 +46,7 @@ export const loginAPI = async (user) => {
 
 export const loginDB = async (user) => {
     try {
-        const response = await fetch(`${BACK_URL}/api/user/loginDB`, {
+        const response = await fetch(`${BACK_URL}api/user/loginDB`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

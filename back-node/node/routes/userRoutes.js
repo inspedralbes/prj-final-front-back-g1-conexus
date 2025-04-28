@@ -153,4 +153,36 @@ router.post('/loginAPI', async (req, res) => {
     }
 });
 
+router.post('/loginDB', async (req, res) => {
+    const { email, password } = req.body;
+
+    try {
+        // Check if user exists
+        const existingUser = await User.findOne({ where: { email } });
+
+        if (!existingUser) {
+            return res.status(404).json({ error: 'User not found' });
+            console.log('User not found');
+        }
+
+        // Verify password
+        const match = await bcrypt.compare(password, existingUser.password);
+
+        if (!match) {
+            return res.status(400).json({ error: 'Invalid password' });
+            console.log('Invalid password');
+        }
+
+        const tokens = generateToken(existingUser);
+        return res.status(200).json({
+            message: 'Login successful',
+            accessToken: tokens.accessToken,
+            userLogin: existingUser
+        });
+    } catch (error) {
+        console.error('Login error:', error);
+        // res.status(500).json({ error: 'Server error during login' });
+    }
+});
+
 export default router;

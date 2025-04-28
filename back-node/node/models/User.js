@@ -10,7 +10,6 @@ const User = sequelize.define('User', {
     password: { type: DataTypes.STRING(255), allowNull: false, },
     profile: { type: DataTypes.STRING(255), allowNull: true, },
     department_id: { type: DataTypes.INTEGER, allowNull: true },
-    created_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW, },
     description: { type: DataTypes.TEXT, allowNull: true, defaultValue: null, },
 });
 
