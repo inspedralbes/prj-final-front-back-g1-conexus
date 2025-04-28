@@ -83,7 +83,7 @@ export const logout = async () => {
         return { error: 'Network error. Please try again later.' };
     }
 };
-export const getUserAPI = async (userId) => {
+export const getUser = async (userId) => {
     try {
         const response = await fetch(`${BACK_URL}/api/users/${userId}`, {
             method: "GET",
@@ -103,7 +103,7 @@ export const getUserAPI = async (userId) => {
     }
 }
 
-export const getUsersAPI = async () => {
+export const getAllUsers = async () => {
     try {
         const response = await fetch(`${BACK_URL}/api/users`, {
             method: "GET",
@@ -123,7 +123,7 @@ export const getUsersAPI = async () => {
     }
 }
 
-export const updateUserAPI = async (userId, user) => {
+export const updateUser = async (userId, user) => {
     try {
         const response = await fetch(`${BACK_URL}/api/users/personalData/${userId}`, {
             method: "PUT",
@@ -144,7 +144,7 @@ export const updateUserAPI = async (userId, user) => {
     }
 }
 
-export const deleteUserAPI = async (userId) => {
+export const deleteUser = async (userId) => {
     try {
         const response = await fetch(`${BACK_URL}/api/users/${userId}`, {
             method: "DELETE",
@@ -164,7 +164,7 @@ export const deleteUserAPI = async (userId) => {
     }
 }
 
-export const createUserAPI = async (user) => {
+export const createUser = async (user) => {
     try {
         const response = await fetch(`${BACK_URL}/api/users`, {
             method: "POST",
@@ -185,7 +185,7 @@ export const createUserAPI = async (user) => {
     }
 }
 
-export const updateUserRoleAPI = async (userId, typesUsersId) => {
+export const updateUserRole = async (userId, typesUsersId) => {
     try {
         const response = await fetch(`${BACK_URL}/api/users/updateRole/${userId}`, {
             method: "PUT",
