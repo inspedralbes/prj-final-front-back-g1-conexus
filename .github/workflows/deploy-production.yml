@@ -80,10 +80,8 @@ jobs:
 
           cd /opt/conexus
 
-          if ! docker network ls | grep -w proxy > /dev/null; then
-            echo "🔧 Creando red proxy..."
-            docker network create proxy
-          fi
+          echo "🔧 Creando red proxy..."
+          docker network inspect proxy || docker network create proxy
 
           # Parar y eliminar contenedores antiguos y huérfanos
           if [ -f docker-compose.portainer.yml ]; then
