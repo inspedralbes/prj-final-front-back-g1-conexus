@@ -26,6 +26,18 @@ services:
       - conexus-hub-mysql
       # - conexus-hub-mongo
 
+  conexus-hub-front:
+    build:
+      context: ./front-vue
+      dockerfile: prod.Dockerfile
+    volumes:
+      - ./front-vue:/app
+    networks:
+      - conexus-hub-network
+    restart: always
+    ports:
+      - "80:80"
+
   conexus-hub-mysql:
     image: mysql:5.7
     environment:
@@ -89,5 +101,3 @@ volumes:
 networks:
   conexus-hub-network:
     driver: bridge
-  proxy:
-    external: true
