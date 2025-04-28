@@ -127,6 +127,7 @@ jobs:
 
           scp -r -o StrictHostKeyChecking=no -i ~/prod_key.pem front-vue/dist/* ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/front-vue
 
+          scp -o StrictHostKeyChecking=no -i ~/prod_key.pem front-vue/prod.Dockerfile ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/front-vue
   BUILD-BACKEND:
     needs: [CONEXIO-SERVIDOR, SECRETS-GITHUB]
     runs-on: ubuntu-latest
