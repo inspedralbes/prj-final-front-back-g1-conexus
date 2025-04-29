@@ -149,6 +149,8 @@ jobs:
     
             ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
             cd /opt/conexus
+
+            
     
             # Limpiar si la carpeta de backend existe
             if [ -d ./back-node ]; then 
@@ -157,7 +159,7 @@ jobs:
             # Crear la carpeta para el backend
             mkdir back-node
 
-            cd /back-node
+            cd /opt/conexus/back-node
 
             mkdir node
             mkdir data
