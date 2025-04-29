@@ -40,8 +40,8 @@
 <script setup>
 import { useRoute } from 'vue-router'
 import { useRouter } from 'vue-router'
-import { userData } from '@/stores/userData.js'
-import { h, onMounted, ref } from 'vue'
+import { useAppStore } from '@/stores/index.js'
+import { onMounted, ref } from 'vue'
 import { getHoursOfCourse,  getAlumns } from '@/services/mainComManager.js'
 import {getAttendanceFromDay,updateAttendance} from '@/services/attendanceComManager.js'
 
@@ -53,10 +53,8 @@ const students=ref([]);
 const route = useRoute()
 const courseId = route.params.courseId
 const router=useRouter()
-onMounted(async () => {
- 
-   
 
+onMounted(async () => {
     hoursAvailable.value = await getHoursOfCourse(courseId)
     // attendance.value = await getAttendanceFromCourse(courseId, new Date().toISOString())
     console.log(attendance.value)

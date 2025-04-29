@@ -14,16 +14,16 @@
     </div>
 </template>
 <script setup>
-import { userData } from '@/stores/userData.js'
+import { useAppStore } from '@/stores/index.js'
 import { onMounted, ref } from 'vue'
 import { getCoursesFromUser } from '@/services/mainComManager.js'
 import { useRouter } from 'vue-router'
 
-const store = userData()
+const store = useAppStore()
 const courses = ref([])
 const route = useRouter()
 onMounted(async () => {
-    courses.value = await getCoursesFromUser(store.userId)
+    courses.value = await getCoursesFromUser(store.getUserId())
     console.log(courses.value)
 })
 

@@ -16,13 +16,12 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { userData } from '@/stores/userData.js'
 import { createTask } from '@/services/gradesComManager.js'
 import { useRouter } from 'vue-router'
 const task_name = ref('')
 const task_description = ref('')
 const courseId = ref(null)
-const router= useRouter()
+const router = useRouter()
 onMounted(() => {
     const route = useRoute()
     courseId.value = route.params.courseId
