@@ -30,8 +30,6 @@ services:
     build:
       context: ./front-vue
       dockerfile: ./front-vue/prod.Dockerfile
-    volumes:
-      - ./front-vue:/app
     restart: always
     ports:
       - "8080:80"
