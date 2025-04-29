@@ -16,14 +16,14 @@
 <script setup>
 import { userData } from '@/stores/userData.js'
 import { onMounted, ref } from 'vue'
-import { getCoursesFromUser } from '@/services/mainComManager.js'
+import { getCoursesFromUser } from '@/services/communicationsScripts/mainManager.js'
 import { useRouter } from 'vue-router'
 
 const store = userData()
 const courses = ref([])
 const route = useRouter()
 onMounted(async () => {
-    courses.value = await getCoursesFromUser(store.userId)
+    courses.value = await getCoursesFromUser(3)
     console.log(courses.value)
 })
 

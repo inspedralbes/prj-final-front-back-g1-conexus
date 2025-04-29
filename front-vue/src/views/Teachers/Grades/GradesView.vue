@@ -33,7 +33,7 @@ import { useRoute } from 'vue-router'
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { onMounted, ref } from 'vue'
-import { getTasksFromCourse } from '@/services/gradesComManager.js'
+import { getTasksFromCourse } from '@/services/communicationsScripts/gradesComManager.js'
 const route = useRoute()
 const tasks = ref([]);
 const courseId = ref(null)

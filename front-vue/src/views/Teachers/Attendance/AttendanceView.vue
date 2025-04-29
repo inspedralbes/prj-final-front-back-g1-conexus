@@ -42,8 +42,8 @@ import { useRoute } from 'vue-router'
 import { useRouter } from 'vue-router'
 import { userData } from '@/stores/userData.js'
 import { h, onMounted, ref } from 'vue'
-import { getHoursOfCourse,  getAlumns } from '@/services/mainComManager.js'
-import {getAttendanceFromDay,updateAttendance} from '@/services/attendanceComManager.js'
+import { getHoursOfCourse,  getAlumns } from '@/services/communicationsScripts/mainManager'
+import {getAttendanceFromDay,updateAttendance} from '@/services/communicationsScripts/attendanceComManager.js'
 
 const selectedDate = ref(new Date().toISOString().substr(0, 10))
 const attendance = ref([])

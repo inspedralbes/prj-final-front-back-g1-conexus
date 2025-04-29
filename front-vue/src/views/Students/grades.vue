@@ -8,8 +8,8 @@
                 <th>Tasca</th>
                 <th>Nota</th>
             </tr>
-            <tr v-for="grade in grade">
-                <td>{{ grade.task }}</td>
+            <tr v-for="grade in grades">
+                <td>{{ grade.task_name }}</td>
                 <td>{{ grade.grade }}</td>
             </tr>
         </table>
@@ -18,10 +18,16 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import {appStore} from '@/stores/index.js';
-
-onMounted(() => {
-    getGradesFromUserAndCourse(appStore.user.id);
+import {useAppStore} from '@/stores/index.js';
+import { getGradesFromUserAndCourse } from '@/services/communicationsScripts/gradesComManager.js';
+const courseId = ref(null);
+const grades = ref([]);
+onMounted(async () => {
+    const route = useRoute();
+    courseId.value = route.params.id;
+    console.log(courseId.value);
+    grades.value=await getGradesFromUserAndCourse(3, route.params.id);
+    console.log(grades.value);
 });
 </script>
 <style scoped>
