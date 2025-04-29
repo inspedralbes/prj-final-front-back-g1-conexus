@@ -3,12 +3,12 @@ version: '3.8'
 services:
   conexus-hub-back:
     build:
-      context: .
+      context: back-node/node
       dockerfile: prod.Dockerfile
     working_dir: /usr/src/app
-    volumes:
-      - ./back-node/node:/app
-      - conexus-hub-image:/app/images
+    # volumes:
+    #   - ./back-node/node:/app
+    #   - conexus-hub-image:/app/images
     ports:
       - "3000:3000"
       - "3001:3001"
