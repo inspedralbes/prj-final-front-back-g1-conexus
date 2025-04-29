@@ -4,7 +4,7 @@ import Grade from "../models/Grade.js";
 
 const router = express.Router();
 
-
+// Obtenir totes les tasques
 router.get("/", async (req, res) => {
     try {
         const Tasks = await Task.findAll();
@@ -14,6 +14,7 @@ router.get("/", async (req, res) => {
     }
 });
 
+// Obtenir una tasca en concret
 router.get("/:id", async (req, res) => {
     try {
         const Task = await Task.findByPk(req.params.id);
@@ -23,16 +24,19 @@ router.get("/:id", async (req, res) => {
     }
 });
 
+// Crear una tasca nova
 router.post("/", async (req, res) => {
     try {
-        const { name } = req.body;
-        const Task = await Task.create({ name });
-        res.json(Task);
+        const { task_name, course_id,task_description } = req.body;
+        const task_ended = false; // Valor per defecte
+        const newTask = await Task.create({ task_name, course_id,task_description, task_ended });
+        res.json(newTask);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 });
 
+// Actualitzar una tasca existent
 router.put("/:id", async (req, res) => {
     try {
         const { name } = req.body;
@@ -43,6 +47,7 @@ router.put("/:id", async (req, res) => {
     }
 });
 
+// Eliminar una tasca
 router.delete("/:id", async (req, res) => {
     try {
         const Task = await Task.findByPk(req.params.id);
@@ -57,6 +62,7 @@ router.delete("/:id", async (req, res) => {
     }
 });
 
+// Obtenir totes les notes d'una tasca
 router.get("/getAllGradesFromTask/:id", async (req, res) => {
     try {
         const task = await Task.findByPk(req.params.id, {
@@ -76,6 +82,47 @@ router.get("/getAllGradesFromTask/:id", async (req, res) => {
     }
 }
 );
+//Obtenir totes les tasques d'un curs
+router.get("/getAllTasksFromCourse/:id", async (req, res) => {
+    try {
+        const task = await Task.findAll({ where: { course_id: req.params.id } });
+        if (!task) {
+            return res.status(404).json({ message: "Task not found" });
+        }
+        res.json(task);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+);
+//Obtenir totes les tasques d'un alumne
+router.get("/getAllTasksFromStudent/:id", async (req, res) => {
+    try {
+        const task = await Task.findAll({ where: { user_id: req.params.id } });
+        if (!task) {
+            return res.status(404).json({ message: "Task not found" });
+        }
+        res.json(task);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+);
+//Obtenir totes les tasques d'un alumne d'un curs
+router.get("/getAllTasksFromStudentFromCourse/:courseId/:studentId", async (req, res) => {
+    try {
+        const task = await Task.findAll({ where: { course_id: req.params.courseId, user_id: req.params.studentId } });
+        if (!task) {
+            return res.status(404).json({ message: "Task not found" });
+        }
+        res.json(task);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+);
+
+
 
 export default router;
 

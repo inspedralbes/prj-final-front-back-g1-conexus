@@ -61,9 +61,29 @@ const router = createRouter({
           component: () => import('@/views/Teachers/assistence.vue')
         },
         {
+          path: 'attendance/:courseId',
+          name: 'attendance',
+          component: () => import('../views/Teachers/Attendance/AttendanceView.vue'),
+        },
+        {
           path: 'grades',
           name: 'teacher-grades',
           component: () => import('@/views/Teachers/grades.vue')
+        },
+        {
+          path: 'grades/:courseId',
+          name: 'grades',
+          component: () => import('../views/Teachers/Grades/GradesView.vue'),
+        },
+        {
+          path: "grades/:courseId/CreateTask",
+          name: "createTask",
+          component: () => import('../views/Teachers/Grades/NewTask.vue'),
+        },
+        {
+          path: "grades/:courseId/Task/:taskId",
+          name: "evaluate",
+          component: () => import('../views/Teachers/Grades/EvaluateTask.vue'),
         },
         {
           path: 'roomReservation',

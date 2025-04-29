@@ -136,6 +136,8 @@ const signInWithApp = async () => {
     let succes = false;
     let profileURL = ref("");
 
+    console.log('Iniciant amb App', userLogin.email, userLogin.password);
+
     try {
         const response = await loginDB(userLogin);
 

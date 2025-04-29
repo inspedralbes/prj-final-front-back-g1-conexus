@@ -3,9 +3,10 @@
   <router-view></router-view>
 </template>
 
-<style scoped>
-</style>
-
 <script setup>
 import ParticlesBackground from '@/components/Desing/background.vue'
-</script> 
+</script>
+
+
+<style scoped>
+</style>
