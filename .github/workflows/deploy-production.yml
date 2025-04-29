@@ -99,7 +99,7 @@ jobs:
           EOF
 
           # Subir los archivos generados en dist al servidor
-          scp -r -o StrictHostKeyChecking=no -i ~/prod_key.pem front-vue/dist/* ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/front-vue
+          scp -r -o StrictHostKeyChecking=no -i ~/prod_key.pem front-vue/dist ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/front-vue/
 
       - name: Copiar prod.Dockerfile al servidor
         run: |
