@@ -154,7 +154,7 @@ jobs:
             mkdir -p ./back-node
 
             cd /back-node
-            
+
             mkdir -p node
             mkdir -p data
 
@@ -174,7 +174,7 @@ jobs:
 
 
   START-DOCKER-COMPOSE-PRINCIPAL:
-    needs: [BUILD-FRONTEND-AND-BUILD-PORTAINER]
+    needs: [BUILD-FRONTEND-AND-BUILD-PORTAINER, BUILD-BACKEND]
     runs-on: ubuntu-latest
     steps:
       - name: Conectar a la máquina de producción y levantar contenedores
