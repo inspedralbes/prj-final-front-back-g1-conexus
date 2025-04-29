@@ -142,28 +142,21 @@ jobs:
           cd back-node/node
           npm install --production  # Solo instalar dependencias de producción
       
-      - name: Subir archivos del backend al servidor
+      - name: Subir archivos del backend al servidor sin node_modules
         run: |
-            echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > ~/prod_key.pem
-            chmod 600 ~/prod_key.pem
-    
-            ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
-            cd /opt/conexus
-
-            
-    
-            # Limpiar si la carpeta de backend existe
-            if [ -d ./back-node ]; then 
-              sudo rm -r ./back-node
-            fi
-            # Crear la carpeta para el backend
-            mkdir back-node
-
-            EOF
-    
-            # Subir los archivos de backend (node y data) al servidor
-            scp -r -o StrictHostKeyChecking=no -i ~/prod_key.pem back-node/node ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/back-node
-            scp -r -o StrictHostKeyChecking=no -i ~/prod_key.pem back-node/data ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/back-node
+          echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > ~/prod_key.pem
+          chmod 600 ~/prod_key.pem
+      
+          ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
+          cd /opt/conexus
+          if [ -d ./back-node ]; then 
+            sudo rm -r ./back-node
+          fi
+          mkdir -p back-node
+          EOF
+      
+          rsync -avz -e "ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem" --exclude 'node_modules' back-node/node ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/back-node/
+          rsync -avz -e "ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem" back-node/data ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/back-node/
       
       - name: Copiar prod.Dockerfile al servidor
         run: |
