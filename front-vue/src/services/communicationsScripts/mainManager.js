@@ -105,7 +105,7 @@ export const getUser = async (userId) => {
 
 export const getAllUsers = async () => {
     try {
-        const response = await fetch(`${BACK_URL}api/users`, {
+        const response = await fetch(`${BACK_URL}api/user`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -156,7 +156,7 @@ export const updateUser = async (userId, user) => {
 
 export const deleteUser = async (userId) => {
     try {
-        const response = await fetch(`${BACK_URL}api/users/${userId}`, {
+        const response = await fetch(`${BACK_URL}api/user/${userId}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -197,12 +197,12 @@ export const createUser = async (user) => {
 
 export const updateUserRole = async (userId, typesUsersId) => {
     try {
-        const response = await fetch(`${BACK_URL}api/users/updateRole/${userId}`, {
+        const response = await fetch(`${BACK_URL}api/user/updateRole/${userId}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ typesUsers_id: typesUsersId }),
+            body: JSON.stringify({ typeUsers_id: typesUsersId }),
         });
 
         // Verificar primero el tipo de contenido
@@ -228,7 +228,7 @@ export const updateUserRole = async (userId, typesUsersId) => {
 
 export const getAllTypeUsers = async () => {
     try {
-        const response = await fetch(`${BACK_URL}api/types-users`, {
+        const response = await fetch(`${BACK_URL}api/type-users`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",

@@ -17,7 +17,7 @@
           <img :src="user.profile" alt="Imatge de l'usuari" class="w-30 h-30 rounded-full mb-4 mx-auto">
           <h2 class="text-xl font-bold mb-2">{{ user.name }}</h2>
           <p class="text-gray-700 mb-2">Email: {{ user.email }}</p>
-          <p class="text-gray-700 mb-2">Rol: {{ getRoleName(user.typesUsers_id) }}</p>
+          <p class="text-gray-700 mb-2">Rol: {{ getRoleName(user.typeUsers_id) }}</p>
           <p class="text-gray-700 mb-2">Fecha de creación: {{ formatDate(user.created_at) }}</p>
           <button @click="handleDeleteUser(user.id)" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Eliminar</button>
           <button @click="handleUpdateUser(user.id)" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Modificar rol</button>
@@ -40,7 +40,7 @@
           
           <div class="mb-4">
               <p class="mb-2"><strong>Usuario:</strong> {{ selectedUser?.name }}</p>
-              <p class="mb-2"><strong>Rol actual:</strong> {{ selectedUser ? getRoleName(selectedUser.typesUsers_id) : '' }}</p>
+              <p class="mb-2"><strong>Rol actual:</strong> {{ selectedUser ? getRoleName(selectedUser.typeUsers_id) : '' }}</p>
               
               <div class="mt-4">
                   <label class="block text-gray-700 mb-2">Nuevo rol:</label>
@@ -183,7 +183,7 @@ if (confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
 const handleUpdateUser = (userId) => {
 selectedUser.value = users.value.find(user => user.id === userId);
 if (selectedUser.value) {
-  newRoleId.value = selectedUser.value.typesUsers_id;
+  newRoleId.value = selectedUser.value.typeUsers_id;
   modalError.value = null;
   modalSuccess.value = null;
   showModal.value = true;
@@ -204,7 +204,7 @@ if (!selectedUser.value || !newRoleId.value) {
   return;
 }
 
-if (newRoleId.value === selectedUser.value.typesUsers_id) {
+if (newRoleId.value === selectedUser.value.typeUsers_id) {
   modalError.value = "El rol seleccionado es el mismo que el actual";
   return;
 }
@@ -223,7 +223,7 @@ try {
     // Actualizar el rol en la lista de usuarios
     const userIndex = users.value.findIndex(user => user.id === selectedUser.value.id);
     if (userIndex !== -1) {
-      users.value[userIndex].typesUsers_id = newRoleId.value;
+      users.value[userIndex].typeUsers_id = newRoleId.value;
     }
     
     modalSuccess.value = "¡Rol actualizado correctamente!";

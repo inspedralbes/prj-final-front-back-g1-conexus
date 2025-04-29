@@ -1,6 +1,6 @@
 import express from "express";
 import User from "../models/User.js";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
@@ -28,8 +28,8 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
     console.log(req.body);
     try {
-        const { typesUsers_id, name, email, password, profile, department_id, description } = req.body;
-        const user = await User.create({ typesUsers_id, name, email, password, profile, department_id, description });
+        const { typeUsers_id, name, email, password, profile, department_id, description } = req.body;
+        const user = await User.create({ typeUsers_id, name, email, password, profile, department_id, description });
         res.json(user);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -75,7 +75,7 @@ router.put("/personalData/:id", async (req, res) => {
 router.put("/updateRole/:id", async (req, res) => {
     try {
         const { id } = req.params;
-        const { typesUsers_id } = req.body;
+        const { typeUsers_id } = req.body;
 
         const user = await User.findByPk(id);
 
@@ -83,7 +83,7 @@ router.put("/updateRole/:id", async (req, res) => {
             return res.status(404).json({ message: "Usuario no encontrado" });
         }
 
-        await user.update({ typesUsers_id });
+        await user.update({ typeUsers_id });
         res.json(user);
     } catch (error) {
         res.status(500).json({ message: error.message });

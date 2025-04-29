@@ -3,7 +3,7 @@ import TypeUser from "../models/TypeUser.js";
 
 const router = express.Router();
 
-// Obtener todas las reservas de habitaciones
+// Get all type users
 router.get("/", async (req, res) => {
     try {
         const typeUsers = await TypeUser.findAll();
@@ -13,25 +13,29 @@ router.get("/", async (req, res) => {
     }
 });
 
+// Get type user by ID
 router.get("/:id", async (req, res) => {
     try {
         const typeUser = await TypeUser.findByPk(req.params.id);
+        if (!typeUser) {
+            return res.status(404).json({ message: "Tipo de usuario no encontrado" });
+        }
         res.json(typeUser);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 });
-// Crear una nueva reserva de habitación
+
+// Create a new type user
 router.post("/", async (req, res) => {
-    console.log(req.body);
     try {
         const { name } = req.body;
-        // Verificar si el tipo de usuario ya existe
+        // Check if type user already exists
         const existingTypeUser = await TypeUser.findOne({ where: { name } });
         if (existingTypeUser) {
             return res.status(400).json({ message: "El tipo de usuario ya existe" });
         }
-        // Crear el nuevo tipo de usuario
+        // Create new type user
         const typeUser = await TypeUser.create({ name });
         res.json(typeUser);
     } catch (error) {
@@ -39,27 +43,37 @@ router.post("/", async (req, res) => {
     }
 });
 
+// Update type user by ID
 router.put("/:id", async (req, res) => {
     try {
         const { name } = req.body;
-        const typeUser = await TypeUser.update({ name }, { where: { id: req.params.id } });
+        const [updated] = await TypeUser.update({ name }, { 
+            where: { id: req.params.id },
+            returning: true 
+        });
+        
+        if (!updated) {
+            return res.status(404).json({ message: "Tipo de usuario no encontrado" });
+        }
+        
+        const typeUser = await TypeUser.findByPk(req.params.id);
         res.json(typeUser);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 });
 
-// Eliminar una reserva de habitación por ID
+// Delete type user by ID
 router.delete("/:id", async (req, res) => {
     try {
         const { id } = req.params;
-        const typeUsers = await TypeUser.findByPk(id);
+        const typeUser = await TypeUser.findByPk(id);
 
-        if (!typeUsers) {
+        if (!typeUser) {
             return res.status(404).json({ message: "Tipo de usuario no encontrado" });
         }
 
-        await typeUsers.destroy();
+        await typeUser.destroy();
         res.json({ message: "Tipo de usuario eliminado correctamente" });
     } catch (error) {
         res.status(500).json({ message: error.message });
