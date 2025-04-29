@@ -5,7 +5,6 @@ services:
     build:
       context: back-node/node
       dockerfile: prod.Dockerfile
-    working_dir: /usr/src/app
     # volumes:
     #   - ./back-node/node:/app
     #   - conexus-hub-image:/app/images

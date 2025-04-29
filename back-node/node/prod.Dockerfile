@@ -2,8 +2,6 @@ FROM node:18-alpine3.20
 
 ENV NODE_ENV=production
 
-WORKDIR /app
-
 # Copiar solo los archivos necesarios para la instalación de dependencias
 COPY package*.json package-lock.json ./
 
