@@ -18,26 +18,34 @@ jobs:
           echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > ~/prod_key.pem
           chmod 600 ~/prod_key.pem
 
-      - name: Conect to SSH i actualizaciones servidor
+      - name: Conectar por SSH, actualizar servidor e instalar dependencias
         run: |
           ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
-            echo "🚀 Iniciando actualizaciones e instalar dependencies..."
+            echo "🚀 Iniciando actualizaciones e instalación de dependencias..."
 
-            # Actualizar sistema máquina producción
+            # Actualizar sistema
             sudo apt update && sudo apt upgrade -y
 
-            # Asegurar que Docker esté corriendo
+            # Instalar Node.js (v20) y npm desde NodeSource
+            if ! command -v node >/dev/null 2>&1; then
+              echo "📦 Instalando Node.js y npm..."
+              curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+              sudo apt install -y nodejs
+            else
+              echo "✅ Node.js ya está instalado"
+            fi
+
+            # Confirmar versiones instaladas
+            node -v
+            npm -v
+
+            # Asegurar que Docker esté activo
             sudo systemctl enable docker
             sudo systemctl start docker
 
-            # Crear la carpeta si no existe
-            if [ ! -d "/opt/conexus/front-vue" ]; then
-              sudo mkdir -p /opt/conexus/front-vue
-            fi
-
-            if [ ! -d "/opt/conexus/back-node" ]; then
-              sudo mkdir -p /opt/conexus/back-node
-            fi
+            # Crear carpetas necesarias si no existen
+            sudo mkdir -p /opt/conexus/front-vue
+            sudo mkdir -p /opt/conexus/back-node
           EOF
 
   SECRETS-GITHUB:
@@ -89,7 +97,7 @@ jobs:
 
       - name: Subir front-vue al servidor sin node_modules
         run: |
-        
+
           # Conectarse al servidor y limpiar el front-vue existente
           ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
             cd /opt/conexus
