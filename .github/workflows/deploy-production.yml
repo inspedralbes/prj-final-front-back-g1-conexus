@@ -82,53 +82,36 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Instalar dependencias y construir frontend
-        run: |
-          cd front-vue
-          npm install
-          npm run build
-
-      - name: Subir los archivos de frontend construidos al servidor remoto y crear carpeta front-vue
+      - name: Crear clave privada para conexión SSH
         run: |
           echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > ~/prod_key.pem
           chmod 600 ~/prod_key.pem
 
+      - name: Subir front-vue al servidor sin node_modules
+        run: |
+        
+          # Conectarse al servidor y limpiar el front-vue existente
           ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
-          cd /opt/conexus 
-
-          if [ -d ./front-vue ]; then 
-            sudo rm -r ./front-vue
-          fi 
-          mkdir front-vue
+            cd /opt/conexus
+            if [ -d ./front-vue ]; then 
+              sudo rm -rf ./front-vue
+            fi
+            mkdir front-vue
           EOF
 
-          # Subir los archivos generados en dist al servidor
-          scp -r -o StrictHostKeyChecking=no -i ~/prod_key.pem front-vue/dist ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/front-vue/
+          # Subir toda la carpeta front-vue (sin node_modules) al servidor
+          rsync -avz -e "ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem" --exclude 'node_modules' front-vue/ ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/front-vue/
 
-      - name: Copiar prod.Dockerfile al servidor
+      - name: Construir el frontend directamente en el servidor
         run: |
-          echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > ~/prod_key.pem
-          chmod 600 ~/prod_key.pem
+          ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
+            cd /opt/conexus/front-vue
+            echo "📦 Instalando dependencias..."
+            npm install
 
-          # Copiar el prod.Dockerfile al servidor en la carpeta front-vue
-          scp -o StrictHostKeyChecking=no -i ~/prod_key.pem front-vue/prod.Dockerfile ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/front-vue/
-
-      - name: Levantar contenedor de Portainer
-        run: |
-            echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > ~/prod_key.pem
-            chmod 600 ~/prod_key.pem
-
-            ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
-            echo "🚢 Limpiando contenedores antiguos..."
-            cd /opt/conexus
-
-            echo "🔧 Levantando Portainer..."
-            if [ -f docker-compose.portainer.yml ]; then
-              docker-compose -f docker-compose.portainer.yml up -d --build
-            fi
-
-            echo "🎉 Despliegue portainer completado"
-            EOF
+            echo "🛠️ Compilando frontend..."
+            npm run build
+          EOF
 
   BUILD-BACKEND:
     needs: [BUILD-FRONTEND-AND-BUILD-PORTAINER]
