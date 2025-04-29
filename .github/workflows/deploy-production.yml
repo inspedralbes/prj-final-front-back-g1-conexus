@@ -125,11 +125,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Instalar dependencias y construir backend
-        run: |
-          cd back-node/node
-          npm install --production  # Solo instalar dependencias de producción
-      
       - name: Subir archivos del backend al servidor sin node_modules
         run: |
           echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > ~/prod_key.pem
