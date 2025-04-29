@@ -90,13 +90,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Crear clave privada para conexión SSH
+      - name: Subir front-vue al servidor sin node_modules
         run: |
           echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > ~/prod_key.pem
           chmod 600 ~/prod_key.pem
-
-      - name: Subir front-vue al servidor sin node_modules
-        run: |
 
           # Conectarse al servidor y limpiar el front-vue existente
           ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
@@ -108,7 +105,7 @@ jobs:
           EOF
 
           # Subir toda la carpeta front-vue (sin node_modules) al servidor
-          rsync -avz -e "ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem" --exclude 'node_modules' front-vue/ ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/front-vue/
+          rsync -avz --exclude=node_modules --exclude=dist -e "ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem" front-vue/ ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/front-vue/
 
       - name: Construir el frontend directamente en el servidor
         run: |
@@ -146,7 +143,7 @@ jobs:
           mkdir -p back-node
           EOF
       
-          rsync -avz -e "ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem" --exclude 'node_modules' back-node/node ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/back-node/
+          rsync -avz --exclude=node_modules -e "ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem"  back-node/node ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/back-node/
           rsync -avz -e "ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem" back-node/data ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/back-node/
       
       - name: Copiar prod.Dockerfile al servidor
@@ -170,7 +167,6 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
             echo "🚢 Levantando contenedores Docker..."
 
-            set -e  # Aborta el script si algo falla
             cd /opt/conexus
 
             if [ -f docker-compose.prod.yml ]; then
