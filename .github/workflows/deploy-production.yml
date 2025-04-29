@@ -126,6 +126,53 @@ jobs:
             echo "🎉 Despliegue portainer completado"
             EOF
 
+  BUILD-BACKEND:
+    needs: [BUILD-FRONTEND-AND-BUILD-PORTAINER]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Instalar dependencias y construir backend
+        run: |
+          cd back-node/node
+          npm install --production  # Solo instalar dependencias de producción
+      
+      - name: Subir archivos del backend al servidor
+        run: |
+            echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > ~/prod_key.pem
+            chmod 600 ~/prod_key.pem
+    
+            ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
+            cd /opt/conexus
+    
+            # Limpiar si la carpeta de backend existe
+            if [ -d ./back-node ]; then 
+              sudo rm -r ./back-node
+            fi
+            # Crear la carpeta para el backend
+            mkdir -p ./back-node
+
+            cd /back-node
+            
+            mkdir -p node
+            mkdir -p data
+
+            EOF
+    
+            # Subir los archivos de backend (node y data) al servidor
+            scp -r -o StrictHostKeyChecking=no -i ~/prod_key.pem back-node/node ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/back-node
+            scp -r -o StrictHostKeyChecking=no -i ~/prod_key.pem back-node/data ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/back-node
+      
+      - name: Copiar prod.Dockerfile al servidor
+        run: |
+          echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > ~/prod_key.pem
+          chmod 600 ~/prod_key.pem
+
+          # Copiar el prod.Dockerfile al servidor en la carpeta back-node
+          scp -o StrictHostKeyChecking=no -i ~/prod_key.pem back-node/node/prod.Dockerfile ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/back-node/node/
+
+
   START-DOCKER-COMPOSE-PRINCIPAL:
     needs: [BUILD-FRONTEND-AND-BUILD-PORTAINER]
     runs-on: ubuntu-latest

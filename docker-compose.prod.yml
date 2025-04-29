@@ -3,8 +3,8 @@ version: '3.8'
 services:
   conexus-hub-back:
     build:
-      dockerfile: ./back-node/node/prod.Dockerfile
       context: ./back-node/node
+      dockerfile: prod.Dockerfile
     working_dir: /usr/src/app
     volumes:
       - ./back-node/node:/app
