@@ -28,8 +28,8 @@ services:
 
   conexus-hub-front:
     build:
-      context: ./front-vue
-      dockerfile: ./front-vue/prod.Dockerfile
+      context: .
+      dockerfile: prod.Dockerfile
     restart: always
     ports:
       - "8080:80"
