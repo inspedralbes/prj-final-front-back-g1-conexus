@@ -28,7 +28,7 @@ services:
 
   conexus-hub-front:
     build:
-      context: .
+      context: ./front-vue
       dockerfile: prod.Dockerfile
     restart: always
     ports:
