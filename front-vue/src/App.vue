@@ -8,4 +8,4 @@
 
 <script setup>
 import ParticlesBackground from '@/components/Desing/background.vue'
-</script>
+</script> 

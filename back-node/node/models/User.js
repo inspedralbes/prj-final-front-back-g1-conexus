@@ -12,6 +12,8 @@ const User = sequelize.define('User', {
     department_id: { type: DataTypes.INTEGER, allowNull: true },
     created_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW, },
     description: { type: DataTypes.TEXT, allowNull: true, defaultValue: null, },
+}, {
+    timestamps: false,
 });
 
 
