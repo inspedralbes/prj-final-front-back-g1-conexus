@@ -34,6 +34,10 @@ jobs:
             if [ ! -d "/opt/conexus/front-vue" ]; then
               sudo mkdir -p /opt/conexus/front-vue
             fi
+
+            if [ ! -d "/opt/conexus/back-node" ]; then
+              sudo mkdir -p /opt/conexus/back-node
+            fi
           EOF
 
   SECRETS-GITHUB:
@@ -151,18 +155,18 @@ jobs:
               sudo rm -r ./back-node
             fi
             # Crear la carpeta para el backend
-            mkdir -p ./back-node
+            mkdir back-node
 
             cd /back-node
 
-            mkdir -p node
-            mkdir -p data
+            mkdir node
+            mkdir data
 
             EOF
     
             # Subir los archivos de backend (node y data) al servidor
-            scp -r -o StrictHostKeyChecking=no -i ~/prod_key.pem back-node/node ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/back-node
-            scp -r -o StrictHostKeyChecking=no -i ~/prod_key.pem back-node/data ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/back-node
+            scp -r -o StrictHostKeyChecking=no -i ~/prod_key.pem back-node/node/* ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/back-node
+            scp -r -o StrictHostKeyChecking=no -i ~/prod_key.pem back-node/data/* ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/back-node
       
       - name: Copiar prod.Dockerfile al servidor
         run: |
