@@ -180,7 +180,7 @@ router.post('/loginDB', async (req, res) => {
         const tokens = generateToken(existingUser);
         return res.status(200).json({
             message: 'Login successful',
-            accessToken: tokens.accessToken,
+            accessToken: tokens,
             userLogin: existingUser
         });
     } catch (error) {

@@ -4,7 +4,7 @@ import { hashPassword } from '../routes/userRoutes.js';
 
 const User = sequelize.define('User', {
     id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-    typesUsers_id: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 1 },
+    typeUsers_id: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 1 },
     name: { type: DataTypes.STRING(255), allowNull: false },
     email: { type: DataTypes.STRING(255), allowNull: false, unique: true },
     password: { type: DataTypes.STRING(255), allowNull: false },

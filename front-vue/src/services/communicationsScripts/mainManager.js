@@ -34,7 +34,11 @@ export const loginAPI = async (user) => {
         });
 
         if (!response.ok) {
-            return { error: `HTTP error! status: ${response.status}` };
+            if (response.status === 404) {
+                return { error: 'Correu electrònic o contrasenya incorrectes. Verifica les teves credencials.' };
+            } else {
+                return { error: `Error inesperat. Proba a iniciar sessio més tard.` };
+            }
         }
 
         return await response.json();
@@ -55,7 +59,11 @@ export const loginDB = async (user) => {
         });
 
         if (!response.ok) {
-            return { error: `HTTP error! status: ${response.status}` };
+            if (response.status === 404) {
+                return { error: 'Correu electrònic o contrasenya incorrectes. Verifica les teves credencials.' };
+            } else {
+                return { error: `Error inesperat. Proba a iniciar sessio més tard.` };
+            }
         }
 
         return await response.json();
