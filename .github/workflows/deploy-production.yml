@@ -138,6 +138,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
             echo "🚢 Levantando contenedores Docker..."
 
+            set -e  # Aborta el script si algo falla
             cd /opt/conexus
 
             if [ -f docker-compose.prod.yml ]; then
