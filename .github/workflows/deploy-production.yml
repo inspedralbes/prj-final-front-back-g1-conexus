@@ -159,16 +159,11 @@ jobs:
             # Crear la carpeta para el backend
             mkdir back-node
 
-            cd /opt/conexus/back-node
-
-            mkdir node
-            mkdir data
-
             EOF
     
             # Subir los archivos de backend (node y data) al servidor
-            scp -r -o StrictHostKeyChecking=no -i ~/prod_key.pem back-node/node/* ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/back-node
-            scp -r -o StrictHostKeyChecking=no -i ~/prod_key.pem back-node/data/* ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/back-node
+            scp -r -o StrictHostKeyChecking=no -i ~/prod_key.pem back-node/node ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/back-node
+            scp -r -o StrictHostKeyChecking=no -i ~/prod_key.pem back-node/data ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/back-node
       
       - name: Copiar prod.Dockerfile al servidor
         run: |
