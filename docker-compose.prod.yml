@@ -5,6 +5,8 @@ services:
     build:
       context: back-node/node
       dockerfile: prod.Dockerfile
+    env_file:
+      - .env
     # volumes:
     #   - ./back-node/node:/app
     #   - conexus-hub-image:/app/images
