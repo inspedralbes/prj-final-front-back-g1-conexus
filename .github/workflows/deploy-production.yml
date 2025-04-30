@@ -107,6 +107,20 @@ jobs:
           # Subir toda la carpeta front-vue (sin node_modules) al servidor
           rsync -avz --exclude=node_modules --exclude=dist -e "ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem" front-vue/ ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/front-vue/
 
+      - name: Levantar Portainer con Docker Compose
+        run: |
+            # Conectarse al servidor y ejecutar docker-compose up --build
+            ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
+              cd /opt/conexus
+              # Asegúrate de que el archivo docker-compose.portainer.yml esté en la ubicación correcta
+              if [ -f docker-compose.portainer.yml ]; then
+                # Levantar los contenedores de Portainer y construir la imagen si es necesario
+                sudo docker-compose -f docker-compose.portainer.yml up --build -d
+              else
+                echo "No se encontró docker-compose.portainer.yml"
+              fi
+            EOF
+
 
   BUILD-BACKEND:
     needs: [BUILD-FRONTEND-AND-BUILD-PORTAINER]
