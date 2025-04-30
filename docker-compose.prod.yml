@@ -23,7 +23,7 @@ services:
         condition: service_healthy
     networks:
       - conexus-hub-network
-    restart: always
+    # restart: always
 
   conexus-hub-front:
     build:
