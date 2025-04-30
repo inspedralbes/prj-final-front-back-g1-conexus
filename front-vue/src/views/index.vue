@@ -1,5 +1,62 @@
 <template>
     <div class="min-h-screen flex items-center justify-center bg-slate-900/10">
+        <!-- Diálogo de selección de rol -->
+        <transition name="fade">
+            <div v-if="showRoleModal" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+                <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" @click="showRoleModal = false"></div>
+                <transition name="pop">
+                    <div
+                        class="relative bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 max-w-md w-full border border-slate-700/50 shadow-2xl">
+                        <div class="text-center mb-6">
+                            <h3 class="text-xl font-bold text-white">Selecciona el teu rol</h3>
+                            <p class="text-slate-400 mt-1">A quin tipus d'usuari vols registrar-te?</p>
+                        </div>
+
+                        <div class="space-y-3">
+                            <button @click="completeRegistration('student')"
+                                class="w-full flex items-center justify-between px-4 py-3 bg-slate-700 hover:bg-slate-600 rounded-lg text-white transition-all hover:scale-[1.02]">
+                                <span>Estudiant</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                </svg>
+                            </button>
+
+                            <button @click="completeRegistration('teacher')"
+                                class="w-full flex items-center justify-between px-4 py-3 bg-slate-700 hover:bg-slate-600 rounded-lg text-white transition-all hover:scale-[1.02]">
+                                <span>Professor</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                                </svg>
+                            </button>
+
+                            <button @click="completeRegistration('admin')"
+                                class="w-full flex items-center justify-between px-4 py-3 bg-slate-700 hover:bg-slate-600 rounded-lg text-white transition-all hover:scale-[1.02]">
+                                <span>Administrador</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div class="mt-6 flex justify-center">
+                            <button @click="showRoleModal = false"
+                                class="px-4 py-2 text-slate-400 hover:text-white text-sm transition">
+                                Cancel·lar
+                            </button>
+                        </div>
+                    </div>
+                </transition>
+            </div>
+        </transition>
+
         <!-- Diálogo de error mejorado -->
         <transition name="fade">
             <div v-if="message" class="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -69,24 +126,48 @@
                 <!-- Accés amb Google -->
                 <div>
                     <h2 class="text-white text-center mb-4 font-medium">Accedeix amb el teu compte</h2>
-                    <button @click="signInWithGoogle"
-                        class="w-full flex items-center justify-center gap-3 bg-white hover:bg-gray-100 text-gray-800 font-medium py-3 px-4 rounded-lg transition-all duration-200 shadow hover:shadow-md active:scale-[0.98]">
-                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M23.7663 12.2764C23.7663 11.4607 23.7001 10.6406 23.559 9.83807H12.2402V14.4591H18.722C18.453 15.9494 17.5888 17.2678 16.3233 18.1056V21.1039H20.1903C22.4611 19.0139 23.7663 15.9274 23.7663 12.2764Z"
-                                fill="#4285F4" />
-                            <path
-                                d="M12.2401 24.0008C15.4766 24.0008 18.2059 22.9382 20.1945 21.1039L16.3276 18.1055C15.2517 18.8375 13.8627 19.252 12.2445 19.252C9.11388 19.252 6.45946 17.1399 5.50705 14.3003H1.5166V17.3912C3.55371 21.4434 7.7029 24.0008 12.2401 24.0008Z"
-                                fill="#34A853" />
-                            <path
-                                d="M5.50277 14.3003C5.00011 12.8099 5.00011 11.1961 5.50277 9.70575V6.61481H1.51674C-0.185266 10.0056 -0.185266 14.0004 1.51674 17.3912L5.50277 14.3003Z"
-                                fill="#FBBC04" />
-                            <path
-                                d="M12.2401 4.74966C13.9509 4.7232 15.6044 5.36697 16.8434 6.54867L20.2695 3.12262C18.1001 1.0855 15.2208 -0.034466 12.2401 0.000808666C7.7029 0.000808666 3.55371 2.55822 1.5166 6.61481L5.50264 9.70575C6.45064 6.86173 9.10947 4.74966 12.2401 4.74966Z"
-                                fill="#EA4335" />
-                        </svg>
-                        <span>Continua amb Google</span>
-                    </button>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <!-- Botón de Login con Google -->
+                        <button @click="signInWithGoogle('login')"
+                            class="flex items-center justify-center gap-2 bg-white hover:bg-gray-100 text-gray-800 font-medium py-2.5 px-4 rounded-lg transition-all duration-200 shadow hover:shadow-md active:scale-[0.98] text-sm">
+                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M23.7663 12.2764C23.7663 11.4607 23.7001 10.6406 23.559 9.83807H12.2402V14.4591H18.722C18.453 15.9494 17.5888 17.2678 16.3233 18.1056V21.1039H20.1903C22.4611 19.0139 23.7663 15.9274 23.7663 12.2764Z"
+                                    fill="#4285F4" />
+                                <path
+                                    d="M12.2401 24.0008C15.4766 24.0008 18.2059 22.9382 20.1945 21.1039L16.3276 18.1055C15.2517 18.8375 13.8627 19.252 12.2445 19.252C9.11388 19.252 6.45946 17.1399 5.50705 14.3003H1.5166V17.3912C3.55371 21.4434 7.7029 24.0008 12.2401 24.0008Z"
+                                    fill="#34A853" />
+                                <path
+                                    d="M5.50277 14.3003C5.00011 12.8099 5.00011 11.1961 5.50277 9.70575V6.61481H1.51674C-0.185266 10.0056 -0.185266 14.0004 1.51674 17.3912L5.50277 14.3003Z"
+                                    fill="#FBBC04" />
+                                <path
+                                    d="M12.2401 4.74966C13.9509 4.7232 15.6044 5.36697 16.8434 6.54867L20.2695 3.12262C18.1001 1.0855 15.2208 -0.034466 12.2401 0.000808666C7.7029 0.000808666 3.55371 2.55822 1.5166 6.61481L5.50264 9.70575C6.45064 6.86173 9.10947 4.74966 12.2401 4.74966Z"
+                                    fill="#EA4335" />
+                            </svg>
+                            <span>Iniciar sessió</span>
+                        </button>
+
+                        <!-- Botón de Registro con Google -->
+                        <button @click="signInWithGoogle('register')"
+                            class="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-medium py-2.5 px-4 rounded-lg transition-all duration-200 shadow hover:shadow-md active:scale-[0.98] text-sm">
+                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M23.7663 12.2764C23.7663 11.4607 23.7001 10.6406 23.559 9.83807H12.2402V14.4591H18.722C18.453 15.9494 17.5888 17.2678 16.3233 18.1056V21.1039H20.1903C22.4611 19.0139 23.7663 15.9274 23.7663 12.2764Z"
+                                    fill="white" />
+                                <path
+                                    d="M12.2401 24.0008C15.4766 24.0008 18.2059 22.9382 20.1945 21.1039L16.3276 18.1055C15.2517 18.8375 13.8627 19.252 12.2445 19.252C9.11388 19.252 6.45946 17.1399 5.50705 14.3003H1.5166V17.3912C3.55371 21.4434 7.7029 24.0008 12.2401 24.0008Z"
+                                    fill="#34A853" />
+                                <path
+                                    d="M5.50277 14.3003C5.00011 12.8099 5.00011 11.1961 5.50277 9.70575V6.61481H1.51674C-0.185266 10.0056 -0.185266 14.0004 1.51674 17.3912L5.50277 14.3003Z"
+                                    fill="#FBBC04" />
+                                <path
+                                    d="M12.2401 4.74966C13.9509 4.7232 15.6044 5.36697 16.8434 6.54867L20.2695 3.12262C18.1001 1.0855 15.2208 -0.034466 12.2401 0.000808666C7.7029 0.000808666 3.55371 2.55822 1.5166 6.61481L5.50264 9.70575C6.45064 6.86173 9.10947 4.74966 12.2401 4.74966Z"
+                                    fill="#EA4335" />
+                            </svg>
+                            <span>Registrar-se</span>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Separador -->
@@ -136,7 +217,9 @@ import { ref, reactive } from 'vue';
 import { initializeApp } from "firebase/app";
 import { useAppStore } from '@/stores/index.js';
 import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
-import { loginAPI, loginDB } from '@/services/communicationsScripts/mainManager.js';
+import { loginAPI, loginDB, getTypeUsers } from '@/services/communicationsScripts/mainManager.js';
+
+getTypeUsers(); // Fetch user types on component mount
 
 const apikey = import.meta.env.VITE_FIREBASE_API_KEY;
 
@@ -159,6 +242,8 @@ const auth = getAuth(app);
 const message = ref("");
 const messageType = ref("");
 const lastAction = ref(null);
+const showRoleModal = ref(false);
+const pendingRegistration = ref(null);
 
 const userLogin = reactive({
     email: "",
@@ -170,19 +255,22 @@ const userAPIs = reactive({
     name: "",
     password: "",
     profile: "",
+    role: "",
 });
 
 const retryAction = () => {
     message.value = "";
-    if (lastAction.value === 'google') {
-        signInWithGoogle();
+    if (lastAction.value === 'google-login') {
+        signInWithGoogle('login');
+    } else if (lastAction.value === 'google-register') {
+        signInWithGoogle('register');
     } else if (lastAction.value === 'app') {
         signInWithApp();
     }
 };
 
-const signInWithGoogle = async () => {
-    lastAction.value = 'google';
+const signInWithGoogle = async (action) => {
+    lastAction.value = `google-${action}`;
     const provider = new GoogleAuthProvider();
     try {
         const result = await signInWithPopup(auth, provider);
@@ -192,9 +280,49 @@ const signInWithGoogle = async () => {
         userAPIs.name = result.user.displayName;
         userAPIs.profile = result.user.photoURL;
 
-        // validateAndLogin(userAPIs);
+        if (action === 'login') {
+            // Lógica para login
+            // validateAndLogin(userAPIs);
+        } else {
+            // Lógica para registro
+            if (!checkEmailType(userAPIs.email)) {
+                pendingRegistration.value = { ...userAPIs };
+                showRoleModal.value = true;
+            } else {
+                userAPIs.role = 'student'; 
+                await completeRegistration();
+            }
+        }
     } catch (error) {
-        message.value = "Error en l'inici de sessió amb Google. Si us plau, torna a intentar-ho.";
+        message.value = action === 'login'
+            ? "Error en l'inici de sessió amb Google. Si us plau, torna a intentar-ho."
+            : "Error en el registre amb Google. Si us plau, torna a intentar-ho.";
+        messageType.value = "error";
+    }
+};
+
+const completeRegistration = async (role = null) => {
+    try {
+        if (role) {
+            pendingRegistration.value.role = role;
+        }
+
+        // Aquí iría la llamada a tu API para registrar al usuario
+        const response = await registerUser(pendingRegistration.value);
+
+        if (response.error) {
+            throw new Error(response.error);
+        }
+
+        // Si el registro es exitoso
+        showRoleModal.value = false;
+        message.value = "Registre completat amb èxit! Ara pots iniciar sessió.";
+        messageType.value = "success";
+
+        // Limpiar el estado pendiente
+        pendingRegistration.value = null;
+    } catch (error) {
+        message.value = "Error en completar el registre: " + error.message;
         messageType.value = "error";
     }
 };
@@ -244,7 +372,6 @@ const signInWithApp = async () => {
 };
 
 const checkEmailType = (email) => {
-    // Regular expression to check if email starts with 'a' followed by exactly two numbers
     const regex = /^a\d{2}/;
 
     if (regex.test(email)) {

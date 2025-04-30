@@ -3,7 +3,6 @@ import TypeUser from "../models/TypeUser.js";
 
 const router = express.Router();
 
-// Obtener todas las reservas de habitaciones
 router.get("/", async (req, res) => {
     try {
         const typeUsers = await TypeUser.findAll();

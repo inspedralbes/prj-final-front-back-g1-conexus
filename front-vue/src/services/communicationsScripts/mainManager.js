@@ -2,21 +2,15 @@ import { useAppStore } from "@/stores/index";
 
 const BACK_URL = import.meta.env.VITE_BACKEND_URL;
 
-export const checkUser = async (user) => {
+export const getTypeUsers = async () => {
     try {
-        const response = await fetch(`${BACK_URL}api/user/checkUser`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(user),
-        });
-
+        const response = await fetch(`${BACK_URL}api/type-users/`);
         if (!response.ok) {
-            return { error: `HTTP error! status: ${response.status}` };
+            throw new Error("Error fetching type users");
         }
-
-        return await response.json();
+        const data = await response.json();
+        console.log("Response:", data); 
+        return data;
     } catch (error) {
         console.error("Network error:", error);
         return { error: "Network error. Please try again later." };
