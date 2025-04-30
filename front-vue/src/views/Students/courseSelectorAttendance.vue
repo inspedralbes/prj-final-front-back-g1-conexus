@@ -28,7 +28,7 @@ onMounted(async () => {
 })
 
 function goToAttendance(id) {
-    route.push({ name: 'grades-from-course-student', params: { id } })
+    route.push({ name: 'assistence-from-course-student', params: { id } })
 }   
 
 </script>

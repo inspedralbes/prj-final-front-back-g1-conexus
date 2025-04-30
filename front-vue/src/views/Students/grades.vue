@@ -20,6 +20,9 @@ import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import {useAppStore} from '@/stores/index.js';
 import { getGradesFromUserAndCourse } from '@/services/communicationsScripts/gradesComManager.js';
+import { useRouter } from 'vue-router';
+
+const router=useRouter();
 const courseId = ref(null);
 const grades = ref([]);
 onMounted(async () => {
@@ -29,6 +32,9 @@ onMounted(async () => {
     grades.value=await getGradesFromUserAndCourse(3, route.params.id);
     console.log(grades.value);
 });
+function goToHome() {
+    router.push({ name: 'student-grades' });
+}
 </script>
 <style scoped>
 

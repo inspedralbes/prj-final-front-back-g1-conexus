@@ -109,6 +109,22 @@ router.get("/course/:courseId/day/:day", async (req, res) => {
     }
 });
 
+//Get all assistance from a user and a course
+router.get("/user/:userId/course/:courseId", async (req, res) => {
+    try {
+        const { userId, courseId } = req.params;
+        const assistance = await Assistence.findAll({ where: { user_id: userId, course_id: courseId } });
+        let auxAssistance=[];
+        assistance.forEach((assistance) => {
+            if(assistance.assisted!="not selected"){
+                auxAssistance.push(assistance);
+            }
+        });
+        res.json(auxAssistance);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
 
 export default router;
 
