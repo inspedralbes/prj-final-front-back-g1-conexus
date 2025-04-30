@@ -31,12 +31,12 @@ const PORT = process.env.NODE_PORT || 3000;
 app.use(bodyParser.json());
 app.use(cors());
 
-app.use("/api/assistences", assistenceRoutes);
+// app.use("/api/assistences", assistenceRoutes);
 app.use("/api/courses", courseRoutes);
 app.use("/api/departments", departmentRoutes);
-app.use("/api/grades", gradeRoutes);
+// app.use("/api/grades", gradeRoutes);
 
-app.use("/api/lost-objects", lostObjectRoutes);
+// app.use("/api/lost-objects", lostObjectRoutes);
 app.use("/api/reports", reportRoutes);
 app.use("/api/responses", responseRoutes);
 app.use("/api/room-reservations", roomReservationRoutes);

@@ -1,6 +1,6 @@
 import { useAppStore } from "@/stores/index";
 
-const BACK_URL = import.meta.env.VITE_BACK_URL;
+const BACK_URL = import.meta.env.VITE_BACKEND_URL;
 
 
 export const loginAPI = async (user) => {
