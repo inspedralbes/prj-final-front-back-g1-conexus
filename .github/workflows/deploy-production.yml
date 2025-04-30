@@ -70,9 +70,9 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} <<EOF
           echo "🔐 Afegint secrets al fitxer .env..."
 
-          echo "NODE_USER=${{ secrets.NODE_DB_USER }}" >> /opt/conexus/.env
-          echo "NODE_PASSWORD=${{ secrets.NODE_DB_PASSWORD }}" >> /opt/conexus/.env
-          echo "NODE_ROOT_PASSWORD=${{ secrets.NODE_ROOT_PASSWORD }}" >> /opt/conexus/.env
+          echo "NODE_DB_USER=${{ secrets.NODE_DB_USER }}" >> /opt/conexus/.env
+          echo "NODE_DB_PASSWORD=${{ secrets.NODE_DB_PASSWORD }}" >> /opt/conexus/.env
+          echo "NODE_DB_ROOT_PASSWORD=${{ secrets.NODE_ROOT_PASSWORD }}" >> /opt/conexus/.env
           echo "NODE_SECRET_KEY_TOKEN=${{ secrets.NODE_SECRET_KEY_TOKEN}}" >> /opt/conexus/.env
 
           # Añadir variables del contenedor nginx db
