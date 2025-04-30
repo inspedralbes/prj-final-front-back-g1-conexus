@@ -51,7 +51,6 @@ onMounted(async () => {
     courseId.value = route.params.id;
     console.log(courseId.value);
     assistance.value = await getAttendanceFromUserAndCourse(3, route.params.id);
-    console.log(grades.value);
 });
 function goToHome() {
     router.push({ name: 'student-assistence' });

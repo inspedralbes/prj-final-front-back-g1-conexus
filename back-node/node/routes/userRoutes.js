@@ -28,8 +28,8 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
     console.log(req.body);
     try {
-        const { typesUsers_id, name, email, password, banner, profile, department_id, description } = req.body;
-        const user = await User.create({ typesUsers_id, name, email, password, banner, profile, department_id, description });
+        const { typesUsers_id, name, email, password, profile, department_id, description } = req.body;
+        const user = await User.create({ typesUsers_id, name, email, password, profile, department_id, description });
         res.json(user);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -56,7 +56,7 @@ router.get("/:id", async (req, res) => {
 router.put("/personalData/:id", async (req, res) => {
     try {
         const { id } = req.params;
-        const { name, password, banner, profile, department_id, description } = req.body;
+        const { name, password, profile, department_id, description } = req.body;
 
         const user = await User.findByPk(id);
 
@@ -64,7 +64,7 @@ router.put("/personalData/:id", async (req, res) => {
             return res.status(404).json({ message: "Usuario no encontrado" });
         }
 
-        await user.update({ name, password, banner, profile, department_id, description });
+        await user.update({ name, password, profile, department_id, description });
         res.json(user);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -108,7 +108,7 @@ router.delete("/:id", async (req, res) => {
 });
 
 // Login route
-router.post('/login', async (req, res) => {
+router.post('/loginAPI', async (req, res) => {
     const { email, name, token, profile } = req.body;
 
     try {
@@ -118,13 +118,11 @@ router.post('/login', async (req, res) => {
         if (!existingUser) {
             // Create new user if doesn't exist
             const hashedToken = await hashPassword(token);
-            const banner = '/upload/banner_default.png';
 
             const newUser = await User.create({
                 name,
                 email,
                 password: hashedToken,
-                banner,
                 profile
             });
 
@@ -132,7 +130,6 @@ router.post('/login', async (req, res) => {
             return res.status(200).json({
                 message: 'User created and logged in successfully',
                 accessToken: tokens.accessToken,
-                refreshToken: tokens.refreshToken,
                 userLogin: newUser
             });
         } else {
@@ -147,10 +144,45 @@ router.post('/login', async (req, res) => {
             return res.status(200).json({
                 message: 'Login successful',
                 accessToken: tokens.accessToken,
-                refreshToken: tokens.refreshToken,
                 userLogin: existingUser
             });
         }
+    } catch (error) {
+        console.error('Login error:', error);
+        res.status(500).json({ error: 'Server error during login' });
+    }
+});
+
+router.post('/loginDB', async (req, res) => {
+    const { email, password } = req.body;
+
+    try {
+        // Check if user exists
+        const existingUser = await User.findOne({ where: { email } });
+
+        console.log('Existing user:', existingUser);
+
+        if (!existingUser) {
+            return res.status(404).json({ error: 'User not found' });
+            console.log('User not found');
+        } else {
+            console.log('User found:', existingUser);
+        }
+
+        // Verify password
+        // const match = await bcrypt.compare(password, existingUser.password);
+
+        // if (!match) {
+        //     return res.status(400).json({ error: 'Invalid password' });
+        //     console.log('Invalid password');
+        // }
+
+        const tokens = generateToken(existingUser);
+        return res.status(200).json({
+            message: 'Login successful',
+            accessToken: tokens.accessToken,
+            userLogin: existingUser
+        });
     } catch (error) {
         console.error('Login error:', error);
         res.status(500).json({ error: 'Server error during login' });

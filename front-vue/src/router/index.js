@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
+
 import HomeView from '../views/Teachers/myCourses.vue'
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -73,9 +75,29 @@ const router = createRouter({
           component: () => import('@/views/Teachers/assistence.vue')
         },
         {
+          path: 'attendance/:courseId',
+          name: 'attendance',
+          component: () => import('../views/Teachers/Attendance/AttendanceView.vue'),
+        },
+        {
           path: 'grades',
           name: 'teacher-grades',
           component: () => import('@/views/Teachers/grades.vue')
+        },
+        {
+          path: 'grades/:courseId',
+          name: 'grades',
+          component: () => import('../views/Teachers/Grades/GradesView.vue'),
+        },
+        {
+          path: "grades/:courseId/CreateTask",
+          name: "createTask",
+          component: () => import('../views/Teachers/Grades/NewTask.vue'),
+        },
+        {
+          path: "grades/:courseId/Task/:taskId",
+          name: "evaluate",
+          component: () => import('../views/Teachers/Grades/EvaluateTask.vue'),
         },
         {
           path: 'roomReservation',
@@ -152,27 +174,8 @@ const router = createRouter({
           component: () => import('@/views/Admin/incidents.vue')
         },
       ]
-    },
-    // {
-    //   path: '/Attendance/:courseId',
-    //   name: 'attendance',
-    //   component: () => import('../views/Teachers/Attendance/AttendanceView.vue'),
-    // },
-    // {
-    //   path: '/Grades/:courseId',
-    //   name: 'grades',
-    //   component: () => import('../views/Teachers/Grades/GradesView.vue'),
-    // },
-    // {
-    //   path: "/Grades/:courseId/CreateTask",
-    //   name: "createTask",
-    //   component: () => import('../views/Teachers/Grades/NewTask.vue'),
-    // },
-    // {
-    //   path: "/Grades/:courseId/Task/:taskId",
-    //   name: "evaluate",
-    //   component: () => import('../views/Teachers/Grades/EvaluateTask.vue'),
-    // }
+
+    }
   ],
 })
 

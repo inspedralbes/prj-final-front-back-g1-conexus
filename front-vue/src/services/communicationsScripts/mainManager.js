@@ -2,7 +2,6 @@ import { useAppStore } from "@/stores/index";
 
 const BACK_URL = import.meta.env.VITE_BACKEND_URL;
 
-
 export const loginAPI = async (user) => {
     try {
         const response = await fetch(`${BACK_URL}api/user/login`, {
@@ -23,6 +22,7 @@ export const loginAPI = async (user) => {
         return { error: "Network error. Please try again later." };
     }
 };
+
 export const getCoursesWithUser= async (userId) => {
     try{
         const response = await fetch(`${BACK_URL}api/user-courses/user/${userId}`, {
@@ -42,6 +42,7 @@ export const getCoursesWithUser= async (userId) => {
         return { error: "Network error. Please try again later." };
     }
 }
+
 export const getCoursesFromUser = async (userId) => {
     try {
         const response = await fetch(`${BACK_URL}api/courses/teacher/${userId}`, {
@@ -59,6 +60,7 @@ export const getCoursesFromUser = async (userId) => {
         console.error('Error fetching courses:', error);
     }
 }
+
 export const getHoursOfCourse = async (courseId) => {
     try {
         const response = await fetch(`${BACK_URL}api/courses/${courseId}`, {
@@ -110,7 +112,7 @@ export const getHoursOfCourse = async (courseId) => {
     
 }
 
-export const getAlumns=async (courseId) => {
+export const getAlumns = async (courseId) => {
     return fetch(`${BACK_URL}api/user-courses/course/${courseId}`, {
         method: 'GET',
         headers: {

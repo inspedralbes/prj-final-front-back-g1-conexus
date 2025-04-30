@@ -23,7 +23,6 @@ import userRoutes from "./routes/userRoutes.js";
 import taskRoutes from "./routes/taskRoutes.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
 dotenv.config();
 
 const app = express();
@@ -36,7 +35,6 @@ app.use("/api/assistences", assistenceRoutes);
 app.use("/api/courses", courseRoutes);
 app.use("/api/departments", departmentRoutes);
 
-
 app.use("/api/lost-objects", lostObjectRoutes);
 app.use("/api/reports", reportRoutes);
 app.use("/api/responses", responseRoutes);
@@ -45,8 +43,7 @@ app.use("/api/room-reservations", roomReservationRoutes);
 app.use("/api/rooms", roomRoutes);
 app.use("/api/type-users", typeUserRoutes);
 app.use("/api/user-courses", userCourseRoutes);
-app.use("/api/users", userRoutes);
-
+app.use("/api/user", userRoutes);
 
 sequelize.sync().then(() => {
     console.log("Database synced");
