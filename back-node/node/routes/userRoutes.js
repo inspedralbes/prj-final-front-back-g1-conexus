@@ -8,6 +8,18 @@ import { generateToken, verifyTokenMiddleware } from "../token.js";
 
 const router = express.Router();
 
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/');
+    },
+    filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, uniqueSuffix + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({ storage: storage });
+
 export async function hashPassword(contrasenya) {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(contrasenya, salt);
@@ -25,10 +37,11 @@ router.get("/", async (req, res) => {
 });
 
 // Crear un nuevo usuario
-router.post("/", async (req, res) => {
+router.post("/", upload.single('profile') ,async (req, res) => {
     console.log(req.body);
     try {
-        const { typeUsers_id, name, email, password, profile, department_id, description } = req.body;
+        const { typeUsers_id, name, email, password, department_id, description } = req.body;
+        const profile = req.file ? req.file.path : null; // Guardar la ruta de la imagen si se proporciona
         const user = await User.create({ typeUsers_id, name, email, password, profile, department_id, description });
         res.json(user);
     } catch (error) {

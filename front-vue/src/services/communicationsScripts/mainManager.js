@@ -174,14 +174,11 @@ export const deleteUser = async (userId) => {
     }
 }
 
-export const createUser = async (user) => {
+export const createUser = async (formData) => {
     try {
-        const response = await fetch(`${BACK_URL}api/users`, {
+        const response = await fetch(`${BACK_URL}api/user`, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(user),
+            body: formData,
         });
 
         if (!response.ok) {

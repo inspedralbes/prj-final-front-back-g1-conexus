@@ -30,7 +30,7 @@ const PORT = process.env.NODE_PORT || 3000;
 
 app.use(bodyParser.json());
 app.use(cors());
-
+app.use('/uploads', express.static('uploads'));
 app.use("/api/assistences", assistenceRoutes);
 app.use("/api/courses", courseRoutes);
 app.use("/api/departments", departmentRoutes);
