@@ -3,7 +3,7 @@ FROM node:18-alpine AS build-stage
 
 WORKDIR /app
 
-# Copia solo los archivos necesarios
+# Copiar solo los archivos necesarios
 COPY package*.json ./
 
 # Instalar dependencias
@@ -12,8 +12,8 @@ RUN npm install
 # Copiar el resto del código
 COPY . .
 
-# Compilar la aplicación
-RUN npm run build
+# Ejecutar el build y mostrar los archivos de /app
+RUN npm run build && ls -la /app
 
 # Etapa 2: Imagen de producción con Nginx
 FROM nginx:stable-alpine AS production-stage
