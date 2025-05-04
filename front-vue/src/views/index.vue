@@ -217,7 +217,7 @@ import { ref, reactive } from 'vue';
 import { initializeApp } from "firebase/app";
 import { useAppStore } from '@/stores/index.js';
 import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
-import { loginAPI, loginDB, getTypeUsers } from '@/services/communicationsScripts/mainManager.js';
+import { login, getTypeUsers } from '@/services/communicationsScripts/mainManager.js';
 
 getTypeUsers(); // Fetch user types on component mount
 
@@ -272,6 +272,9 @@ const retryAction = () => {
 const signInWithGoogle = async (action) => {
     lastAction.value = `google-${action}`;
     const provider = new GoogleAuthProvider();
+    
+    let profileURL = ref("");
+
     try {
         const result = await signInWithPopup(auth, provider);
 
@@ -282,14 +285,40 @@ const signInWithGoogle = async (action) => {
 
         if (action === 'login') {
             // Lógica para login
-            // validateAndLogin(userAPIs);
+            const response = await login(userAPIs);
+
+            if (response.error) {
+                console.log(response.error);
+                message.value = response.error;
+                messageType.value = "error";
+                return;
+            }
+
+            console.log(response);
+            let user = response.userLogin;
+            let profile = user.profile;
+
+            if (profile.includes("/upload/", 0)) {
+                profileURL.value = `${import.meta.env.VITE_BACKEND_URL}${user.profile}`;
+            } else {
+                profileURL.value = user.profile;
+            }
+
+            user.profile = profileURL.value;
+
+            useAppStore().setAccessToken(response.accessToken);
+            useAppStore().setUser(user);
+
+            localStorage.setItem("user", JSON.stringify(user.email));
+            localStorage.setItem("accessToken", response.accessToken);
         } else {
             // Lógica para registro
             if (!checkEmailType(userAPIs.email)) {
+                console.log("No es estudiant");
                 pendingRegistration.value = { ...userAPIs };
                 showRoleModal.value = true;
             } else {
-                userAPIs.role = 'student'; 
+                userAPIs.role = 'student';
                 await completeRegistration();
             }
         }
@@ -307,19 +336,16 @@ const completeRegistration = async (role = null) => {
             pendingRegistration.value.role = role;
         }
 
-        // Aquí iría la llamada a tu API para registrar al usuario
         const response = await registerUser(pendingRegistration.value);
 
         if (response.error) {
             throw new Error(response.error);
         }
 
-        // Si el registro es exitoso
         showRoleModal.value = false;
         message.value = "Registre completat amb èxit! Ara pots iniciar sessió.";
         messageType.value = "success";
 
-        // Limpiar el estado pendiente
         pendingRegistration.value = null;
     } catch (error) {
         message.value = "Error en completar el registre: " + error.message;
@@ -338,7 +364,7 @@ const signInWithApp = async () => {
     }
 
     try {
-        const response = await loginDB(userLogin);
+        const response = await login(userLogin);
 
         if (response.error) {
             console.log(response.error);
@@ -351,7 +377,6 @@ const signInWithApp = async () => {
         let user = response.userLogin;
         let profile = user.profile;
 
-        console.log('hola')
         if (profile.includes("/upload/", 0)) {
             profileURL.value = `${import.meta.env.VITE_BACKEND_URL}${user.profile}`;
         } else {

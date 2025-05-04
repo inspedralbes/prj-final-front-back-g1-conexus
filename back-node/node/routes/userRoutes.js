@@ -107,75 +107,24 @@ router.delete("/:id", async (req, res) => {
     }
 });
 
-// Login route
-router.post('/loginAPI', async (req, res) => {
-    const { email, name, token, profile } = req.body;
-
-    try {
-        // Check if user exists
-        const existingUser = await User.findOne({ where: { email } });
-
-        if (!existingUser) {
-            // Create new user if doesn't exist
-            const hashedToken = await hashPassword(token);
-
-            const newUser = await User.create({
-                name,
-                email,
-                password: hashedToken,
-                profile
-            });
-
-            const tokens = generateToken(newUser);
-            return res.status(200).json({
-                message: 'User created and logged in successfully',
-                accessToken: tokens.accessToken,
-                userLogin: newUser
-            });
-        } else {
-            // Verify password for existing user
-            const match = await comparePassword(token, existingUser.password);
-
-            if (!match) {
-                return res.status(400).json({ error: 'Invalid password' });
-            }
-
-            const tokens = generateToken(existingUser);
-            return res.status(200).json({
-                message: 'Login successful',
-                accessToken: tokens.accessToken,
-                userLogin: existingUser
-            });
-        }
-    } catch (error) {
-        console.error('Login error:', error);
-        res.status(500).json({ error: 'Server error during login' });
-    }
-});
-
-router.post('/loginDB', async (req, res) => {
+router.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        // Check if user exists
         const existingUser = await User.findOne({ where: { email } });
 
         console.log('Existing user:', existingUser);
 
         if (!existingUser) {
             return res.status(404).json({ error: 'User not found' });
-            console.log('User not found');
-        } else {
-            console.log('User found:', existingUser);
         }
 
         // Verify password
-        // const match = await bcrypt.compare(password, existingUser.password);
+        const match = await bcrypt.compare(password, existingUser.password);
 
-        // if (!match) {
-        //     return res.status(400).json({ error: 'Invalid password' });
-        //     console.log('Invalid password');
-        // }
+        if (!match) {
+            return res.status(404).json({ error: 'Invalid password' });
+        }
 
         const tokens = generateToken(existingUser);
         return res.status(200).json({

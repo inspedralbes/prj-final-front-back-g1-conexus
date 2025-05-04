@@ -17,34 +17,37 @@ export const getTypeUsers = async () => {
     }
 };
 
-export const loginAPI = async (user) => {
+export const register = async (user) => {
     try {
-        const response = await fetch(`${BACK_URL}api/user/login`, {
-            method: "POST",
+        const response = await fetch(`${BACK_URL}api/user/`, {
+            method: 'POST',
             headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify(user),
         });
 
         if (!response.ok) {
-            if (response.status === 404) {
-                return { error: 'Correu electrònic o contrasenya incorrectes. Verifica les teves credencials.' };
+            if (response.status === 400) {
+                return { error: 'Correu electrònic ja registrat. Proba a iniciar sessio.' };
+            } else if (response.status === 500) {
+                return { error: 'Error inesperat. Proba a registrar-te més tard.' };
             } else {
-                return { error: `Error inesperat. Proba a iniciar sessio més tard.` };
+                return { error: 'Error desconegut. Proba a registrar-te més tard.' };
             }
         }
-
-        return await response.json();
+        const data = await response.json();
+        console.log("Response:", data);
+        return data;
     } catch (error) {
-        console.error("Network error:", error);
-        return { error: "Network error. Please try again later." };
+        console.error('Network error:', error);
+        return { error: 'Network error. Please try again later.' };
     }
 };
 
-export const loginDB = async (user) => {
+export const login = async (user) => {
     try {
-        const response = await fetch(`${BACK_URL}api/user/loginDB`, {
+        const response = await fetch(`${BACK_URL}api/user/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -71,11 +74,9 @@ export const logout = async () => {
     try {
         const accessToken = localStorage.getItem('accessToken');
 
-        // Clear Pinia store
         const appStore = useAppStore();
         appStore.$reset();
 
-        // Clear localStorage
         localStorage.removeItem('accessToken');
         localStorage.removeItem('user');
 
