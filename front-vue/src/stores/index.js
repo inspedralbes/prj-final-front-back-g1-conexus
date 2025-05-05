@@ -2,7 +2,16 @@ import { defineStore } from 'pinia';
 
 export const useAppStore = defineStore('appStore', {
   state: () => ({
-    user: {},
+    user: {
+      name: '',
+      email: '',
+      password: '',
+      profile: '',
+      department_id: null,
+      description: '',
+      typesUsers_id: null,
+      id: null,
+    },
     accessToken: '',
   }),
   actions: {
@@ -12,16 +21,16 @@ export const useAppStore = defineStore('appStore', {
     setAccessToken(accessToken) {
       this.accessToken = accessToken;
     },
-    },
     getUser() {
       return this.user;
     },
     getTypeUser() {
-      return this.user.type;
+      return this.user.typesUsers_id;
+    },
+    getUserId() {
+      return this.user.id;
     },
     getAccessToken() {
       return this.accessToken;
-    },
-
-  },
-);
+    }
+}});

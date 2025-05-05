@@ -1,5 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
+import HomeView from '../views/Teachers/myCourses.vue'
+
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -21,15 +24,26 @@ const router = createRouter({
         { 
           path: 'assistence',
           name: 'student-assistence',
-          component: () => import('@/views/Students/assistence.vue')
+          component: () => import('@/views/Students/courseSelectorAttendance.vue')
         },
         {
           path: 'grades',
           name: 'student-grades',
-          component: () => import('@/views/Students/grades.vue')
-        }
+          component: () => import('@/views/Students/courseSelectorGrades.vue')
+        },
+        {
+          path: ':id/grades',
+          name: 'grades-from-course-student',
+          component: () => import('@/views/Students/grades.vue'),
+        },
+        {
+          path: ':id/assistence',
+          name: 'assistence-from-course-student',
+          component: () => import('@/views/Students/assistence.vue'),
+        },
       ]
     },
+    
     {
       path: '/teachers',
       name: 'teacher',
@@ -61,9 +75,29 @@ const router = createRouter({
           component: () => import('@/views/Teachers/assistence.vue')
         },
         {
+          path: 'attendance/:courseId',
+          name: 'attendance',
+          component: () => import('../views/Teachers/Attendance/AttendanceView.vue'),
+        },
+        {
           path: 'grades',
           name: 'teacher-grades',
           component: () => import('@/views/Teachers/grades.vue')
+        },
+        {
+          path: 'grades/:courseId',
+          name: 'grades',
+          component: () => import('../views/Teachers/Grades/GradesView.vue'),
+        },
+        {
+          path: "grades/:courseId/CreateTask",
+          name: "createTask",
+          component: () => import('../views/Teachers/Grades/NewTask.vue'),
+        },
+        {
+          path: "grades/:courseId/Task/:taskId",
+          name: "evaluate",
+          component: () => import('../views/Teachers/Grades/EvaluateTask.vue'),
         },
         {
           path: 'roomReservation',
@@ -127,7 +161,7 @@ const router = createRouter({
         {
           path: 'config-servers',
           name: 'admin-config-servers',
-          component: () => import('@/views/Admin/servers.vue')
+          // component: () => import('@/views/Admin/servers.vue')
         },
         {
           path: 'config-lost-objects',
@@ -140,6 +174,7 @@ const router = createRouter({
           component: () => import('@/views/Admin/incidents.vue')
         },
       ]
+
     }
   ],
 })

@@ -6,7 +6,10 @@ const Response = sequelize.define('Response', {
     user_id: { type: DataTypes.INTEGER, allowNull: false },
     lostAndFound_id: { type: DataTypes.INTEGER, allowNull: false },
     comment: { type: DataTypes.TEXT, allowNull: false, },
-    created_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW, },
+
+}, {
+    tableName: 'Responses',
+    timestamps: false,
 });
 
 export default Response;
