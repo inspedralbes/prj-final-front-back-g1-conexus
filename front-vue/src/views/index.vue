@@ -13,17 +13,16 @@
                         </div>
 
                         <div class="space-y-3">
-                            <button 
-                                v-for="role in availableRoles" 
-                                :key="role.id"
-                                @click="completeRegistration(role.name)"
+                            <button v-for="role in availableRoles" :key="role.id" @click="completeRegistration(role.id)"
                                 class="w-full flex items-center justify-between px-4 py-3 bg-slate-700 hover:bg-slate-600 rounded-lg text-white transition-all hover:scale-[1.02]">
                                 <span>{{ role.name }}</span>
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                                     stroke="currentColor">
-                                    <path v-if="role.name === 'Estudiant'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    <path v-if="role.name === 'Estudiant'" stroke-linecap="round"
+                                        stroke-linejoin="round" stroke-width="2"
                                         d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                                    <path v-else-if="role.name === 'Professor'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    <path v-else-if="role.name === 'Professor'" stroke-linecap="round"
+                                        stroke-linejoin="round" stroke-width="2"
                                         d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                                     <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -279,7 +278,7 @@ const retryAction = () => {
 const signInWithGoogle = async (action) => {
     lastAction.value = `google-${action}`;
     const provider = new GoogleAuthProvider();
-    
+
     let profileURL = ref("");
 
     try {
@@ -325,10 +324,19 @@ const signInWithGoogle = async (action) => {
                 pendingRegistration.value = { ...userAPIs };
                 showRoleModal.value = true;
             } else {
-                userAPIs.role = 'Estudiant';
-                await completeRegistration();
+                // Buscar el rol de Estudiante en los roles disponibles
+                const estudiantRole = availableRoles.value.find(role => role.name === 'Estudiant');
+                if (estudiantRole) {
+                    pendingRegistration.value = { ...userAPIs };
+                    pendingRegistration.value.role = estudiantRole.id;
+                    await completeRegistration();
+                } else {
+                    message.value = "No s'ha trobat el rol d'Estudiant. Si us plau, contacta amb l'administrador.";
+                    messageType.value = "error";
+                }
             }
         }
+
     } catch (error) {
         message.value = action === 'login'
             ? "Error en l'inici de sessió amb Google. Si us plau, torna a intentar-ho."
@@ -337,12 +345,16 @@ const signInWithGoogle = async (action) => {
     }
 };
 
-const completeRegistration = async (role = null) => {
+const completeRegistration = async (roleId = null) => {
     try {
-        if (role) {
-            pendingRegistration.value.role = role;
+        if (roleId) {
+            pendingRegistration.value.typeUsers_id = roleId;
+        } else if (pendingRegistration.value.role) {
+            pendingRegistration.value.typeUsers_id = pendingRegistration.value.role; // Transferir el valor
+            delete pendingRegistration.value.role;
         }
 
+        console.log("Datos a enviar al registro:", JSON.stringify(pendingRegistration.value));
         const response = await register(pendingRegistration.value);
 
         if (response.error) {
@@ -405,74 +417,71 @@ const signInWithApp = async () => {
 
 const checkEmailType = (email) => {
     const regex = /^a\d{2}/;
-
-    if (regex.test(email)) {
-        return 1;
-    }
-    return 0;
+    return regex.test(email) ? 1 : 0;
 };
 </script>
 
 <style scoped>
-.animate-fade-in {
-    animation: fadeIn 0.6s ease-out forwards;
-}
+    .animate-fade-in {
+        animation: fadeIn 0.6s ease-out forwards;
+    }
 
-@keyframes fadeIn {
-    from {
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(12px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Animaciones para el diálogo */
+    .fade-enter-active,
+    .fade-leave-active {
+        transition: opacity 0.3s ease;
+    }
+
+    .fade-enter-from,
+    .fade-leave-to {
         opacity: 0;
-        transform: translateY(12px);
     }
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
+    .pop-enter-active,
+    .pop-leave-active {
+        transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
     }
-}
 
-/* Animaciones para el diálogo */
-.fade-enter-active,
-.fade-leave-active {
-    transition: opacity 0.3s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-    opacity: 0;
-}
-
-.pop-enter-active,
-.pop-leave-active {
-    transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
-}
-
-.pop-enter-from,
-.pop-leave-to {
-    opacity: 0;
-    transform: scale(0.9) translateY(10px);
-}
+    .pop-enter-from,
+    .pop-leave-to {
+        opacity: 0;
+        transform: scale(0.9) translateY(10px);
+    }
 
 /* Transicions suaus */
-button,
-input,
-a {
-    transition: all 0.2s ease;
-}
+    button,
+    input,
+    a {
+        transition: all 0.2s ease;
+    }
 
-/* Efecte hover per als botons */
-button:hover {
-    transform: translateY(-1px);
-}
+    /* Efecte hover per als botons */
+    button:hover {
+        transform: translateY(-1px);
+    }
 
-/* Estilo para el checkbox personalizado */
-input[type="checkbox"] {
-    appearance: none;
-    -webkit-appearance: none;
-    @apply border border-slate-700 rounded bg-slate-800/60 w-4 h-4 cursor-pointer;
-}
+    /* Estilo para el checkbox personalizado */
+    input[type="checkbox"] {
+        appearance: none;
+        -webkit-appearance: none;
+        @apply border border-slate-700 rounded bg-slate-800/60 w-4 h-4 cursor-pointer;
+    }
 
-input[type="checkbox"]:checked {
-    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M5.707 7.293a1 1 0 0 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0-1.414-1.414L7 8.586 5.707 7.293z'/%3e%3c/svg%3e");
-    @apply bg-blue-600 border-blue-600 bg-center bg-no-repeat bg-[length:80%];
-}
+    input[type="checkbox"]:checked {
+        background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M5.707 7.293a1 1 0 0 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0-1.414-1.414L7 8.586 5.707 7.293z'/%3e%3c/svg%3e");
+        @apply bg-blue-600 border-blue-600 bg-center bg-no-repeat bg-[length:80%];
+    }
+
 </style>

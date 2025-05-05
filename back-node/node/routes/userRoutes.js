@@ -28,8 +28,8 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
     console.log(req.body);
     try {
-        const { typesUsers_id, name, email, password, profile, department_id, description } = req.body;
-        const user = await User.create({ typesUsers_id, name, email, password, profile, department_id, description });
+        const { typeUsers_id, name, email, password, profile } = req.body;
+        const user = await User.create({ typeUsers_id, name, email, password, profile });
         res.json(user);
     } catch (error) {
         res.status(500).json({ message: error.message });

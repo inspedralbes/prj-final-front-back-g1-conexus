@@ -5,7 +5,6 @@ import assistenceRoutes from "./routes/assistenceRoutes.js";
 import courseRoutes from "./routes/courseRoutes.js";
 import departmentRoutes from "./routes/departmentRoutes.js";
 import gradeRoutes from "./routes/gradeRoutes.js";
-
 import dotenv from "dotenv";
 import cors from "cors";
 // import { verifyTokenMiddleware } from "./token.js";
