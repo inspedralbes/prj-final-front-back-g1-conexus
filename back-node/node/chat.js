@@ -2,7 +2,6 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
-import socket from 'socket.io';
 
 dotenv.config();
 
@@ -24,8 +23,6 @@ mongoose.connect(process.env.NODE_MONGO_URI, {
     console.log(err);
 });
 
-const io = socket(app);
-
 const messageSchema = new mongoose.Schema({
     name: String,
     teachers: [Number],
@@ -39,14 +36,6 @@ const messageSchema = new mongoose.Schema({
 });
 
 mongoose.model("Message", messageSchema);
-
-io.on("connection", (socket) => {
-    console.log("New client connected");
-
-    socket.on("disconnect", () => {
-        console.log("Client disconnected");
-    });
-});
 
 app.use("/api/chat", chatRoutes);
 

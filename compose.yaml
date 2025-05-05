@@ -11,13 +11,13 @@ services:
     working_dir: /app
     environment:
       - NODE_ENV=development
-      - CHOKIDAR_USEPOLLING=true  
+      - CHOKIDAR_USEPOLLING=true
       - HOST=0.0.0.0
     env_file:
       - .env
     restart: unless-stopped
     networks:
-        - conexus-hub-network
+      - conexus-hub-network
 
   conexus-hub-back:
     build:
@@ -45,7 +45,7 @@ services:
     networks:
       - conexus-hub-network
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "conexus-hub-mysql"]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "conexus-hub-mysql" ]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -76,9 +76,35 @@ services:
     networks:
       - conexus-hub-network
 
+  conexus-hub-mongodb:
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - mongo-db:/data/db
+
+  conexus-hub-mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@tr-final-mongodb:27017/
+      ME_CONFIG_BASICAUTH: false
+    depends_on:
+      - conexus-hub-mongodb
+
 volumes:
   conexus-hub-mysql-data:
-  
+  mongo-db:
+
+
 networks:
   conexus-hub-network:
     driver: bridge

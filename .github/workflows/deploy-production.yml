@@ -1,0 +1,183 @@
+name: Deploy to Production
+run-name: ${{ github.actor }} is deploying to production 🚀
+
+on:
+  push:
+    branches: [deploy]
+
+jobs:
+  CONEXIO-SERVIDOR:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup SSH key
+        run: |
+          echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > ~/prod_key.pem
+          chmod 600 ~/prod_key.pem
+
+      - name: Conectar por SSH, actualizar servidor e instalar dependencias
+        run: |
+          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
+            echo "🚀 Iniciando actualizaciones e instalación de dependencias..."
+
+            # Actualizar sistema dependencies
+            sudo apt update && sudo apt upgrade -y
+
+            # Instalar Node.js (v20) y npm desde NodeSource
+            if ! command -v node >/dev/null 2>&1; then
+              echo "📦 Instalando Node.js y npm..."
+              curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+              sudo apt install -y nodejs
+            else
+              echo "✅ Node.js ya está instalado"
+            fi
+
+            # Confirmar versiones instaladas
+            node -v
+            npm -v
+
+            # Asegurar que Docker esté activo
+            sudo systemctl enable docker
+            sudo systemctl start docker
+
+            # Crear carpetas necesarias si no existen
+            sudo mkdir -p /opt/conexus/front-vue
+            sudo mkdir -p /opt/conexus/back-node
+          EOF
+
+  SECRETS-GITHUB:
+    needs: [CONEXIO-SERVIDOR]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obtener variables de entorno
+        uses: actions/checkout@v4
+
+      - name: Update docker compose
+        run: |
+          echo "Afegir variables d'entorn al .env"
+          echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > ~/prod_key.pem
+          chmod 600 ~/prod_key.pem
+
+          echo "" >> .env.prod
+
+          # Copiar .env.prod al servidor y renombrarlo .env
+          scp -o StrictHostKeyChecking=no -i ~/prod_key.pem .env.prod ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/.env
+          
+          # Conectarse por SSH y añadir las variables sensibles
+          ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} <<EOF
+          echo "🔐 Afegint secrets al fitxer .env..."
+
+          echo "NODE_DB_USER=${{ secrets.NODE_DB_USER }}" >> /opt/conexus/.env
+          echo "NODE_DB_PASSWORD=${{ secrets.NODE_DB_PASSWORD }}" >> /opt/conexus/.env
+          echo "NODE_DB_ROOT_PASSWORD=${{ secrets.NODE_ROOT_PASSWORD }}" >> /opt/conexus/.env
+          echo "NODE_SECRET_KEY_TOKEN=${{ secrets.NODE_SECRET_KEY_TOKEN}}" >> /opt/conexus/.env
+
+          # Añadir variables del contenedor nginx db
+          echo "NGINX_DB_ROOT_PASSWORD=${{ secrets.NGINX_DB_ROOT_PASSWORD }}" >> /opt/conexus/.env
+          echo "NGINX_DB_USER=${{ secrets.NGINX_DB_USER }}" >> /opt/conexus/.env
+          echo "NGINX_DB_PASSWORD=${{ secrets.NGINX_DB_PASSWORD }}" >> /opt/conexus/.env
+
+          echo "✅ .env completat!"
+          EOF
+
+  BUILD-FRONTEND-AND-BUILD-PORTAINER:
+    needs: [CONEXIO-SERVIDOR, SECRETS-GITHUB]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Subir front-vue al servidor sin node_modules
+        run: |
+          echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > ~/prod_key.pem
+          chmod 600 ~/prod_key.pem
+
+          # Conectarse al servidor y limpiar el front-vue existente
+          ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
+            cd /opt/conexus
+            if [ -d ./front-vue ]; then 
+              sudo rm -rf ./front-vue
+            fi
+            mkdir front-vue
+          EOF
+
+          # Subir toda la carpeta front-vue (sin node_modules) al servidor
+          rsync -avz --exclude=node_modules --exclude=dist -e "ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem" front-vue/ ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/front-vue/
+
+      - name: Levantar Portainer con Docker Compose
+        run: |
+            # Conectarse al servidor y ejecutar docker-compose up --build
+            ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
+              cd /opt/conexus
+              # Asegúrate de que el archivo docker-compose.portainer.yml esté en la ubicación correcta
+              if [ -f docker-compose.portainer.yml ]; then
+                # Levantar los contenedores de Portainer y construir la imagen si es necesario
+                sudo docker-compose -f docker-compose.portainer.yml up --build -d
+              else
+                echo "No se encontró docker-compose.portainer.yml"
+              fi
+            EOF
+
+
+  BUILD-BACKEND:
+    needs: [BUILD-FRONTEND-AND-BUILD-PORTAINER]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Subir archivos del backend al servidor sin node_modules
+        run: |
+          echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > ~/prod_key.pem
+          chmod 600 ~/prod_key.pem
+      
+          ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
+          cd /opt/conexus
+          if [ -d ./back-node ]; then 
+            sudo rm -r ./back-node
+          fi
+          mkdir -p back-node
+          EOF
+      
+          rsync -avz --exclude=node_modules -e "ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem"  back-node/node ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/back-node/
+          rsync -avz -e "ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem" back-node/data ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/back-node/
+      
+      - name: Copiar prod.Dockerfile al servidor
+        run: |
+          echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > ~/prod_key.pem
+          chmod 600 ~/prod_key.pem
+
+          # Copiar el prod.Dockerfile al servidor en la carpeta back-node
+          scp -o StrictHostKeyChecking=no -i ~/prod_key.pem back-node/node/prod.Dockerfile ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/back-node/node/
+
+
+  START-DOCKER-COMPOSE-PRINCIPAL:
+    needs: [BUILD-FRONTEND-AND-BUILD-PORTAINER, BUILD-BACKEND]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Conectar a la máquina de producción y levantar contenedores
+        run: |
+          echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > ~/prod_key.pem
+          chmod 600 ~/prod_key.pem
+
+          ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
+            echo "🚢 Levantando contenedores Docker..."
+
+            cd /opt/conexus
+
+            if [ -f docker-compose.prod.yml ]; then
+              echo "🧹 Parando y eliminando contenedores anteriores..."
+              docker-compose -f docker-compose.prod.yml down
+
+              echo "🔧 Levantando Backend y Frontend..."
+              docker-compose -f docker-compose.prod.yml up -d --build
+            else
+              echo "❌ No se encontró el archivo docker-compose.prod.yml"
+              exit 1
+            fi
+
+            echo "🎉 Contenedores levantados con éxito"
+          EOF
