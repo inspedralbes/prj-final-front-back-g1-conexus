@@ -13,35 +13,20 @@
                         </div>
 
                         <div class="space-y-3">
-                            <button @click="completeRegistration('student')"
+                            <button 
+                                v-for="role in availableRoles" 
+                                :key="role.id"
+                                @click="completeRegistration(role.name)"
                                 class="w-full flex items-center justify-between px-4 py-3 bg-slate-700 hover:bg-slate-600 rounded-lg text-white transition-all hover:scale-[1.02]">
-                                <span>Estudiant</span>
+                                <span>{{ role.name }}</span>
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                                     stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    <path v-if="role.name === 'Estudiant'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                                </svg>
-                            </button>
-
-                            <button @click="completeRegistration('teacher')"
-                                class="w-full flex items-center justify-between px-4 py-3 bg-slate-700 hover:bg-slate-600 rounded-lg text-white transition-all hover:scale-[1.02]">
-                                <span>Professor</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    <path v-else-if="role.name === 'Professor'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                                </svg>
-                            </button>
-
-                            <button @click="completeRegistration('admin')"
-                                class="w-full flex items-center justify-between px-4 py-3 bg-slate-700 hover:bg-slate-600 rounded-lg text-white transition-all hover:scale-[1.02]">
-                                <span>Administrador</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                 </svg>
                             </button>
                         </div>
@@ -213,13 +198,35 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 import { initializeApp } from "firebase/app";
 import { useAppStore } from '@/stores/index.js';
 import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
-import { login, getTypeUsers } from '@/services/communicationsScripts/mainManager.js';
+import { login, getTypeUsers, register } from '@/services/communicationsScripts/mainManager.js';
 
-getTypeUsers(); // Fetch user types on component mount
+// Estado para los roles disponibles
+const availableRoles = ref([]);
+const loadingRoles = ref(true);
+
+// Obtener los tipos de usuario al montar el componente
+onMounted(async () => {
+    try {
+        const response = await getTypeUsers();
+        if (response && Array.isArray(response)) {
+            availableRoles.value = response;
+        } else {
+            console.error("Formato de datos inesperado:", response);
+            message.value = "Error al cargar los tipos de usuario";
+            messageType.value = "error";
+        }
+    } catch (error) {
+        console.error("Error al obtener los tipos de usuario:", error);
+        message.value = "Error al cargar los tipos de usuario disponibles";
+        messageType.value = "error";
+    } finally {
+        loadingRoles.value = false;
+    }
+});
 
 const apikey = import.meta.env.VITE_FIREBASE_API_KEY;
 
@@ -318,7 +325,7 @@ const signInWithGoogle = async (action) => {
                 pendingRegistration.value = { ...userAPIs };
                 showRoleModal.value = true;
             } else {
-                userAPIs.role = 'student';
+                userAPIs.role = 'Estudiant';
                 await completeRegistration();
             }
         }
@@ -336,7 +343,7 @@ const completeRegistration = async (role = null) => {
             pendingRegistration.value.role = role;
         }
 
-        const response = await registerUser(pendingRegistration.value);
+        const response = await register(pendingRegistration.value);
 
         if (response.error) {
             throw new Error(response.error);
