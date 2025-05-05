@@ -3,7 +3,7 @@ run-name: ${{ github.actor }} is deploying to production 🚀
 
 on:
   push:
-    branches: [116-refer-producció]
+    branches: [deploy]
 
 jobs:
   CONEXIO-SERVIDOR:
