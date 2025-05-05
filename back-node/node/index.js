@@ -45,6 +45,8 @@ app.use("/api/type-users", typeUserRoutes);
 app.use("/api/user-courses", userCourseRoutes);
 app.use("/api/user", userRoutes);
 
+app.use("/api/chat", chatRoutes);
+
 sequelize.sync().then(() => {
     console.log("Database synced");
     app.listen(PORT, () => {
