@@ -317,6 +317,8 @@ const signInWithGoogle = async (action) => {
 
             localStorage.setItem("user", JSON.stringify(user.email));
             localStorage.setItem("accessToken", response.accessToken);
+
+            redirectUserBasedOnRole(user);
         } else {
             // Lógica para registro
             if (!checkEmailType(userAPIs.email)) {
@@ -366,6 +368,13 @@ const completeRegistration = async (roleId = null) => {
         messageType.value = "success";
 
         pendingRegistration.value = null;
+
+        useAppStore().setAccessToken(response.accessToken);
+        useAppStore().setUser(user);
+
+        localStorage.setItem("user", JSON.stringify(user.email));
+        localStorage.setItem("accessToken", response.accessToken);
+        redirectUserBasedOnRole(user);
     } catch (error) {
         message.value = "Error en completar el registre: " + error.message;
         messageType.value = "error";
@@ -409,11 +418,37 @@ const signInWithApp = async () => {
 
         localStorage.setItem("user", JSON.stringify(user.email));
         localStorage.setItem("accessToken", response.accessToken);
+
+        redirectUserBasedOnRole(user);
     } catch (error) {
         message.value = "S'ha produït un error en connectar amb el servidor. Torna a intentar-ho més tard.";
         messageType.value = "error";
     }
 };
+
+const redirectUserBasedOnRole = (user) => {
+    // Obtener el rol del usuario y redirigir según corresponda
+    const userRole = user?.typeusers?.name || '';
+
+    switch (userRole) {
+        case 'Administrador':
+            router.push('/admin');
+            break;
+        case 'Professor':
+            router.push('/teachers');
+            break;
+        case 'Estudiant':
+            router.push('/students');
+            break;
+        case 'Tècnic':
+            router.push('/technicians');
+            break;
+        default:
+            router.push('/');
+            break;
+    }
+};
+
 
 const checkEmailType = (email) => {
     const regex = /^a\d{2}/;
@@ -422,66 +457,61 @@ const checkEmailType = (email) => {
 </script>
 
 <style scoped>
-    .animate-fade-in {
-        animation: fadeIn 0.6s ease-out forwards;
-    }
+.animate-fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+}
 
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(12px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    /* Animaciones para el diálogo */
-    .fade-enter-active,
-    .fade-leave-active {
-        transition: opacity 0.3s ease;
-    }
-
-    .fade-enter-from,
-    .fade-leave-to {
+@keyframes fadeIn {
+    from {
         opacity: 0;
+        transform: translateY(12px);
     }
 
-    .pop-enter-active,
-    .pop-leave-active {
-        transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
+}
 
-    .pop-enter-from,
-    .pop-leave-to {
-        opacity: 0;
-        transform: scale(0.9) translateY(10px);
-    }
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.3s ease;
+}
 
-/* Transicions suaus */
-    button,
-    input,
-    a {
-        transition: all 0.2s ease;
-    }
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}
 
-    /* Efecte hover per als botons */
-    button:hover {
-        transform: translateY(-1px);
-    }
+.pop-enter-active,
+.pop-leave-active {
+    transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
 
-    /* Estilo para el checkbox personalizado */
-    input[type="checkbox"] {
-        appearance: none;
-        -webkit-appearance: none;
-        @apply border border-slate-700 rounded bg-slate-800/60 w-4 h-4 cursor-pointer;
-    }
+.pop-enter-from,
+.pop-leave-to {
+    opacity: 0;
+    transform: scale(0.9) translateY(10px);
+}
 
-    input[type="checkbox"]:checked {
-        background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M5.707 7.293a1 1 0 0 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0-1.414-1.414L7 8.586 5.707 7.293z'/%3e%3c/svg%3e");
-        @apply bg-blue-600 border-blue-600 bg-center bg-no-repeat bg-[length:80%];
-    }
+button,
+input,
+a {
+    transition: all 0.2s ease;
+}
 
+button:hover {
+    transform: translateY(-1px);
+}
+
+input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    @apply border border-slate-700 rounded bg-slate-800/60 w-4 h-4 cursor-pointer;
+}
+
+input[type="checkbox"]:checked {
+    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M5.707 7.293a1 1 0 0 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0-1.414-1.414L7 8.586 5.707 7.293z'/%3e%3c/svg%3e");
+    @apply bg-blue-600 border-blue-600 bg-center bg-no-repeat bg-[length:80%];
+}
 </style>

@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAppStore } from '@/stores/index.js'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -6,12 +7,19 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => import('@/views/index.vue')
+      component: () => import('@/views/index.vue'),
+      meta: {
+        requiresAuth: false,
+      },
     },
     {
       path: '/students',
       name: 'student',
       component: () => import('@/views/Students/index.vue'),
+      meta: {
+        requiresAuth: true,
+        allowedRoles: ['Estudiant'],
+      },
       children: [
         {
           path: 'incidents',
@@ -34,6 +42,10 @@ const router = createRouter({
       path: '/teachers',
       name: 'teacher',
       component: () => import('@/views/Teachers/index.vue'),
+      meta: {
+        requiresAuth: true,
+        allowedRoles: ['Professor'],
+      },
       children: [
         {
           path: 'canteen',
@@ -96,6 +108,10 @@ const router = createRouter({
       path: '/technicians',
       name: 'technicians',
       component: () => import('@/views/Technicians/index.vue'),
+      meta: {
+        requiresAuth: true,
+        allowedRoles: ['Tècnic'],
+      },
       children: [
         {
           path: 'canteen',
@@ -133,6 +149,10 @@ const router = createRouter({
       path: '/admin',
       name: 'admin',
       component: () => import('@/views/Admin/index.vue'),
+      meta: {
+        requiresAuth: true,
+        allowedRoles: ['Administrador'],
+      },
       children: [
         {
           path: 'config-users',
@@ -160,8 +180,50 @@ const router = createRouter({
           component: () => import('@/views/Admin/incidents.vue')
         },
       ]
+    },
+    {
+      path: '/unauthorized',
+      name: 'Unauthorized',
+      component: () => import('@/views/errors/Unauthorized.vue'),
+      meta: { requiresAuth: false }
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'NotFound',
+      component: () => import('@/views/errors/NotFound.vue'),
+      meta: { requiresAuth: false }
     }
   ],
 })
+
+// Guardián de navegación
+router.beforeEach((to, from, next) => {
+  // Si la ruta no requiere autenticación, permitir acceso
+  if (!to.meta.requiresAuth) {
+    next();
+    return;
+  }
+  
+  const store = useAppStore();
+  const isAuthenticated = !!store.getAccessToken();
+  const user = store.getUser();
+  
+  if (!isAuthenticated) {
+    next({ name: 'home' });
+    return;
+  }
+
+  if (to.meta.allowedRoles && to.meta.allowedRoles.length) {
+    const userRole = user?.typeusers?.name || '';
+    const hasPermission = to.meta.allowedRoles.includes(userRole);
+    
+    if (!hasPermission) {
+      next({ name: 'Unauthorized' });
+      return;
+    }
+  }
+  
+  next();
+});
 
 export default router

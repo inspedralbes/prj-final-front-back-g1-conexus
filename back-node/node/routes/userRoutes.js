@@ -52,6 +52,24 @@ router.get("/:id", async (req, res) => {
     }
 });
 
+// Obtener un usuario por email
+router.post("/email", async (req, res) => {
+    try {
+        const { email } = req.body;
+        console.log(email);
+        console.log("Hplaaaaaaaaaaa");
+        const user = await User.findOne({ where: { email } });
+
+        if (!user) {
+            return res.status(404).json({ message: "Usuario no encontrado" });
+        }
+
+        res.json(user);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
 // Actualizar un usuario por ID
 router.put("/personalData/:id", async (req, res) => {
     try {
@@ -107,6 +125,7 @@ router.delete("/:id", async (req, res) => {
     }
 });
 
+// Login de usuario
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
