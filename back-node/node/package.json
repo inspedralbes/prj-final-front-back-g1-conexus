@@ -7,7 +7,14 @@
     "scripts": {
         "start": "node index.js",
         "dev": "nodemon index.js -L",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "dev:assistences": "nodemon assistences.js -L",
+        "dev:incidents": "nodemon incidents.js -L",
+        "dev:grades": "nodemon grades.js -L",
+        "dev:rooms": "nodemon rooms.js -L",
+        "dev:lostObjects": "nodemon lostObjects.js -L",
+        "dev:canteen": "nodemon canteen.js -L",
+        "dev:all": "nodemon index.js assistences.js incidents.js grades.js rooms.js lostObjects.js canteen.js -L"
     },
     "dependencies": {
         "bcrypt": "^5.1.1",

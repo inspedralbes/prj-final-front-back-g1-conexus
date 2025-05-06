@@ -46,7 +46,14 @@ app.use("/api/type-users", typeUserRoutes);
 app.use("/api/user-courses", userCourseRoutes);
 app.use("/api/user", userRoutes);
 
-startAllServices(); // Iniciar todos los servicios al arrancar el servidor
+// Iniciar todos los servicios cuando la aplicación se inicia
+if (process.env.NODE_ENV === 'development') {
+    console.log('Iniciando servicios en modo desarrollo con nodemon...');
+} else {
+    console.log('Iniciando servicios en modo producción...');
+}
+
+startAllServices();
 
 // Rutas para gestionar los servicios
 app.get("/api/services", (req, res) => {
