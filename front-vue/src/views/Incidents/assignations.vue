@@ -99,13 +99,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { getAllReports, updateReport as updateReportApi } from "@/services/communicationsScripts/incidentsManager";
 
-const myReports = ref([]);
+const allReports = ref([]);
 const loading = ref(true);
 const baseURL = import.meta.env.VITE_INCIDENT_URL;
-
 const reportToClose = ref(null);
 const closureComment = ref('');
 
@@ -114,29 +113,31 @@ const currentUser = ref({
     name: "Tech Support" 
 });
 
+const myReports = computed(() => {
+    return allReports.value.filter(report => 
+        report.user_assigned === currentUser.value.id && report.status !== 'revised'
+    );
+});
+
 onMounted(async () => {
+    loadAssignedReports();
+});
+
+const loadAssignedReports = async () => {
     try {
         loading.value = true;
-        const allReports = await getAllReports();
-        
-        myReports.value = allReports.filter(report => 
-            report.user_assigned === currentUser.value.id
-        );
-        
-        console.log("Mis incidències assignades:", myReports.value);
+        allReports.value = await getAllReports();
     } catch (error) {
         console.error("Error obtenint informes assignats:", error);
     } finally {
         loading.value = false;
     }
-});
-
+};
 
 const closeReport = (reportId) => {
     reportToClose.value = reportId;
     closureComment.value = '';
 };
-
 
 const cancelCloseReport = () => {
     reportToClose.value = null;
@@ -150,23 +151,25 @@ const confirmCloseReport = async (reportId) => {
             closure_comment: closureComment.value || 'Incidència tancada satisfactòriament'
         });
         
-        const report = myReports.value.find(r => r.id === reportId);
+        const report = allReports.value.find(r => r.id === reportId);
         if (report) {
             report.status = 'revised';
         }
         
         reportToClose.value = null;
         closureComment.value = '';
-        
-        console.log("Incidència tancada:", reportId);
     } catch (error) {
         console.error("Error tancant la incidència:", error);
     }
 };
+
 const unassignReport = async (reportId) => {
     try {
         await updateReportApi(reportId, { user_assigned: null });
-        myReports.value = myReports.value.filter(report => report.id !== reportId);
+        const index = allReports.value.findIndex(report => report.id === reportId);
+        if (index !== -1) {
+            allReports.value[index].user_assigned = null;
+        }
         console.log("Informe desassignat:", reportId);
     } catch (error) {
         console.error("Error desassignant l'informe:", error);

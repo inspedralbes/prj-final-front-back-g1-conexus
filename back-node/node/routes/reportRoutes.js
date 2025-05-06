@@ -40,7 +40,6 @@ router.get("/", async (req, res) => {
                 }
             ],
         });
-        //retornar l'array d'informes
         res.json(reports);
     }catch (error) {
         res.status(500).json({ message: error.message });
