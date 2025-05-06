@@ -46,6 +46,8 @@ app.use("/api/type-users", typeUserRoutes);
 app.use("/api/user-courses", userCourseRoutes);
 app.use("/api/user", userRoutes);
 
+startAllServices(); // Iniciar todos los servicios al arrancar el servidor
+
 // Rutas para gestionar los servicios
 app.get("/api/services", (req, res) => {
     res.json(getAllServicesStatus());
