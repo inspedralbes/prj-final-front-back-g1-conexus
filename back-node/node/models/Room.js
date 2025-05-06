@@ -6,9 +6,11 @@ const Room = sequelize.define('Room', {
     room_name: { type: DataTypes.TEXT, allowNull: false },
     room_hours_available: { type: DataTypes.JSON, allowNull: true, defaultValue: null },
     room_description: { type: DataTypes.TEXT, allowNull: false },
+    createdAt: { field: 'created_at', type: DataTypes.DATE },
+    updatedAt: { field: 'updated_at', type: DataTypes.DATE },
 }, {
     tableName: 'Rooms',
-    timestamps: false,
+    timestamps: true,
 });
 
 export default Room;

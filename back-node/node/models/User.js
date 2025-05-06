@@ -11,10 +11,11 @@ const User = sequelize.define('User', {
     profile: { type: DataTypes.STRING(255), allowNull: true },
     department_id: { type: DataTypes.INTEGER, allowNull: true },
     description: { type: DataTypes.TEXT, allowNull: true, defaultValue: null },
-
+    createdAt: { field: 'created_at', type: DataTypes.DATE },
+    updatedAt: { field: 'updated_at', type: DataTypes.DATE },
 }, {
     tableName: 'Users',
-    timestamps: false, // Habilita los timestamps
+    timestamps: true, // Habilita los timestamps
 });
 
 User.beforeCreate(async (user) => {

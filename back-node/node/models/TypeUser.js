@@ -8,7 +8,7 @@ const TypeUser = sequelize.define('TypeUser', {
     updatedAt: { field: 'updated_at', type: DataTypes.DATE },
 }, {
     tableName: 'TypeUsers',
-    timestamps: false,
+    timestamps: true,
 });
 
 export default TypeUser;

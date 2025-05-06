@@ -9,7 +9,6 @@ import dotenv from "dotenv";
 import cors from "cors";
 // import { verifyTokenMiddleware } from "./token.js";
 import path from "path";
-
 import { fileURLToPath } from "url";
 import lostObjectRoutes from "./routes/lostObjectRoutes.js";
 import reportRoutes from "./routes/reportRoutes.js";
