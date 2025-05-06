@@ -19,9 +19,9 @@
                         </li>
                     </ul>
                 </li>
-                <li v-if="props.room.room_hours_available_wednesday">
+                <li v-if="props.room.room_hours_available_wensday">
                     Dimecres: <ul>
-                        <li v-for="hour in props.room.room_hours_available_wednesday" :key="hour">
+                        <li v-for="hour in props.room.room_hours_available_wensday" :key="hour">
                             {{ hour }}
                         </li>
                     </ul>
@@ -84,7 +84,7 @@ const allHours = computed(() => {
     return [
         ...(props.room.room_hours_available_monday || []),
         ...(props.room.room_hours_available_tuesday || []),
-        ...(props.room.room_hours_available_wednesday || []),
+        ...(props.room.room_hours_available_wensday || []),
         ...(props.room.room_hours_available_thursday || []),
         ...(props.room.room_hours_available_friday || [])
     ];
@@ -133,7 +133,7 @@ function filterHoursByDate() {
             });
             break;
         case 3:
-            filteredHours.value = (props.room.room_hours_available_wednesday || []).filter(hour => {
+            filteredHours.value = (props.room.room_hours_available_wensday || []).filter(hour => {
                 return !reservations.value.some(reservation => {
                     const reservedDate = new Date(reservation.start_time);
                     return reservedDate.toDateString() === new Date(selectedDate.value).toDateString() &&

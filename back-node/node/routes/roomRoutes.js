@@ -8,7 +8,7 @@ router.get("/", async (req, res) => {
         const rooms = await Room.findAll();
         const processedRooms = rooms.map((room) => {
             const hoursAvailable = room.room_hours_available || {};
-            const days = ["monday", "tuesday", "wednesday", "thursday", "friday"];
+            const days = ["monday", "tuesday", "wensday", "thursday", "friday"];
             const processedRoom = { ...room.toJSON() };
 
             days.forEach((day) => {
@@ -75,9 +75,7 @@ router.post("/", async (req, res) => {
 router.put("/:id", async (req, res) => {
     try {
         const { room_name, room_hours_available, room_description } = req.body;
-        if(await Room.findOne({ where: { room_name } })) {
-            return res.status(400).json({ message: "Ja hi ha una sala amb aquest nom" });
-        }
+
         const room = await Room.update({ room_name, room_hours_available, room_description }, { where: { id: req.params.id } });
         res.json(room);
     } catch (error) {

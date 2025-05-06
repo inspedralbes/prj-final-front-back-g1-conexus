@@ -74,7 +74,7 @@ export const getHoursOfCourse = async (courseId) => {
         }
         const data = await response.json();
         console.log(data);
-        const daysOfWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+        const daysOfWeek = ['monday', 'tuesday', 'wensday', 'thursday', 'friday', 'saturday', 'sunday'];
         const processedHours = Object.fromEntries(
             daysOfWeek.map(day => {
             if (!data.course_hours_available[day] || data.course_hours_available[day].length === 0) {

@@ -14,7 +14,7 @@
                 <label for="roomHours">Horari disponible:</label>
                 <div v-for="(ranges, day) in roomHours" :key="day" class="day-group">
                     <h4>
-                        <input type="checkbox" :id="`enable-${day}`" v-model="dayEnabled[day]"  />
+                        <input type="checkbox" :id="`enable-${day}`" v-model="dayEnabled[day]" @click="deleteRanges(day)"  />
                         <label :for="`enable-${day}`">{{ translatedDay(day) }}</label>
                     </h4>
                     <div v-if="dayEnabled[day]">
@@ -82,6 +82,12 @@ function addTimeRange(day) {
 
 function removeTimeRange(day, index) {
     roomHours.value[day].splice(index, 1);
+}
+
+function deleteRanges(day) {
+    if (!dayEnabled.value[day]) {
+        roomHours.value[day] =[];
+    }
 }
 
 function formatRoomHours(hours, enabledDays) {
