@@ -1,15 +1,18 @@
-FROM node:23-alpine3.20
+FROM node:18-alpine3.20
 
-WORKDIR /app
+ENV NODE_ENV=production
 
-# RUN apk add --no-cache bash
+# Copiar solo los archivos necesarios para la instalación de dependencias
+COPY package*.json package-lock.json ./
 
-COPY package*.json ./
+# Instalar dependencias de producción
+RUN npm ci --omit=dev
 
-RUN npm install
-
+# Copiar el resto del código
 COPY . .
 
-EXPOSE 4000
+# Exponer el puerto que usa tu aplicación
+EXPOSE 3000
 
+# Comando para iniciar la aplicación
 CMD ["node", "index.js"]
