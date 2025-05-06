@@ -1,8 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import HomeView from '../views/Teachers/myCourses.vue'
-
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -72,7 +69,7 @@ const router = createRouter({
         { 
           path: 'assistence',
           name: 'teacher-assistence',
-          component: () => import('@/views/Teachers/assistence.vue')
+          component: () => import('@/views/Teachers/myCourses.vue')
         },
         {
           path: 'attendance/:courseId',
@@ -82,7 +79,7 @@ const router = createRouter({
         {
           path: 'grades',
           name: 'teacher-grades',
-          component: () => import('@/views/Teachers/grades.vue')
+          component: () => import('@/views/Teachers/myCourses.vue')
         },
         {
           path: 'grades/:courseId',

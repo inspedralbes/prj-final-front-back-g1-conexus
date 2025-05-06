@@ -16,8 +16,8 @@ import Task from "./Task.js";
 // Define relationships
 
 // User - TypeUser relationship (Many-to-One)
-User.belongsTo(TypeUser, { foreignKey: 'typesUsers_id' });
-TypeUser.hasMany(User, { foreignKey: 'typesUsers_id' });
+User.belongsTo(TypeUser, { foreignKey: 'typeUsers_id' });
+TypeUser.hasMany(User, { foreignKey: 'typeUsers_id' });
 
 // User - Department relationship (Many-to-One)
 User.belongsTo(Department, { foreignKey: 'department_id' });
