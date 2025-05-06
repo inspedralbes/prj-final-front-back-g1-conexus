@@ -1,5 +1,23 @@
 const BACK_URL = import.meta.env.VITE_GRADE_URL;
-import { getAlumns } from "./mainComManager";
+import { getAlumns } from "./mainManager.js";
+
+export const getGradesFromUserAndCourse = async (userId, courseId) => {
+    try {
+        const response = await fetch(`${BACK_URL}api/grades/getAllGradesFromUserAndCourse/${userId}/${courseId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching grades:', error);
+    }
+}
 export const getTasksFromCourse = async (courseId) => {
     try {
         const response = await fetch(`${BACK_URL}api/tasks/getAllTasksFromCourse/${courseId}`, {

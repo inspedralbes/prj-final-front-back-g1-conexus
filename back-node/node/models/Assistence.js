@@ -8,11 +8,9 @@ const Assistence = sequelize.define('Assistence', {
     hour: { type: DataTypes.STRING, allowNull: false },
     day: { type: DataTypes.DATE, allowNull: false },
     assisted: { type: DataTypes.ENUM('yes', 'unjustified', 'justified','not selected','late'), defaultValue: 'unjustified' },
-    createdAt: { field: 'created_at', type: DataTypes.DATE },
-    updatedAt: { field: 'updated_at', type: DataTypes.DATE },
 }, {
-    tableName: 'Assistance',
-    timestamps: true,
+    tableName: 'Assistence',
+    timestamps: false,
 });
 
 export default Assistence;
