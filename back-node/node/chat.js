@@ -11,7 +11,7 @@ const PORT = process.env.NODE_CHAT_PORT || 3007;
 app.use(bodyParser.json());
 app.use(cors());
 
-mongoose.connect(process.env.NODE_MONGO_URI, {
+mongoose.connect(process.env.NODE_MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,

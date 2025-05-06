@@ -21,6 +21,7 @@ import typeUserRoutes from "./routes/typeUserRoutes.js";
 import userCourseRoutes from "./routes/userCourseRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import taskRoutes from "./routes/taskRoutes.js";
+import chatRoutes from "./routes/chatRoutes.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config();

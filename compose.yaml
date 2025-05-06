@@ -31,6 +31,7 @@ services:
       - "3004:3004"
       - "3005:3005"
       - "3006:3006"
+      - "3007:3007"
     volumes:
       - ./back-node/node:/app
       - /app/node_modules
@@ -40,7 +41,10 @@ services:
     env_file:
       - .env
     depends_on:
-      - conexus-hub-mysql
+      conexus-hub-mongodb:
+        condition: service_healthy
+      conexus-hub-mysql:
+        condition: service_healthy
     restart: unless-stopped
     networks:
       - conexus-hub-network
@@ -86,6 +90,14 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: password
     volumes:
       - mongo-db:/data/db
+    networks:
+      - conexus-hub-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
 
   conexus-hub-mongo-express:
     image: mongo-express
@@ -94,11 +106,16 @@ services:
       - 8081:8081
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: example
-      ME_CONFIG_MONGODB_URL: mongodb://root:example@tr-final-mongodb:27017/
-      ME_CONFIG_BASICAUTH: false
+      ME_CONFIG_MONGODB_ADMINPASSWORD: password
+      ME_CONFIG_MONGODB_URL: mongodb://root:password@conexus-hub-mongodb:27017/
+      ME_CONFIG_BASICAUTH: true
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: pass
     depends_on:
-      - conexus-hub-mongodb
+      conexus-hub-mongodb:
+        condition: service_healthy
+    networks:
+      - conexus-hub-network
 
 volumes:
   conexus-hub-mysql-data:
