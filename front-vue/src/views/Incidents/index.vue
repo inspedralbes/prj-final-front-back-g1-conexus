@@ -6,7 +6,7 @@
             <div class="form-group">
                 <label for="report">Report Description</label>
                 <textarea id="report" v-model="reportData.report" required placeholder="Describe the incident..."
-                    class="form-control"></textarea>
+                    class="form-control text-gray-900"></textarea>
             </div>
 
             <div class="form-group">
