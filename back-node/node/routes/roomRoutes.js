@@ -6,7 +6,36 @@ const router = express.Router();
 router.get("/", async (req, res) => {
     try {
         const rooms = await Room.findAll();
-        res.json(rooms);
+        const processedRooms = rooms.map((room) => {
+            const hoursAvailable = room.room_hours_available || {};
+            const days = ["monday", "tuesday", "wednesday", "thursday", "friday"];
+            const processedRoom = { ...room.toJSON() };
+
+            days.forEach((day) => {
+                if (hoursAvailable[day]) {
+                    processedRoom[`room_hours_available_${day}`] = hoursAvailable[day].flatMap((range) => {
+                        const [start, end] = range.split("-");
+                        const startTime = new Date(`1970-01-01T${start}:00Z`);
+                        const endTime = new Date(`1970-01-01T${end}:00Z`);
+                        const times = [];
+                        while (startTime < endTime) {
+                            const nextTime = new Date(startTime.getTime() + 60 * 60 * 1000); // Add 1 hour
+                            times.push(
+                                `${startTime.toISOString().substr(11, 5)}-${nextTime.toISOString().substr(11, 5)}`
+                            );
+                            startTime.setTime(nextTime.getTime());
+                        }
+                        return times;
+                    });
+                } else {
+                    processedRoom[`room_hours_available_${day}`] = null;
+                }
+            });
+
+            return processedRoom;
+        });
+
+        res.json(processedRooms);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -68,6 +97,8 @@ router.delete("/:id", async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 });
+
+
 
 export default router;
 

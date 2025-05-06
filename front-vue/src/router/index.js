@@ -173,6 +173,11 @@ const router = createRouter({
           name: 'admin-config-incidents',
           component: () => import('@/views/Admin/incidents.vue')
         },
+        {
+          name:"new-room",
+          path: 'new-room',
+          component: () => import('@/views/Admin/newRoom.vue')
+        }
       ]
 
     }
