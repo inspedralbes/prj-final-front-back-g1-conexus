@@ -10,7 +10,7 @@
           v-model="reportData.report"
           required
           placeholder="Describe the incident..."
-          class="form-control"
+          class="form-control text-gray-900"
         ></textarea>
       </div>
 
@@ -21,7 +21,7 @@
           id="room_id"
           v-model.number="reportData.room_id"
           required
-          class="form-control"
+          class="form-control text-gray-900"
         />
       </div>
 
@@ -32,7 +32,7 @@
           type="file"
           id="upload-image"
           @change="handleFileUpload"
-          class="form-control"
+          class="form-control text-gray-900"
         />
       </div>
       <button type="submit" class="submit-btn" :disabled="isSubmitting">
