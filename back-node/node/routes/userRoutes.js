@@ -57,8 +57,18 @@ router.post("/email", async (req, res) => {
     try {
         const { email } = req.body;
         console.log(email);
-        console.log("Hplaaaaaaaaaaa");
-        const user = await User.findOne({ where: { email } });
+        
+        // Obtener el usuario con su tipo de usuario
+        const user = await User.findOne({ 
+            where: { email },
+            include: [
+                {
+                    model: TypeUser,
+                    as: 'typeusers',
+                    attributes: ['id', 'name']
+                }
+            ]
+        });
 
         if (!user) {
             return res.status(404).json({ message: "Usuario no encontrado" });

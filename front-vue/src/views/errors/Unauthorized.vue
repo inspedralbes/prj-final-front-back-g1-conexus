@@ -27,10 +27,46 @@
 
 <script setup>
 import { useRouter } from 'vue-router';
+import { useAppStore } from '@/stores/index.js';
 
 const router = useRouter();
+const store = useAppStore();
 
 const goBack = () => {
-    router.go(-1); // Volver a la página anterior
+    const user = store.getUser();
+    let userRole = '';
+
+    // Determinar el rol del usuario
+    if (user?.typeusers?.name) {
+        userRole = user.typeusers.name;
+    } else if (user?.typeUsers_id) {
+        switch (Number(user.typeUsers_id)) {
+            case 1: userRole = 'Estudiant'; break;
+            case 2: userRole = 'Professor'; break;
+            case 3: userRole = 'Administrador'; break;
+            case 4: userRole = 'Tècnic'; break;
+        }
+    }
+
+    console.log('Redirigiendo desde Unauthorized a la página principal del rol:', userRole);
+
+    // Redireccionar según el rol
+    switch (userRole) {
+        case 'Administrador':
+            router.push('/admin');
+            break;
+        case 'Professor':
+            router.push('/teachers');
+            break;
+        case 'Estudiant':
+            router.push('/students');
+            break;
+        case 'Tècnic':
+            router.push('/technicians');
+            break;
+        default:
+            router.push('/');
+            break;
+    }
 };
 </script>

@@ -1,6 +1,6 @@
 <template>
   <ParticlesBackground />
-  <Navigation v-if="isAuthenticated" />
+  <!-- Eliminamos la navegación global ya que cada vista tiene su propia navegación -->
   <router-view></router-view>
 </template>
 
@@ -8,7 +8,6 @@
 import { onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import ParticlesBackground from '@/components/Desing/background.vue';
-import Navigation from '@/components/Navigation.vue';
 import { useAppStore } from '@/stores/index.js';
 import { getUserByEmail } from '@/services/communicationsScripts/mainManager.js';
 
@@ -16,22 +15,38 @@ const router = useRouter();
 const store = useAppStore();
 const isAuthenticated = computed(() => !!store.getAccessToken());
 
-// Función que redirige al usuario según su rol
 const redirectUserBasedOnRole = (user) => {
-  // Obtener la ruta actual
   const currentRoute = router.currentRoute.value;
-  
-  // Si el usuario ya está en una página específica (no en la página de login), no redirigir
+
   if (currentRoute.path !== '/' && currentRoute.path !== '/login') {
     return;
   }
 
-  // Obtener el rol del usuario
-  const userRole = user?.typeusers?.name || '';
+  let userRole = '';
+
+  if (user?.typeusers?.name) {
+    userRole = user.typeusers.name;
+  }
+
+  else if (user?.typeUsers_id) {
+    switch (user.typeUsers_id) {
+      case 1:
+        userRole = 'Estudiant';
+        break;
+      case 2:
+        userRole = 'Professor';
+        break;
+      case 3:
+        userRole = 'Administrador';
+        break;
+      case 4:
+        userRole = 'Tècnic';
+        break;
+    }
+  }
   
   console.log('Redirigiendo usuario con rol:', userRole);
 
-  // Redireccionar según el rol
   switch (userRole) {
     case 'Administrador':
       router.push('/admin');
@@ -46,7 +61,7 @@ const redirectUserBasedOnRole = (user) => {
       router.push('/technicians');
       break;
     default:
-      // Si no tiene un rol reconocido, dejarlo en la página actual o redirigirlo al dashboard
+      console.error('No se pudo determinar un rol válido para el usuario:', user);
       router.push('/');
       break;
   }

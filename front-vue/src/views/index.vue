@@ -198,12 +198,13 @@
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import { initializeApp } from "firebase/app";
 import { useAppStore } from '@/stores/index.js';
 import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { login, getTypeUsers, register } from '@/services/communicationsScripts/mainManager.js';
 
-// Estado para los roles disponibles
+const router = useRouter(); 
 const availableRoles = ref([]);
 const loadingRoles = ref(true);
 
@@ -369,12 +370,30 @@ const completeRegistration = async (roleId = null) => {
 
         pendingRegistration.value = null;
 
-        useAppStore().setAccessToken(response.accessToken);
-        useAppStore().setUser(user);
+        // Comprobar si tenemos una respuesta con usuario y token de acceso
+        if (response.userLogin && response.accessToken) {
+            let user = response.userLogin;
+            
+            // Procesar la URL del perfil si es necesario
+            if (user.profile && user.profile.includes("/upload/", 0)) {
+                user.profile = `${import.meta.env.VITE_BACKEND_URL}${user.profile}`;
+            }
+            
+            // Guardar datos en el store
+            useAppStore().setAccessToken(response.accessToken);
+            useAppStore().setUser(user);
 
-        localStorage.setItem("user", JSON.stringify(user.email));
-        localStorage.setItem("accessToken", response.accessToken);
-        redirectUserBasedOnRole(user);
+            // Guardar en localStorage
+            localStorage.setItem("user", JSON.stringify(user.email));
+            localStorage.setItem("accessToken", response.accessToken);
+            
+            // Redirigir al usuario
+            redirectUserBasedOnRole(user);
+        } else {
+            // Si no hay datos de usuario y token, simplemente mostrar mensaje de éxito
+            // El usuario tendrá que iniciar sesión manualmente
+            console.log("Registro exitoso, pero sin inicio de sesión automático");
+        }
     } catch (error) {
         message.value = "Error en completar el registre: " + error.message;
         messageType.value = "error";
@@ -427,8 +446,23 @@ const signInWithApp = async () => {
 };
 
 const redirectUserBasedOnRole = (user) => {
-    // Obtener el rol del usuario y redirigir según corresponda
-    const userRole = user?.typeusers?.name || '';
+    // Intentar obtener el rol del usuario de diferentes formas
+    let userRole = '';
+    
+    // Si tenemos typeusers completo con nombre
+    if (user?.typeusers?.name) {
+        userRole = user.typeusers.name;
+    }
+    // Si solo tenemos el ID del tipo de usuario
+    else if (user?.typeUsers_id) {
+        // Buscar en availableRoles el nombre que corresponde a este ID
+        const roleObj = availableRoles.value.find(role => role.id === user.typeUsers_id);
+        if (roleObj) {
+            userRole = roleObj.name;
+        }
+    }
+    
+    console.log('Redirigiendo usuario con rol:', userRole);
 
     switch (userRole) {
         case 'Administrador':
@@ -444,11 +478,11 @@ const redirectUserBasedOnRole = (user) => {
             router.push('/technicians');
             break;
         default:
+            console.error('No se pudo determinar un rol válido para el usuario:', user);
             router.push('/');
             break;
     }
 };
-
 
 const checkEmailType = (email) => {
     const regex = /^a\d{2}/;
