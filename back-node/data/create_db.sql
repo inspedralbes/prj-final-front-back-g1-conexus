@@ -86,7 +86,7 @@ CREATE TABLE
         FOREIGN KEY (task_id) REFERENCES Tasks (id)
     );
 
--- Table 8: assistance
+-- Table 8: assistence
 CREATE TABLE
     IF NOT EXISTS Assistence (
         id INT AUTO_INCREMENT PRIMARY KEY,
