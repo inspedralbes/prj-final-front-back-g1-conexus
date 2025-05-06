@@ -7,9 +7,6 @@ services:
       dockerfile: prod.Dockerfile
     env_file:
       - .env
-    # volumes:
-    #   - ./back-node/node:/app
-    #   - conexus-hub-image:/app/images
     ports:
       - "3000:3000"
       - "3001:3001"
@@ -23,7 +20,14 @@ services:
         condition: service_healthy
     networks:
       - conexus-hub-network
-    # restart: always
+    restart: always
+    # Temporalmente removemos el healthcheck del backend para debug
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 3
+    #   start_period: 40s
 
   conexus-hub-front:
     build:
@@ -34,11 +38,14 @@ services:
       - "8080:80"
     networks:
       - conexus-hub-network
-
+    depends_on:
+      - conexus-hub-back
+    env_file:
+      - .env
   conexus-hub-mysql:
     image: mysql:5.7
     environment:
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${NODE_DB_ROOT_PASSWORD}
       - MYSQL_DATABASE=conexus-hub
     volumes:
       - mysql-data:/var/lib/mysql
@@ -50,11 +57,11 @@ services:
     ports:
       - "3306:3306"
     healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
-      interval: 30s
-      retries: 3
+      test: [ "CMD", "mysql", "-u", "root", "-p${NODE_DB_ROOT_PASSWORD}", "-e", "SELECT 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
       start_period: 30s
-      timeout: 10s
 
   conexus-hub-adminer:
     image: adminer
@@ -67,38 +74,9 @@ services:
       - conexus-hub-network
     depends_on:
       - conexus-hub-mysql
-  # conexus-hub-mongo:
-  #   image: mongo
-  #   restart: always
-  #   ports:
-  #     - "27017:27017"
-  #   environment:
-  #     - MONGO_INITDB_ROOT_USERNAME=root
-  #     - MONGO_INITDB_ROOT_PASSWORD=conexus
-  #   networks:
-  #     - conexus-hub-network
-  #   volumes:
-  #     - mongo-data:/data/db
-
-  # mongo-express:
-  #   image: mongo-express
-  #   restart: always
-  #   ports:
-  #     - "3007:8081"
-  #   environment:
-  #     - ME_CONFIG_MONGODB_ADMINUSER=root
-  #     - ME_CONFIG_MONGODB_ADMINPASS=conexus
-  #     - ME_CONFIG_MONGODB_SERVER=conexus-hub-mongo
-  #   depends_on:
-  #     - conexus-hub-mongo
-  #   networks:
-  #     - conexus-hub-network
 
 volumes:
-  conexus-hub-image:
   mysql-data:
-  portainer_data:
-    # mongo-data:
 
 
 networks:

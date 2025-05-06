@@ -13,7 +13,7 @@ RUN npm install
 COPY . .
 
 # Ejecutar el build y mostrar los archivos de /app
-RUN npm run build && ls -la /app
+RUN npm run build
 
 # Etapa 2: Imagen de producción con Nginx
 FROM nginx:stable-alpine AS production-stage
