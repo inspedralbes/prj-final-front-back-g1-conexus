@@ -35,7 +35,7 @@
                   <input 
                       v-model="newUser.name" 
                       type="text" 
-                      class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                      class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 text-gray-900"
                       required
                   >
               </div>
@@ -44,7 +44,7 @@
                   <input 
                       v-model="newUser.email" 
                       type="email" 
-                      class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                      class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 text-gray-900"
                       required
                   >
               </div>
@@ -53,7 +53,7 @@
                   <input 
                       v-model="newUser.password" 
                       type="password" 
-                      class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                      class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 text-gray-900"
                       required
                   >
               </div>
@@ -61,7 +61,7 @@
                   <label class="block text-gray-700 mb-2">Rol:</label>
                   <select 
                       v-model="newUser.typeUsers_id" 
-                      class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                      class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 text-gray-900"
                       required
                   >
                       <option v-for="type in typeUsers" :key="type.id" :value="type.id">
@@ -75,7 +75,7 @@
                     type="file" 
                     @change="handleFileUpload" 
                     accept="image/*"
-                    class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                    class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 text-gray-900"
                 >
                 <p v-if="selectedFileName" class="mt-1 text-sm text-gray-500">
                     Archivo seleccionado: {{ selectedFileName }}
