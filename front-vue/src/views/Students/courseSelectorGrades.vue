@@ -2,12 +2,12 @@
     <div class="container">
         <h1>My Courses</h1>
         <div class="course-list">
-            <div class="course-item" v-for="course in courses" :key="course.id">
+            <div class="course-item" v-for="course in courses" :key="course.course_id">
                 <h2>{{ course.course_name }}</h2>
                 <p>{{ course.course_description }}</p>
                 <div class="Buttons">
-                    <button @click="goToAssistance(course.id)">Asistencia</button>
-                    <button @click="goToGrades(course.id)">Avaluació</button>
+                    <button @click="goToGrades(course.course_id)">Seleccionar</button>
+        
                 </div>
             </div>
         </div>
@@ -16,25 +16,22 @@
 <script setup>
 import { useAppStore } from '@/stores/index.js'
 import { onMounted, ref } from 'vue'
-import { getCoursesFromUser } from '@/services/communicationsScripts/mainManager.js'
+import { getCoursesWithUser } from '@/services/communicationsScripts/mainManager.js'
 import { useRouter } from 'vue-router'
 
 const store = useAppStore()
 const courses = ref([])
 const route = useRouter()
 onMounted(async () => {
-    courses.value = await getCoursesFromUser(store.getUserId())
+    courses.value = await getCoursesWithUser(3)
     console.log(courses.value)
 })
 
-function goToGrades(courseId) {
-    route.push({ name: 'grades', params: { courseId } })
+function goToGrades(id) {
+    console.log(id)
+    route.push({ name: 'grades-from-course-student', params: { id } })
 }   
 
-function goToAssistance(courseId) {
-
-    route.push({ name: 'attendance', params: { courseId } })
-}
 </script>
 <style scoped>
 .container {

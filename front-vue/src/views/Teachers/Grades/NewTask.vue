@@ -16,7 +16,8 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { createTask } from '@/services/gradesComManager.js'
+import { userData } from '@/stores/userData.js'
+import { createTask } from '@/services/communicationsScripts/gradesComManager.js'
 import { useRouter } from 'vue-router'
 const task_name = ref('')
 const task_description = ref('')

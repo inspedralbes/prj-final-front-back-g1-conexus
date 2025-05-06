@@ -3,7 +3,6 @@ import TypeUser from "../models/TypeUser.js";
 
 const router = express.Router();
 
-// Get all type users
 router.get("/", async (req, res) => {
     try {
         const typeUsers = await TypeUser.findAll();

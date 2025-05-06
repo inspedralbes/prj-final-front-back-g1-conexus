@@ -5,12 +5,10 @@ import assistenceRoutes from "./routes/assistenceRoutes.js";
 import courseRoutes from "./routes/courseRoutes.js";
 import departmentRoutes from "./routes/departmentRoutes.js";
 import gradeRoutes from "./routes/gradeRoutes.js";
-
 import dotenv from "dotenv";
 import cors from "cors";
 // import { verifyTokenMiddleware } from "./token.js";
 import path from "path";
-
 import { fileURLToPath } from "url";
 import lostObjectRoutes from "./routes/lostObjectRoutes.js";
 import reportRoutes from "./routes/reportRoutes.js";
