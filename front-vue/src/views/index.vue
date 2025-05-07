@@ -365,7 +365,7 @@ const apikey = import.meta.env.VITE_FIREBASE_API_KEY;
 // Firebase configuration
 const firebaseConfig = {
   apiKey: apikey,
-  authDomain: "www.conexushub.cat",
+  authDomain: "conexushub.cat",
   projectId: "tr2-dam-mentories",
   storageBucket: "tr2-dam-mentories.firebaseapp.com",
   messagingSenderId: "338164475859",
