@@ -104,10 +104,22 @@ jobs:
               sudo rm -rf ./front-vue
             fi
             mkdir front-vue
+            if [ -d ./scripts ]; then
+              sudo rm -rf ./scripts
+            fi
+            mkdir scripts
           EOF
 
           # Subir toda la carpeta front-vue (sin node_modules) al servidor
           rsync -avz --exclude=node_modules --exclude=dist -e "ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem" front-vue/ ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/front-vue/
+          scp -o StrictHostKeyChecking=no -i ~/prod_key.pem scripts/build.sh ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/scripts/
+          
+          ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
+            cd /opt/conexus
+            cd scripts
+            chmod +x build.sh
+            ./build.sh
+          EOF
 
       - name: Levantar Portainer con Docker Compose
         run: |
