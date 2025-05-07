@@ -35,7 +35,7 @@ services:
       dockerfile: prod.Dockerfile
     restart: always
     ports:
-      - "80:8080"
+      - "80:80"
     networks:
       - conexus-hub-network
     depends_on:
