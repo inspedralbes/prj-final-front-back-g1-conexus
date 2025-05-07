@@ -81,6 +81,7 @@ jobs:
           echo "NGINX_DB_PASSWORD=${{ secrets.NGINX_DB_PASSWORD }}" >> /opt/conexus/.env
           echo "VITE_FIREBASE_API_KEY=${{ secrets.VITE_FIREBASE_API_KEY }}" >> /opt/conexus/.env
 
+          cat /opt/conexus/.env
           echo "✅ .env completat!"
           EOF
 
