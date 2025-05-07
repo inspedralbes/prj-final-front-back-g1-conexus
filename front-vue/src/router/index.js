@@ -174,6 +174,11 @@ const router = createRouter({
           name:"new-room",
           path: 'new-room',
           component: () => import('@/views/Admin/newRoom.vue')
+        },
+        {
+          name:"config-courses",
+          path:"config-courses",
+          component:()=>import('@/views/Admin/courses.vue')
         }
       ]
 
