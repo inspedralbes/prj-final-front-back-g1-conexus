@@ -92,7 +92,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Subir front-vue al servidor
+      - name: Subir front-vue al servidor sin node_modules
         run: |
           echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > ~/prod_key.pem
           chmod 600 ~/prod_key.pem
