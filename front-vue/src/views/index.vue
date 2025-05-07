@@ -360,17 +360,17 @@ onMounted(async () => {
   }
 });
 
-const apikey = import.meta.env.VITE_FIREBASE_API_KEY;
+// const apikey = import.meta.env.VITE_FIREBASE_API_KEY;
 
 // Firebase configuration
 const firebaseConfig = {
-  apiKey: apikey,
-  authDomain: "conexushub.cat",
-  projectId: "tr2-dam-mentories",
-  storageBucket: "tr2-dam-mentories.firebaseapp.com",
-  messagingSenderId: "338164475859",
-  appId: "1:338164475859:web:e69d1ef2426b26d9e0f126",
-  measurementId: "G-KTW22GCCFB",
+  apiKey: "AIzaSyCis27wweCuGy0ad9pdgF-15uBKS5mZIgQ",
+  authDomain: "conexushub-18c6a.firebaseapp.com",
+  projectId: "conexushub-18c6a",
+  storageBucket: "conexushub-18c6a.firebasestorage.app",
+  messagingSenderId: "615648032782",
+  appId: "1:615648032782:web:3e2b66daee467ee602245f",
+  measurementId: "G-F27Z1WF9QH",
 };
 
 // Initialize Firebase
