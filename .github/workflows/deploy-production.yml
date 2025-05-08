@@ -81,9 +81,12 @@ jobs:
           echo "NGINX_DB_PASSWORD=${{ secrets.NGINX_DB_PASSWORD }}" >> /opt/conexus/.env
           echo "VITE_FIREBASE_API_KEY=${{ secrets.VITE_FIREBASE_API_KEY }}" >> /opt/conexus/.env
 
-          # copiar .env a front-vue
-          scp -o StrictHostKeyChecking=no -i ~/prod_key.pem /opt/conexus/.env ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/front-vue/.env
-          
+          # Asegurarse de que la carpeta front-vue existe
+          mkdir -p /opt/conexus/front-vue
+
+          # Copiar .env a front-vue
+          cp /opt/conexus/.env /opt/conexus/front-vue/.env
+            
           cat /opt/conexus/.env
           cat /opt/conexus/front-vue/.env
           echo "✅ .env completat!"
@@ -101,14 +104,25 @@ jobs:
           echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > ~/prod_key.pem
           chmod 600 ~/prod_key.pem
 
-          # Conectarse al servidor y limpiar el front-vue existente
+          # Conectarse al servidor y limpiar el front-vue existente preservando .env
           ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
             cd /opt/conexus
             if [ -d ./front-vue ]; then 
+              # Guardar temporalmente el .env si existe
+              if [ -f ./front-vue/.env ]; then
+                cp ./front-vue/.env ./front-vue.env.backup
+              fi
+              # Eliminar la carpeta front-vue
               sudo rm -rf ./front-vue
+              # Crear la carpeta de nuevo
+              mkdir front-vue
+              # Restaurar el .env si existía
+              if [ -f ./front-vue.env.backup ]; then
+                mv ./front-vue.env.backup ./front-vue/.env
+              fi
+            else
+              mkdir front-vue
             fi
-            mkdir front-vue
-            
           EOF
 
           # Subir toda la carpeta front-vue (sin node_modules) al servidor
@@ -142,7 +156,6 @@ jobs:
               fi
             EOF
 
-
   BUILD-BACKEND:
     needs: [BUILD-FRONTEND-AND-BUILD-PORTAINER]
     runs-on: ubuntu-latest
@@ -173,7 +186,6 @@ jobs:
 
           # Copiar el prod.Dockerfile al servidor en la carpeta back-node
           scp -o StrictHostKeyChecking=no -i ~/prod_key.pem back-node/node/prod.Dockerfile ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/back-node/node/
-
 
   START-DOCKER-COMPOSE-PRINCIPAL:
     needs: [BUILD-FRONTEND-AND-BUILD-PORTAINER, BUILD-BACKEND]
