@@ -206,6 +206,13 @@ jobs:
             # Generar certificados SSL si no existen
             if [ ! -d "/opt/conexus/letsencrypt/live/conexushub.cat" ]; then
               echo "🔒 Generando certificados SSL..."
+              
+              # Detener cualquier servicio que pueda estar usando el puerto 80
+              sudo systemctl stop nginx || true
+              sudo systemctl stop apache2 || true
+              sudo lsof -ti:80 | xargs kill -9 || true
+              
+              # Ejecutar el script de generación de certificados
               sudo /opt/conexus/scripts/generate-ssl.sh
             else
               echo "✅ Los certificados SSL ya existen"
