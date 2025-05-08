@@ -23,9 +23,9 @@ const upload = multer({ storage: storage });
 
 // GET /lost-objects - Obtenir tots els objectes perduts
 router.get("/", async (req, res) => {
-  const LostObjects = await LostObjects.findAll({ order: [["createdAt", "DESC"]] });
+  const lostObjectsList = await LostObjects.findAll({ order: [["createdAt", "DESC"]] });
   //return the LostObjects array
-  res.json(LostObjects);
+  res.json(lostObjectsList);
 });
 
 // GET /lost-objects/:id - Obtenir un objecte perdut per ID
