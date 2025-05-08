@@ -1,6 +1,6 @@
 const API_URL = import.meta.env.VITE_INCIDENT_URL;
 
-console.log(API_URL);
+console.log('API_URL:', import.meta.env.VITE_INCIDENT_URL);
 
 // Helper function to handle fetch responses
 const handleResponse = async (response) => {
