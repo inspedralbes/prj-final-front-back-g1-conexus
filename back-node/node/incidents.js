@@ -13,8 +13,7 @@ const __dirname = path.dirname(__filename);
 
 dotenv.config();
 const app = express();
-const PORT = process.env.NODE_INCIDENT_PORT || 3001;
-
+const PORT = process.env.NODE_INCIDENT_PORT || 3004;
 
 app.use(bodyParser.json());
 app.use(cors());

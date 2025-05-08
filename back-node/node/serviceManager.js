@@ -4,6 +4,8 @@ import { spawn } from 'node:child_process';
 const isDevelopment = process.env.NODE_ENV === 'development';
 const executor = isDevelopment ? 'nodemon' : 'node';
 
+console.log(`Ejecutando en modo ${isDevelopment ? 'desarrollo' : 'producción'}`);
+
 // Registro de servicios con sus nombres de archivo
 const services = {
     assistences: { state: "stopped", process: null, script: "assistences.js" },

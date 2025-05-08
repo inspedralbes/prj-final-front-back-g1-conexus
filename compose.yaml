@@ -42,7 +42,6 @@ services:
     depends_on:
       conexus-hub-mysql:
         condition: service_healthy
-    # Comando personalizado para esperar a MySQL antes de iniciar
     command: >
       sh -c "
         echo 'Esperando a que MySQL esté disponible...'
@@ -50,7 +49,7 @@ services:
           sleep 1
         done
         echo 'MySQL está disponible, iniciando la aplicación...'
-        npm start
+        npm run dev
       "
     restart: unless-stopped
     networks:
