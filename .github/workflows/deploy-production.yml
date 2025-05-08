@@ -81,7 +81,11 @@ jobs:
           echo "NGINX_DB_PASSWORD=${{ secrets.NGINX_DB_PASSWORD }}" >> /opt/conexus/.env
           echo "VITE_FIREBASE_API_KEY=${{ secrets.VITE_FIREBASE_API_KEY }}" >> /opt/conexus/.env
 
+          # copiar .env a front-vue
+          scp -o StrictHostKeyChecking=no -i ~/prod_key.pem /opt/conexus/.env ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/front-vue/.env
+          
           cat /opt/conexus/.env
+          cat /opt/conexus/front-vue/.env
           echo "✅ .env completat!"
           EOF
 
@@ -104,8 +108,7 @@ jobs:
               sudo rm -rf ./front-vue
             fi
             mkdir front-vue
-            # Copiar .env.prod al servidor carpeta front-vue y renombrarlo .env
-            scp -o StrictHostKeyChecking=no -i ~/prod_key.pem .env ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/front-vue/.env
+            
           EOF
 
           # Subir toda la carpeta front-vue (sin node_modules) al servidor
