@@ -21,7 +21,7 @@ const upload = multer({ storage: storage });
 
 // GET /reports - Obtenir tots els informes
 router.get("/", async (req, res) => {
-    try{
+    try {
         const reports = await Reports.findAll({
             include: [
                 {
@@ -36,7 +36,7 @@ router.get("/", async (req, res) => {
         });
         //retornar l'array d'informes
         res.json(reports);
-    }catch (error) {
+    } catch (error) {
         res.status(500).json({ message: error.message });
     }
 });
@@ -138,13 +138,13 @@ router.post("/", upload.single('image'), async (req, res) => {
          * @param {number} reportData.room_id - L'ID de l'habitació associada amb l'informe.
          * @returns {Promise<Object>} L'objecte del nou informe creat.
          */
-        const newReport = await Reports.create({ 
-            user_id, 
-            report, 
-            image, 
-            room_id 
+        const newReport = await Reports.create({
+            user_id,
+            report,
+            image,
+            room_id
         });
-        
+
         res.status(201).json(newReport);
     } catch (error) {
         console.error('Error creating report:', error);
