@@ -109,6 +109,12 @@ jobs:
 
           # Subir toda la carpeta front-vue (sin node_modules) al servidor
           rsync -avz --exclude=node_modules --exclude=dist -e "ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem" front-vue/ ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/front-vue/
+          
+          # Crear directorio scripts si no existe y copiar build.sh
+          ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
+            cd /opt/conexus
+            mkdir -p scripts
+          EOF
           scp -o StrictHostKeyChecking=no -i ~/prod_key.pem scripts/build.sh ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/scripts/
           
           ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
