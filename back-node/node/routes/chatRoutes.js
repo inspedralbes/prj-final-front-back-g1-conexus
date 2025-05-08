@@ -1,20 +1,24 @@
 import express from "express";
 import mongoose from "mongoose";
-import socket from 'socket.io';
+import { Server } from 'socket.io';
 
 const router = express.Router();
 
 // Obtener el modelo Message
 const Message = mongoose.model("Message");
-const io = socket(app);
 
-io.on("connection", (socket) => {
-    console.log("New client connected");
+// Note: Socket.io should be initialized in the main server file, not in routes
+// The following code is commented out as it needs app which isn't available here
+// const io = new Server(app);
+// 
+// io.on("connection", (socket) => {
+//     console.log("New client connected");
+// 
+//     socket.on("disconnect", () => {
+//         console.log("Client disconnected");
+//     });
+// });
 
-    socket.on("disconnect", () => {
-        console.log("Client disconnected");
-    });
-});
 // Obtener todos los chats
 router.get("/", async (req, res) => {
     try {
