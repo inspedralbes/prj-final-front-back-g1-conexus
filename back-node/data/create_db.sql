@@ -167,6 +167,7 @@ CREATE TABLE
         status ENUM ('pending', 'revising', 'revised') DEFAULT 'pending',
         image TEXT,
         room_id INT NOT NULL,
+        user_assigned INT DEFAULT NULL,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES Users (id),
