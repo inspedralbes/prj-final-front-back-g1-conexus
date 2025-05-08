@@ -45,8 +45,6 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=${NODE_DB_ROOT_PASSWORD}
       - MYSQL_DATABASE=conexus-hub
-      - MYSQL_USER=${NODE_DB_USER}
-      - MYSQL_PASSWORD=${NODE_DB_PASSWORD}
     volumes:
       - mysql-data:/var/lib/mysql
       - ./back-node/data/create_db.sql:/docker-entrypoint-initdb.d/create.sql
@@ -57,11 +55,11 @@ services:
     ports:
       - "3306:3306"
     healthcheck:
-      test: [ "CMD", "mysql", "-u", "root", "-p${NODE_DB_ROOT_PASSWORD}", "-e", "SELECT 1" ]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${NODE_DB_ROOT_PASSWORD}" ]
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 30s
+      start_period: 60s
 
   conexus-hub-adminer:
     image: adminer
