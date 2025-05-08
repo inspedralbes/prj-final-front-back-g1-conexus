@@ -120,3 +120,21 @@ export const getNotFinishedReports = async () => {
         throw error;
     }
 };
+
+
+export const assignReport = async (reportId, userId) => {
+    try {
+        const response = await fetch(`${API_URL}api/reports/${reportId}/assign`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ user_assigned: userId }),
+        });
+        return await handleResponse(response);
+    }
+    catch (error) {
+        console.error(`Error assigning report ${reportId} to user ${userId}:`, error);
+        throw error;
+    }
+};

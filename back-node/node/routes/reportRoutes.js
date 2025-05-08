@@ -26,6 +26,12 @@ router.get("/", async (req, res) => {
             include: [
                 {
                     model: User,
+                    as: 'User',
+                    attributes: ["id", "name", "email"],
+                },
+                {
+                    model: User,
+                    as: 'AssignedUser',
                     attributes: ["id", "name", "email"],
                 },
                 {
@@ -34,7 +40,6 @@ router.get("/", async (req, res) => {
                 }
             ],
         });
-        //retornar l'array d'informes
         res.json(reports);
     }catch (error) {
         res.status(500).json({ message: error.message });
@@ -180,6 +185,47 @@ router.delete("/:id", async (req, res) => {
         //retornar un codi d'estat 204 per indicar l'eliminació amb èxit
         //i sense contingut al cos de la resposta
         res.status(204).send();
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+
+router.put("/:id/assign", async (req, res) => {
+    const { id } = req.params;
+    const { user_assigned } = req.body;
+    try {
+        const report = await Reports.findOne({ where: { id } });
+        if (!report) {
+            return res.status(404).json({ message: "Informe no trobat" });
+        }
+        await report.update({ user_assigned });
+        //retornar l'objecte informe actualitzat
+
+
+        const updatedReport = await Reports.findOne({
+            where: { id },
+            include: [
+                {
+                    model: User,
+                    as: 'User',
+                    attributes: ["id", "name", "email"],
+                },
+                {
+                    model: User,
+                    as: 'AssignedUser',
+                    attributes: ["id", "name", "email"],
+                },
+                {
+                    model: Room,
+                    attributes: ["id", "room_name"],
+                }
+            ],
+        });
+        if (!updatedReport) {
+            return res.status(404).json({ message: "Informe no trobat" });
+        }
+        res.json(updatedReport);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
