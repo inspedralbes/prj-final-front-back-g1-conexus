@@ -111,7 +111,10 @@ jobs:
           rsync -avz --exclude=node_modules --exclude=dist -e "ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem" front-vue/ ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/front-vue/
           
           # Copiar .env.prod al servidor carpeta front-vue y renombrarlo .env
-          scp -o StrictHostKeyChecking=no -i ~/prod_key.pem .env.prod ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/front-vue/.env
+          ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
+          cd /opt/conexus/
+            scp -o StrictHostKeyChecking=no -i ~/prod_key.pem .env ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/front-vue/.env
+          EOF
 
           # Crear directorio scripts si no existe y copiar build.sh
           ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
