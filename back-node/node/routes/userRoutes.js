@@ -151,4 +151,19 @@ router.post('/login', async (req, res) => {
     }
 });
 
+// Get all users with typeUsers_id=1 (teacher) from a specific department
+router.get("/teachers/:department_id", async (req, res) => {
+    try {
+        const { department_id } = req.params;
+        const users = await User.findAll({
+            where: {
+                typeUsers_id: 1,
+                department_id: department_id
+            }
+        });
+        res.json(users);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
 export default router;

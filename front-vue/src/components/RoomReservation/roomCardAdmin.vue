@@ -65,7 +65,7 @@
                                 <input type="checkbox" :id="`enable-${day}`" v-model="dayEnabled[day]" @click="deleteAllHorsFromDay(day)" />
                                 <label :for="`enable-${day}`">{{ translatedDay(day) }}</label>
                             </h4>
-                            <div v-if="dayEnabled[day]">
+                            <div v-if="dayEnabled[day]" style="max-height: 300px; overflow-y: auto;">
                                 <div v-for="(range, index) in ranges" :key="index" class="time-range">
                                     <label :for="`startHour-${day}-${index}`">Inici:</label>
                                     <select :id="`startHour-${day}-${index}`" v-model="range.startHour">
