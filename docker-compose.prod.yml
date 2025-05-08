@@ -1,6 +1,24 @@
 version: '3.8'
 
 services:
+  conexus-hub-front:
+    build:
+      context: ./front-vue
+      dockerfile: prod.Dockerfile
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /opt/conexus/letsencrypt:/etc/letsencrypt
+      - webroot:/usr/share/nginx/html
+    networks:
+      - conexus-hub-network
+    depends_on:
+      - conexus-hub-back
+    env_file:
+      - .env
+
   conexus-hub-back:
     build:
       context: back-node/node
@@ -21,32 +39,20 @@ services:
     networks:
       - conexus-hub-network
     restart: always
-    # Temporalmente removemos el healthcheck del backend para debug
-    # healthcheck:
-    #   test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
-    #   interval: 30s
-    #   timeout: 10s
-    #   retries: 3
-    #   start_period: 40s
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/health", "||", "exit", "1" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
-    # conexus-hub-front:
-    #   build:
-    #     context: ./front-vue
-    #     dockerfile: prod.Dockerfile
-    #   restart: always
-    #   ports:
-    #     - "8080:443"
-    #   networks:
-    #     - conexus-hub-network
-    #   depends_on:
-    #     - conexus-hub-back
-    #   env_file:
-    #     - .env
   conexus-hub-mysql:
     image: mysql:5.7
     environment:
       - MYSQL_ROOT_PASSWORD=${NODE_DB_ROOT_PASSWORD}
       - MYSQL_DATABASE=conexus-hub
+      - MYSQL_USER=${NODE_DB_USER}
+      - MYSQL_PASSWORD=${NODE_DB_PASSWORD}
     volumes:
       - mysql-data:/var/lib/mysql
       - ./back-node/data/create_db.sql:/docker-entrypoint-initdb.d/create.sql
@@ -77,6 +83,7 @@ services:
 
 volumes:
   mysql-data:
+  webroot:
 
 
 networks:

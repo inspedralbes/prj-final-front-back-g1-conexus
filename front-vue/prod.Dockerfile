@@ -12,7 +12,7 @@ RUN npm install
 # Copiar el resto del código
 COPY . .
 
-# Ejecutar el build y mostrar los archivos de /app
+# Ejecutar el build
 RUN npm run build
 
 # Etapa 2: Imagen de producción con Nginx
@@ -20,6 +20,9 @@ FROM nginx:stable-alpine AS production-stage
 
 # Copiar el build generado a la carpeta de Nginx
 COPY --from=build-stage /app/dist /usr/share/nginx/html
+
+# Copiar configuración de Nginx
+COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
 
 # Exponer puertos
 EXPOSE 80 443

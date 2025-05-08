@@ -43,9 +43,20 @@ jobs:
             sudo systemctl enable docker
             sudo systemctl start docker
 
+            # Instalar certbot si no está instalado
+            if ! command -v certbot &> /dev/null; then
+              echo "📦 Instalando Certbot..."
+              sudo apt install -y certbot
+            else
+              echo "✅ Certbot ya está instalado"
+            fi
+
             # Crear carpetas necesarias si no existen
             sudo mkdir -p /opt/conexus/front-vue
             sudo mkdir -p /opt/conexus/back-node
+            sudo mkdir -p /opt/conexus/webroot
+            sudo mkdir -p /opt/conexus/letsencrypt
+            sudo chmod -R 755 /opt/conexus
           EOF
 
   SECRETS-GITHUB:
@@ -80,15 +91,11 @@ jobs:
           echo "NGINX_DB_USER=${{ secrets.NGINX_DB_USER }}" >> /opt/conexus/.env
           echo "NGINX_DB_PASSWORD=${{ secrets.NGINX_DB_PASSWORD }}" >> /opt/conexus/.env
           echo "VITE_FIREBASE_API_KEY=${{ secrets.VITE_FIREBASE_API_KEY }}" >> /opt/conexus/.env
+          
+          # Añadir variables de SSL
+          echo "SSL_EMAIL_ADDRESS=${{ secrets.SSL_EMAIL_ADDRESS || 'admin@conexushub.cat' }}" >> /opt/conexus/.env
 
-          # Asegurarse de que la carpeta front-vue existe
-          mkdir -p /opt/conexus/front-vue
-
-          # Copiar .env a front-vue
-          cp /opt/conexus/.env /opt/conexus/front-vue/.env
-            
           cat /opt/conexus/.env
-          cat /opt/conexus/front-vue/.env
           echo "✅ .env completat!"
           EOF
 
@@ -104,57 +111,23 @@ jobs:
           echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > ~/prod_key.pem
           chmod 600 ~/prod_key.pem
 
-          # Conectarse al servidor y limpiar el front-vue existente preservando .env
-          ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
-            cd /opt/conexus
-            if [ -d ./front-vue ]; then 
-              # Guardar temporalmente el .env si existe
-              if [ -f ./front-vue/.env ]; then
-                cp ./front-vue/.env ./front-vue.env.backup
-              fi
-              # Eliminar la carpeta front-vue
-              sudo rm -rf ./front-vue
-              # Crear la carpeta de nuevo
-              mkdir front-vue
-              # Restaurar el .env si existía
-              if [ -f ./front-vue.env.backup ]; then
-                mv ./front-vue.env.backup ./front-vue/.env
-              fi
-            else
-              mkdir front-vue
-            fi
-          EOF
-
-          # Subir toda la carpeta front-vue (sin node_modules) al servidor
           rsync -avz --exclude=node_modules --exclude=dist -e "ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem" front-vue/ ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/front-vue/
-
-          # Crear directorio scripts si no existe y copiar build.sh
-          ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
-            cd /opt/conexus
-            mkdir -p scripts
-          EOF
-          scp -o StrictHostKeyChecking=no -i ~/prod_key.pem scripts/build.sh ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/scripts/
           
-          ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
-            cd /opt/conexus
-            cd scripts
-            chmod +x build.sh
-            ./build.sh
-          EOF
-
+          # Copiar el prod.Dockerfile al servidor en la carpeta front
+          scp -o StrictHostKeyChecking=no -i ~/prod_key.pem front-vue/prod.Dockerfile ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/front-vue/
+      
       - name: Levantar Portainer con Docker Compose
         run: |
-            # Conectarse al servidor y ejecutar docker-compose up --build
-            ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
-              cd /opt/conexus
-              # Asegúrate de que el archivo docker-compose.portainer.yml esté en la ubicación correcta
-              if [ -f docker-compose.portainer.yml ]; then
-                # Levantar los contenedores de Portainer y construir la imagen si es necesario
-                sudo docker-compose -f docker-compose.portainer.yml up --build -d
-              else
-                echo "No se encontró docker-compose.portainer.yml"
-              fi
-            EOF
+          ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
+            cd /opt/conexus
+            # Asegúrate de que el archivo docker-compose.portainer.yml esté en la ubicación correcta
+            if [ -f docker-compose.portainer.yml ]; then
+              # Levantar los contenedores de Portainer y construir la imagen si es necesario
+              sudo docker-compose -f docker-compose.portainer.yml up --build -d
+            else
+              echo "No se encontró docker-compose.portainer.yml"
+            fi
+          EOF
 
   BUILD-BACKEND:
     needs: [BUILD-FRONTEND-AND-BUILD-PORTAINER]
@@ -187,8 +160,37 @@ jobs:
           # Copiar el prod.Dockerfile al servidor en la carpeta back-node
           scp -o StrictHostKeyChecking=no -i ~/prod_key.pem back-node/node/prod.Dockerfile ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/back-node/node/
 
-  START-DOCKER-COMPOSE-PRINCIPAL:
+  SETUP-SSL:
     needs: [BUILD-FRONTEND-AND-BUILD-PORTAINER, BUILD-BACKEND]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Copiar script de generación de SSL
+        run: |
+          echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > ~/prod_key.pem
+          chmod 600 ~/prod_key.pem
+
+          # Crear directorio scripts si no existe
+          ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} "mkdir -p /opt/conexus/scripts"
+          
+          # Copiar script de generación de SSL
+          scp -o StrictHostKeyChecking=no -i ~/prod_key.pem scripts/generate-ssl.sh ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/scripts/
+          
+          # Dar permisos de ejecución
+          ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} "chmod +x /opt/conexus/scripts/generate-ssl.sh"
+
+      - name: Copiar docker-compose.prod.yml
+        run: |
+          echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > ~/prod_key.pem
+          chmod 600 ~/prod_key.pem
+          
+          # Copiar docker-compose
+          scp -o StrictHostKeyChecking=no -i ~/prod_key.pem docker-compose.prod.yml ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/
+
+  START-DOCKER-COMPOSE-PRINCIPAL:
+    needs: [SETUP-SSL]
     runs-on: ubuntu-latest
     steps:
       - name: Conectar a la máquina de producción y levantar contenedores
@@ -200,6 +202,14 @@ jobs:
             echo "🚢 Levantando contenedores Docker..."
 
             cd /opt/conexus
+
+            # Generar certificados SSL si no existen
+            if [ ! -d "/opt/conexus/letsencrypt/live/conexushub.cat" ]; then
+              echo "🔒 Generando certificados SSL..."
+              sudo /opt/conexus/scripts/generate-ssl.sh
+            else
+              echo "✅ Los certificados SSL ya existen"
+            fi
 
             if [ -f docker-compose.prod.yml ]; then
               echo "🧹 Parando y eliminando contenedores anteriores..."

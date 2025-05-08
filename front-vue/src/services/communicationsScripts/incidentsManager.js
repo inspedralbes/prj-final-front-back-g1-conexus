@@ -1,6 +1,6 @@
 const API_URL = import.meta.env.VITE_INCIDENT_URL;
 
-console.log('API_URL:', import.meta.env.VITE_INCIDENT_URL);
+console.log('API_URL:', API_URL);
 
 // Helper function to handle fetch responses
 const handleResponse = async (response) => {
@@ -39,7 +39,10 @@ export const createReport = async (reportData) => {
     try {
         const response = await fetch(`${API_URL}api/reports`, {
             method: 'POST',
-            body: reportData,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(reportData),
         });
         return await handleResponse(response);
     } catch (error) {
