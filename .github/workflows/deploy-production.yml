@@ -203,7 +203,7 @@ jobs:
 
             cd /opt/conexus
 
-            # Generar certificados SSL si no existen
+            # Generar certificados SSL si no existen 
             if [ ! -d "/opt/conexus/letsencrypt/live/conexushub.cat" ]; then
               echo "🔒 Generando certificados SSL..."
               
