@@ -49,8 +49,10 @@ services:
           sleep 1
         done
         echo 'MySQL está disponible, iniciando la aplicación...'
-        npm run dev
+        npm run dev 
       "
+    # command: npm run dev # para desarrollo
+    # command: npm run start # para producción
     restart: unless-stopped
     networks:
       - conexus-hub-network
