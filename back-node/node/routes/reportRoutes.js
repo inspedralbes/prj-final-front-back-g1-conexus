@@ -205,10 +205,10 @@ router.put("/:id", async (req, res) => {
       const user = await User.findOne({ where: { id: report.user_id } });
       let note = null;
       if (report.note) {
-        note=`Benvolgut/da ${user.name},\n\nEns complau informar-lo/la que l'informe amb ID ${report.id} ha estat revisat i s'ha completat amb èxit.\n\nAtentament,\nL'equip de gestió d'informes. \n\nNota: ${report.note}`;
+        note=`Benvolgut/da ${user.name},\n\nEns complau informar-lo/la que l'informe amb ID ${report.id} amb descripció: ${report.report}\n\n  ha estat revisat i s'ha completat amb èxit.\n\nAtentament,\nL'equip de gestió d'informes. \n\nNota: ${report.note}`;
           
       } else {
-       note=`Benvolgut/da ${user.name},\n\nEns complau informar-lo/la que l'informe amb ID ${report.id} ha estat revisat i s'ha completat amb èxit.\n\nAtentament,\nL'equip de gestió d'informes.`;
+       note=`Benvolgut/da ${user.name},\n\nEns complau informar-lo/la que l'informe amb ID ${report.id}amb descripció: ${report.report}\n\n ha estat revisat i s'ha completat amb èxit.\n\nAtentament,\nL'equip de gestió d'informes.`;
         
       }
       const mailOptions = {
