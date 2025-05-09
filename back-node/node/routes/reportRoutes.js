@@ -4,7 +4,38 @@ import User from "../models/User.js";
 import Room from "../models/Room.js";
 import multer from 'multer';
 import path from 'path';
+import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
+dotenv.config();
 
+const host= process.env.EMAIL_HOST;
+const port= process.env.EMAIL_PORT;
+const user= process.env.EMAIL_USER;
+const pass= process.env.EMAIL_PASS;
+
+
+console.log("Host: ", host);
+console.log("Port: ", port);
+console.log("User: ", user);
+console.log("Pass: ", pass);
+const transporter = nodemailer.createTransport({
+    service: 'smtp.gmail.com',
+    host: host,
+    port: port,
+    secure: false,
+    auth: {
+        user: user,
+        pass: pass
+    }
+});
+
+transporter.verify((error, success) => {
+    if (error) {
+        console.error('Error with email transporter:', error);
+    } else {
+        console.log('Email transporter is ready');
+    }
+});
 const router = express.Router();
 
 const storage = multer.diskStorage({
@@ -161,6 +192,23 @@ router.put("/:id", async (req, res) => {
             return res.status(404).json({ message: "Informe no trobat" });
         }
         await report.update(req.body);
+        if(req.body.finished) {
+            const user = await User.findOne({ where: { id: report.user_id } });
+            const { user_id, report, room_id } = req.body;
+            const mailOptions = {
+                from: process.env.EMAIL_USER,
+                to: user.email,
+                subject: 'Informe acabat',
+                text: `L'informe amb ID ${id} ha estat tancat.`,
+            };
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    console.error('Error sending email:', error);
+                } else {
+                    console.log('Email sent:', info.response);
+                }
+            });
+        }
         //retornar l'objecte informe actualitzat
         res.json(report);
     } catch (error) {
