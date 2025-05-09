@@ -5,6 +5,7 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import { generateToken, verifyTokenMiddleware } from "../token.js";
+import TypeUser from "../models/TypeUser.js";
 
 const router = express.Router();
 
@@ -66,7 +67,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // Obtener un usuario por email
-router.post("/email", async (req, res) => {
+router.post("/email", verifyTokenMiddleware, async (req, res) => {
     try {
         const { email } = req.body;
         console.log(email);
@@ -82,7 +83,9 @@ router.post("/email", async (req, res) => {
                 }
             ]
         });
-
+        
+        console.log(user);
+        
         if (!user) {
             return res.status(404).json({ message: "Usuario no encontrado" });
         }

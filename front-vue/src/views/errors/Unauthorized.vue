@@ -41,10 +41,11 @@ const goBack = () => {
         userRole = user.typeusers.name;
     } else if (user?.typeUsers_id) {
         switch (Number(user.typeUsers_id)) {
-            case 1: userRole = 'Estudiant'; break;
-            case 2: userRole = 'Professor'; break;
+            case 1: userRole = 'Professor'; break;  // Corregido: 1 es Professor
+            case 2: userRole = 'Estudiant'; break;  // Corregido: 2 es Estudiant
             case 3: userRole = 'Administrador'; break;
             case 4: userRole = 'Tècnic'; break;
+            case 5: userRole = 'Cantina'; break;    // Añadido el caso para Cantina
         }
     }
 
@@ -63,6 +64,9 @@ const goBack = () => {
             break;
         case 'Tècnic':
             router.push('/technicians');
+            break;
+        case 'Cantina':
+            router.push('/canteen');  // Añade la ruta para Cantina si existe
             break;
         default:
             router.push('/');

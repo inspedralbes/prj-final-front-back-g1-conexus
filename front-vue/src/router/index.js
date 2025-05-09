@@ -224,37 +224,40 @@ router.beforeEach((to, from, next) => {
   console.log('Navegando a:', to.path);
   console.log('¿Usuario autenticado?:', isAuthenticated);
   
-  // Si la ruta requiere autenticación y el usuario no está autenticado
   if (to.meta.requiresAuth && !isAuthenticated) {
     console.log('Usuario no autenticado, redirigiendo a login');
     next({ name: 'home' });
     return;
   }
   
-  // Si el usuario está autenticado y la ruta tiene restricción de roles
   if (isAuthenticated && to.meta.allowedRoles && to.meta.allowedRoles.length > 0) {
     const user = store.getUser();
     console.log('Datos de usuario:', user);
     
     let userRole = '';
     
-    // Intentar obtener el rol del usuario
+    if (!user || Object.keys(user).length === 0) {
+      console.log('Usuario autenticado pero sin datos de rol. Redirigiendo a home para re-autenticación');
+      store.clearAuthData();
+      next({ name: 'home' });
+      return;
+    }
+    
     if (user?.typeusers?.name) {
       userRole = user.typeusers.name;
     } else if (user?.typeUsers_id) {
-      // Mapear ID a nombre de rol
-      switch (Number(user.typeUsers_id)) {  // Asegurarnos que sea un número
-        case 1: userRole = 'Estudiant'; break;
-        case 2: userRole = 'Professor'; break;
+      switch (Number(user.typeUsers_id)) {  
+        case 1: userRole = 'Professor'; break;
+        case 2: userRole = 'Estudiant'; break;
         case 3: userRole = 'Administrador'; break;
         case 4: userRole = 'Tècnic'; break;
+        case 5: userRole = 'Cantina'; break;
       }
     }
     
     console.log('Rol del usuario:', userRole);
     console.log('Roles permitidos para esta ruta:', to.meta.allowedRoles);
     
-    // Verificar si tiene permiso para acceder a esta ruta
     const hasPermission = to.meta.allowedRoles.includes(userRole);
     console.log('¿Tiene permiso?:', hasPermission);
     
@@ -264,8 +267,6 @@ router.beforeEach((to, from, next) => {
       return;
     }
   }
-  
-  // Si todo está bien, permitir la navegación
   next();
 });
 
