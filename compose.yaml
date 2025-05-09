@@ -86,6 +86,7 @@ services:
   conexus-hub-mongodb:
     image: mongo
     restart: always
+    container_name: conexus-hub-mongodb
     ports:
       - 27017:27017
     environment:
@@ -114,6 +115,8 @@ services:
       ME_CONFIG_BASICAUTH: false
     depends_on:
       - conexus-hub-mongodb
+    networks:
+      - conexus-hub-network
 
 volumes:
   conexus-hub-mysql-data:

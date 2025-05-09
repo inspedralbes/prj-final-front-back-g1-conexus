@@ -22,6 +22,9 @@ import userCourseRoutes from "./routes/userCourseRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import taskRoutes from "./routes/taskRoutes.js";
 import chatRoutes from "./routes/chatRoutes.js";
+import mongoose from 'mongoose';
+import './models/Message.js';  // Import to register the Message model
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config();
@@ -29,9 +32,27 @@ dotenv.config();
 const app = express();
 const PORT = process.env.NODE_PORT || 3000;
 
+// Configuración de MongoDB - URL correcta según el compose.yaml
+const MONGODB_URI = process.env.NODE_MONGODB_URI || 'mongodb://root:password@conexus-hub-mongodb:27017/chat';
+
+// Conectar a MongoDB
+console.log("Intentando conectar a MongoDB en:", MONGODB_URI);
+mongoose.connect(MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 30000,
+    socketTimeoutMS: 45000,
+}).then(() => {
+    console.log("Conectado a MongoDB");
+}).catch(err => {
+    console.error("Error al conectar a MongoDB:", err);
+});
+
+// Middleware
 app.use(bodyParser.json());
 app.use(cors());
 
+// Rutas
 app.use("/api/assistences", assistenceRoutes);
 app.use("/api/courses", courseRoutes);
 app.use("/api/departments", departmentRoutes);
@@ -48,6 +69,7 @@ app.use("/api/user", userRoutes);
 
 app.use("/api/chat", chatRoutes);
 
+// Iniciar servidor
 sequelize.sync().then(() => {
     console.log("Database synced");
     app.listen(PORT, () => {
