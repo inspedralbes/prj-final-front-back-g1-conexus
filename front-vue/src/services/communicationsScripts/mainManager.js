@@ -138,7 +138,7 @@ export const getHoursOfCourse = async (courseId) => {
         }
         const data = await response.json();
         console.log(data);
-        const daysOfWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+        const daysOfWeek = ['monday', 'tuesday', 'wensday', 'thursday', 'friday', 'saturday', 'sunday'];
         const processedHours = Object.fromEntries(
             daysOfWeek.map(day => {
                 if (!data.course_hours_available[day] || data.course_hours_available[day].length === 0) {
@@ -329,6 +329,153 @@ export const updateUserRole = async (userId, typesUsersId) => {
 export const getAllTypeUsers = async () => {
     try {
         const response = await fetch(`${BACK_URL}api/type-users`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (!response.ok) {
+            return { error: `HTTP error! status: ${response.status}` };
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Network error:", error);
+        return { error: "Network error. Please try again later." };
+    }
+}
+
+export const getAllCourses = async () => {
+    try {
+        const response = await fetch(`${BACK_URL}api/courses`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (!response.ok) {
+            return { error: `HTTP error! status: ${response.status}` };
+        }
+
+        const courses = await response.json();
+
+        for (const course of courses) {
+            console.log(course);
+            if (course.course_teacher_id) {
+                try {
+                    const teacherResponse = await fetch(`${BACK_URL}api/user/${course.course_teacher_id}`, {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    });
+                    console.log(teacherResponse);
+
+                    if (teacherResponse.ok) {
+                        const teacherData = await teacherResponse.json();
+                        course.teacher = teacherData;
+                    } else {
+                        console.error(`Failed to fetch teacher with ID ${course.course_teacher_id}`);
+                        course.teacher = null;
+                    }
+                } catch (error) {
+                    console.error(`Error fetching teacher with ID ${course.course_teacher_id}:`, error);
+                    course.teacher = null;
+                }
+            }
+        }
+
+        return courses;
+    } catch (error) {
+        console.error("Network error:", error);
+        return { error: "Network error. Please try again later." };
+    }
+};
+export const deleteCourse = async (courseId) => {
+    try {
+        const response = await fetch(`${BACK_URL}api/courses/${courseId}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (!response.ok) {
+            return { error: `HTTP error! status: ${response.status}` };
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Network error:", error);
+        return { error: "Network error. Please try again later." };
+    }
+}
+export const createCourse = async (course) => {
+    try {
+        console.log(course.course_hours_available);
+        // Convertir el objeto course a una cadena JSON 
+        const response = await fetch(`${BACK_URL}api/courses`, {
+            method: "POST",
+            headers: {
+            "Content-Type": "application/json",
+            },
+            body: JSON.stringify(course),
+        });
+
+        if (!response.ok) {
+            return { error: `HTTP error! status: ${response.status}` };
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Network error:", error);
+        return { error: "Network error. Please try again later." };
+    }
+}
+export const updateCourse = async (courseId, course) => {
+    try {
+        const response = await fetch(`${BACK_URL}api/courses/${courseId}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(course),
+        });
+
+        if (!response.ok) {
+            return { error: `HTTP error! status: ${response.status}` };
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Network error:", error);
+        return { error: "Network error. Please try again later." };
+    }
+}
+export const getAllDepartments = async () => {
+    try {
+        const response = await fetch(`${BACK_URL}api/departments`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (!response.ok) {
+            return { error: `HTTP error! status: ${response.status}` };
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Network error:", error);
+        return { error: "Network error. Please try again later." };
+    }
+}
+export const getAllTeachersFromDepartment = async (departmentId) => {
+    try {
+        const response = await fetch(`${BACK_URL}api/user/teachers/${departmentId}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",

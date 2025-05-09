@@ -95,8 +95,8 @@ function thereIsClassThatDay() {
             return hoursAvailable.value.monday!=null;
         case 'tuesday':
             return hoursAvailable.value.tuesday!=null;
-        case 'wednesday':
-            return hoursAvailable.value.wednesday!=null;
+        case 'wensday':
+            return hoursAvailable.value.wensday!=null;
         case 'thursday':
             return hoursAvailable.value.thursday!=null;
         case 'friday':
