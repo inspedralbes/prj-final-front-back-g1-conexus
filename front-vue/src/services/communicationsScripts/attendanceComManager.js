@@ -82,3 +82,20 @@ export const getAttendanceFromDay = async (courseId, day) => {
         console.error('Error fetching courses:', error);
     }
 }
+export const getAttendanceFromUserAndCourse = async (userId, courseId) => {
+    try {
+        const response = await fetch(`${BACK_URL}api/assistences/user/${userId}/course/${courseId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching courses:', error);
+    }
+}

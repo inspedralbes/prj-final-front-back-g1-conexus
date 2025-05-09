@@ -17,7 +17,7 @@
 import { useRoute } from 'vue-router'
 import { onMounted, ref } from 'vue'
 import { useAppStore } from '@/stores/index.js'
-import { getTask, updateGrade } from '@/services/gradesComManager.js'
+import { getTask, updateGrade } from '@/services/communicationsScripts/gradesComManager.js'
 
 const route = useRoute()
 const taskId = route.params.taskId

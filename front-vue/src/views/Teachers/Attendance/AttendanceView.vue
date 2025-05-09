@@ -42,8 +42,8 @@ import { useRoute } from 'vue-router'
 import { useRouter } from 'vue-router'
 import { useAppStore } from '@/stores/index.js'
 import { onMounted, ref } from 'vue'
-import { getHoursOfCourse,  getAlumns } from '@/services/mainComManager.js'
-import {getAttendanceFromDay,updateAttendance} from '@/services/attendanceComManager.js'
+import { getHoursOfCourse,  getAlumns } from '@/services/communicationsScripts/mainManager'
+import {getAttendanceFromDay,updateAttendance} from '@/services/communicationsScripts/attendanceComManager.js'
 
 const selectedDate = ref(new Date().toISOString().substr(0, 10))
 const attendance = ref([])
@@ -95,8 +95,8 @@ function thereIsClassThatDay() {
             return hoursAvailable.value.monday!=null;
         case 'tuesday':
             return hoursAvailable.value.tuesday!=null;
-        case 'wednesday':
-            return hoursAvailable.value.wednesday!=null;
+        case 'wensday':
+            return hoursAvailable.value.wensday!=null;
         case 'thursday':
             return hoursAvailable.value.thursday!=null;
         case 'friday':

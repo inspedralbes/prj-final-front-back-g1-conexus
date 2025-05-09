@@ -4,6 +4,9 @@
   <router-view></router-view>
 </template>
 
+<style scoped>
+</style>
+
 <script setup>
 import { onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';

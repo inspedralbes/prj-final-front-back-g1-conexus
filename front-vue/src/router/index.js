@@ -29,15 +29,26 @@ const router = createRouter({
         { 
           path: 'assistence',
           name: 'student-assistence',
-          component: () => import('@/views/Students/assistence.vue')
+          component: () => import('@/views/Students/courseSelectorAttendance.vue')
         },
         {
           path: 'grades',
           name: 'student-grades',
-          component: () => import('@/views/Students/grades.vue')
-        }
+          component: () => import('@/views/Students/courseSelectorGrades.vue')
+        },
+        {
+          path: ':id/grades',
+          name: 'grades-from-course-student',
+          component: () => import('@/views/Students/grades.vue'),
+        },
+        {
+          path: ':id/assistence',
+          name: 'assistence-from-course-student',
+          component: () => import('@/views/Students/assistence.vue'),
+        },
       ]
     },
+    
     {
       path: '/teachers',
       name: 'teacher',
@@ -70,7 +81,7 @@ const router = createRouter({
         { 
           path: 'assistence',
           name: 'teacher-assistence',
-          component: () => import('@/views/Teachers/assistence.vue')
+          component: () => import('@/views/Teachers/myCourses.vue')
         },
         {
           path: 'attendance/:courseId',
@@ -80,7 +91,7 @@ const router = createRouter({
         {
           path: 'grades',
           name: 'teacher-grades',
-          component: () => import('@/views/Teachers/grades.vue')
+          component: () => import('@/views/Teachers/myCourses.vue')
         },
         {
           path: 'grades/:courseId',
@@ -167,7 +178,7 @@ const router = createRouter({
         {
           path: 'config-servers',
           name: 'admin-config-servers',
-          component: () => import('@/views/Admin/servers.vue')
+          // component: () => import('@/views/Admin/servers.vue')
         },
         {
           path: 'config-lost-objects',
@@ -179,6 +190,16 @@ const router = createRouter({
           name: 'admin-config-incidents',
           component: () => import('@/views/Admin/incidents.vue')
         },
+        {
+          name:"new-room",
+          path: 'new-room',
+          component: () => import('@/views/Admin/newRoom.vue')
+        },
+        {
+          name:"config-courses",
+          path:"config-courses",
+          component:()=>import('@/views/Admin/courses.vue')
+        }
       ]
     },
     {

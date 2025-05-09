@@ -6,10 +6,10 @@
             <div class="form-group">
                 <label for="report">Report Description</label>
                 <textarea id="report" v-model="reportData.report" required placeholder="Describe the incident..."
-                    class="form-control"></textarea>
+                    class="form-control text-gray-900"></textarea>
             </div>
 
-            <div class="form-group">
+            <div class="form-group text-gray-900">
                 <label for="room_id">Room ID</label>
                 <input type="number" id="room_id" v-model.number="reportData.room_id" required class="form-control" />
             </div>
@@ -17,7 +17,7 @@
             <!-- Nuevo campo para subir imágenes -->
             <div class="form-group">
                 <label for="upload-image">Upload Image</label>
-                <input type="file" id="upload-image" @change="handleFileUpload" class="form-control" />
+                <input type="file" id="upload-image" @change="handleFileUpload" class="form-control text-gray-900" />
             </div>
             <button type="submit" class="submit-btn" :disabled="isSubmitting">
                 {{ isSubmitting ? 'Submitting...' : 'Submit Report' }}

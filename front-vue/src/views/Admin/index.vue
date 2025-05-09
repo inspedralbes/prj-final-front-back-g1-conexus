@@ -53,6 +53,13 @@
                     </svg>
                     <span>Serveis</span>
                 </router-link>
+                <router-link to="/admin/config-courses"
+                    class="flex items-center p-2 text-gray-300 hover:bg-slate-800/50 rounded-lg transition-colors duration-300">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V7m-6 4h4m-4 4h4m-4 4h4m-8-8h4m-4 4h4m-4 4h4" />
+                    </svg>
+                    <span>Cursos</span>
+                </router-link>
             </nav>
             <!-- Botó de Tancar Sessió -->
             <div class="mt-4 pt-4 border-t border-gray-700">
@@ -107,6 +114,12 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                         </svg>
                         Serveis
+                    </router-link>
+                    <router-link to="/admin/config-courses" class="flex items-center text-white hover:text-gray-300 transition-colors duration-300">
+                        <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V7m-6 4h4m-4 4h4m-4 4h4m-8-8h4m-4 4h4m-4 4h4" />
+                        </svg>
+                        Cursos
                     </router-link>
                     <button @click="logout" class="flex items-center text-white hover:text-red-300 transition-colors duration-300">
                         <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
