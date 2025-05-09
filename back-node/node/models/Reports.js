@@ -6,7 +6,7 @@ import User from './User.js';
 
 const Report = sequelize.define('Report', {
     id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-    user_id: { type: DataTypes.INTEGER, allowNull: false },
+    user_id: { type: DataTypes.INTEGER, allowNull: true },
     report: { type: DataTypes.TEXT, allowNull: false },
     status: { type: DataTypes.ENUM('pending', 'revising', 'revised'), defaultValue: 'pending' },
     image: { type: DataTypes.TEXT, allowNull: true },
