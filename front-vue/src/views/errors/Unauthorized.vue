@@ -18,7 +18,7 @@
 
                 <button @click="goBack"
                     class="inline-block px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-medium rounded-lg transition-all hover:scale-[1.02] active:scale-95">
-                    Tornar
+                    Tornar a l'inici
                 </button>
             </div>
         </div>

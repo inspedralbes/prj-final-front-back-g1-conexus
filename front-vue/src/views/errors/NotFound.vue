@@ -16,11 +16,61 @@
                 <h1 class="text-2xl font-bold text-white mb-2">Pàgina no trobada</h1>
                 <p class="text-slate-300 mb-6">La pàgina a la que intentes accedir no existeix.</p>
 
-                <router-link to="/"
+                <button @click="goBack"
                     class="inline-block px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-medium rounded-lg transition-all hover:scale-[1.02] active:scale-95">
                     Tornar a l'inici
-                </router-link>
+                </button>
             </div>
         </div>
     </div>
 </template>
+
+<script setup>
+import { useRouter } from 'vue-router';
+import { useAppStore } from '@/stores/index.js';
+
+const router = useRouter();
+const store = useAppStore();
+
+const goBack = () => {
+    const user = store.getUser();
+    let userRole = '';
+
+    // Determinar el rol del usuario
+    if (user?.typeusers?.name) {
+        userRole = user.typeusers.name;
+    } else if (user?.typeUsers_id) {
+        switch (Number(user.typeUsers_id)) {
+            case 1: userRole = 'Professor'; break;  // Corregido: 1 es Professor
+            case 2: userRole = 'Estudiant'; break;  // Corregido: 2 es Estudiant
+            case 3: userRole = 'Administrador'; break;
+            case 4: userRole = 'Tècnic'; break;
+            case 5: userRole = 'Cantina'; break;    // Añadido el caso para Cantina
+        }
+    }
+
+    console.log('Redirigiendo desde Unauthorized a la página principal del rol:', userRole);
+
+    // Redireccionar según el rol
+    switch (userRole) {
+        case 'Administrador':
+            router.push('/admin');
+            break;
+        case 'Professor':
+            router.push('/teachers');
+            break;
+        case 'Estudiant':
+            router.push('/students');
+            break;
+        case 'Tècnic':
+            router.push('/technicians');
+            break;
+        case 'Cantina':
+            router.push('/canteen');  // Añade la ruta para Cantina si existe
+            break;
+        default:
+            router.push('/');
+            break;
+    }
+};
+</script>
