@@ -4,13 +4,10 @@ import { sequelize } from "./models/index.js";
 import assistenceRoutes from "./routes/assistenceRoutes.js";
 import courseRoutes from "./routes/courseRoutes.js";
 import departmentRoutes from "./routes/departmentRoutes.js";
-import gradeRoutes from "./routes/gradeRoutes.js";
 import dotenv from "dotenv";
 import cors from "cors";
-// import { verifyTokenMiddleware } from "./token.js";
 import path from "path";
 import { fileURLToPath } from "url";
-import lostObjectRoutes from "./routes/lostObjectRoutes.js";
 import reportRoutes from "./routes/reportRoutes.js";
 import responseRoutes from "./routes/responseRoutes.js";
 import roomReservationRoutes from "./routes/roomReservationRoutes.js";
@@ -18,7 +15,6 @@ import roomRoutes from "./routes/roomRoutes.js";
 import typeUserRoutes from "./routes/typeUserRoutes.js";
 import userCourseRoutes from "./routes/userCourseRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
-import taskRoutes from "./routes/taskRoutes.js";
 import { startService, stopService, startAllServices, stopAllServices, getServiceStatus, getAllServicesStatus } from "./serviceManager.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -34,26 +30,21 @@ app.use('/uploads', express.static('uploads'));
 app.use("/api/assistences", assistenceRoutes);
 app.use("/api/courses", courseRoutes);
 app.use("/api/departments", departmentRoutes);
-// app.use("/api/grades", gradeRoutes);
-
-// app.use("/api/lost-objects", lostObjectRoutes);
 app.use("/api/reports", reportRoutes);
 app.use("/api/responses", responseRoutes);
 app.use("/api/room-reservations", roomReservationRoutes);
-
 app.use("/api/rooms", roomRoutes);
 app.use("/api/type-users", typeUserRoutes);
 app.use("/api/user-courses", userCourseRoutes);
 app.use("/api/user", userRoutes);
 
-// Iniciar todos los servicios cuando la aplicación se inicia
 if (process.env.NODE_ENV === 'development') {
     console.log('Iniciando servicios en modo desarrollo con nodemon...');
 } else {
     console.log('Iniciando servicios en modo producción...');
 }
 
-startAllServices();
+// startAllServices();
 
 // Rutas para gestionar los servicios
 app.get("/api/services", (req, res) => {

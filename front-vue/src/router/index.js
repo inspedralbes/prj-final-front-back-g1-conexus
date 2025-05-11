@@ -166,6 +166,11 @@ const router = createRouter({
       },
       children: [
         {
+          path: 'panel',
+          name: 'admin-panel',
+          component: () => import('@/views/Admin/panel.vue')
+        },
+        {
           path: 'config-users',
           name: 'admin-config-users',
           component: () => import('@/views/Admin/users.vue')
@@ -178,7 +183,7 @@ const router = createRouter({
         {
           path: 'config-servers',
           name: 'admin-config-servers',
-          // component: () => import('@/views/Admin/servers.vue')
+          component: () => import('@/views/Admin/servers.vue')
         },
         {
           path: 'config-lost-objects',

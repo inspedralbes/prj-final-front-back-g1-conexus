@@ -3,9 +3,9 @@ import User from "../models/User.js";
 import bcrypt from "bcrypt";
 import multer from "multer";
 import path from "path";
-import fs from "fs";
 import { generateToken, verifyTokenMiddleware } from "../token.js";
 import TypeUser from "../models/TypeUser.js";
+import { Op } from "sequelize"; // Añade esta importación
 
 const router = express.Router();
 
@@ -28,7 +28,7 @@ export async function hashPassword(contrasenya) {
 }
 
 // Obtener todos los usuarios
-router.get("/", async (req, res) => {
+router.get("/", verifyTokenMiddleware, async (req, res) => {
     try {
         const users = await User.findAll();
         res.json(users);
@@ -38,7 +38,7 @@ router.get("/", async (req, res) => {
 });
 
 // Crear un nuevo usuario
-router.post("/", upload.single('profile') ,async (req, res) => {
+router.post("/", verifyTokenMiddleware, upload.single('profile') ,async (req, res) => {
     console.log(req.body);
     try {
         const { typeUsers_id, name, email, password, profile } = req.body;
@@ -51,7 +51,7 @@ router.post("/", upload.single('profile') ,async (req, res) => {
 });
 
 // Obtener un usuario por ID
-router.get("/:id", async (req, res) => {
+router.get("/:id", verifyTokenMiddleware, async (req, res) => {
     try {
         const { id } = req.params;
         const user = await User.findByPk(id);
@@ -97,7 +97,7 @@ router.post("/email", verifyTokenMiddleware, async (req, res) => {
 });
 
 // Actualizar un usuario por ID
-router.put("/personalData/:id", async (req, res) => {
+router.put("/personalData/:id", verifyTokenMiddleware, async (req, res) => {
     try {
         const { id } = req.params;
         const { name, password, profile, department_id, description } = req.body;
@@ -116,7 +116,7 @@ router.put("/personalData/:id", async (req, res) => {
 });
 
 // Actualizar un usuario por ID (actualización de rol)
-router.put("/updateRole/:id", async (req, res) => {
+router.put("/updateRole/:id", verifyTokenMiddleware, async (req, res) => {
     try {
         const { id } = req.params;
         const { typeUsers_id } = req.body;
@@ -135,7 +135,7 @@ router.put("/updateRole/:id", async (req, res) => {
 });
 
 // Eliminar un usuario por ID
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", verifyTokenMiddleware, async (req, res) => {
     try {
         const { id } = req.params;
         const user = await User.findByPk(id);
@@ -184,7 +184,7 @@ router.post('/login', async (req, res) => {
 });
 
 // Get all users with typeUsers_id=1 (teacher) from a specific department
-router.get("/teachers/:department_id", async (req, res) => {
+router.get("/teachers/:department_id", verifyTokenMiddleware, async (req, res) => {
     try {
         const { department_id } = req.params;
         const users = await User.findAll({
@@ -198,4 +198,35 @@ router.get("/teachers/:department_id", async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 });
+
+// Get stats: total users and users registered today
+router.get("/stats/count", verifyTokenMiddleware, async (req, res) => {
+    try {
+        // Get total count of users
+        const totalUsers = await User.count();
+        
+        // Get today's date boundaries (start and end of day)
+        const today = new Date();
+        const startOfDay = new Date(today.setHours(0, 0, 0, 0));
+        const endOfDay = new Date(today.setHours(23, 59, 59, 999));
+        
+        // Count users registered today
+        const todayUsers = await User.count({
+            where: {
+                createdAt: {
+                    [Op.between]: [startOfDay, endOfDay]
+                }
+            }
+        });
+        
+        res.json({
+            total: totalUsers,
+            registeredToday: todayUsers
+        });
+    } catch (error) {
+        console.error("Error getting user stats:", error);
+        res.status(500).json({ message: error.message });
+    }
+});
+
 export default router;
