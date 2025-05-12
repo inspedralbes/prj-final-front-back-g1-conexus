@@ -103,7 +103,7 @@
           <h2 class="text-xl font-bold mb-2">{{ user.name }}</h2>
           <p class="text-gray-700 mb-2">Email: {{ user.email }}</p>
           <p class="text-gray-700 mb-2">Rol: {{ getRoleName(user.typeUsers_id) }}</p>
-          <p class="text-gray-700 mb-2">Fecha de creación: {{ formatDate(user.created_at) }}</p>
+          <p class="text-gray-700 mb-2">Fecha de creación: {{ getUserCreationDate(user) }}</p>
           <button @click="handleDeleteUser(user.id)" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Eliminar</button>
           <button @click="handleUpdateUser(user.id)" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Modificar rol</button>
       </div>
@@ -291,17 +291,37 @@ const saveNewUser = async () => {
   }
 };
 
+// Función para obtener la fecha de creación del usuario (maneja diferentes formatos)
+const getUserCreationDate = (user) => {
+  // Intenta diferentes campos de fecha posibles
+  const dateField = user.created_at || user.createdAt || user.created || user.date_created;
+  return dateField ? formatDate(dateField) : 'No disponible';
+};
+
+// Función para formatear fechas
 // Función para formatear fechas
 const formatDate = (dateString) => {
   if (!dateString) return 'N/A';
-  const date = new Date(dateString);
-  return date.toLocaleDateString('es-ES', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric'
-  });
+  
+  try {
+    const date = new Date(dateString);
+    
+    // Verificar si la fecha es válida
+    if (isNaN(date.getTime())) {
+      console.warn('Fecha inválida recibida:', dateString);
+      return 'Fecha no válida';
+    }
+    
+    return date.toLocaleDateString('es-ES', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+  } catch (err) {
+    console.error('Error al formatear fecha:', err, dateString);
+    return 'Error en formato';
+  }
 };
-
 // Función para obtener tipos de usuarios
 const fetchTypeUsers = async () => {
   try {
