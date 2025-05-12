@@ -43,6 +43,68 @@ router.get("/", async (req, res) => {
 });
 
 /**
+ * Obtener todos los chats donde participa un profesor específico
+ * @route GET /api/chat/user/:teacherId
+ * @param {string} teacherId.path.required - ID del profesor
+ * @returns {array} 200 - Array de chats donde participa el profesor
+ * @returns {object} 404 - Profesor no encontrado o no tiene chats
+ * @returns {object} 500 - Error del servidor
+ */
+router.get("/user/:teacherId", async (req, res) => {
+    console.log(`GET /api/chat/user/${req.params.teacherId} - Buscando chats de profesor`);
+    logMongoConnectionState();
+
+    try {
+        // Convertir el ID a número ya que es un campo numérico
+        const teacherId = parseInt(req.params.teacherId);
+
+        if (isNaN(teacherId)) {
+            return res.status(400).json({ message: "ID de profesor inválido" });
+        }
+
+        // Buscar todos los chats donde el profesor participa
+        const chats = await Message.find({ teachers: teacherId });
+
+        if (!chats || chats.length === 0) {
+            console.log(`No se encontraron chats para el profesor ${teacherId}`);
+            return res.status(200).json([]); // Devolver array vacío
+        }
+
+        console.log(`Se encontraron ${chats.length} chats para el profesor ${teacherId}`);
+        res.json(chats);
+    } catch (error) {
+        console.error(`Error al buscar chats del profesor ${req.params.teacherId}:`, error);
+        res.status(500).json({ message: error.message });
+    }
+});
+
+/**
+ * Obtener un chat por nombre
+ * @route GET /api/chat/name/:name
+ * @param {string} name.path.required - Nombre del chat
+ * @returns {object} 200 - Chat encontrado
+ * @returns {object} 404 - Chat no encontrado
+ * @returns {object} 500 - Error del servidor
+ */
+router.get("/name/:name", async (req, res) => {
+    console.log(`GET /api/chat/name/${req.params.name} - Buscando chat por nombre`);
+    logMongoConnectionState();
+
+    try {
+        const message = await Message.findOne({ name: req.params.name });
+        if (!message) {
+            console.log(`Chat '${req.params.name}' no encontrado`);
+            return res.status(404).json({ message: "Chat no encontrado" });
+        }
+        console.log("Chat encontrado:", message.name);
+        res.json(message);
+    } catch (error) {
+        console.error(`Error al buscar chat '${req.params.name}':`, error);
+        res.status(500).json({ message: error.message });
+    }
+});
+
+/**
  * Obtener un chat por ID
  * @route GET /api/chat/:id
  * @param {string} id.path.required - ID del chat
@@ -64,32 +126,6 @@ router.get("/:id", async (req, res) => {
         res.json(message);
     } catch (error) {
         console.error(`Error al buscar chat '${req.params.id}':`, error);
-        res.status(500).json({ message: error.message });
-    }
-});
-
-/**
- * Obtener un chat por nombre
- * @route GET /api/chat/:name
- * @param {string} name.path.required - Nombre del chat
- * @returns {object} 200 - Chat encontrado
- * @returns {object} 404 - Chat no encontrado
- * @returns {object} 500 - Error del servidor
- */
-router.get("/name/:name", async (req, res) => {
-    console.log(`GET /api/chat/name/${req.params.name} - Buscando chat por nombre`);
-    logMongoConnectionState();
-
-    try {
-        const message = await Message.findOne({ name: req.params.name });
-        if (!message) {
-            console.log(`Chat '${req.params.name}' no encontrado`);
-            return res.status(404).json({ message: "Chat no encontrado" });
-        }
-        console.log("Chat encontrado:", message.name);
-        res.json(message);
-    } catch (error) {
-        console.error(`Error al buscar chat '${req.params.name}':`, error);
         res.status(500).json({ message: error.message });
     }
 });

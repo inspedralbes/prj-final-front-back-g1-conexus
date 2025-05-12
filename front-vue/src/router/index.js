@@ -26,7 +26,7 @@ const router = createRouter({
           name: 'student-incidents',
           component: () => import('@/views/Incidents/index.vue')
         },
-        { 
+        {
           path: 'assistence',
           name: 'student-assistence',
           component: () => import('@/views/Students/courseSelectorAttendance.vue')
@@ -48,7 +48,7 @@ const router = createRouter({
         },
       ]
     },
-    
+
     {
       path: '/teachers',
       name: 'teacher',
@@ -65,8 +65,13 @@ const router = createRouter({
         },
         {
           path: 'chats',
-          name: 'teacher-chats',
-          component: () => import('@/views/Chats/index.vue')
+          name: 'chats-list',
+          component: () => import('@/views/Chats/ChatListView.vue')
+        },
+        {
+          path: 'chats/:chatId',
+          name: 'chat-detail',
+          component: () => import('@/views/Chats/ChatDetailView.vue')
         },
         {
           path: 'incidents',
@@ -78,7 +83,7 @@ const router = createRouter({
           name: 'teacher-lost-objects',
           component: () => import('@/views/Teachers/lost-objects.vue')
         },
-        { 
+        {
           path: 'assistence',
           name: 'teacher-assistence',
           component: () => import('@/views/Teachers/myCourses.vue')
@@ -131,8 +136,13 @@ const router = createRouter({
         },
         {
           path: 'chats',
-          name: 'technician-chats',
-          component: () => import('@/views/Chats/index.vue')
+          name: 'technician-chats-list',
+          component: () => import('@/views/Chats/ChatListView.vue')
+        },
+        {
+          path: 'chats/:chatId',
+          name: 'technician-chat-detail',
+          component: () => import('@/views/Chats/ChatDetailView.vue')
         },
         {
           path: 'incidents',
@@ -191,14 +201,14 @@ const router = createRouter({
           component: () => import('@/views/Admin/incidents.vue')
         },
         {
-          name:"new-room",
+          name: "new-room",
           path: 'new-room',
           component: () => import('@/views/Admin/newRoom.vue')
         },
         {
-          name:"config-courses",
-          path:"config-courses",
-          component:()=>import('@/views/Admin/courses.vue')
+          name: "config-courses",
+          path: "config-courses",
+          component: () => import('@/views/Admin/courses.vue')
         }
       ]
     },
@@ -220,33 +230,33 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const store = useAppStore();
   const isAuthenticated = !!store.getAccessToken();
-  
+
   console.log('Navegando a:', to.path);
   console.log('¿Usuario autenticado?:', isAuthenticated);
-  
+
   if (to.meta.requiresAuth && !isAuthenticated) {
     console.log('Usuario no autenticado, redirigiendo a login');
     next({ name: 'home' });
     return;
   }
-  
+
   if (isAuthenticated && to.meta.allowedRoles && to.meta.allowedRoles.length > 0) {
     const user = store.getUser();
     console.log('Datos de usuario:', user);
-    
+
     let userRole = '';
-    
+
     if (!user || Object.keys(user).length === 0) {
       console.log('Usuario autenticado pero sin datos de rol. Redirigiendo a home para re-autenticación');
       store.clearAuthData();
       next({ name: 'home' });
       return;
     }
-    
+
     if (user?.typeusers?.name) {
       userRole = user.typeusers.name;
     } else if (user?.typeUsers_id) {
-      switch (Number(user.typeUsers_id)) {  
+      switch (Number(user.typeUsers_id)) {
         case 1: userRole = 'Professor'; break;
         case 2: userRole = 'Estudiant'; break;
         case 3: userRole = 'Administrador'; break;
@@ -254,13 +264,13 @@ router.beforeEach((to, from, next) => {
         case 5: userRole = 'Cantina'; break;
       }
     }
-    
+
     console.log('Rol del usuario:', userRole);
     console.log('Roles permitidos para esta ruta:', to.meta.allowedRoles);
-    
+
     const hasPermission = to.meta.allowedRoles.includes(userRole);
     console.log('¿Tiene permiso?:', hasPermission);
-    
+
     if (!hasPermission) {
       console.log('Usuario no autorizado, redirigiendo a página de unauthorized');
       next({ name: 'Unauthorized' });

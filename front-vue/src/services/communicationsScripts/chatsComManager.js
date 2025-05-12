@@ -147,9 +147,9 @@ export const deleteMessage = async (chatId, messageId) => {
 };
 
 /**
- * Elimina un chat completo
+ * Elimina un chat por su ID
  * @param {string} chatId - ID del chat a eliminar
- * @returns {Promise<Object>} Respuesta de confirmación
+ * @returns {Promise<Object>} Respuesta de la operación
  */
 export const deleteChat = async (chatId) => {
     try {
@@ -158,12 +158,30 @@ export const deleteChat = async (chatId) => {
         });
 
         if (!response.ok) {
-            throw new Error(`Error al eliminar chat: ${response.statusText}`);
+            throw new Error(`Error al eliminar el chat: ${response.statusText}`);
         }
 
         return await response.json();
     } catch (error) {
-        console.error(`Error en deleteChat (${chatId}):`, error);
+        console.error(`Error en deleteChat (chatId: ${chatId}):`, error);
+        throw error;
+    }
+};
+
+/**
+ * Obtiene todos los chats donde participa un profesor específico
+ * @param {number} teacherId - ID del profesor
+ * @returns {Promise<Array>} Lista de chats
+ */
+export const getChatsByUser = async (teacherId) => {
+    try {
+        const response = await fetch(`${API_URL}/user/${teacherId}`);
+        if (!response.ok) {
+            throw new Error(`Error al obtener chats del usuario: ${response.statusText}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error(`Error en getChatsByUser (teacherId: ${teacherId}):`, error);
         throw error;
     }
 };
@@ -178,7 +196,8 @@ const chatManager = {
     createChat,
     sendMessage,
     deleteMessage,
-    deleteChat
+    deleteChat,
+    getChatsByUser
 };
 
 export default chatManager;
