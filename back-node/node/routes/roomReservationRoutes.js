@@ -160,5 +160,22 @@ router.delete("/:id", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
-
+//Get reservations from a room
+router.get("/room/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+        const reservations = await RoomReservation.findAll({
+            where: {
+                room_id: id,
+            },
+        });
+        if (!reservations) {
+            return res.status(404).json({ message: "No s'han trobat reserves d'habitació per a aquesta sala" });
+        }
+        //retornar l'array de reserves d'habitacions
+        res.json(reservations);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
 export default router;

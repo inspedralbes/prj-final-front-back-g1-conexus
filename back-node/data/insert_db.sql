@@ -42,3 +42,20 @@ INSERT INTO `Grades` (`id`, `user_id`, `task_id`, `grade`) VALUES
 INSERT INTO `UserCourses` (`id`, `user_id`, `course_id`) VALUES
 (1,	3,	2),
 (2,	4,	2);
+
+INSERT INTO `Rooms` (`id`, `room_name`, `room_hours_available`, `room_description`) VALUES
+(1, 'Sala de Informática 1', '{"monday":["08:00-10:00","10:00-12:00","16:00-18:00"],"tuesday":["09:00-11:00","14:00-16:00"],"wensday":["08:00-10:00","12:00-14:00"],"thursday":["10:00-12:00","15:00-17:00"],"friday":["09:00-11:00","13:00-15:00"]}', 'Aula con 25 ordenadores equipados con software de desarrollo y diseño'),
+(2, 'Sala de Conferencias', '{"monday":["09:00-13:00","15:00-19:00"],"tuesday":["09:00-13:00","15:00-19:00"],"wensday":["09:00-13:00","15:00-19:00"],"thursday":["09:00-13:00","15:00-19:00"],"friday":["09:00-13:00","15:00-17:00"]}', 'Sala para eventos y presentaciones con capacidad para 50 personas'),
+(3, 'Laboratorio DAM', '{"monday":["08:00-14:00"],"tuesday":["10:00-16:00"],"wensday":["08:00-14:00"],"thursday":["10:00-16:00"],"friday":["08:00-12:00"]}', 'Laboratorio especializado para estudiantes de Desarrollo de Aplicaciones Multiplataforma'),
+(4, 'Aula Multimedia', '{"monday":["10:00-12:00","16:00-18:00"],"tuesday":["09:00-13:00"],"wensday":["14:00-18:00"],"thursday":["09:00-13:00"],"friday":["10:00-14:00"]}', 'Aula equipada con tecnología audiovisual para proyectos multimedia'),
+(5, 'Sala de Reuniones', '{"monday":["09:00-20:00"],"tuesday":["09:00-20:00"],"wensday":["09:00-20:00"],"thursday":["09:00-20:00"],"friday":["09:00-17:00"]}', 'Sala para reuniones profesionales con capacidad para 12 personas');
+
+INSERT INTO `Reports` (`id`, `user_id`, `report`, `status`, `image`, `room_id`, `user_assigned`) VALUES
+(1, 1, 'El ordenador número 5 no arranca correctamente', 'pending', 'uploads/reports/image1.jpg', 1, NULL),
+(2, 1, 'La iluminación de la sala falla intermitentemente', 'revising', 'uploads/reports/image2.jpg', 2, 4),
+(3, 1, 'Falta una silla en la última fila', 'pending', NULL, 3, NULL),
+(4, 1, 'El proyector muestra imágenes con colores distorsionados', 'revised', 'uploads/reports/image4.jpg', 2, 1),
+(5, 1, 'El aire acondicionado hace ruido excesivo', 'pending', 'uploads/reports/image5.jpg', 5, NULL),
+(6, 1, 'Varios ordenadores tienen el software desactualizado', 'revising', NULL, 1, 4),
+(7, 1, 'Hay goteras en el techo cerca de la ventana', 'pending', 'uploads/reports/image7.jpg', 4, NULL),
+(8, 3, 'La pizarra digital no responde correctamente', 'revised', 'uploads/reports/image8.jpg', 3, 1);

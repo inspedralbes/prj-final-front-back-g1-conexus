@@ -43,6 +43,17 @@ services:
     depends_on:
       conexus-hub-mysql:
         condition: service_healthy
+    command: >
+      sh -c "
+        echo 'Esperando a que MySQL esté disponible...'
+        while ! nc -z conexus-hub-mysql 3306; do
+          sleep 1
+        done
+        echo 'MySQL está disponible, iniciando la aplicación...'
+        npm run dev 
+      "
+    # command: npm run dev # para desarrollo
+    # command: npm run start # para producción
     restart: unless-stopped
     networks:
       - conexus-hub-network

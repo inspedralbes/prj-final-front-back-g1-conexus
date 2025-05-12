@@ -169,7 +169,9 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useAppStore } from '@/stores/index.js';
 
+const store = useAppStore();
 const router = useRouter();
 const route = useRoute();
 const isSidebarOpen = ref(false);
@@ -179,8 +181,10 @@ const toggleSidebar = () => {
 };
 
 const logout = () => {
-    // Aquí hauries de fer la lògica per tancar sessió
-    localStorage.removeItem('token');
+    store.setAccessToken('');
+    store.setUser({});
+    localStorage.removeItem('user');
+    localStorage.removeItem('accessToken');
     router.push('/');
 };
 

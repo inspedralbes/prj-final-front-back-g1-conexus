@@ -1,0 +1,106 @@
+version: '3.8'
+
+services:
+  conexus-hub-back:
+    build:
+      context: back-node/node
+      dockerfile: prod.Dockerfile
+    env_file:
+      - .env
+    # volumes:
+    #   - ./back-node/node:/app
+    #   - conexus-hub-image:/app/images
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+      - "3002:3002"
+      - "3003:3003"
+      - "3004:3004"
+      - "3005:3005"
+      - "3006:3006"
+    depends_on:
+      conexus-hub-mysql:
+        condition: service_healthy
+    networks:
+      - conexus-hub-network
+    # restart: always
+
+  conexus-hub-front:
+    build:
+      context: ./front-vue
+      dockerfile: prod.Dockerfile
+    restart: always
+    ports:
+      - "8080:80"
+    networks:
+      - conexus-hub-network
+
+  conexus-hub-mysql:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=conexus-hub
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./back-node/data/create_db.sql:/docker-entrypoint-initdb.d/create.sql
+      - ./back-node/data/insert_db.sql:/docker-entrypoint-initdb.d/inserts.sql
+    networks:
+      - conexus-hub-network
+    restart: always
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 30s
+      retries: 3
+      start_period: 30s
+      timeout: 10s
+
+  conexus-hub-adminer:
+    image: adminer
+    ports:
+      - "8081:8080"
+    environment:
+      ADMINER_DEFAULT_SERVER: conexus-hub-mysql
+    restart: always
+    networks:
+      - conexus-hub-network
+    depends_on:
+      - conexus-hub-mysql
+  # conexus-hub-mongo:
+  #   image: mongo
+  #   restart: always
+  #   ports:
+  #     - "27017:27017"
+  #   environment:
+  #     - MONGO_INITDB_ROOT_USERNAME=root
+  #     - MONGO_INITDB_ROOT_PASSWORD=conexus
+  #   networks:
+  #     - conexus-hub-network
+  #   volumes:
+  #     - mongo-data:/data/db
+
+  # mongo-express:
+  #   image: mongo-express
+  #   restart: always
+  #   ports:
+  #     - "3007:8081"
+  #   environment:
+  #     - ME_CONFIG_MONGODB_ADMINUSER=root
+  #     - ME_CONFIG_MONGODB_ADMINPASS=conexus
+  #     - ME_CONFIG_MONGODB_SERVER=conexus-hub-mongo
+  #   depends_on:
+  #     - conexus-hub-mongo
+  #   networks:
+  #     - conexus-hub-network
+
+volumes:
+  conexus-hub-image:
+  mysql-data:
+  portainer_data:
+    # mongo-data:
+
+
+networks:
+  conexus-hub-network:
+    driver: bridge

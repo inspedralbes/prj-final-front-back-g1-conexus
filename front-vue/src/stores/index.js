@@ -2,18 +2,12 @@ import { defineStore } from 'pinia';
 
 export const useAppStore = defineStore('appStore', {
   state: () => ({
-    user: {
-      name: '',
-      email: '',
-      password: '',
-      profile: '',
-      department_id: null,
-      description: '',
-      typesUsers_id: null,
-      id: null,
-    },
-    accessToken: '',
+    user: {},
+    accessToken: localStorage.getItem('accessToken') || '',
   }),
+  getters: {
+    isAuthenticated: (state) => !!state.accessToken && !!state.user,
+  },
   actions: {
     setUser(user) {
       this.user = user;
@@ -25,12 +19,17 @@ export const useAppStore = defineStore('appStore', {
       return this.user;
     },
     getTypeUser() {
-      return this.user.typesUsers_id;
+      return this.user.typeusers?.id || null;
     },
     getUserId() {
       return this.user.id;
     },
     getAccessToken() {
       return this.accessToken;
+    },
+    clearUser() {
+      this.user = {};
+      this.accessToken = '';
     }
-}});
+  }
+});
