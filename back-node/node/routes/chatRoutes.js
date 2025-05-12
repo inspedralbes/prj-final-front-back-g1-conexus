@@ -188,11 +188,16 @@ router.post("/:id/message", async (req, res) => {
         // Notificar a través de Socket.io que se ha añadido un mensaje
         const io = getIo(req);
         if (io) {
-            io.to(req.params.id).emit('new_message', {
+            // Asegurarse de que la información del mensaje esté completa
+            const newMessageData = {
                 chatId: req.params.id,
-                interaction: newInteraction,
-                timestamp: new Date()
-            });
+                userId: newInteraction.teacherId,
+                id: newInteraction._id,
+                message: newInteraction.message,
+                timestamp: newInteraction.date
+            };
+
+            io.to(req.params.id).emit('new_message', newMessageData);
         }
 
         res.json(updatedMessage);

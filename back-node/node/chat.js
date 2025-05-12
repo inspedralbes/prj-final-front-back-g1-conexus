@@ -103,17 +103,27 @@ io.on("connection", (socket) => {
             }
 
             const savedMessage = await response.json();
-            const newMessageData = savedMessage.interaction[savedMessage.interaction.length - 1];
+            // Obtener el último mensaje añadido de forma segura
+            const lastInteractionIndex = savedMessage.interaction.length - 1;
+            const newMessageData = lastInteractionIndex >= 0 ? savedMessage.interaction[lastInteractionIndex] : null;
 
-            // Enviar a todos en la sala (incluido el remitente para confirmar)
-            io.to(chatId).emit("new_message", {
-                id: newMessageData._id,
-                chatId,
-                userId,
-                userName,
-                message,
-                timestamp: new Date()
-            });
+            if (newMessageData) {
+                // Enviar a todos en la sala (incluido el remitente para confirmar)
+                io.to(chatId).emit("new_message", {
+                    id: newMessageData._id,
+                    chatId,
+                    userId,
+                    userName,
+                    message,
+                    timestamp: new Date()
+                });
+            } else {
+                console.error("No se pudo obtener el último mensaje guardado");
+                socket.emit("error", {
+                    type: "message_error",
+                    message: "Error al procesar el mensaje guardado"
+                });
+            }
         } catch (error) {
             console.error("Error al guardar mensaje:", error);
             socket.emit("error", {

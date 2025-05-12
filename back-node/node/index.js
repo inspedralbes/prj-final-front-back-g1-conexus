@@ -74,7 +74,7 @@ if (process.env.NODE_ENV === 'development') {
     console.log('Iniciando servicios en modo producción...');
 }
 
-startAllServices();
+// startAllServices();
 
 // Rutas para gestionar los servicios
 app.get("/api/services", (req, res) => {
@@ -126,7 +126,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 app.use("/api/chat", chatRoutes);
 
-startAllServices();
+// startAllServices();
 
 // Rutas para gestionar los servicios
 app.get("/api/services", (req, res) => {
@@ -180,3 +180,5 @@ sequelize.sync().then(() => {
         console.log(`Para gestionar servicios, usa las rutas /api/services/`);
     });
 });
+
+console.log("Seaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaao", PORT);

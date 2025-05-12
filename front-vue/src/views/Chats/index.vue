@@ -60,17 +60,26 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, nextTick } from "vue";
+import { ref, onMounted, onUnmounted, nextTick, computed } from "vue";
 import io from "socket.io-client";
 import chatManager from "@/services/communicationsScripts/chatsComManager";
+import { useAppStore } from "@/stores";
+
+// Obtener el store de la aplicación
+const appStore = useAppStore();
 
 // Variables del chat
 const socket = ref(null);
 const messages = ref([]);
 const newMessage = ref("");
-const currentUserId = ref("101"); // ID de usuario para prueba -
-const otherUserId = ref("202"); // ID de otro usuario para prueba
-const currentUserName = ref("Profesor 101"); // Nombre para prueba
+// Usar datos del usuario actual desde el store
+const currentUserId = computed(() =>
+  appStore.getUserId() ? appStore.getUserId().toString() : null
+);
+const currentUserName = computed(
+  () => appStore.getUser()?.name || appStore.getUser()?.username || "Usuario"
+);
+const isTeacher = computed(() => appStore.getTypeUser() === 1); // Verificar si es profesor
 const messagesContainer = ref(null);
 const isConnected = ref(false);
 const isTyping = ref(false);
@@ -83,10 +92,25 @@ const processedMessages = ref(new Set());
 
 // Conectar al socket cuando el componente se monta
 onMounted(async () => {
+  // Verificar si el usuario está autenticado y es profesor
+  if (!currentUserId.value || !isTeacher.value) {
+    console.warn(
+      "No se puede iniciar el chat: usuario no autenticado o no es profesor"
+    );
+    return;
+  }
+
   // Primero intentar obtener los chats existentes o crear uno
   await initializeChat();
-  // Luego conectar al socket
-  connectSocket();
+
+  // Luego conectar al socket si tenemos un chat
+  if (chatId.value) {
+    connectSocket();
+  } else {
+    console.warn(
+      "No se pudo obtener o crear un chat. No se conectará al socket."
+    );
+  }
 });
 
 // Limpiar cuando el componente se desmonta
@@ -97,13 +121,32 @@ onUnmounted(() => {
 // Inicializar el chat (obtener o crear uno)
 const initializeChat = async () => {
   try {
+    // Verificar si el usuario está autenticado y es profesor
+    if (!currentUserId.value || !isTeacher.value) {
+      console.warn(
+        "No hay usuario autenticado o no es profesor. Usuario:",
+        appStore.getUser()
+      );
+      return;
+    }
+
+    console.log("Inicializando chat como profesor. ID:", currentUserId.value);
+
     // Intentar obtener chats existentes
     const chats = await chatManager.getAllChats();
     console.log("Chats existentes:", chats);
 
-    if (chats && chats.length > 0) {
-      // Usar el primer chat disponible
-      chatId.value = chats[0]._id;
+    // Filtrar chats donde este profesor participa
+    const myChats = chats.filter(
+      (chat) =>
+        chat.teachers && chat.teachers.includes(parseInt(currentUserId.value))
+    );
+
+    console.log("Mis chats como profesor:", myChats);
+
+    if (myChats && myChats.length > 0) {
+      // Usar el primer chat donde participa este profesor
+      chatId.value = myChats[0]._id;
       console.log("Usando chat existente:", chatId.value);
 
       // Cargar mensajes existentes
@@ -112,7 +155,6 @@ const initializeChat = async () => {
 
       if (chatData && chatData.interaction && chatData.interaction.length > 0) {
         console.log("Cargando mensajes del historial:", chatData.interaction);
-        console.log("Usuario actual:", currentUserId.value);
 
         // Convertir los mensajes al formato esperado
         messages.value = chatData.interaction.map((msg) => {
@@ -140,19 +182,31 @@ const initializeChat = async () => {
         );
       }
     } else {
-      // Crear un nuevo chat si no hay ninguno
-      console.log(
-        "No se encontraron chats, creando uno nuevo entre dos profesores"
-      );
+      // Si no hay chats donde participe este profesor, buscar otros profesores para crear un chat
+      try {
+        // Aquí se podría hacer una llamada a la API para obtener otros profesores
+        // Por ahora, creamos un chat con otro ID genérico (simulación)
+        const otherTeacherId = parseInt(currentUserId.value) + 1; // Simulación de otro profesor
 
-      const newChat = await chatManager.createChat({
-        name: `Chat profesores ${currentUserId.value} y ${otherUserId.value}`,
-        teachers: [parseInt(currentUserId.value), parseInt(otherUserId.value)], // Usar IDs de profesores como números
-        interaction: [],
-      });
+        console.log(
+          "No se encontraron chats, creando uno nuevo entre profesores",
+          {
+            currentUserId: currentUserId.value,
+            otherTeacherId,
+          }
+        );
 
-      chatId.value = newChat._id;
-      console.log("Nuevo chat creado:", newChat);
+        const newChat = await chatManager.createChat({
+          name: `Chat profesores ${currentUserId.value} y ${otherTeacherId}`,
+          teachers: [parseInt(currentUserId.value), otherTeacherId],
+          interaction: [],
+        });
+
+        chatId.value = newChat._id;
+        console.log("Nuevo chat creado:", newChat);
+      } catch (createError) {
+        console.error("Error al crear nuevo chat:", createError);
+      }
     }
   } catch (error) {
     console.error("Error al inicializar el chat:", error);
@@ -162,6 +216,12 @@ const initializeChat = async () => {
 // Conectar al servidor de socket.io
 const connectSocket = () => {
   try {
+    // Verificar que tenemos los datos necesarios
+    if (!currentUserId.value) {
+      console.error("No se puede conectar al socket: falta ID de usuario");
+      return;
+    }
+
     // Iniciar conexión con socket.io
     socket.value = io("http://localhost:3007", {
       reconnection: true,
@@ -220,7 +280,11 @@ const setupSocketEventHandlers = () => {
     let messageData = null;
 
     // Si el mensaje tiene una estructura completa (viene del backend directamente)
-    if (data.interaction) {
+    if (
+      data.interaction &&
+      Array.isArray(data.interaction) &&
+      data.interaction.length > 0
+    ) {
       // Tome el último mensaje de la interacción
       const lastInteraction = data.interaction[data.interaction.length - 1];
       messageData = {
@@ -237,8 +301,12 @@ const setupSocketEventHandlers = () => {
         message: data.message,
         timestamp: data.timestamp || new Date(),
       };
-    } else if (data.chatId && data.interaction) {
-      // Otra estructura posible
+    } else if (
+      data.chatId &&
+      data.interaction &&
+      !Array.isArray(data.interaction)
+    ) {
+      // Si interaction es un solo objeto (no un array)
       const msg = data.interaction;
       messageData = {
         id: msg._id || Date.now().toString(),
@@ -355,6 +423,11 @@ const disconnectSocket = () => {
 
 // Enviar mensaje
 const sendMessage = async () => {
+  if (!currentUserId.value) {
+    console.error("No se puede enviar mensaje: usuario no autenticado");
+    return;
+  }
+
   if (newMessage.value.trim() && isConnected.value && chatId.value) {
     try {
       // Crear datos del mensaje para mostrar localmente
@@ -669,6 +742,7 @@ input {
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 4px;
+  color: #000;
 }
 
 input:disabled {
