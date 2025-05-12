@@ -58,3 +58,21 @@ export const createLostObject = async (lostObjectData) => {
         throw error;
     }
 };
+
+
+export const deleteLostObject = async (id) => {
+    try {
+        const response = await fetch(`${API_URL}api/lost-objects/${id}`, {
+            method: 'DELETE',
+        });
+        
+        if (response.status === 204) {
+            return true;
+        }
+        
+        return await handleResponse(response);
+    } catch (error) {
+        console.error(`Error deleting lost object ${id}:`, error);
+        throw error;
+    }
+};
