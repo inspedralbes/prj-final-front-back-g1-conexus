@@ -1,5 +1,5 @@
 <template>
-    <div class="animate-fade-in mt-9">
+    <div class="animate-fade-in mt-9 mb-9">
         <!-- Encabezado -->
         <div class="mb-8 text-center">
             <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
