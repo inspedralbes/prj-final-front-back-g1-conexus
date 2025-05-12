@@ -83,7 +83,7 @@ router.delete("/:id", async (req, res) => {
     }
   }
 });
-
+//assign teacher to course
 router.post("/assingTeacher", async (req, res) => {
   try {
     const { course_id, teacher_id } = req.body;
@@ -111,6 +111,34 @@ router.get("/teacher/:teacher_id", async (req, res) => {
       where: { course_teacher_id: teacher_id },
     });
     res.json(courses);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Get all courses without a teacher 
+router.put("/withoutTeacher", async (req, res) => {
+  try {
+    const courses = await Course.findAll({
+      where: { course_teacher_id: null },
+    });
+    res.json(courses);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// desassign teacher from course
+router.post("/desassignTeacher", async (req, res) => {
+  try {
+    const { course_id } = req.body;
+    const course = await Course.findByPk(course_id);
+    if (!course) {
+      return res.status(404).json({ message: "Course not found" });
+    }
+    course.course_teacher_id = null;
+    await course.save();
+    res.json(course);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

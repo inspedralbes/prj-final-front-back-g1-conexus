@@ -31,6 +31,7 @@
                             tècnic</router-link>
                     </template>
 
+                    
                     <!-- Perfil y cerrar sesión -->
                     <div class="relative">
                         <button @click="toggleDropdown"
