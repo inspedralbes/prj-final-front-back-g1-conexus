@@ -5,6 +5,7 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import { generateToken, verifyTokenMiddleware } from "../token.js";
+import TypeUser from "../models/TypeUser.js";
 
 const router = express.Router();
 
@@ -55,6 +56,36 @@ router.get("/:id", async (req, res) => {
         const { id } = req.params;
         const user = await User.findByPk(id);
 
+        if (!user) {
+            return res.status(404).json({ message: "Usuario no encontrado" });
+        }
+
+        res.json(user);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Obtener un usuario por email
+router.post("/email", verifyTokenMiddleware, async (req, res) => {
+    try {
+        const { email } = req.body;
+        console.log(email);
+        
+        // Obtener el usuario con su tipo de usuario
+        const user = await User.findOne({ 
+            where: { email },
+            include: [
+                {
+                    model: TypeUser,
+                    as: 'typeusers',
+                    attributes: ['id', 'name']
+                }
+            ]
+        });
+        
+        console.log(user);
+        
         if (!user) {
             return res.status(404).json({ message: "Usuario no encontrado" });
         }
@@ -120,6 +151,7 @@ router.delete("/:id", async (req, res) => {
     }
 });
 
+// Login de usuario
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
 

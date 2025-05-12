@@ -17,6 +17,36 @@ export const getTypeUsers = async () => {
     }
 };
 
+export const getUserByEmail = async (email) => {
+    try {
+        const response = await fetch(`${BACK_URL}api/user/email`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                },
+                body: JSON.stringify({ email }),
+            }
+        );
+        
+        if (!response.ok) {
+            if (response.status === 404) {
+                return { error: "Correu electrònic no trobat." };
+            } else {
+                return { error: "Error inesperat. Proba a registrar-te més tard." };
+            }
+        }
+
+        const data = await response.json();
+        console.log("Response:", data);
+        return data;
+    } catch (error) {
+        console.error("Network error:", error);
+        return { error: "Network error. Please try again later." };
+    }
+};
+
 export const register = async (user) => {
     try {
         const response = await fetch(`${BACK_URL}api/user/`, {

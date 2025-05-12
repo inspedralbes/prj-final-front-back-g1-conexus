@@ -198,12 +198,13 @@
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import { initializeApp } from "firebase/app";
 import { useAppStore } from '@/stores/index.js';
 import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { login, getTypeUsers, register } from '@/services/communicationsScripts/mainManager.js';
 
-// Estado para los roles disponibles
+const router = useRouter(); 
 const availableRoles = ref([]);
 const loadingRoles = ref(true);
 
@@ -317,6 +318,8 @@ const signInWithGoogle = async (action) => {
 
             localStorage.setItem("user", JSON.stringify(user.email));
             localStorage.setItem("accessToken", response.accessToken);
+
+            redirectUserBasedOnRole(user);
         } else {
             // Lógica para registro
             if (!checkEmailType(userAPIs.email)) {
@@ -366,6 +369,31 @@ const completeRegistration = async (roleId = null) => {
         messageType.value = "success";
 
         pendingRegistration.value = null;
+
+        // Comprobar si tenemos una respuesta con usuario y token de acceso
+        if (response.userLogin && response.accessToken) {
+            let user = response.userLogin;
+            
+            // Procesar la URL del perfil si es necesario
+            if (user.profile && user.profile.includes("/upload/", 0)) {
+                user.profile = `${import.meta.env.VITE_BACKEND_URL}${user.profile}`;
+            }
+            
+            // Guardar datos en el store
+            useAppStore().setAccessToken(response.accessToken);
+            useAppStore().setUser(user);
+
+            // Guardar en localStorage
+            localStorage.setItem("user", JSON.stringify(user.email));
+            localStorage.setItem("accessToken", response.accessToken);
+            
+            // Redirigir al usuario
+            redirectUserBasedOnRole(user);
+        } else {
+            // Si no hay datos de usuario y token, simplemente mostrar mensaje de éxito
+            // El usuario tendrá que iniciar sesión manualmente
+            console.log("Registro exitoso, pero sin inicio de sesión automático");
+        }
     } catch (error) {
         message.value = "Error en completar el registre: " + error.message;
         messageType.value = "error";
@@ -409,9 +437,50 @@ const signInWithApp = async () => {
 
         localStorage.setItem("user", JSON.stringify(user.email));
         localStorage.setItem("accessToken", response.accessToken);
+
+        redirectUserBasedOnRole(user);
     } catch (error) {
         message.value = "S'ha produït un error en connectar amb el servidor. Torna a intentar-ho més tard.";
         messageType.value = "error";
+    }
+};
+
+const redirectUserBasedOnRole = (user) => {
+    // Intentar obtener el rol del usuario de diferentes formas
+    let userRole = '';
+    
+    // Si tenemos typeusers completo con nombre
+    if (user?.typeusers?.name) {
+        userRole = user.typeusers.name;
+    }
+    // Si solo tenemos el ID del tipo de usuario
+    else if (user?.typeUsers_id) {
+        // Buscar en availableRoles el nombre que corresponde a este ID
+        const roleObj = availableRoles.value.find(role => role.id === user.typeUsers_id);
+        if (roleObj) {
+            userRole = roleObj.name;
+        }
+    }
+    
+    console.log('Redirigiendo usuario con rol:', userRole);
+
+    switch (userRole) {
+        case 'Administrador':
+            router.push('/admin');
+            break;
+        case 'Professor':
+            router.push('/teachers');
+            break;
+        case 'Estudiant':
+            router.push('/students');
+            break;
+        case 'Tècnic':
+            router.push('/technicians');
+            break;
+        default:
+            console.error('No se pudo determinar un rol válido para el usuario:', user);
+            router.push('/');
+            break;
     }
 };
 
@@ -422,66 +491,61 @@ const checkEmailType = (email) => {
 </script>
 
 <style scoped>
-    .animate-fade-in {
-        animation: fadeIn 0.6s ease-out forwards;
-    }
+.animate-fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+}
 
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(12px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    /* Animaciones para el diálogo */
-    .fade-enter-active,
-    .fade-leave-active {
-        transition: opacity 0.3s ease;
-    }
-
-    .fade-enter-from,
-    .fade-leave-to {
+@keyframes fadeIn {
+    from {
         opacity: 0;
+        transform: translateY(12px);
     }
 
-    .pop-enter-active,
-    .pop-leave-active {
-        transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
+}
 
-    .pop-enter-from,
-    .pop-leave-to {
-        opacity: 0;
-        transform: scale(0.9) translateY(10px);
-    }
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.3s ease;
+}
 
-/* Transicions suaus */
-    button,
-    input,
-    a {
-        transition: all 0.2s ease;
-    }
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}
 
-    /* Efecte hover per als botons */
-    button:hover {
-        transform: translateY(-1px);
-    }
+.pop-enter-active,
+.pop-leave-active {
+    transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
 
-    /* Estilo para el checkbox personalizado */
-    input[type="checkbox"] {
-        appearance: none;
-        -webkit-appearance: none;
-        @apply border border-slate-700 rounded bg-slate-800/60 w-4 h-4 cursor-pointer;
-    }
+.pop-enter-from,
+.pop-leave-to {
+    opacity: 0;
+    transform: scale(0.9) translateY(10px);
+}
 
-    input[type="checkbox"]:checked {
-        background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M5.707 7.293a1 1 0 0 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0-1.414-1.414L7 8.586 5.707 7.293z'/%3e%3c/svg%3e");
-        @apply bg-blue-600 border-blue-600 bg-center bg-no-repeat bg-[length:80%];
-    }
+button,
+input,
+a {
+    transition: all 0.2s ease;
+}
 
+button:hover {
+    transform: translateY(-1px);
+}
+
+input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    @apply border border-slate-700 rounded bg-slate-800/60 w-4 h-4 cursor-pointer;
+}
+
+input[type="checkbox"]:checked {
+    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M5.707 7.293a1 1 0 0 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0-1.414-1.414L7 8.586 5.707 7.293z'/%3e%3c/svg%3e");
+    @apply bg-blue-600 border-blue-600 bg-center bg-no-repeat bg-[length:80%];
+}
 </style>

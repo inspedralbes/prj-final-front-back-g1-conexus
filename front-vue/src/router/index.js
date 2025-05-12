@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAppStore } from '@/stores/index.js'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -6,12 +7,19 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => import('@/views/index.vue')
+      component: () => import('@/views/index.vue'),
+      meta: {
+        requiresAuth: false,
+      },
     },
     {
       path: '/students',
       name: 'student',
       component: () => import('@/views/Students/index.vue'),
+      meta: {
+        requiresAuth: true,
+        allowedRoles: ['Estudiant'],
+      },
       children: [
         {
           path: 'incidents',
@@ -45,6 +53,10 @@ const router = createRouter({
       path: '/teachers',
       name: 'teacher',
       component: () => import('@/views/Teachers/index.vue'),
+      meta: {
+        requiresAuth: true,
+        allowedRoles: ['Professor'],
+      },
       children: [
         {
           path: 'canteen',
@@ -107,6 +119,10 @@ const router = createRouter({
       path: '/technicians',
       name: 'technicians',
       component: () => import('@/views/Technicians/index.vue'),
+      meta: {
+        requiresAuth: true,
+        allowedRoles: ['Tècnic'],
+      },
       children: [
         {
           path: 'canteen',
@@ -144,6 +160,10 @@ const router = createRouter({
       path: '/admin',
       name: 'admin',
       component: () => import('@/views/Admin/index.vue'),
+      meta: {
+        requiresAuth: true,
+        allowedRoles: ['Administrador'],
+      },
       children: [
         {
           path: 'config-users',
@@ -181,9 +201,73 @@ const router = createRouter({
           component:()=>import('@/views/Admin/courses.vue')
         }
       ]
-
+    },
+    {
+      path: '/unauthorized',
+      name: 'Unauthorized',
+      component: () => import('@/views/errors/Unauthorized.vue'),
+      meta: { requiresAuth: false }
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'NotFound',
+      component: () => import('@/views/errors/NotFound.vue'),
+      meta: { requiresAuth: false }
     }
   ],
 })
+
+router.beforeEach((to, from, next) => {
+  const store = useAppStore();
+  const isAuthenticated = !!store.getAccessToken();
+  
+  console.log('Navegando a:', to.path);
+  console.log('¿Usuario autenticado?:', isAuthenticated);
+  
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    console.log('Usuario no autenticado, redirigiendo a login');
+    next({ name: 'home' });
+    return;
+  }
+  
+  if (isAuthenticated && to.meta.allowedRoles && to.meta.allowedRoles.length > 0) {
+    const user = store.getUser();
+    console.log('Datos de usuario:', user);
+    
+    let userRole = '';
+    
+    if (!user || Object.keys(user).length === 0) {
+      console.log('Usuario autenticado pero sin datos de rol. Redirigiendo a home para re-autenticación');
+      store.clearAuthData();
+      next({ name: 'home' });
+      return;
+    }
+    
+    if (user?.typeusers?.name) {
+      userRole = user.typeusers.name;
+    } else if (user?.typeUsers_id) {
+      switch (Number(user.typeUsers_id)) {  
+        case 1: userRole = 'Professor'; break;
+        case 2: userRole = 'Estudiant'; break;
+        case 3: userRole = 'Administrador'; break;
+        case 4: userRole = 'Tècnic'; break;
+        case 5: userRole = 'Cantina'; break;
+      }
+    }
+    
+    console.log('Rol del usuario:', userRole);
+    console.log('Roles permitidos para esta ruta:', to.meta.allowedRoles);
+    
+    const hasPermission = to.meta.allowedRoles.includes(userRole);
+    console.log('¿Tiene permiso?:', hasPermission);
+    
+    if (!hasPermission) {
+      console.log('Usuario no autorizado, redirigiendo a página de unauthorized');
+      next({ name: 'Unauthorized' });
+      return;
+    }
+  }
+  next();
+});
 
 export default router
