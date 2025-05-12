@@ -113,7 +113,7 @@
   <div v-if="showModal" class="fixed inset-0 flex items-center justify-center z-50">
       <div class="fixed inset-0 bg-black opacity-50" @click="closeModal"></div>
       <div class="bg-white p-6 rounded-lg shadow-lg z-10 w-full max-w-md">
-          <h2 class="text-xl font-bold mb-4">Cambiar rol de usuario</h2>
+          <h2 class="text-xl font-bold mb-4 text-gray-700">Cambiar rol de usuario</h2>
           
           <div v-if="modalError" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
               {{ modalError }}
@@ -124,14 +124,14 @@
           </div>
           
           <div class="mb-4">
-              <p class="mb-2"><strong>Usuario:</strong> {{ selectedUser?.name }}</p>
-              <p class="mb-2"><strong>Rol actual:</strong> {{ selectedUser ? getRoleName(selectedUser.typeUsers_id) : '' }}</p>
+              <p class="mb-2 text-gray-700"><strong>Usuario:</strong> {{ selectedUser?.name }}</p>
+              <p class="mb-2 text-gray-700"><strong>Rol actual:</strong> {{ selectedUser ? getRoleName(selectedUser.typeUsers_id) : '' }}</p>
               
               <div class="mt-4">
                   <label class="block text-gray-700 mb-2">Nuevo rol:</label>
                   <select 
                       v-model="newRoleId" 
-                      class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                      class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 text-gray-700"
                   >
                       <option v-for="type in typeUsers" :key="type.id" :value="type.id">
                           {{ type.name }}
