@@ -121,7 +121,6 @@ export const getNotFinishedReports = async () => {
     }
 };
 
-
 export const assignReport = async (reportId, userId) => {
     try {
         const response = await fetch(`${API_URL}api/reports/${reportId}/assign`, {
@@ -136,5 +135,16 @@ export const assignReport = async (reportId, userId) => {
     catch (error) {
         console.error(`Error assigning report ${reportId} to user ${userId}:`, error);
         throw error;
+    }
+};
+
+// Get report statistics
+export const getReportStats = async () => {
+    try {
+        const response = await fetch(`${API_URL}api/reports/stats/count`);
+        return await handleResponse(response);
+    } catch (error) {
+        console.error('Error fetching report stats:', error);
+        return { total: 0, pending: 0, resolved: 0 };
     }
 };

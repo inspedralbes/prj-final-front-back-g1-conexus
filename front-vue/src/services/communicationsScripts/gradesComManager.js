@@ -113,3 +113,22 @@ export const updateGrade = async (user_id, grade, task_id) => {
         console.error('Error updating grade:', error);
     }
 }
+
+export const getCourseStats = async () => {
+    try {
+        const response = await fetch(`${BACK_URL}api/courses/stats/count`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching course stats:', error);
+        return { total: 0, createdThisMonth: 0 };
+    }
+};

@@ -200,7 +200,7 @@ router.get("/teachers/:department_id", verifyTokenMiddleware, async (req, res) =
 });
 
 // Get stats: total users and users registered today
-router.get("/stats/count", verifyTokenMiddleware, async (req, res) => {
+router.get("/stats/count", async (req, res) => {
     try {
         // Get total count of users
         const totalUsers = await User.count();

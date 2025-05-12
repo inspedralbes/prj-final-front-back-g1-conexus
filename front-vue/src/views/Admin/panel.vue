@@ -16,8 +16,8 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <h3 class="text-lg font-semibold text-gray-300">Usuarios</h3>
-                        <p class="text-3xl font-bold mt-2">1,248</p>
-                        <p class="text-sm text-gray-400 mt-1">+12 nuevos hoy</p>
+                        <p class="text-3xl font-bold mt-2">{{ userStats.total || 0 }}</p>
+                        <p class="text-sm text-gray-400 mt-1">+{{ userStats.registeredToday || 0 }} nuevos hoy</p>
                     </div>
                     <div class="p-3 rounded-full bg-blue-500/20">
                         <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -41,8 +41,8 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <h3 class="text-lg font-semibold text-gray-300">Aulas</h3>
-                        <p class="text-3xl font-bold mt-2">56</p>
-                        <p class="text-sm text-gray-400 mt-1">3 en mantenimiento</p>
+                        <p class="text-3xl font-bold mt-2">{{ roomStats.total || 0 }}</p>
+                        <p class="text-sm text-gray-400 mt-1">{{ roomStats.maintenance || 0 }} en mantenimiento</p>
                     </div>
                     <div class="p-3 rounded-full bg-purple-500/20">
                         <svg class="w-8 h-8 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -66,8 +66,8 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <h3 class="text-lg font-semibold text-gray-300">Incidencias</h3>
-                        <p class="text-3xl font-bold mt-2">24</p>
-                        <p class="text-sm text-gray-400 mt-1">5 sin resolver</p>
+                        <p class="text-3xl font-bold mt-2">{{ reportStats.total || 0 }}</p>
+                        <p class="text-sm text-gray-400 mt-1">{{ reportStats.pending || 0 }} sin resolver</p>
                     </div>
                     <div class="p-3 rounded-full bg-red-500/20">
                         <svg class="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -91,8 +91,8 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <h3 class="text-lg font-semibold text-gray-300">Objetos Perdidos</h3>
-                        <p class="text-3xl font-bold mt-2">18</p>
-                        <p class="text-sm text-gray-400 mt-1">2 nuevos hoy</p>
+                        <p class="text-3xl font-bold mt-2">{{ lostObjectStats.total || 0 }}</p>
+                        <p class="text-sm text-gray-400 mt-1">{{ lostObjectStats.reportedToday || 0 }} nuevos hoy</p>
                     </div>
                     <div class="p-3 rounded-full bg-yellow-500/20">
                         <svg class="w-8 h-8 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -141,8 +141,8 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <h3 class="text-lg font-semibold text-gray-300">Cursos</h3>
-                        <p class="text-3xl font-bold mt-2">32</p>
-                        <p class="text-sm text-gray-400 mt-1">4 nuevos este mes</p>
+                        <p class="text-3xl font-bold mt-2">{{ courseStats.total || 0 }}</p>
+                        <p class="text-sm text-gray-400 mt-1">{{ courseStats.createdThisMonth || 0 }} nuevos este mes</p>
                     </div>
                     <div class="p-3 rounded-full bg-indigo-500/20">
                         <svg class="w-8 h-8 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -248,6 +248,44 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue';
 import { countUsers } from '@/services/communicationsScripts/mainManager.js';
+import { getRoomsStats } from '@/services/communicationsScripts/roomsManager.js';
+import { getReportStats } from '@/services/communicationsScripts/incidentsManager.js';
+import { getLostObjectStats } from '@/services/communicationsScripts/lostObjectsManager.js';
+import { getCourseStats } from '@/services/communicationsScripts/gradesComManager.js';
 
+// Definir variables reactivas para almacenar las estadísticas
+const userStats = ref({ total: 0, registeredToday: 0 });
+const roomStats = ref({ total: 0, available: 0, maintenance: 0 });
+const reportStats = ref({ total: 0, pending: 0, resolved: 0 });
+const lostObjectStats = ref({ total: 0, reportedToday: 0 });
+const courseStats = ref({ total: 0, createdThisMonth: 0 });
+
+// Función para cargar todos los datos
+const loadAllStats = async () => {
+    try {
+        // Cargar estadísticas de usuarios
+        userStats.value = await countUsers();
+        
+        // Cargar estadísticas de aulas
+        roomStats.value = await getRoomsStats();
+        
+        // Cargar estadísticas de incidencias
+        reportStats.value = await getReportStats();
+        
+        // Cargar estadísticas de objetos perdidos
+        lostObjectStats.value = await getLostObjectStats();
+        
+        // Cargar estadísticas de cursos
+        courseStats.value = await getCourseStats();
+    } catch (error) {
+        console.error("Error loading stats:", error);
+    }
+};
+
+// Cargar los datos cuando el componente se monte
+onMounted(() => {
+    loadAllStats();
+});
 </script>
