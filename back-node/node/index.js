@@ -88,6 +88,31 @@ app.post("/api/services/:serviceName/stop", (req, res) => {
     }
 });
 
+// Endpoint para crear un nuevo servicio
+app.post("/api/services", (req, res) => {
+    const { name, script, description, tech, port, autoStart } = req.body;
+    
+    if (!name || !script) {
+        return res.status(400).json({ success: false, message: "El nombre y el script son obligatorios" });
+    }
+    
+    try {
+        const result = addService(name, script, { 
+            name: description || `Servei ${name}`, 
+            tech: tech || 'Node.js 18.x',
+            port: port || null
+        });
+        
+        if (result.success && autoStart) {
+            startService(name);
+        }
+        
+        res.status(201).json(result);
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
 sequelize.sync().then(() => {
     console.log("Database synced");
     app.listen(PORT, () => {

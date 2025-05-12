@@ -38,7 +38,7 @@ router.get("/", verifyTokenMiddleware, async (req, res) => {
 });
 
 // Crear un nuevo usuario
-router.post("/", verifyTokenMiddleware, upload.single('profile') ,async (req, res) => {
+router.post("/", upload.single('profile') ,async (req, res) => {
     console.log(req.body);
     try {
         const { typeUsers_id, name, email, password, profile } = req.body;
