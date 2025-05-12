@@ -4,6 +4,7 @@ import User from "../models/User.js";
 import Room from "../models/Room.js";
 import multer from 'multer';
 import path from 'path';
+import { Op } from "sequelize";
 
 const router = express.Router();
 
@@ -227,6 +228,37 @@ router.put("/:id/assign", async (req, res) => {
         }
         res.json(updatedReport);
     } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Obtener estadísticas de incidencias (total i sense resoldre)
+router.get("/stats/count", async (req, res) => {
+    try {
+        // Contar totes les incidències
+        const totalReports = await Reports.count();
+        
+        // Contar incidències pendents (no resoltes)
+        const pendingReports = await Reports.count({
+            where: {
+                status: {
+                    [Op.in]: ['pending', 'revising']
+                }
+            }
+        });
+        
+        // Contar incidències resoltes
+        const resolvedReports = await Reports.count({
+            where: { status: 'revised' }
+        });
+        
+        res.json({
+            total: totalReports,
+            pending: pendingReports,
+            resolved: resolvedReports
+        });
+    } catch (error) {
+        console.error("Error al obtener estadísticas de incidencias:", error);
         res.status(500).json({ message: error.message });
     }
 });

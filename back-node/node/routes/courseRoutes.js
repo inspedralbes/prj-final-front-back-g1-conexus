@@ -1,6 +1,7 @@
 import express from "express";
 import Course from "../models/Course.js";
 import User from "../models/User.js";
+import { Op } from "sequelize"; // Añade esta importación al principio
 
 const router = express.Router();
 
@@ -116,11 +117,49 @@ router.get("/teacher/:teacher_id", async (req, res) => {
   }
 });
 
+// Obtener estadísticas de cursos (total y de este mes)
+router.get("/stats/count", async (req, res) => {
+  try {
+    // Contar todos los cursos
+    const totalCourses = await Course.count();
+
+    // Preparar fechas para este mes
+    const today = new Date();
+    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    const endOfMonth = new Date(
+      today.getFullYear(),
+      today.getMonth() + 1,
+      0,
+      23,
+      59,
+      59,
+      999
+    );
+
+    // Contar cursos creados este mes
+    const thisMonthCourses = await Course.count({
+      where: {
+        createdAt: {
+          [Op.between]: [startOfMonth, endOfMonth],
+        },
+      },
+    });
+
+    res.json({
+      total: totalCourses,
+      createdThisMonth: thisMonthCourses,
+    });
+  } catch (error) {
+    console.error("Error al obtener estadísticas de cursos:", error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
 async function checkIfUserIsTeacher(teacher_id) {
-    const user = await User.findByPk(teacher_id);
-    if (!user) {
-        return false;
-    }
-    return user.user_type == 1;
+  const user = await User.findByPk(teacher_id);
+  if (!user) {
+    return false;
+  }
+  return user.user_type == 1;
 }
 export default router;

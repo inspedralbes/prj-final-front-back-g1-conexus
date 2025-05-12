@@ -1,5 +1,6 @@
 import express from "express";
 import LostObjects from "../models/LostObjects.js";
+import { Op } from "sequelize"; // Añade esta importación al principio
 
 const router = express.Router();
 
@@ -80,6 +81,36 @@ router.delete("/:id", async (req, res) => {
     // return 204 indicating the successful deletion
     res.status(204).send();
   } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Obtener estadísticas de objetos perdidos (total i d'avui)
+router.get("/stats/count", async (req, res) => {
+  try {
+    // Contar tots els objectes perduts
+    const totalLostObjects = await LostObjects.count();
+    
+    // Preparar dates per avui
+    const today = new Date();
+    const startOfDay = new Date(today.setHours(0, 0, 0, 0));
+    const endOfDay = new Date(today.setHours(23, 59, 59, 999));
+    
+    // Contar objectes perduts reportats avui
+    const todayLostObjects = await LostObjects.count({
+      where: {
+        createdAt: {
+          [Op.between]: [startOfDay, endOfDay]
+        }
+      }
+    });
+    
+    res.json({
+      total: totalLostObjects,
+      reportedToday: todayLostObjects
+    });
+  } catch (error) {
+    console.error("Error al obtener estadísticas de objetos perdidos:", error);
     res.status(500).json({ message: error.message });
   }
 });
