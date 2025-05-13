@@ -56,7 +56,7 @@
         </router-link>
         <router-link
           to="/teachers/chats"
-          class="flex items-center p-2 text-gray-300 hover:bg-slate-800/50 rounded-lg transition-colors duration-300"
+          class="flex items-center p-2 text-gray-300 hover:bg-slate-800/50 rounded-lg transition-colors duration-300 relative"
         >
           <svg
             class="w-5 h-5 mr-2"
@@ -72,6 +72,12 @@
             />
           </svg>
           <span>Xats</span>
+          <span
+            v-if="unreadCount > 0"
+            class="absolute -top-1 -right-1 px-1.5 py-0.5 bg-red-500 text-white text-xs rounded-full"
+          >
+            {{ unreadCount }}
+          </span>
         </router-link>
         <router-link
           to="/teachers/incidents"
@@ -229,7 +235,7 @@
           </router-link>
           <router-link
             to="/teachers/chats"
-            class="flex items-center text-white hover:text-gray-300 transition-colors duration-300"
+            class="flex items-center text-white hover:text-gray-300 transition-colors duration-300 relative"
           >
             <svg
               class="w-5 h-5 mr-1"
@@ -245,6 +251,12 @@
               />
             </svg>
             Xats
+            <span
+              v-if="unreadCount > 0"
+              class="absolute -top-2 -right-2 px-1.5 py-0.5 bg-red-500 text-white text-xs rounded-full"
+            >
+              {{ unreadCount }}
+            </span>
           </router-link>
           <router-link
             to="/teachers/incidents"
@@ -388,7 +400,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useAppStore } from "@/stores/index.js";
 
@@ -396,6 +408,33 @@ const store = useAppStore();
 const router = useRouter();
 const route = useRoute();
 const isSidebarOpen = ref(false);
+
+// Obtener el contador de mensajes no leídos
+const unreadCount = computed(() => store.getUnreadCount);
+
+// Intervalo para comprobar mensajes no leídos
+const interval = ref(null);
+
+// Comprobar mensajes no leídos periódicamente
+onMounted(() => {
+  // Comprobar al inicio
+  store.updateUnreadMessagesCount();
+  console.log("Teacher view - Initial unread count:", store.getUnreadCount);
+
+  // Configurar intervalo para comprobar regularmente
+  interval.value = setInterval(() => {
+    store.updateUnreadMessagesCount();
+    console.log("Teacher view - Updated unread count:", store.getUnreadCount);
+  }, 2000);
+});
+
+// Limpiar intervalo al desmontar
+onUnmounted(() => {
+  if (interval.value) {
+    clearInterval(interval.value);
+    interval.value = null;
+  }
+});
 
 const toggleSidebar = () => {
   isSidebarOpen.value = !isSidebarOpen.value;

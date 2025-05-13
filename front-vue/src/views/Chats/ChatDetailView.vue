@@ -124,6 +124,9 @@ onMounted(async () => {
 
   // Conectar al socket
   connectSocket();
+
+  // Marcar mensajes como leídos
+  await markMessagesAsRead();
 });
 
 // Observar cambios en el ID del chat
@@ -154,6 +157,9 @@ watch(
           userName: currentUserName.value,
         });
       }
+
+      // Marcar mensajes como leídos para el nuevo chat
+      await markMessagesAsRead();
     }
   }
 );
@@ -219,6 +225,54 @@ const loadChatData = async () => {
 onUnmounted(() => {
   disconnectSocket();
 });
+
+// Función para marcar los mensajes de un chat como leídos
+const markMessagesAsRead = async () => {
+  try {
+    if (!chatId.value || !currentUserId.value) return;
+
+    // Obtener los datos del chat para saber con quién estamos hablando
+    const data = await chatManager.getChatById(chatId.value);
+    if (!data || !data.teachers) return;
+
+    // Identificar al otro usuario en el chat
+    const otherUserId = data.teachers.find(
+      (teacherId) => teacherId !== parseInt(currentUserId.value)
+    );
+
+    if (!otherUserId) return;
+
+    console.log(`Marcando mensajes como leídos para el usuario ${otherUserId}`);
+
+    // Obtener el estado actual de los mensajes no leídos
+    const storageKey = `chat_unread_${currentUserId.value}`;
+    const unreadData = localStorage.getItem(storageKey);
+
+    if (unreadData) {
+      const unreadMessages = JSON.parse(unreadData);
+
+      // Si hay mensajes no leídos de este usuario, marcarlos como leídos
+      if (unreadMessages[otherUserId]) {
+        console.log(
+          `Usuario ${otherUserId} tenía mensajes no leídos, marcando como leídos`
+        );
+        delete unreadMessages[otherUserId];
+
+        // Guardar el nuevo estado
+        localStorage.setItem(storageKey, JSON.stringify(unreadMessages));
+
+        // Actualizar el contador global
+        appStore.updateUnreadMessagesCount();
+        console.log(
+          "Contador de mensajes no leídos actualizado:",
+          appStore.getUnreadCount
+        );
+      }
+    }
+  } catch (error) {
+    console.error("Error al marcar mensajes como leídos:", error);
+  }
+};
 
 // Conectar al servidor de socket.io
 const connectSocket = () => {
