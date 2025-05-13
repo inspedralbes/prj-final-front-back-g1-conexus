@@ -30,6 +30,10 @@ const messageSchema = new mongoose.Schema({
     interaction: {
         type: [interactionSchema],
         default: []
+    },
+    deletedFor: {
+        type: [Number], // IDs de usuarios que han eliminado el chat
+        default: []
     }
 }, {
     timestamps: true, // Añade createdAt y updatedAt

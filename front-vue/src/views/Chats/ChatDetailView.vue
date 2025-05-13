@@ -127,6 +127,9 @@ onMounted(async () => {
 
   // Marcar mensajes como leídos
   await markMessagesAsRead();
+
+  // Emitir evento de chat visto
+  dispatchChatViewEvent("entered");
 });
 
 // Observar cambios en el ID del chat
@@ -137,6 +140,17 @@ watch(
       loading.value = true;
       messages.value = [];
       processedMessages.value.clear();
+
+      // Emitir evento de salida del chat anterior
+      if (oldChatId) {
+        const exitEvent = new CustomEvent("chat-view-exited", {
+          detail: {
+            chatId: oldChatId,
+            userId: currentUserId.value,
+          },
+        });
+        window.dispatchEvent(exitEvent);
+      }
 
       // Desconectar del chat anterior
       if (socket.value && oldChatId) {
@@ -160,6 +174,17 @@ watch(
 
       // Marcar mensajes como leídos para el nuevo chat
       await markMessagesAsRead();
+
+      // Emitir evento de entrada al nuevo chat
+      if (newChatId) {
+        const enterEvent = new CustomEvent("chat-view-entered", {
+          detail: {
+            chatId: newChatId,
+            userId: currentUserId.value,
+          },
+        });
+        window.dispatchEvent(enterEvent);
+      }
     }
   }
 );
@@ -223,7 +248,11 @@ const loadChatData = async () => {
 
 // Limpiar cuando el componente se desmonta
 onUnmounted(() => {
+  // Desconectar socket
   disconnectSocket();
+
+  // Emitir evento de chat no visto
+  dispatchChatViewEvent("exited");
 });
 
 // Función para marcar los mensajes de un chat como leídos
@@ -269,6 +298,16 @@ const markMessagesAsRead = async () => {
         );
       }
     }
+
+    // Asegurarse de que este chat se considera activo
+    // (esto es redundante con el evento dispatchChatViewEvent, pero es una garantía adicional)
+    const chatActiveEvent = new CustomEvent("chat-view-entered", {
+      detail: {
+        chatId: chatId.value,
+        userId: currentUserId.value,
+      },
+    });
+    window.dispatchEvent(chatActiveEvent);
   } catch (error) {
     console.error("Error al marcar mensajes como leídos:", error);
   }
@@ -656,6 +695,26 @@ const retryMessage = async (message, index) => {
       messages.value[index].sending = false;
     }
   }
+};
+
+// Función para emitir eventos de cambio de vista de chat
+const dispatchChatViewEvent = (action) => {
+  if (!chatId.value) return;
+
+  const eventName =
+    action === "entered" ? "chat-view-entered" : "chat-view-exited";
+
+  // Usar CustomEvent para poder enviar datos adicionales
+  const event = new CustomEvent(eventName, {
+    detail: {
+      chatId: chatId.value,
+      userId: currentUserId.value,
+      timestamp: new Date(),
+    },
+  });
+
+  console.log(`Emitiendo evento ${eventName} para chat ${chatId.value}`);
+  window.dispatchEvent(event);
 };
 </script>
 

@@ -35,6 +35,15 @@
           Existentes
         </button>
         <button
+          :class="['tab-button', { active: activeTab === 'unread' }]"
+          @click="activeTab = 'unread'"
+        >
+          No leídos
+          <span v-if="unreadChatsCount > 0" class="badge">{{
+            unreadChatsCount
+          }}</span>
+        </button>
+        <button
           :class="['tab-button', { active: activeTab === 'all' }]"
           @click="activeTab = 'all'"
         >
@@ -129,7 +138,7 @@
 
 <script setup>
 import { ref, onMounted, computed, watch, onUnmounted } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import {
   getAllUsers,
   getAllTypeUsers,
@@ -151,10 +160,13 @@ const userMessages = ref({}); // Para almacenar el último mensaje de cada usuar
 const canteenUserId = ref(null); // Para almacenar el ID del usuario cantina
 const socket = ref(null); // Socket.io connection
 const hasNewMessages = ref({}); // Para marcar chats con mensajes nuevos
+const deletedChats = ref(new Set());
+const activeChats = ref(new Set());
 
 // Obtener el store de la aplicación
 const appStore = useAppStore();
 const router = useRouter();
+const route = useRoute();
 
 // Usuario actual
 const currentUserId = computed(() =>
@@ -208,8 +220,21 @@ const filteredUsers = computed(() => {
 // Usuarios a mostrar según la pestaña seleccionada
 const displayedUsers = computed(() => {
   if (activeTab.value === "existing") {
-    // Solo usuarios con chats existentes
-    return filteredUsers.value.filter((user) => hasExistingChat(user));
+    // Solo usuarios con chats existentes y que no hayan sido eliminados
+    return filteredUsers.value.filter((user) => {
+      const chat = findChatWithUser(user);
+      return chat && !deletedChats.value.has(chat._id);
+    });
+  } else if (activeTab.value === "unread") {
+    // Solo usuarios con mensajes no leídos
+    return filteredUsers.value.filter((user) => {
+      const chat = findChatWithUser(user);
+      return (
+        chat &&
+        !deletedChats.value.has(chat._id) &&
+        hasNewMessages.value[user.id]
+      );
+    });
   } else {
     // Todos los usuarios filtrados
     return filteredUsers.value;
@@ -218,12 +243,8 @@ const displayedUsers = computed(() => {
 
 // Comprobar si hay un chat existente con este usuario
 const hasExistingChat = (user) => {
-  return existingChats.value.some(
-    (chat) =>
-      chat.teachers &&
-      chat.teachers.includes(parseInt(currentUserId.value)) &&
-      chat.teachers.includes(parseInt(user.id))
-  );
+  const chat = findChatWithUser(user);
+  return chat && !deletedChats.value.has(chat._id);
 };
 
 // Métodos
@@ -360,12 +381,7 @@ const selectUser = async (user) => {
     }
 
     // Verificar si ya existe un chat entre estos usuarios
-    const existingChat = existingChats.value.find(
-      (chat) =>
-        chat.teachers &&
-        chat.teachers.includes(parseInt(currentUserId.value)) &&
-        chat.teachers.includes(parseInt(user.id))
-    );
+    const existingChat = findChatWithUser(user);
 
     let chatId;
 
@@ -373,6 +389,13 @@ const selectUser = async (user) => {
       // Usar el chat existente
       chatId = existingChat._id;
       console.log("Usando chat existente:", chatId);
+
+      // Si el chat estaba marcado como eliminado, restaurarlo
+      if (deletedChats.value.has(chatId)) {
+        console.log(`Restaurando chat eliminado: ${chatId}`);
+        deletedChats.value.delete(chatId);
+        saveDeletedChats();
+      }
     } else {
       // Crear un nuevo chat entre estos usuarios
       const newChat = await chatManager.createChat({
@@ -442,42 +465,64 @@ watch(
 // Cargar los chats del usuario actual y extraer los últimos mensajes
 const loadUserChats = async () => {
   try {
-    const chatsResponse = await chatManager.getChatsByUser(
-      parseInt(currentUserId.value)
-    );
-    existingChats.value = chatsResponse;
-    console.log("Chats del usuario cargados:", existingChats.value);
+    // Intentar obtener los chats del usuario primero con getChatsByUser
+    let chatsResponse;
+    try {
+      chatsResponse = await chatManager.getChatsByUser(
+        parseInt(currentUserId.value)
+      );
+    } catch (error) {
+      console.warn(
+        "Error al obtener chats por usuario, intentando con getAllChats:",
+        error
+      );
+      // Si falla, usar getAllChats como alternativa
+      const allChats = await chatManager.getAllChats();
+      chatsResponse = allChats.filter(
+        (chat) =>
+          chat.teachers && chat.teachers.includes(parseInt(currentUserId.value))
+      );
+    }
 
-    // Extraer los últimos mensajes para cada usuario
-    userMessages.value = {};
+    // Si tenemos chats, actualizar la lista pero filtrando los eliminados
+    if (chatsResponse && Array.isArray(chatsResponse)) {
+      // Guardar todos los chats para tener el acceso completo
+      existingChats.value = chatsResponse;
+      console.log("Chats del usuario cargados:", existingChats.value);
 
-    // No reiniciar hasNewMessages para mantener estado de mensajes no leídos
+      // Extraer los últimos mensajes para cada usuario
+      userMessages.value = {};
 
-    for (const chat of existingChats.value) {
-      if (chat.interaction && chat.interaction.length > 0) {
-        // Encontrar el ID del otro usuario
-        const otherUserId = chat.teachers.find(
-          (teacherId) => teacherId !== parseInt(currentUserId.value)
-        );
+      // No reiniciar hasNewMessages para mantener estado de mensajes no leídos
 
-        if (otherUserId) {
-          // Obtener el último mensaje
-          const lastMessage = chat.interaction[chat.interaction.length - 1];
-          userMessages.value[otherUserId] =
-            lastMessage.message.length > 30
-              ? lastMessage.message.substring(0, 30) + "..."
-              : lastMessage.message;
+      for (const chat of existingChats.value) {
+        if (chat.interaction && chat.interaction.length > 0) {
+          // Encontrar el ID del otro usuario
+          const otherUserId = chat.teachers.find(
+            (teacherId) => teacherId !== parseInt(currentUserId.value)
+          );
+
+          if (otherUserId) {
+            // Obtener el último mensaje
+            const lastMessage = chat.interaction[chat.interaction.length - 1];
+            userMessages.value[otherUserId] =
+              lastMessage.message.length > 30
+                ? lastMessage.message.substring(0, 30) + "..."
+                : lastMessage.message;
+          }
         }
       }
+
+      return true; // Indicar que el método se ejecutó correctamente
+    } else {
+      console.warn(
+        "No se pudieron cargar los chats o no hay chats disponibles"
+      );
+      return false;
     }
   } catch (error) {
-    console.error("Error al cargar chats del usuario:", error);
-    // Intentar con el método alternativo como fallback
-    const allChats = await chatManager.getAllChats();
-    existingChats.value = allChats.filter(
-      (chat) =>
-        chat.teachers && chat.teachers.includes(parseInt(currentUserId.value))
-    );
+    console.error("Error grave al cargar chats del usuario:", error);
+    return false;
   }
 };
 
@@ -486,20 +531,24 @@ const deleteUserChat = async (user) => {
     loading.value = true;
 
     // Buscar un chat existente donde participen ambos usuarios
-    const existingChat = existingChats.value.find(
-      (chat) =>
-        chat.teachers &&
-        chat.teachers.includes(parseInt(currentUserId.value)) &&
-        chat.teachers.includes(parseInt(user.id))
-    );
+    const existingChat = findChatWithUser(user);
 
     if (existingChat) {
-      // Eliminar el chat
-      await chatManager.deleteChat(existingChat._id);
-      console.log("Chat eliminado:", existingChat._id);
+      // Marcar el chat como eliminado localmente
+      deletedChats.value.add(existingChat._id);
+      saveDeletedChats();
 
-      // Recargar la lista de chats
-      await loadUserChats();
+      console.log("Chat marcado como eliminado localmente:", existingChat._id);
+
+      // Limpiar el mensaje no leído del usuario si existe
+      if (hasNewMessages.value[user.id]) {
+        hasNewMessages.value[user.id] = false;
+        saveUnreadMessagesState(); // Guardar el cambio en localStorage
+        appStore.updateUnreadMessagesCount(); // Actualizar contador en el store
+      }
+
+      // Forzar actualización de la UI
+      filteredUsers.value = [...filteredUsers.value];
     }
   } catch (error) {
     console.error("Error al eliminar el chat:", error);
@@ -550,6 +599,26 @@ const connectToSocket = () => {
 
     // Escuchar nuevos mensajes
     socket.value.on("new_message", handleNewMessage);
+
+    // Escuchar cuando se crea un nuevo chat
+    socket.value.on("new_chat_created", async (data) => {
+      console.log("Notificación de nuevo chat creado:", data);
+
+      // Comprobar si este chat podría ser relevante para el usuario actual
+      const chatData = await chatManager.getChatById(data.chatId);
+
+      if (
+        chatData &&
+        chatData.teachers &&
+        chatData.teachers.includes(parseInt(currentUserId.value))
+      ) {
+        console.log(
+          "Nuevo chat relevante para este usuario, actualizando lista..."
+        );
+        // Recargar la lista de chats para incluir el nuevo chat
+        await loadUserChats();
+      }
+    });
 
     // Evento de desconexión
     socket.value.on("disconnect", () => {
@@ -612,54 +681,184 @@ const handleNewMessage = (data) => {
       messageInfo.message
     ) {
       // Buscar el chat correspondiente
-      const chat = existingChats.value.find(
-        (c) => c._id === messageInfo.chatId
-      );
+      let chat = existingChats.value.find((c) => c._id === messageInfo.chatId);
 
-      if (chat) {
-        // Encontrar el otro usuario en el chat
-        const otherUserId = chat.teachers.find(
-          (teacherId) => teacherId !== parseInt(currentUserId.value)
+      // Si el chat no existe en nuestra lista, intentar obtenerlo de manera optimizada
+      if (!chat) {
+        console.log(
+          "Recibido mensaje de un chat que no está en la lista. Recuperando inmediatamente..."
         );
 
-        if (otherUserId) {
-          // Actualizar el último mensaje
-          userMessages.value[otherUserId] =
-            messageInfo.message.length > 30
-              ? messageInfo.message.substring(0, 30) + "..."
-              : messageInfo.message;
-
-          // Marcar como nuevo mensaje
-          hasNewMessages.value[otherUserId] = true;
-
-          // Guardar el estado en localStorage
-          saveUnreadMessagesState();
-
-          // Trigger store update after marking new messages
-          appStore.updateUnreadMessagesCount();
+        // Si el chat estaba eliminado localmente, marcarlo como no eliminado
+        if (deletedChats.value.has(messageInfo.chatId)) {
           console.log(
-            "Message marked as unread and store updated, current store count:",
-            appStore.getUnreadCount
+            `Chat ${messageInfo.chatId} estaba eliminado, restaurándolo`
           );
-
-          // Encontrar nombre del usuario que envió el mensaje
-          const sender = users.value.find(
-            (user) => user.id.toString() === otherUserId.toString()
-          );
-          const senderName = sender
-            ? sender.name || sender.username
-            : "Usuario";
-
-          // Solo mostrar notificación si el documento está visible (usuario en la web)
-          if (document.visibilityState === "visible") {
-            showNotification(senderName, messageInfo.message);
-          }
+          deletedChats.value.delete(messageInfo.chatId);
+          saveDeletedChats();
         }
+
+        // Primero, intentar obtener el chat directamente por su ID para una respuesta más rápida
+        chatManager
+          .getChatById(messageInfo.chatId)
+          .then((fetchedChat) => {
+            if (fetchedChat) {
+              console.log("Chat nuevo obtenido directamente:", fetchedChat);
+
+              // Verificar si este chat debe pertenecer al usuario actual
+              if (
+                fetchedChat.teachers &&
+                fetchedChat.teachers.includes(parseInt(currentUserId.value))
+              ) {
+                // Añadir el chat a la lista existente
+                existingChats.value.push(fetchedChat);
+                processNewMessage(fetchedChat, messageInfo);
+
+                // Emitir evento de unión al chat para futuras notificaciones
+                if (socket.value && socket.value.connected) {
+                  socket.value.emit("join_chat", {
+                    chatId: fetchedChat._id,
+                    userId: currentUserId.value,
+                    userName:
+                      appStore.getUser()?.name ||
+                      appStore.getUser()?.username ||
+                      "Usuario",
+                  });
+                  console.log(
+                    `Suscrito a actualizaciones del chat nuevo: ${fetchedChat._id}`
+                  );
+                }
+              }
+            } else {
+              console.error(
+                "No se pudo obtener el chat con ID:",
+                messageInfo.chatId
+              );
+              // Como plan B, recargar todos los chats
+              loadUserChats().catch((err) => {
+                console.error("Error al recargar todos los chats:", err);
+              });
+            }
+          })
+          .catch((err) => {
+            console.error("Error al obtener el chat directo:", err);
+            // Como plan B, recargar todos los chats
+            loadUserChats().catch((err) => {
+              console.error("Error al recargar todos los chats:", err);
+            });
+          });
+      } else {
+        // El chat ya existe en nuestra lista, procesarlo normalmente
+        processNewMessage(chat, messageInfo);
       }
     }
   } catch (error) {
     console.error("Error al procesar notificación de mensaje:", error);
   }
+};
+
+// Función auxiliar para procesar un mensaje nuevo dentro de un chat
+const processNewMessage = (chat, messageInfo) => {
+  // Encontrar el otro usuario en el chat
+  const otherUserId = chat.teachers.find(
+    (teacherId) => teacherId !== parseInt(currentUserId.value)
+  );
+
+  if (otherUserId) {
+    // Si el chat estaba eliminado para este usuario, restaurarlo
+    if (deletedChats.value.has(chat._id)) {
+      console.log(`Chat ${chat._id} restaurado por nuevo mensaje`);
+      deletedChats.value.delete(chat._id);
+      saveDeletedChats();
+    }
+
+    // Actualizar el último mensaje
+    userMessages.value[otherUserId] =
+      messageInfo.message.length > 30
+        ? messageInfo.message.substring(0, 30) + "..."
+        : messageInfo.message;
+
+    // Verificar si el usuario está actualmente viendo este chat
+    const isViewingThisChat = isUserViewingChat(chat._id);
+
+    // Agregar log de depuración
+    console.log(`Procesando mensaje para chat ${chat._id}:`);
+    console.log(
+      `- Usuario en chat detail: ${
+        route.name === "chat-detail" && route.params.chatId === chat._id
+      }`
+    );
+    console.log(
+      `- Chat en lista de activos: ${activeChats.value.has(chat._id)}`
+    );
+    console.log(
+      `- Resultado final: ${
+        isViewingThisChat
+          ? "Mensaje considerado leído"
+          : "Mensaje considerado no leído"
+      }`
+    );
+
+    if (!isViewingThisChat) {
+      // Solo marcar como nuevo mensaje si el usuario no está viendo este chat
+      hasNewMessages.value[otherUserId] = true;
+
+      // Guardar el estado en localStorage
+      saveUnreadMessagesState();
+
+      // Trigger store update after marking new messages
+      appStore.updateUnreadMessagesCount();
+      console.log(
+        "Message marked as unread and store updated, current store count:",
+        appStore.getUnreadCount
+      );
+    } else {
+      console.log(
+        `No marcando mensaje como no leído porque el usuario está viendo el chat ${chat._id}`
+      );
+    }
+
+    // Encontrar nombre del usuario que envió el mensaje
+    const sender = users.value.find(
+      (user) => user.id.toString() === otherUserId.toString()
+    );
+    const senderName = sender ? sender.name || sender.username : "Usuario";
+
+    // Solo mostrar notificación si el documento está visible (usuario en la web)
+    // y el usuario no está viendo este chat
+    if (document.visibilityState === "visible" && !isViewingThisChat) {
+      showNotification(senderName, messageInfo.message);
+    }
+  }
+};
+
+// Función para verificar si el usuario está viendo un chat específico
+const isUserViewingChat = (chatIdToCheck) => {
+  return (
+    // Verificar si está en la ruta de chat detalle con este ID
+    (route.name === "chat-detail" && route.params.chatId === chatIdToCheck) ||
+    // O si está en el array de chats activos
+    activeChats.value.has(chatIdToCheck)
+  );
+};
+
+// Función para escuchar eventos de chat activo
+const setupChatViewListeners = () => {
+  // Cuando un usuario entra a un chat
+  window.addEventListener("chat-view-entered", (event) => {
+    if (event.detail && event.detail.chatId) {
+      console.log(`Chat visto activamente: ${event.detail.chatId}`);
+      activeChats.value.add(event.detail.chatId);
+    }
+  });
+
+  // Cuando un usuario sale de un chat
+  window.addEventListener("chat-view-exited", (event) => {
+    if (event.detail && event.detail.chatId) {
+      console.log(`Chat ya no visto activamente: ${event.detail.chatId}`);
+      activeChats.value.delete(event.detail.chatId);
+    }
+  });
 };
 
 // Función para mostrar notificación
@@ -690,9 +889,85 @@ const showNotification = (senderName, message) => {
   }
 };
 
+// Función auxiliar para encontrar un chat con un usuario específico
+const findChatWithUser = (user) => {
+  return existingChats.value.find(
+    (chat) =>
+      chat.teachers &&
+      chat.teachers.includes(parseInt(currentUserId.value)) &&
+      chat.teachers.includes(parseInt(user.id))
+  );
+};
+
+// Función para cargar chats eliminados desde localStorage
+const loadDeletedChats = () => {
+  try {
+    const savedDeletedChats = localStorage.getItem(
+      `deleted_chats_${currentUserId.value}`
+    );
+    if (savedDeletedChats) {
+      deletedChats.value = new Set(JSON.parse(savedDeletedChats));
+      console.log("Chats eliminados cargados:", Array.from(deletedChats.value));
+    }
+  } catch (error) {
+    console.error("Error al cargar chats eliminados:", error);
+    deletedChats.value = new Set();
+  }
+};
+
+// Función para guardar chats eliminados en localStorage
+const saveDeletedChats = () => {
+  try {
+    localStorage.setItem(
+      `deleted_chats_${currentUserId.value}`,
+      JSON.stringify(Array.from(deletedChats.value))
+    );
+    console.log("Chats eliminados guardados:", Array.from(deletedChats.value));
+  } catch (error) {
+    console.error("Error al guardar chats eliminados:", error);
+  }
+};
+
+// Añadir un computed property para contar mensajes no leídos
+const unreadChatsCount = computed(() => {
+  if (!currentUserId.value) return 0;
+
+  // Contar solo los chats no eliminados que tengan mensajes no leídos
+  let count = 0;
+  filteredUsers.value.forEach((user) => {
+    const chat = findChatWithUser(user);
+    if (
+      chat &&
+      !deletedChats.value.has(chat._id) &&
+      hasNewMessages.value[user.id]
+    ) {
+      count++;
+    }
+  });
+
+  return count;
+});
+
+// Añadir un watcher para actualizar la UI cuando cambie el estado de mensajes no leídos
+watch(
+  hasNewMessages,
+  () => {
+    console.log(
+      "Estado de mensajes no leídos actualizado:",
+      hasNewMessages.value
+    );
+    // Forzar actualización del contador
+    appStore.updateUnreadMessagesCount();
+  },
+  { deep: true }
+);
+
 // Cargar datos
 onMounted(async () => {
   try {
+    // Configurar listeners para cambios en visualización de chat
+    setupChatViewListeners();
+
     // Verificar si el usuario está autenticado
     if (!currentUserId.value) {
       error.value = "Debes iniciar sesión para ver los chats";
@@ -728,6 +1003,9 @@ onMounted(async () => {
     // Cargar estado de mensajes no leídos desde localStorage
     loadUnreadMessagesState();
 
+    // Cargar lista de chats eliminados
+    loadDeletedChats();
+
     // Cargar chats existentes para el usuario actual
     await loadUserChats();
 
@@ -755,6 +1033,10 @@ onUnmounted(() => {
     socket.value.disconnect();
     socket.value = null;
   }
+
+  // Limpiar event listeners
+  window.removeEventListener("chat-view-entered", () => {});
+  window.removeEventListener("chat-view-exited", () => {});
 });
 </script>
 
@@ -837,6 +1119,22 @@ h2 {
 
 .tab-button:hover {
   color: #007bff;
+}
+
+.tab-button .badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  color: white;
+  background-color: #dc3545;
+  border-radius: 9px;
+  margin-left: 5px;
 }
 
 .loading,
