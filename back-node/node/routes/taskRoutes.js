@@ -1,6 +1,7 @@
 import express from "express";
 import Task from "../models/Task.js";
 import Grade from "../models/Grade.js";
+import Course from "../models/Course.js";
 
 const router = express.Router();
 
@@ -27,9 +28,9 @@ router.get("/:id", async (req, res) => {
 // Crear una tasca nova
 router.post("/", async (req, res) => {
     try {
-        const { task_name, course_id,task_description } = req.body;
+        const { task_name, course_id, task_description } = req.body;
         const task_ended = false; // Valor per defecte
-        const newTask = await Task.create({ task_name, course_id,task_description, task_ended });
+        const newTask = await Task.create({ task_name, course_id, task_description, task_ended });
         res.json(newTask);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -122,7 +123,24 @@ router.get("/getAllTasksFromStudentFromCourse/:courseId/:studentId", async (req,
 }
 );
 
-
+export async function getLatestTask() {
+    try {
+        const latestTask = await Task.findOne({
+            order: [['createdAt', 'DESC']],
+            include: [
+                {
+                    model: Course,
+                    attributes: ['course_name']
+                }
+            ]
+        });
+        
+        return latestTask;
+    } catch (error) {
+        console.error("Error al obtener tarea reciente:", error);
+        throw error;
+    }
+}
 
 export default router;
 

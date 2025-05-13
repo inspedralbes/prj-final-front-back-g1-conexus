@@ -548,3 +548,28 @@ export const countUsers = async () => {
         throw error;
     }
 };
+
+export const getLatestActivities = async () => {
+    try {
+        const response = await fetch(`${BACK_URL}api/activities`);
+        
+        // Verificar si la respuesta es exitosa
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error(`Error ${response.status}: ${errorText}`);
+            return { error: `Error del servidor: ${response.status}` };
+        }
+        
+        // Intentar parsear la respuesta como JSON
+        try {
+            const data = await response.json();
+            return data || [];
+        } catch (parseError) {
+            console.error("Error parseando JSON:", parseError);
+            return { error: "La respuesta no es un JSON válido" };
+        }
+    } catch (error) {
+        console.error("Error de red:", error);
+        return { error: "Error de conexión. Comprueba tu red." };
+    }
+};

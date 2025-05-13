@@ -1,6 +1,6 @@
 import express from "express";
 import LostObjects from "../models/LostObjects.js";
-import { Op } from "sequelize"; // Añade esta importación al principio
+import { Op } from "sequelize"; // Añade esta importación al principi
 
 const router = express.Router();
 
@@ -114,5 +114,19 @@ router.get("/stats/count", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
+// Añadir esta función al final del archivo, antes de export default router
+export async function getLatestLostObject() {
+    try {
+        const latestLostObject = await LostObjects.findOne({
+            order: [['createdAt', 'DESC']]
+        });
+        
+        return latestLostObject;
+    } catch (error) {
+        console.error("Error al obtener objeto perdido reciente:", error);
+        throw error;
+    }
+}
 
 export default router;

@@ -1,6 +1,8 @@
 import express from "express";
 import RoomReservation from "../models/RoomReservation.js";
 import { Op } from "sequelize";
+import Room from "../models/Room.js";
+import User from "../models/User.js";  // Si no está ya importado
 const router = express.Router();
 
 // GET /room-reservations - Obtenir totes les reserves d'habitacions
@@ -178,4 +180,29 @@ router.get("/room/:id", async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 });
+
+// Funció per obtenir la última reserva
+export async function getLatestRoomReservation() {
+    try {
+        const latestReservation = await RoomReservation.findOne({
+            order: [['createdAt', 'DESC']],
+            include: [
+                {
+                    model: Room,
+                    attributes: ['room_name']
+                },
+                {
+                    model: User,
+                    attributes: ['name']
+                }
+            ]
+        });
+        
+        return latestReservation;
+    } catch (error) {
+        console.error("Error al obtener reserva reciente:", error);
+        throw error;
+    }
+}
+
 export default router;

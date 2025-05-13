@@ -38,7 +38,7 @@ router.get("/", verifyTokenMiddleware, async (req, res) => {
 });
 
 // Crear un nuevo usuario
-router.post("/", upload.single('profile') ,async (req, res) => {
+router.post("/", upload.single('profile'), async (req, res) => {
     console.log(req.body);
     try {
         const { typeUsers_id, name, email, password, profile } = req.body;
@@ -71,9 +71,9 @@ router.post("/email", verifyTokenMiddleware, async (req, res) => {
     try {
         const { email } = req.body;
         console.log(email);
-        
+
         // Obtener el usuario con su tipo de usuario
-        const user = await User.findOne({ 
+        const user = await User.findOne({
             where: { email },
             include: [
                 {
@@ -83,9 +83,9 @@ router.post("/email", verifyTokenMiddleware, async (req, res) => {
                 }
             ]
         });
-        
+
         console.log(user);
-        
+
         if (!user) {
             return res.status(404).json({ message: "Usuario no encontrado" });
         }
@@ -204,12 +204,12 @@ router.get("/stats/count", async (req, res) => {
     try {
         // Get total count of users
         const totalUsers = await User.count();
-        
+
         // Get today's date boundaries (start and end of day)
         const today = new Date();
         const startOfDay = new Date(today.setHours(0, 0, 0, 0));
         const endOfDay = new Date(today.setHours(23, 59, 59, 999));
-        
+
         // Count users registered today
         const todayUsers = await User.count({
             where: {
@@ -218,7 +218,7 @@ router.get("/stats/count", async (req, res) => {
                 }
             }
         });
-        
+
         res.json({
             total: totalUsers,
             registeredToday: todayUsers
@@ -228,5 +228,28 @@ router.get("/stats/count", async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 });
+
+// Añadir esta función al final del archivo, antes de export default router
+export async function getLatestUser() {
+    try {
+        // No necesitamos verificar token aquí
+        const latestUser = await User.findOne({
+            order: [['createdAt', 'DESC']],
+            attributes: ['id', 'name', 'email', 'typeUsers_id', 'createdAt'],
+            include: [
+                {
+                    model: TypeUser,
+                    as: 'typeusers',
+                    attributes: ['name']
+                }
+            ]
+        });
+        
+        return latestUser;
+    } catch (error) {
+        console.error("Error al obtener usuario reciente:", error);
+        throw error;
+    }
+}
 
 export default router;

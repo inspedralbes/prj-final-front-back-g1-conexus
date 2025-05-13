@@ -22,7 +22,7 @@ const upload = multer({ storage: storage });
 
 // GET /reports - Obtenir tots els informes
 router.get("/", async (req, res) => {
-    try{
+    try {
         const reports = await Reports.findAll({
             include: [
                 {
@@ -42,7 +42,7 @@ router.get("/", async (req, res) => {
             ],
         });
         res.json(reports);
-    }catch (error) {
+    } catch (error) {
         res.status(500).json({ message: error.message });
     }
 });
@@ -144,13 +144,13 @@ router.post("/", upload.single('image'), async (req, res) => {
          * @param {number} reportData.room_id - L'ID de l'habitació associada amb l'informe.
          * @returns {Promise<Object>} L'objecte del nou informe creat.
          */
-        const newReport = await Reports.create({ 
-            user_id, 
-            report, 
-            image, 
-            room_id 
+        const newReport = await Reports.create({
+            user_id,
+            report,
+            image,
+            room_id
         });
-        
+
         res.status(201).json(newReport);
     } catch (error) {
         console.error('Error creating report:', error);
@@ -237,7 +237,7 @@ router.get("/stats/count", async (req, res) => {
     try {
         // Contar totes les incidències
         const totalReports = await Reports.count();
-        
+
         // Contar incidències pendents (no resoltes)
         const pendingReports = await Reports.count({
             where: {
@@ -246,12 +246,12 @@ router.get("/stats/count", async (req, res) => {
                 }
             }
         });
-        
+
         // Contar incidències resoltes
         const resolvedReports = await Reports.count({
             where: { status: 'revised' }
         });
-        
+
         res.json({
             total: totalReports,
             pending: pendingReports,
@@ -262,5 +262,29 @@ router.get("/stats/count", async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 });
+
+export async function getLatestReport() {
+    try {
+        const latestReport = await Reports.findOne({
+            order: [['createdAt', 'DESC']],
+            include: [
+                {
+                    model: User,
+                    as: 'User',
+                    attributes: ['name']
+                },
+                {
+                    model: Room,
+                    attributes: ['room_name']
+                }
+            ]
+        });
+        
+        return latestReport;
+    } catch (error) {
+        console.error("Error al obtener incidencia reciente:", error);
+        throw error;
+    }
+}
 
 export default router;

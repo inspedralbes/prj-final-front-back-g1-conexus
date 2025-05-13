@@ -1,5 +1,5 @@
 import express from "express";
-import Course from "../models/Course.js";
+import Course from "../models/Course.js"; // Verifica la ruta exacta y el nombre
 import User from "../models/User.js";
 import { Op } from "sequelize"; // Añade esta importación al principio
 
@@ -154,6 +154,20 @@ router.get("/stats/count", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
+// Añadir esta función al final del archivo, antes de la función checkIfUserIsTeacher y export default router
+export async function getLatestCourse() {
+    try {
+        const latestCourse = await Course.findOne({
+            order: [['createdAt', 'DESC']]
+        });
+        
+        return latestCourse;
+    } catch (error) {
+        console.error("Error al obtener curso reciente:", error);
+        throw error;
+    }
+}
 
 async function checkIfUserIsTeacher(teacher_id) {
   const user = await User.findByPk(teacher_id);

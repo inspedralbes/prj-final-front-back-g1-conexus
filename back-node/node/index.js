@@ -16,6 +16,13 @@ import typeUserRoutes from "./routes/typeUserRoutes.js";
 import userCourseRoutes from "./routes/userCourseRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import { startService, stopService, startAllServices, stopAllServices, getServiceStatus, getAllServicesStatus } from "./serviceManager.js";
+// Importar las funciones para obtener últimos registros
+import { getLatestUser } from './routes/userRoutes.js';
+import { getLatestCourse } from './routes/courseRoutes.js';
+import { getLatestReport } from './routes/reportRoutes.js';
+import { getLatestLostObject } from './routes/lostObjectRoutes.js';
+import { getLatestRoomReservation } from './routes/roomReservationRoutes.js';
+import { getLatestTask } from './routes/taskRoutes.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -110,6 +117,111 @@ app.post("/api/services", (req, res) => {
         res.status(201).json(result);
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+// Rutas para saber las ultimas actividades
+app.get("/api/activities", async (req, res) => {
+    try {
+        console.log("Obteniendo actividades recientes...");
+        
+        // Array para almacenar los resultados
+        const activities = [];
+        
+        // Obtener las últimas actividades directamente mediante funciones
+        try {
+            const latestUser = await getLatestUser();
+            if (latestUser) {
+                activities.push({
+                    type: "user",
+                    data: latestUser
+                });
+                console.log("Datos de usuario más reciente obtenidos");
+            }
+        } catch (error) {
+            console.error("Error al obtener usuario reciente:", error.message);
+        }
+        
+        try {
+            const latestCourse = await getLatestCourse();
+            if (latestCourse) {
+                activities.push({
+                    type: "course",
+                    data: latestCourse
+                });
+                console.log("Datos de curso más reciente obtenidos");
+            }
+        } catch (error) {
+            console.error("Error al obtener curso reciente:", error.message);
+        }
+        
+        try {
+            const latestReport = await getLatestReport();
+            if (latestReport) {
+                activities.push({
+                    type: "report",
+                    data: latestReport
+                });
+                console.log("Datos de incidencia más reciente obtenidos");
+            }
+        } catch (error) {
+            console.error("Error al obtener incidencia reciente:", error.message);
+        }
+        
+        try {
+            const latestLostObject = await getLatestLostObject();
+            if (latestLostObject) {
+                activities.push({
+                    type: "lostObject",
+                    data: latestLostObject
+                });
+                console.log("Datos de objeto perdido más reciente obtenidos");
+            }
+        } catch (error) {
+            console.error("Error al obtener objeto perdido reciente:", error.message);
+        }
+        
+        try {
+            const latestRoomReservation = await getLatestRoomReservation();
+            if (latestRoomReservation) {
+                activities.push({
+                    type: "roomReservation",
+                    data: latestRoomReservation
+                });
+                console.log("Datos de reserva más reciente obtenidos");
+            }
+        } catch (error) {
+            console.error("Error al obtener reserva reciente:", error.message);
+        }
+        
+        try {
+            const latestTask = await getLatestTask();
+            if (latestTask) {
+                activities.push({
+                    type: "task",
+                    data: latestTask
+                });
+                console.log("Datos de tarea más reciente obtenidos");
+            }
+        } catch (error) {
+            console.error("Error al obtener tarea reciente:", error.message);
+        }
+
+        // Ordenar por fecha más reciente
+        activities.sort((a, b) => {
+            const dateA = new Date(a.data.createdAt || 0);
+            const dateB = new Date(b.data.createdAt || 0);
+            return dateB - dateA;
+        });
+
+        console.log(`Total de actividades obtenidas: ${activities.length}`);
+        res.json(activities);
+    } catch (error) {
+        console.error('Error obteniendo últimas actividades:', error);
+        res.status(500).json({ 
+            message: 'Error obteniendo últimas actividades', 
+            error: error.message 
+        });
     }
 });
 
