@@ -173,11 +173,41 @@ router.post("/", async (req, res) => {
         // Notificar a través de Socket.io que se ha creado un nuevo chat
         const io = getIo(req);
         if (io) {
+            // Identificar el usuario que solicita la creación (primer profesor de la lista o de la cabecera)
+            const requesterId = req.body.requesterId ||
+                (req.body.teachers && req.body.teachers.length > 0 ? req.body.teachers[0] : null);
+
+            console.log(`Chat creado por usuario: ${requesterId}`);
+
+            // Primero, emitir el evento global para todos los clientes conectados
             io.emit('new_chat_created', {
                 chatId: newMessage._id,
                 name: newMessage.name,
-                timestamp: new Date()
+                timestamp: new Date(),
+                teachers: newMessage.teachers, // Incluir los IDs de los profesores
+                requesterId: requesterId // Incluir el ID del usuario que solicita la creación
             });
+
+            // Adicionalmente, intentar notificar directamente a los profesores involucrados
+            // usando sus conexiones individuales si están disponibles
+            if (newMessage.teachers && Array.isArray(newMessage.teachers)) {
+                newMessage.teachers.forEach(teacherId => {
+                    // Verificar si el usuario está conectado
+                    const socketId = io.sockets.adapter.rooms.get(`user:${teacherId}`);
+                    if (socketId) {
+                        // Enviar notificación directa al usuario específico
+                        io.to(`user:${teacherId}`).emit('new_chat_created', {
+                            chatId: newMessage._id,
+                            name: newMessage.name,
+                            timestamp: new Date(),
+                            teachers: newMessage.teachers,
+                            targetUser: teacherId,
+                            requesterId: requesterId // Incluir el ID del usuario que solicita la creación
+                        });
+                        console.log(`Notificación directa enviada al profesor ${teacherId}`);
+                    }
+                });
+            }
         }
 
         res.status(201).json(newMessage);

@@ -220,10 +220,15 @@ const filteredUsers = computed(() => {
 // Usuarios a mostrar según la pestaña seleccionada
 const displayedUsers = computed(() => {
   if (activeTab.value === "existing") {
-    // Solo usuarios con chats existentes y que no hayan sido eliminados
+    // Solo usuarios con chats existentes, que no hayan sido eliminados y que tengan al menos un mensaje
     return filteredUsers.value.filter((user) => {
       const chat = findChatWithUser(user);
-      return chat && !deletedChats.value.has(chat._id);
+      return (
+        chat &&
+        !deletedChats.value.has(chat._id) &&
+        chat.interaction &&
+        chat.interaction.length > 0
+      );
     });
   } else if (activeTab.value === "unread") {
     // Solo usuarios con mensajes no leídos
@@ -244,7 +249,12 @@ const displayedUsers = computed(() => {
 // Comprobar si hay un chat existente con este usuario
 const hasExistingChat = (user) => {
   const chat = findChatWithUser(user);
-  return chat && !deletedChats.value.has(chat._id);
+  return (
+    chat &&
+    !deletedChats.value.has(chat._id) &&
+    chat.interaction &&
+    chat.interaction.length > 0
+  );
 };
 
 // Métodos
@@ -346,6 +356,7 @@ const startCanteenChat = async () => {
           parseInt(canteenUserId.value),
         ],
         interaction: [],
+        requesterId: currentUserId.value,
       });
 
       chatId = newChat._id;
@@ -404,6 +415,7 @@ const selectUser = async (user) => {
         }`,
         teachers: [parseInt(currentUserId.value), parseInt(user.id)],
         interaction: [],
+        requesterId: currentUserId.value,
       });
 
       chatId = newChat._id;
@@ -600,22 +612,148 @@ const connectToSocket = () => {
     // Escuchar nuevos mensajes
     socket.value.on("new_message", handleNewMessage);
 
+    // Escuchar cuando se recibe el primer mensaje en un chat
+    socket.value.on("chat_first_message", async (data) => {
+      console.log("Notificación de primer mensaje en chat recibida:", data);
+
+      try {
+        // Si tenemos los datos completos del chat
+        if (data.chatData) {
+          console.log(
+            "Datos completos del chat recibidos con el primer mensaje"
+          );
+
+          // Verificar si este chat debe pertenecer al usuario actual
+          if (
+            data.chatData.teachers &&
+            data.chatData.teachers.includes(parseInt(currentUserId.value))
+          ) {
+            // Verificar si el chat ya existe en nuestra lista
+            const chatExists = existingChats.value.some(
+              (chat) => chat._id === data.chatId
+            );
+
+            if (!chatExists) {
+              // Añadir el chat a la lista existente inmediatamente
+              existingChats.value.push(data.chatData);
+              console.log("Chat con primer mensaje añadido a la lista local");
+
+              // Procesar el mensaje para actualizar la vista
+              if (data.userId && data.message) {
+                // Encontrar el ID del otro usuario
+                const otherUserId = data.chatData.teachers.find(
+                  (teacherId) => teacherId !== parseInt(currentUserId.value)
+                );
+
+                if (otherUserId) {
+                  // Actualizar el último mensaje para este usuario
+                  userMessages.value[otherUserId] =
+                    data.message.length > 30
+                      ? data.message.substring(0, 30) + "..."
+                      : data.message;
+
+                  // Marcar como no leído
+                  hasNewMessages.value[otherUserId] = true;
+                  saveUnreadMessagesState();
+                  appStore.updateUnreadMessagesCount();
+                }
+              }
+            }
+
+            // De todas formas, recargar la lista completa para asegurar consistencia
+            await loadUserChats();
+
+            // Mostrar notificación del sistema
+            showNotification(
+              data.userName || "Usuario",
+              data.message || "Nuevo mensaje"
+            );
+          }
+        } else {
+          // Si no tenemos datos completos, intentar obtener el chat por ID
+          console.log("Obteniendo datos del chat desde la API");
+          const chatData = await chatManager.getChatById(data.chatId);
+
+          if (
+            chatData &&
+            chatData.teachers &&
+            chatData.teachers.includes(parseInt(currentUserId.value))
+          ) {
+            // Actualizar la lista de chats
+            await loadUserChats();
+          }
+        }
+      } catch (error) {
+        console.error(
+          "Error al procesar notificación de primer mensaje:",
+          error
+        );
+        // Intentar recargar chats de todas formas como fallback
+        await loadUserChats();
+      }
+    });
+
     // Escuchar cuando se crea un nuevo chat
     socket.value.on("new_chat_created", async (data) => {
       console.log("Notificación de nuevo chat creado:", data);
 
-      // Comprobar si este chat podría ser relevante para el usuario actual
-      const chatData = await chatManager.getChatById(data.chatId);
+      try {
+        // Comprobar si este chat podría ser relevante para el usuario actual
+        const chatData = await chatManager.getChatById(data.chatId);
+        console.log("Datos del nuevo chat recibido:", chatData);
 
-      if (
-        chatData &&
-        chatData.teachers &&
-        chatData.teachers.includes(parseInt(currentUserId.value))
-      ) {
-        console.log(
-          "Nuevo chat relevante para este usuario, actualizando lista..."
-        );
-        // Recargar la lista de chats para incluir el nuevo chat
+        if (
+          chatData &&
+          chatData.teachers &&
+          chatData.teachers.includes(parseInt(currentUserId.value))
+        ) {
+          console.log("Nuevo chat relevante para este usuario");
+
+          // Primero unirse al chat para recibir actualizaciones futuras (siempre nos unimos para recibir mensajes)
+          if (socket.value && socket.value.connected) {
+            socket.value.emit("join_chat", {
+              chatId: chatData._id,
+              userId: currentUserId.value,
+              userName:
+                appStore.getUser()?.name ||
+                appStore.getUser()?.username ||
+                "Usuario",
+            });
+            console.log(`Usuario suscrito al nuevo chat: ${chatData._id}`);
+          }
+
+          // Solo añadimos el chat a la lista existente si tiene interacciones
+          // (o si el chat fue creado por este usuario)
+          const isCreatedByCurrentUser =
+            data.requesterId === currentUserId.value;
+          const hasMessages =
+            chatData.interaction && chatData.interaction.length > 0;
+
+          if (isCreatedByCurrentUser || hasMessages) {
+            console.log("Actualizando lista de chats...");
+
+            // Verificar si el chat ya existe en nuestra lista
+            const chatExists = existingChats.value.some(
+              (chat) => chat._id === chatData._id
+            );
+
+            if (!chatExists) {
+              // Añadir el chat a la lista existente inmediatamente
+              existingChats.value.push(chatData);
+              console.log("Chat añadido a la lista local");
+            }
+
+            // De todas formas, recargar la lista completa para asegurar consistencia
+            await loadUserChats();
+          } else {
+            console.log(
+              "Chat sin mensajes, no se muestra en la lista de existentes"
+            );
+          }
+        }
+      } catch (error) {
+        console.error("Error al procesar notificación de nuevo chat:", error);
+        // Intentar recargar chats de todas formas como fallback
         await loadUserChats();
       }
     });

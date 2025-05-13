@@ -1,15 +1,12 @@
 <template>
   <div class="chat-container">
     <div class="chat-header">
-      <h2>Chat</h2>
-      <div class="connection-status" :class="{ connected: isConnected }">
-        {{ isConnected ? "Conectado" : "Desconectado" }}
-      </div>
+      <h2>{{ chatPartnerName }}</h2>
     </div>
 
     <div class="chat-messages" ref="messagesContainer">
       <div v-if="messages.length === 0" class="empty-chat-message">
-        <p>¡Bienvenido al chat!</p>
+        <p>¡Bienvenido al chat con {{ chatPartnerName }}!</p>
         <p>Envía un mensaje para comenzar a conversar.</p>
       </div>
       <div
@@ -51,10 +48,9 @@
         v-model="newMessage"
         @keyup.enter="sendMessage"
         placeholder="Escribe un mensaje..."
-        :disabled="!isConnected"
         @input="handleTyping"
       />
-      <button @click="sendMessage" :disabled="!isConnected">Enviar</button>
+      <button @click="sendMessage">Enviar</button>
     </div>
   </div>
 </template>
@@ -81,7 +77,6 @@ const currentUserName = computed(
 );
 const isTeacher = computed(() => appStore.getTypeUser() === 1); // Verificar si es profesor
 const messagesContainer = ref(null);
-const isConnected = ref(false);
 const isTyping = ref(false);
 const typingTimeout = ref(null);
 const someoneIsTyping = ref(false);
@@ -89,6 +84,10 @@ const typingUserName = ref("");
 const chatId = ref(null); // ID del chat actual
 // Caché para evitar mensajes duplicados
 const processedMessages = ref(new Set());
+
+// Variables para el compañero de chat
+const chatPartnerUserId = ref(null);
+const chatPartnerName = ref("Chat");
 
 // Conectar al socket cuando el componente se monta
 onMounted(async () => {
@@ -153,6 +152,9 @@ const initializeChat = async () => {
       const chatData = await chatManager.getChatById(chatId.value);
       console.log("Datos del chat:", chatData);
 
+      // Obtener información del compañero de chat
+      updateChatPartnerInfo(chatData);
+
       if (chatData && chatData.interaction && chatData.interaction.length > 0) {
         console.log("Cargando mensajes del historial:", chatData.interaction);
 
@@ -204,6 +206,9 @@ const initializeChat = async () => {
 
         chatId.value = newChat._id;
         console.log("Nuevo chat creado:", newChat);
+
+        // Obtener información del compañero de chat
+        updateChatPartnerInfo(newChat);
       } catch (createError) {
         console.error("Error al crear nuevo chat:", createError);
       }
@@ -232,7 +237,6 @@ const connectSocket = () => {
     // Evento de conexión establecida
     socket.value.on("connect", () => {
       console.log("Conectado al servidor de chat");
-      isConnected.value = true;
 
       // Registrar el usuario
       socket.value.emit("register_user", {
@@ -258,7 +262,6 @@ const connectSocket = () => {
     // Evento de desconexión
     socket.value.on("disconnect", () => {
       console.log("Desconectado del servidor de chat");
-      isConnected.value = false;
     });
 
     // Registrar todos los manejadores de eventos
@@ -393,20 +396,6 @@ const setupSocketEventHandlers = () => {
     }
   });
 
-  // Escuchar cuando un usuario se une al chat
-  socket.value.on("user_joined", (data) => {
-    console.log(
-      `${data.userName || "Profesor " + data.userId} se ha unido al chat`
-    );
-  });
-
-  // Escuchar cuando un usuario deja el chat
-  socket.value.on("user_left", (data) => {
-    console.log(
-      `${data.userName || "Profesor " + data.userId} ha salido del chat`
-    );
-  });
-
   // Escuchar errores
   socket.value.on("error", (error) => {
     console.error("Error en socket:", error);
@@ -428,7 +417,7 @@ const sendMessage = async () => {
     return;
   }
 
-  if (newMessage.value.trim() && isConnected.value && chatId.value) {
+  if (newMessage.value.trim() && chatId.value) {
     try {
       // Crear datos del mensaje para mostrar localmente
       const messageText = newMessage.value;
@@ -453,6 +442,9 @@ const sendMessage = async () => {
 
       // Hacer scroll para mostrar el nuevo mensaje
       scrollToBottom();
+
+      // Verificar si este es el primer mensaje del chat
+      const isFirstMessage = messages.value.length === 1;
 
       // Enviar el mensaje a través del API
       console.log(
@@ -486,6 +478,19 @@ const sendMessage = async () => {
           // Solo marcar como enviado si no tenemos el ID real
           messages.value[messageIndex].sending = false;
         }
+      }
+
+      // Si este es el primer mensaje, notificar para actualizar la lista de chats
+      if (isFirstMessage && socket.value) {
+        console.log("Enviando notificación de primer mensaje en el chat");
+
+        // Emitir evento personalizado para primer mensaje
+        socket.value.emit("first_message_sent", {
+          chatId: chatId.value,
+          userId: currentUserId.value,
+          userName: currentUserName.value,
+          message: messageText,
+        });
       }
     } catch (error) {
       console.error("Error al enviar mensaje:", error);
@@ -593,6 +598,43 @@ const retryMessage = async (message, index) => {
     }
   }
 };
+
+// Método para obtener y actualizar la información del compañero de chat
+const updateChatPartnerInfo = (chatData) => {
+  if (!chatData || !chatData.teachers || !Array.isArray(chatData.teachers)) {
+    console.warn("No se pueden obtener datos del compañero de chat");
+    return;
+  }
+
+  // Encontrar el ID del otro usuario
+  const partnerId = chatData.teachers.find(
+    (teacherId) => teacherId !== parseInt(currentUserId.value)
+  );
+
+  if (partnerId) {
+    chatPartnerUserId.value = partnerId.toString();
+
+    // Intentar obtener el nombre del último mensaje recibido de ese usuario
+    const partnerMessage = messages.value.find(
+      (msg) => msg.userId.toString() === chatPartnerUserId.value
+    );
+
+    if (partnerMessage && partnerMessage.userName) {
+      // Usar el nombre del mensaje
+      chatPartnerName.value = partnerMessage.userName;
+    } else {
+      // Si no hay mensajes, usar un nombre genérico con su tipo
+      chatPartnerName.value = `Profesor ${partnerId}`;
+    }
+
+    console.log(
+      `Compañero de chat identificado: ${chatPartnerName.value} (ID: ${chatPartnerUserId.value})`
+    );
+  } else {
+    console.warn("No se pudo identificar al compañero de chat");
+    chatPartnerName.value = "Chat";
+  }
+};
 </script>
 
 <style scoped>
@@ -612,18 +654,6 @@ const retryMessage = async (message, index) => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-.connection-status {
-  font-size: 0.8em;
-  padding: 4px 8px;
-  border-radius: 4px;
-  background-color: #dc3545;
-  color: white;
-}
-
-.connection-status.connected {
-  background-color: #28a745;
 }
 
 .chat-messages {

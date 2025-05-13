@@ -5,9 +5,6 @@
         <i class="fas fa-arrow-left"></i> Volver
       </button>
       <h2>{{ chatName }}</h2>
-      <div class="connection-status" :class="{ connected: isConnected }">
-        {{ isConnected ? "Conectado" : "Desconectado" }}
-      </div>
     </div>
 
     <div class="chat-messages" ref="messagesContainer">
@@ -59,10 +56,9 @@
         v-model="newMessage"
         @keyup.enter="sendMessage"
         placeholder="Escribe un mensaje..."
-        :disabled="!isConnected"
         @input="handleTyping"
       />
-      <button @click="sendMessage" :disabled="!isConnected">Enviar</button>
+      <button @click="sendMessage">Enviar</button>
     </div>
   </div>
 </template>
@@ -96,7 +92,6 @@ const currentUserName = computed(
 );
 
 const messagesContainer = ref(null);
-const isConnected = ref(false);
 const isTyping = ref(false);
 const typingTimeout = ref(null);
 const someoneIsTyping = ref(false);
@@ -164,7 +159,7 @@ watch(
       await loadChatData();
 
       // Unirse al nuevo chat
-      if (socket.value && isConnected.value) {
+      if (socket.value) {
         socket.value.emit("join_chat", {
           chatId: chatId.value,
           userId: currentUserId.value,
@@ -332,7 +327,6 @@ const connectSocket = () => {
     // Evento de conexión establecida
     socket.value.on("connect", () => {
       console.log("Conectado al servidor de chat");
-      isConnected.value = true;
 
       // Registrar el usuario
       socket.value.emit("register_user", {
@@ -358,7 +352,6 @@ const connectSocket = () => {
     // Evento de desconexión
     socket.value.on("disconnect", () => {
       console.log("Desconectado del servidor de chat");
-      isConnected.value = false;
     });
 
     // Registrar todos los manejadores de eventos
@@ -531,7 +524,7 @@ const sendMessage = async () => {
     return;
   }
 
-  if (newMessage.value.trim() && isConnected.value && chatId.value) {
+  if (newMessage.value.trim() && chatId.value) {
     try {
       // Crear datos del mensaje para mostrar localmente
       const messageText = newMessage.value;
@@ -753,18 +746,6 @@ const dispatchChatViewEvent = (action) => {
 
 .back-button:hover {
   text-decoration: underline;
-}
-
-.connection-status {
-  font-size: 0.8em;
-  padding: 4px 8px;
-  border-radius: 4px;
-  background-color: #dc3545;
-  color: white;
-}
-
-.connection-status.connected {
-  background-color: #28a745;
 }
 
 .loading-container {

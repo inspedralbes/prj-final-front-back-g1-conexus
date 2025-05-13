@@ -49,6 +49,10 @@ io.on("connection", (socket) => {
         connectedUsers.set(userId, socket.id);
         userSockets.set(socket.id, userId);
 
+        // Crear una sala específica para este usuario para notificaciones directas
+        socket.join(`user:${userId}`);
+        console.log(`Usuario ${userName} (${userId}) unido a sala personal user:${userId}`);
+
         socket.emit("registered", {
             success: true,
             userId,
@@ -146,6 +150,57 @@ io.on("connection", (socket) => {
         });
     });
 
+    // Manejo del primer mensaje en un chat
+    socket.on("first_message_sent", async (data) => {
+        const { chatId, userId, userName, message } = data;
+        console.log(`Primer mensaje en chat ${chatId} de ${userName} (${userId}): ${message}`);
+
+        try {
+            // Obtener información completa del chat
+            const chatDataResponse = await fetch(`http://localhost:${PORT}/api/chat/${chatId}`);
+
+            if (!chatDataResponse.ok) {
+                throw new Error(`Error al obtener datos del chat: ${chatDataResponse.statusText}`);
+            }
+
+            const chatData = await chatDataResponse.json();
+
+            // Notificar a todos los participantes del chat (excepto al remitente)
+            if (chatData && chatData.teachers && Array.isArray(chatData.teachers)) {
+                chatData.teachers.forEach(teacherId => {
+                    if (teacherId.toString() !== userId.toString()) {
+                        // Notificar a cada profesor mediante su sala personal
+                        io.to(`user:${teacherId}`).emit('chat_first_message', {
+                            chatId,
+                            userId,
+                            userName,
+                            message,
+                            timestamp: new Date(),
+                            chatData: chatData
+                        });
+                        console.log(`Notificación de primer mensaje enviada al profesor ${teacherId}`);
+                    }
+                });
+            }
+
+            // También notificar a todos en la sala del chat
+            socket.to(chatId).emit('chat_first_message', {
+                chatId,
+                userId,
+                userName,
+                message,
+                timestamp: new Date(),
+                chatData: chatData
+            });
+        } catch (error) {
+            console.error("Error al procesar primer mensaje:", error);
+            socket.emit("error", {
+                type: "first_message_error",
+                message: "Error al procesar la notificación del primer mensaje"
+            });
+        }
+    });
+
     // Usuario elimina un mensaje
     socket.on("delete_message", async (data) => {
         const { chatId, messageId, userId } = data;
@@ -229,6 +284,9 @@ io.on("connection", (socket) => {
             // Limpiar registros de usuario
             connectedUsers.delete(userId);
             userSockets.delete(socket.id);
+
+            // Salir de la sala personal
+            socket.leave(`user:${userId}`);
 
             // Hacer que el usuario salga de todas las salas activas
             for (const [chatId, socketIds] of activeRooms.entries()) {
@@ -334,3 +392,23 @@ server.listen(PORT, () => {
     // Iniciar la creación del chat de muestra después de que el servidor esté en marcha
     createSampleChat();
 });
+
+// Agregar una función auxiliar para obtener los usuarios en una sala
+function getUsersInRoom(chatId) {
+    if (!activeRooms.has(chatId)) {
+        return [];
+    }
+
+    const userIds = [];
+    const socketIds = activeRooms.get(chatId);
+
+    // Convertir los socket IDs a user IDs
+    for (const socketId of socketIds) {
+        const userId = userSockets.get(socketId);
+        if (userId) {
+            userIds.push(userId);
+        }
+    }
+
+    return userIds;
+}
