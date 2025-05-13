@@ -1,13 +1,31 @@
 import express from "express";
 import LostObjects from "../models/LostObjects.js";
+import User from "../models/User.js";
+import Room from "../models/Room.js";
+import multer from "multer";
+import path from "path";
 
 const router = express.Router();
 
+
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/");
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(null, uniqueSuffix + path.extname(file.originalname));
+  },
+});
+
+const upload = multer({ storage: storage });
+
 // GET /lost-objects - Obtenir tots els objectes perduts
 router.get("/", async (req, res) => {
-  const LostObjects = await LostObjects.findAll({ order: [["createdAt", "DESC"]] });
+  const lostObjectsList = await LostObjects.findAll({ order: [["createdAt", "DESC"]] });
   //return the LostObjects array
-  res.json(LostObjects);
+  res.json(lostObjectsList);
 });
 
 // GET /lost-objects/:id - Obtenir un objecte perdut per ID
@@ -25,9 +43,13 @@ router.get("/:id", async (req, res) => {
   }
 });
 // POST /lost-objects - Crear un nou objecte perdut
-router.post("/", async (req, res) => {
+router.post("/", upload.single('image'),async (req, res) => {
   try {
-    const { title, description, image, user_id, expired_at } = req.body;
+
+    const lostObjectData = JSON.parse(req.body.data);
+    const { title, description, user_id, expired_at } = lostObjectData;
+    const image = req.file ? req.file.path : null;
+
     /**
      * Crea un nou objecte perdut a la base de dades.
      *
