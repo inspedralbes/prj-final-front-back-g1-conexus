@@ -466,7 +466,7 @@ export const createCourse = async (course) => {
 }
 export const updateCourse = async (courseId, course) => {
     try {
-        const response = await fetch(`${BACK_URL}api/courses/${courseId}`, {
+        const response = await fetch(`${BACK_URL}api/courses/updateCourse/${courseId}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -608,6 +608,27 @@ export const desassignTeacher = async (courseId) => {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({ course_teacher_id: null }),
+        });
+
+        if (!response.ok) {
+            return { error: `HTTP error! status: ${response.status}` };
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Network error:", error);
+        return { error: "Network error. Please try again later." };
+    }
+}
+export const assignTeacher = async (courseId, teacherId) => {
+    console.log(courseId, teacherId);   
+    try {
+        const response = await fetch(`${BACK_URL}api/courses/assignTeacher`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ course_id: courseId, teacher_id: teacherId }),
         });
 
         if (!response.ok) {
