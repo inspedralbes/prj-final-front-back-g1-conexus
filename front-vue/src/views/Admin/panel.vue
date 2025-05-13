@@ -116,11 +116,16 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <h3 class="text-lg font-semibold text-gray-300">Servicios</h3>
-                        <p class="text-3xl font-bold mt-2">7</p>
-                        <p class="text-sm text-gray-400 mt-1">Todos operativos</p>
+                        <p class="text-3xl font-bold mt-2">{{ serviceStats.total || 0 }}</p>
+                        <p class="text-sm text-gray-400 mt-1">
+                            <span v-if="serviceStats.allRunning" class="text-green-400">Todos operativos</span>
+                            <span v-else>{{ serviceStats.running || 0 }} operativos</span>
+                        </p>
                     </div>
-                    <div class="p-3 rounded-full bg-green-500/20">
-                        <svg class="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="p-3 rounded-full"
+                        :class="serviceStats.allRunning ? 'bg-green-500/20' : 'bg-yellow-500/20'">
+                        <svg class="w-8 h-8" :class="serviceStats.allRunning ? 'text-green-400' : 'text-yellow-400'"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M13 10V3L4 14h7v7l9-11h-7z" />
                         </svg>
@@ -142,7 +147,8 @@
                     <div>
                         <h3 class="text-lg font-semibold text-gray-300">Cursos</h3>
                         <p class="text-3xl font-bold mt-2">{{ courseStats.total || 0 }}</p>
-                        <p class="text-sm text-gray-400 mt-1">{{ courseStats.createdThisMonth || 0 }} nuevos este mes</p>
+                        <p class="text-sm text-gray-400 mt-1">{{ courseStats.createdThisMonth || 0 }} nuevos este mes
+                        </p>
                     </div>
                     <div class="p-3 rounded-full bg-indigo-500/20">
                         <svg class="w-8 h-8 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -162,7 +168,7 @@
         </div>
 
         <!-- Sección de Actividad Reciente -->
-        <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl p-6 shadow-lg mb-8">
+        <!-- <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl p-6 shadow-lg mb-8">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-xl font-semibold text-gray-300">Actividad Reciente</h2>
                 <button class="text-sm text-blue-400 hover:text-blue-300 transition-colors">
@@ -213,7 +219,7 @@
                     <span class="text-xs text-gray-500">Hace 3 horas</span>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <!-- Acciones Rápidas -->
         <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl p-6 shadow-lg">
@@ -254,6 +260,7 @@ import { getRoomsStats } from '@/services/communicationsScripts/roomsManager.js'
 import { getReportStats } from '@/services/communicationsScripts/incidentsManager.js';
 import { getLostObjectStats } from '@/services/communicationsScripts/lostObjectsManager.js';
 import { getCourseStats } from '@/services/communicationsScripts/gradesComManager.js';
+import { getAllServices } from '@/services/communicationsScripts/servicesManager.js';
 
 // Definir variables reactivas para almacenar las estadísticas
 const userStats = ref({ total: 0, registeredToday: 0 });
@@ -261,6 +268,7 @@ const roomStats = ref({ total: 0, available: 0, maintenance: 0 });
 const reportStats = ref({ total: 0, pending: 0, resolved: 0 });
 const lostObjectStats = ref({ total: 0, reportedToday: 0 });
 const courseStats = ref({ total: 0, createdThisMonth: 0 });
+const serviceStats = ref({ total: 0, running: 0, allRunning: true });
 
 // Función para cargar todos los datos
 const loadAllStats = async () => {
@@ -279,6 +287,18 @@ const loadAllStats = async () => {
         
         // Cargar estadísticas de cursos
         courseStats.value = await getCourseStats();
+        
+        // Cargar estadísticas de servicios
+        const services = await getAllServices();
+        const serviceNames = Object.keys(services);
+        const totalServices = serviceNames.length;
+        const runningServices = serviceNames.filter(name => services[name].state === "running").length;
+        
+        serviceStats.value = {
+            total: totalServices,
+            running: runningServices,
+            allRunning: runningServices === totalServices
+        };
     } catch (error) {
         console.error("Error loading stats:", error);
     }
