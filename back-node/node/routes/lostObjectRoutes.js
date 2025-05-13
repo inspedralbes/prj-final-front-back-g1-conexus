@@ -2,6 +2,7 @@ import express from "express";
 import LostObjects from "../models/LostObjects.js";
 import User from "../models/User.js";
 import Room from "../models/Room.js";
+import Response from "../models/Response.js";
 import multer from "multer";
 import path from "path";
 
@@ -104,6 +105,63 @@ router.delete("/:id", async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
+});
+
+// GET /lost-objects/:id/responses - Obtenir totes les respostes d'un objecte perdut
+router.get("/:id/responses", async (req, res) => {
+    const { id } = req.params;
+    try {
+        const responses = await Response.findAll({
+            where: { lostAndFound_id: id },
+            order: [["createdAt", "DESC"]]
+        });
+        res.json(responses);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// POST /lost-objects/:id/responses - Crear una nova resposta per un objecte perdut
+router.post("/:id/responses", async (req, res) => {
+    const { id } = req.params;
+    try {
+        const { user_id, comment } = req.body;
+
+        if (!user_id || !comment) {
+            return res.status(400).json({ message: "user_id i comment són obligatoris" });
+        }
+
+        const newResponse = await Response.create({
+            user_id,
+            lostAndFound_id: id,
+            comment
+        });
+        res.status(201).json(newResponse);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// DELETE /lost-objects/:id/responses/:responseId - Eliminar una resposta d'un objecte perdut
+router.delete("/:id/responses/:responseId", async (req, res) => {
+    const { id, responseId } = req.params;
+    try {
+        const response = await Response.findOne({
+            where: {
+                id: responseId,
+                lostAndFound_id: id
+            }
+        });
+
+        if (!response) {
+            return res.status(404).json({ message: "Resposta no trobada" });
+        }
+
+        await response.destroy();
+        res.status(204).send();
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 });
 
 export default router;

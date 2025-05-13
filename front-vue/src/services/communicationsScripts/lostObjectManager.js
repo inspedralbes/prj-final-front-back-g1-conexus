@@ -76,3 +76,46 @@ export const deleteLostObject = async (id) => {
         throw error;
     }
 };
+
+export const getLostObjectResponses = async (lostObjectId) => {
+    try {
+        const response = await fetch(`${API_URL}api/lost-objects/${lostObjectId}/responses`);
+        return await handleResponse(response);
+    } catch (error) {
+        console.error(`Error fetching responses for lost object ${lostObjectId}:`, error);
+        throw error;
+    }
+};
+
+export const createResponse = async (lostObjectId, responseData) => {
+    try {
+        const response = await fetch(`${API_URL}api/lost-objects/${lostObjectId}/responses`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(responseData),
+        });
+        return await handleResponse(response);
+    } catch (error) {
+        console.error(`Error creating response for lost object ${lostObjectId}:`, error);
+        throw error;
+    }
+};
+
+export const deleteResponse = async (lostObjectId, responseId) => {
+    try {
+        const response = await fetch(`${API_URL}api/lost-objects/${lostObjectId}responses/${responseId}`, {
+            method: 'DELETE',
+        });
+        
+        if (response.status === 204) {
+            return true;
+        }
+        
+        return await handleResponse(response);
+    } catch (error) {
+        console.error(`Error deleting response ${responseId} for lost object ${lostObjectId}:`, error);
+        throw error;
+    }
+};

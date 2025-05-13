@@ -88,6 +88,11 @@ const router = createRouter({
           name: 'teacher-lost-objects',
           component: () => import('@/views/Teachers/lost-objects.vue')
         },
+        {
+          path: 'lost-objects/:id/responses',
+          name: 'teacher-lost-object-responses',
+          component: () => import('@/views/Teachers/responses.vue')
+        },
         { 
           path: 'assistence',
           name: 'teacher-assistence',
