@@ -209,29 +209,29 @@
         <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl p-6 shadow-lg">
             <h2 class="text-xl font-semibold text-gray-300 mb-4">Acciones Rápidas</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <button
+                <router-link to="/admin/config-users?action=new"
                     class="flex items-center justify-center p-4 bg-blue-500/10 hover:bg-blue-500/20 rounded-lg transition-colors">
                     <svg class="w-5 h-5 mr-2 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                     </svg>
                     <span>Nuevo Usuario</span>
-                </button>
+                </router-link>
 
-                <button
+                <router-link to="/admin/new-room"
                     class="flex items-center justify-center p-4 bg-purple-500/10 hover:bg-purple-500/20 rounded-lg transition-colors">
                     <svg class="w-5 h-5 mr-2 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                     </svg>
                     <span>Nueva Aula</span>
-                </button>
+                </router-link>
 
-                <button
+                <router-link to="/admin/config-courses?action=new"
                     class="flex items-center justify-center p-4 bg-green-500/10 hover:bg-green-500/20 rounded-lg transition-colors">
                     <svg class="w-5 h-5 mr-2 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                     </svg>
                     <span>Nuevo Curso</span>
-                </button>
+                </router-link>
             </div>
         </div>
     </div>

@@ -86,11 +86,14 @@
 
 </template>
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
+import { useRoute } from 'vue-router';
 import { getAllCourses, createCourse, getAllDepartments, getAllTeachersFromDepartment } from '@/services/communicationsScripts/mainManager.js';
 import { useRouter } from 'vue-router';
 import courseCardAdmin from '@/components/Courses/courseCardAdmin.vue';
 
+// Añadir el route para detectar parámetros de URL
+const route = useRoute();
 const departments= ref([]);
 const teachers= ref([]);    
 const router = useRouter();
@@ -151,11 +154,29 @@ function deleteAllHorsFromDay(day) {
     }
 }
 
+// Función para verificar si debemos mostrar el modal de creación automáticamente
+const checkUrlParams = () => {
+  if (route.query.action === 'new') {
+    toggleCreateCourse();
+  }
+};
+
+// Añadir cerrar modal
+const toggleModal = () => {
+  showCreateCourse.value = false;
+};
+
+// Observador para cambios en los parámetros de la URL
+watch(() => route.query, checkUrlParams, { immediate: true });
+
 onMounted(async () => {
     const response = await getAllCourses();
     courses.value = response;
     console.log(courses.value);
     departments.value = await getAllDepartments();
+    
+    // Verificar parámetros de URL al cargar
+    checkUrlParams();
 });
 
 async function getTeachersFromDepartment(departmentId) {

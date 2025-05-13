@@ -160,8 +160,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
+import { useRoute } from 'vue-router';
 import { getAllUsers, deleteUser, updateUserRole, getAllTypeUsers, createUser } from '@/services/communicationsScripts/mainManager.js';
+
+// Añadir el route para detectar parámetros de URL
+const route = useRoute();
 
 // Variables generales
 const users = ref([]);
@@ -430,9 +434,20 @@ const saveRoleChange = async () => {
   }
 };
 
+// Función para verificar si debemos mostrar el modal de creación automáticamente
+const checkUrlParams = () => {
+  if (route.query.action === 'new') {
+    handleCreateUser();
+  }
+};
+
+// Observador para cambios en los parámetros de la URL
+watch(() => route.query, checkUrlParams, { immediate: true });
+
 // Cargar usuarios al montar el componente
 onMounted(() => {
   fetchUsers();
+  checkUrlParams();
 });
 </script>
 
