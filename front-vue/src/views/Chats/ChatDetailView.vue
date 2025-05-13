@@ -44,11 +44,28 @@
         >
           Error al enviar - Haz clic para reintentar
         </div>
+        <button
+          v-if="
+            message.userId.toString() === currentUserId.toString() &&
+            !message.sending &&
+            !message.failed &&
+            message.id
+          "
+          class="delete-message-btn"
+          @click="deleteMessage(message)"
+          title="Eliminar mensaje"
+        >
+          <i class="fas fa-trash"></i>
+        </button>
       </div>
     </div>
 
     <div class="typing-indicator" v-if="someoneIsTyping">
-      {{ typingUserName }} está escribiendo...
+      <div class="typing-dots">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
     </div>
 
     <div class="chat-input">
@@ -193,20 +210,74 @@ const loadChatData = async () => {
       return;
     }
 
-    // Cargar datos del chat
-    const chatData = await chatManager.getChatById(chatId.value);
+    loading.value = true;
+    console.log(`Intentando cargar chat con ID: ${chatId.value}`);
+
+    // Intentar cargar el chat directamente por ID
+    let chatData;
+    try {
+      chatData = await chatManager.getChatById(chatId.value);
+    } catch (error) {
+      console.error(`Error al cargar chat por ID ${chatId.value}:`, error);
+      chatData = null;
+    }
+
+    // Si no se encuentra el chat, intentar buscarlo entre todos los chats disponibles
+    if (!chatData) {
+      console.log(
+        "Chat no encontrado directamente, buscando entre todos los chats..."
+      );
+      try {
+        // Obtener todos los chats y filtrar por el ID actual
+        const allChats = await chatManager.getAllChats();
+        chatData = allChats.find((chat) => chat._id === chatId.value);
+
+        if (!chatData) {
+          // Buscar chats donde participa el usuario actual
+          const userChats = allChats.filter(
+            (chat) =>
+              chat.teachers &&
+              chat.teachers.includes(parseInt(currentUserId.value))
+          );
+
+          console.log(
+            `Encontrados ${userChats.length} chats donde participa el usuario actual`
+          );
+
+          if (userChats.length > 0) {
+            // Si no se encuentra el chat específico pero hay otros chats del usuario,
+            // redirigir al primero de ellos
+            console.log("Redirigiendo al primer chat disponible del usuario");
+            router.replace({
+              name: "chat-detail",
+              params: { chatId: userChats[0]._id },
+            });
+            return;
+          }
+        }
+      } catch (fallbackError) {
+        console.error(
+          "Error en la búsqueda alternativa de chats:",
+          fallbackError
+        );
+      }
+    }
 
     if (!chatData) {
-      console.error("No se encontró el chat");
+      console.error("No se encontró el chat ni alternativas");
       router.push({ name: "chats-list" });
       return;
     }
+
+    console.log("Chat encontrado:", chatData);
 
     // Establecer nombre del chat
     chatName.value = chatData.name || "Chat";
 
     // Cargar mensajes
     if (chatData.interaction && chatData.interaction.length > 0) {
+      console.log(`Cargando ${chatData.interaction.length} mensajes`);
+
       // Convertir los mensajes al formato esperado
       messages.value = chatData.interaction.map((msg) => {
         // Verificar si el mensaje es del usuario actual o de otro
@@ -227,6 +298,9 @@ const loadChatData = async () => {
       messages.value.sort(
         (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
       );
+    } else {
+      console.log("El chat no tiene mensajes");
+      messages.value = [];
     }
 
     // Actualizar estado
@@ -238,6 +312,7 @@ const loadChatData = async () => {
   } catch (error) {
     console.error("Error al cargar datos del chat:", error);
     loading.value = false;
+    router.push({ name: "chats-list" });
   }
 };
 
@@ -499,6 +574,20 @@ const setupSocketEventHandlers = () => {
   socket.value.on("error", (error) => {
     console.error("Error en socket:", error);
   });
+
+  // Escuchar cuando un mensaje es eliminado
+  socket.value.on("message_deleted", (data) => {
+    console.log("Mensaje eliminado:", data);
+
+    // Encontrar y eliminar el mensaje de la lista local
+    const messageIndex = messages.value.findIndex(
+      (msg) => msg.id === data.messageId
+    );
+    if (messageIndex !== -1) {
+      console.log(`Eliminando mensaje en índice ${messageIndex}`);
+      messages.value.splice(messageIndex, 1);
+    }
+  });
 };
 
 // Desconectar del socket
@@ -709,6 +798,45 @@ const dispatchChatViewEvent = (action) => {
   console.log(`Emitiendo evento ${eventName} para chat ${chatId.value}`);
   window.dispatchEvent(event);
 };
+
+// Función para eliminar un mensaje
+const deleteMessage = async (message) => {
+  if (!message.id || !chatId.value) return;
+
+  try {
+    console.log(
+      `Intentando eliminar mensaje ${message.id} del chat ${chatId.value}`
+    );
+
+    // Mostrar confirmación
+    if (!confirm("¿Estás seguro de que deseas eliminar este mensaje?")) {
+      return;
+    }
+
+    // Si estamos usando sockets, enviar evento de eliminación
+    if (socket.value) {
+      socket.value.emit("delete_message", {
+        chatId: chatId.value,
+        messageId: message.id,
+        userId: currentUserId.value,
+      });
+    } else {
+      // Si no hay socket, usar directamente el API
+      await chatManager.deleteMessage(chatId.value, message.id);
+
+      // Eliminar el mensaje localmente
+      const messageIndex = messages.value.findIndex(
+        (msg) => msg.id === message.id
+      );
+      if (messageIndex !== -1) {
+        messages.value.splice(messageIndex, 1);
+      }
+    }
+  } catch (error) {
+    console.error("Error al eliminar mensaje:", error);
+    alert("No se pudo eliminar el mensaje. Inténtalo de nuevo.");
+  }
+};
 </script>
 
 <style scoped>
@@ -784,9 +912,52 @@ const dispatchChatViewEvent = (action) => {
 
 .typing-indicator {
   padding: 5px 10px;
-  font-size: 0.8em;
-  color: #6c757d;
-  font-style: italic;
+  margin-bottom: 10px;
+  align-self: flex-start;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  max-width: 50px;
+}
+
+.typing-dots {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding: 0 5px;
+}
+
+.typing-dots span {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin: 0 2px;
+  background-color: #6c757d;
+  border-radius: 50%;
+  opacity: 0.8;
+  animation: typingAnimation 1.4s infinite ease-in-out;
+}
+
+.typing-dots span:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.typing-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes typingAnimation {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
 }
 
 .message {
@@ -905,5 +1076,32 @@ button:hover:not(:disabled) {
 button:disabled {
   background-color: #6c757d;
   cursor: not-allowed;
+}
+
+/* Estilo para el botón de eliminar mensaje */
+.delete-message-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+  padding: 2px 5px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.other-message .delete-message-btn {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.message:hover .delete-message-btn {
+  opacity: 1;
+}
+
+.delete-message-btn:hover {
+  color: #dc3545;
 }
 </style> 

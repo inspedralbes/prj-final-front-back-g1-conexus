@@ -69,7 +69,7 @@
       <li v-for="user in displayedUsers" :key="user.id" class="user-item">
         <div class="user-avatar" @click="selectUser(user)">
           <img
-            :src="user.profileImage || '/img/default-avatar.png'"
+            :src="user.profile || '/img/default-avatar.png'"
             :alt="user.name || user.username"
             onerror="this.src='/img/default-avatar.png'"
           />
@@ -350,7 +350,7 @@ const startCanteenChat = async () => {
       });
 
       const newChat = await chatManager.createChat({
-        name: `Chat con ${canteenName}`,
+        name: `Chat de ${appStore.getUser().name} con ${canteenName}`,
         teachers: [
           parseInt(currentUserId.value),
           parseInt(canteenUserId.value),
