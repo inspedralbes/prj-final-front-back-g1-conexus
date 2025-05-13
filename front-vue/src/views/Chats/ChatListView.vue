@@ -81,8 +81,13 @@
         <div class="user-info" @click="selectUser(user)">
           <h3>{{ user.name || user.username }}</h3>
           <p class="user-type">{{ getUserTypeName(user.typeUsers_id) }}</p>
+          <p v-if="typingUsers[user.id]" class="typing-status">
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+          </p>
           <p
-            v-if="getUserLastMessage(user)"
+            v-else-if="getUserLastMessage(user)"
             class="last-message"
             :class="{ 'new-message': hasNewMessages[user.id] }"
           >
@@ -162,6 +167,7 @@ const socket = ref(null); // Socket.io connection
 const hasNewMessages = ref({}); // Para marcar chats con mensajes nuevos
 const deletedChats = ref(new Set());
 const activeChats = ref(new Set());
+const typingUsers = ref({}); // Para almacenar qué usuarios están escribiendo
 
 // Obtener el store de la aplicación
 const appStore = useAppStore();
@@ -611,6 +617,40 @@ const connectToSocket = () => {
 
     // Escuchar nuevos mensajes
     socket.value.on("new_message", handleNewMessage);
+
+    // Escuchar cuando alguien está escribiendo
+    socket.value.on("user_typing", (data) => {
+      if (data.userId.toString() !== currentUserId.value.toString()) {
+        // Buscar el chat correspondiente
+        const chat = existingChats.value.find((c) => c._id === data.chatId);
+
+        if (chat) {
+          // Encontrar el ID del otro usuario en el chat
+          const otherUserId = chat.teachers.find(
+            (teacherId) => teacherId !== parseInt(currentUserId.value)
+          );
+
+          if (otherUserId) {
+            // Actualizar el estado de escritura para este usuario
+            typingUsers.value = {
+              ...typingUsers.value,
+              [otherUserId]: data.isTyping,
+            };
+
+            // Si el usuario deja de escribir, eliminar después de un tiempo
+            if (!data.isTyping) {
+              setTimeout(() => {
+                if (typingUsers.value[otherUserId] === false) {
+                  const updatedTypingUsers = { ...typingUsers.value };
+                  delete updatedTypingUsers[otherUserId];
+                  typingUsers.value = updatedTypingUsers;
+                }
+              }, 1000);
+            }
+          }
+        }
+      }
+    });
 
     // Escuchar cuando se recibe el primer mensaje en un chat
     socket.value.on("chat_first_message", async (data) => {
@@ -1356,6 +1396,46 @@ h2 {
   margin: 5px 0 0;
   font-size: 14px;
   color: #6c757d;
+}
+
+.typing-status {
+  margin: 5px 0 0;
+  font-size: 13px;
+  color: #6c757d;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.typing-dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  background-color: #6c757d;
+  border-radius: 50%;
+  animation: typingAnimation 1.4s infinite ease-in-out;
+}
+
+.typing-dot:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.typing-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes typingAnimation {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
 }
 
 .last-message {
