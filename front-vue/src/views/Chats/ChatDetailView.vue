@@ -211,7 +211,7 @@ const loadChatData = async () => {
     }
 
     loading.value = true;
-    console.log(`Intentando cargar chat con ID: ${chatId.value}`);
+    // console.log(`Intentando cargar chat con ID: ${chatId.value}`);
 
     // Intentar cargar el chat directamente por ID
     let chatData;
@@ -224,9 +224,9 @@ const loadChatData = async () => {
 
     // Si no se encuentra el chat, intentar buscarlo entre todos los chats disponibles
     if (!chatData) {
-      console.log(
-        "Chat no encontrado directamente, buscando entre todos los chats..."
-      );
+      // console.log(
+      //   "Chat no encontrado directamente, buscando entre todos los chats..."
+      // );
       try {
         // Obtener todos los chats y filtrar por el ID actual
         const allChats = await chatManager.getAllChats();
@@ -240,14 +240,14 @@ const loadChatData = async () => {
               chat.teachers.includes(parseInt(currentUserId.value))
           );
 
-          console.log(
-            `Encontrados ${userChats.length} chats donde participa el usuario actual`
-          );
+          // console.log(
+          //   `Encontrados ${userChats.length} chats donde participa el usuario actual`
+          // );
 
           if (userChats.length > 0) {
             // Si no se encuentra el chat específico pero hay otros chats del usuario,
             // redirigir al primero de ellos
-            console.log("Redirigiendo al primer chat disponible del usuario");
+            // console.log("Redirigiendo al primer chat disponible del usuario");
             router.replace({
               name: "chat-detail",
               params: { chatId: userChats[0]._id },
@@ -269,14 +269,14 @@ const loadChatData = async () => {
       return;
     }
 
-    console.log("Chat encontrado:", chatData);
+    // console.log("Chat encontrado:", chatData);
 
     // Establecer nombre del chat
     chatName.value = chatData.name || "Chat";
 
     // Cargar mensajes
     if (chatData.interaction && chatData.interaction.length > 0) {
-      console.log(`Cargando ${chatData.interaction.length} mensajes`);
+      // console.log(`Cargando ${chatData.interaction.length} mensajes`);
 
       // Convertir los mensajes al formato esperado
       messages.value = chatData.interaction.map((msg) => {
@@ -299,7 +299,7 @@ const loadChatData = async () => {
         (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
       );
     } else {
-      console.log("El chat no tiene mensajes");
+      // console.log("El chat no tiene mensajes");
       messages.value = [];
     }
 
@@ -341,7 +341,7 @@ const markMessagesAsRead = async () => {
 
     if (!otherUserId) return;
 
-    console.log(`Marcando mensajes como leídos para el usuario ${otherUserId}`);
+    // console.log(`Marcando mensajes como leídos para el usuario ${otherUserId}`);
 
     // Obtener el estado actual de los mensajes no leídos
     const storageKey = `chat_unread_${currentUserId.value}`;
@@ -352,9 +352,9 @@ const markMessagesAsRead = async () => {
 
       // Si hay mensajes no leídos de este usuario, marcarlos como leídos
       if (unreadMessages[otherUserId]) {
-        console.log(
-          `Usuario ${otherUserId} tenía mensajes no leídos, marcando como leídos`
-        );
+        // console.log(
+        //   `Usuario ${otherUserId} tenía mensajes no leídos, marcando como leídos`
+        // );
         delete unreadMessages[otherUserId];
 
         // Guardar el nuevo estado
@@ -362,10 +362,10 @@ const markMessagesAsRead = async () => {
 
         // Actualizar el contador global
         appStore.updateUnreadMessagesCount();
-        console.log(
-          "Contador de mensajes no leídos actualizado:",
-          appStore.getUnreadCount
-        );
+        // console.log(
+        //   "Contador de mensajes no leídos actualizado:",
+        //   appStore.getUnreadCount
+        // );
       }
     }
 
@@ -401,7 +401,7 @@ const connectSocket = () => {
 
     // Evento de conexión establecida
     socket.value.on("connect", () => {
-      console.log("Conectado al servidor de chat");
+      // console.log("Conectado al servidor de chat");
 
       // Registrar el usuario
       socket.value.emit("register_user", {
@@ -411,9 +411,9 @@ const connectSocket = () => {
 
       // Unirse al chat actual (solo si tenemos un chatId)
       if (chatId.value) {
-        console.log(
-          `Uniendo al usuario ${currentUserId.value} al chat ${chatId.value}`
-        );
+        // console.log(
+        //   `Uniendo al usuario ${currentUserId.value} al chat ${chatId.value}`
+        // );
         socket.value.emit("join_chat", {
           chatId: chatId.value,
           userId: currentUserId.value,
@@ -426,7 +426,7 @@ const connectSocket = () => {
 
     // Evento de desconexión
     socket.value.on("disconnect", () => {
-      console.log("Desconectado del servidor de chat");
+      // console.log("Desconectado del servidor de chat");
     });
 
     // Registrar todos los manejadores de eventos
@@ -440,7 +440,7 @@ const connectSocket = () => {
 const setupSocketEventHandlers = () => {
   // Escuchar nuevos mensajes
   socket.value.on("new_message", (data) => {
-    console.log("Nuevo mensaje recibido del socket:", data);
+    // console.log("Nuevo mensaje recibido del socket:", data);
 
     // Extraer la información del mensaje según la estructura del backend
     let messageData = null;
@@ -502,7 +502,7 @@ const setupSocketEventHandlers = () => {
 
     // Si este mensaje ya fue procesado, ignorarlo
     if (processedMessages.value.has(msgSignature)) {
-      console.log("Mensaje ya procesado anteriormente, ignorando");
+      // console.log("Mensaje ya procesado anteriormente, ignorando");
       return;
     }
 
@@ -525,16 +525,16 @@ const setupSocketEventHandlers = () => {
 
     if (existingIndex === -1) {
       // Si no existe mensaje similar, agregar este nuevo
-      console.log("Mensaje nuevo, agregando:", messageData);
+      // console.log("Mensaje nuevo, agregando:", messageData);
       messages.value.push(messageData);
       scrollToBottom();
     } else {
       // Si ya existe un mensaje similar, actualizar sus propiedades si es necesario
-      console.log("Mensaje similar encontrado en índice:", existingIndex);
+      // console.log("Mensaje similar encontrado en índice:", existingIndex);
 
       // Si el mensaje existente es local y el nuevo tiene ID del servidor, actualizar
       if (messages.value[existingIndex].local && messageData.id) {
-        console.log("Actualizando mensaje local con datos del servidor");
+        // console.log("Actualizando mensaje local con datos del servidor");
         messages.value[existingIndex].id = messageData.id;
         messages.value[existingIndex].sending = false;
       }
@@ -558,16 +558,16 @@ const setupSocketEventHandlers = () => {
 
   // Escuchar cuando un usuario se une al chat
   socket.value.on("user_joined", (data) => {
-    console.log(
-      `${data.userName || "Profesor " + data.userId} se ha unido al chat`
-    );
+    // console.log(
+    //   `${data.userName || "Profesor " + data.userId} se ha unido al chat`
+    // );
   });
 
   // Escuchar cuando un usuario deja el chat
   socket.value.on("user_left", (data) => {
-    console.log(
-      `${data.userName || "Profesor " + data.userId} ha salido del chat`
-    );
+    // console.log(
+    //   `${data.userName || "Profesor " + data.userId} ha salido del chat`
+    // );
   });
 
   // Escuchar errores
@@ -577,14 +577,14 @@ const setupSocketEventHandlers = () => {
 
   // Escuchar cuando un mensaje es eliminado
   socket.value.on("message_deleted", (data) => {
-    console.log("Mensaje eliminado:", data);
+    // console.log("Mensaje eliminado:", data);
 
     // Encontrar y eliminar el mensaje de la lista local
     const messageIndex = messages.value.findIndex(
       (msg) => msg.id === data.messageId
     );
     if (messageIndex !== -1) {
-      console.log(`Eliminando mensaje en índice ${messageIndex}`);
+      // console.log(`Eliminando mensaje en índice ${messageIndex}`);
       messages.value.splice(messageIndex, 1);
     }
   });
@@ -633,23 +633,23 @@ const sendMessage = async () => {
         local: true, // Marcar como mensaje local para evitar duplicación
       };
 
-      console.log("Agregando mensaje local:", localMessage);
+      // console.log("Agregando mensaje local:", localMessage);
       messages.value.push(localMessage);
 
       // Hacer scroll para mostrar el nuevo mensaje
       scrollToBottom();
 
       // Enviar el mensaje a través del API
-      console.log(
-        `Enviando mensaje a la API. Chat: ${chatId.value}, teacherId: ${currentUserId.value}`
-      );
+      // console.log(
+      //   `Enviando mensaje a la API. Chat: ${chatId.value}, teacherId: ${currentUserId.value}`
+      // );
       const result = await chatManager.sendMessage(
         chatId.value,
         currentUserId.value,
         messageText
       );
 
-      console.log("Respuesta de la API al enviar mensaje:", result);
+      // console.log("Respuesta de la API al enviar mensaje:", result);
 
       // Actualizar el mensaje local con el ID real
       const messageIndex = messages.value.findIndex((m) => m.id === tempId);
@@ -663,10 +663,10 @@ const sendMessage = async () => {
             sending: false,
             local: true, // Mantener la marca para evitar duplicación
           };
-          console.log(
-            "Mensaje actualizado con ID del servidor:",
-            messages.value[messageIndex]
-          );
+          // console.log(
+          //   "Mensaje actualizado con ID del servidor:",
+          //   messages.value[messageIndex]
+          // );
         } else {
           // Solo marcar como enviado si no tenemos el ID real
           messages.value[messageIndex].sending = false;
@@ -733,23 +733,23 @@ const scrollToBottom = async () => {
 const retryMessage = async (message, index) => {
   if (message.failed && chatId.value) {
     try {
-      console.log("Reintentando enviar mensaje:", message);
+      // console.log("Reintentando enviar mensaje:", message);
 
       // Marcar el mensaje como en proceso de envío
       messages.value[index].failed = false;
       messages.value[index].sending = true;
 
       // Solo usar la API para evitar duplicaciones
-      console.log(
-        `Reenviando mensaje a la API. Chat: ${chatId.value}, teacherId: ${message.userId}`
-      );
+      // console.log(
+      //   `Reenviando mensaje a la API. Chat: ${chatId.value}, teacherId: ${message.userId}`
+      // );
       const result = await chatManager.sendMessage(
         chatId.value,
         message.userId,
         message.message
       );
 
-      console.log("Respuesta de la API al reenviar mensaje:", result);
+      // console.log("Respuesta de la API al reenviar mensaje:", result);
 
       // Actualizar el mensaje con el ID real
       if (result.interaction && result.interaction.length > 0) {
@@ -761,10 +761,10 @@ const retryMessage = async (message, index) => {
           failed: false,
           local: true, // Mantener la marca para evitar duplicación
         };
-        console.log(
-          "Mensaje actualizado después del reintento:",
-          messages.value[index]
-        );
+        // console.log(
+        //   "Mensaje actualizado después del reintento:",
+        //   messages.value[index]
+        // );
       } else {
         // Solo marcar como enviado si no tenemos el ID real
         messages.value[index].sending = false;
@@ -795,7 +795,7 @@ const dispatchChatViewEvent = (action) => {
     },
   });
 
-  console.log(`Emitiendo evento ${eventName} para chat ${chatId.value}`);
+  // console.log(`Emitiendo evento ${eventName} para chat ${chatId.value}`);
   window.dispatchEvent(event);
 };
 
@@ -804,9 +804,9 @@ const deleteMessage = async (message) => {
   if (!message.id || !chatId.value) return;
 
   try {
-    console.log(
-      `Intentando eliminar mensaje ${message.id} del chat ${chatId.value}`
-    );
+    // console.log(
+    //   `Intentando eliminar mensaje ${message.id} del chat ${chatId.value}`
+    // );
 
     // Mostrar confirmación
     if (!confirm("¿Estás seguro de que deseas eliminar este mensaje?")) {

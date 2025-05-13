@@ -129,11 +129,11 @@ const initializeChat = async () => {
       return;
     }
 
-    console.log("Inicializando chat como profesor. ID:", currentUserId.value);
+    // console.log("Inicializando chat como profesor. ID:", currentUserId.value);
 
     // Intentar obtener chats existentes
     const chats = await chatManager.getAllChats();
-    console.log("Chats existentes:", chats);
+    // console.log("Chats existentes:", chats);
 
     // Filtrar chats donde este profesor participa
     const myChats = chats.filter(
@@ -141,31 +141,31 @@ const initializeChat = async () => {
         chat.teachers && chat.teachers.includes(parseInt(currentUserId.value))
     );
 
-    console.log("Mis chats como profesor:", myChats);
+    // console.log("Mis chats como profesor:", myChats);
 
     if (myChats && myChats.length > 0) {
       // Usar el primer chat donde participa este profesor
       chatId.value = myChats[0]._id;
-      console.log("Usando chat existente:", chatId.value);
+      // console.log("Usando chat existente:", chatId.value);
 
       // Cargar mensajes existentes
       const chatData = await chatManager.getChatById(chatId.value);
-      console.log("Datos del chat:", chatData);
+      // console.log("Datos del chat:", chatData);
 
       // Obtener información del compañero de chat
       updateChatPartnerInfo(chatData);
 
       if (chatData && chatData.interaction && chatData.interaction.length > 0) {
-        console.log("Cargando mensajes del historial:", chatData.interaction);
+        // console.log("Cargando mensajes del historial:", chatData.interaction);
 
         // Convertir los mensajes al formato esperado
         messages.value = chatData.interaction.map((msg) => {
           // Verificar si el mensaje es del usuario actual o de otro
           const isOwnMessage = msg.teacherId === currentUserId.value.toString();
 
-          console.log(
-            `Mensaje de teacherId: ${msg.teacherId}, ¿Es propio?: ${isOwnMessage}`
-          );
+          // console.log(
+          //   `Mensaje de teacherId: ${msg.teacherId}, ¿Es propio?: ${isOwnMessage}`
+          // );
 
           return {
             id: msg._id,
@@ -190,13 +190,13 @@ const initializeChat = async () => {
         // Por ahora, creamos un chat con otro ID genérico (simulación)
         const otherTeacherId = parseInt(currentUserId.value) + 1; // Simulación de otro profesor
 
-        console.log(
-          "No se encontraron chats, creando uno nuevo entre profesores",
-          {
-            currentUserId: currentUserId.value,
-            otherTeacherId,
-          }
-        );
+        // console.log(
+        //   "No se encontraron chats, creando uno nuevo entre profesores",
+        //   {
+        //     currentUserId: currentUserId.value,
+        //     otherTeacherId,
+        //   }
+        // );
 
         const newChat = await chatManager.createChat({
           name: `Chat profesores ${currentUserId.value} y ${otherTeacherId}`,
@@ -205,7 +205,7 @@ const initializeChat = async () => {
         });
 
         chatId.value = newChat._id;
-        console.log("Nuevo chat creado:", newChat);
+        // console.log("Nuevo chat creado:", newChat);
 
         // Obtener información del compañero de chat
         updateChatPartnerInfo(newChat);
@@ -236,7 +236,7 @@ const connectSocket = () => {
 
     // Evento de conexión establecida
     socket.value.on("connect", () => {
-      console.log("Conectado al servidor de chat");
+      // console.log("Conectado al servidor de chat");
 
       // Registrar el usuario
       socket.value.emit("register_user", {
@@ -246,9 +246,9 @@ const connectSocket = () => {
 
       // Unirse al chat actual (solo si tenemos un chatId)
       if (chatId.value) {
-        console.log(
-          `Uniendo al usuario ${currentUserId.value} al chat ${chatId.value}`
-        );
+        // console.log(
+        //   `Uniendo al usuario ${currentUserId.value} al chat ${chatId.value}`
+        // );
         socket.value.emit("join_chat", {
           chatId: chatId.value,
           userId: currentUserId.value,
@@ -261,7 +261,7 @@ const connectSocket = () => {
 
     // Evento de desconexión
     socket.value.on("disconnect", () => {
-      console.log("Desconectado del servidor de chat");
+      // console.log("Desconectado del servidor de chat");
     });
 
     // Registrar todos los manejadores de eventos
@@ -275,9 +275,9 @@ const connectSocket = () => {
 const setupSocketEventHandlers = () => {
   // Escuchar nuevos mensajes
   socket.value.on("new_message", (data) => {
-    console.log("Nuevo mensaje recibido del socket:", data);
-    console.log("Tipo de dato:", typeof data);
-    console.log("Contenido JSON:", JSON.stringify(data, null, 2));
+    // console.log("Nuevo mensaje recibido del socket:", data);
+    // console.log("Tipo de dato:", typeof data);
+    // console.log("Contenido JSON:", JSON.stringify(data, null, 2));
 
     // Extraer la información del mensaje según la estructura del backend
     let messageData = null;
@@ -332,8 +332,8 @@ const setupSocketEventHandlers = () => {
       ? currentUserName.value
       : `Profesor ${messageData.userId}`;
 
-    console.log("Mensaje procesado:", messageData);
-    console.log("¿Es del usuario actual?:", isCurrentUser);
+    // console.log("Mensaje procesado:", messageData);
+    // console.log("¿Es del usuario actual?:", isCurrentUser);
 
     // Crear una clave única para este mensaje
     const msgSignature = `${messageData.userId}_${
@@ -342,7 +342,7 @@ const setupSocketEventHandlers = () => {
 
     // Si este mensaje ya fue procesado, ignorarlo
     if (processedMessages.value.has(msgSignature)) {
-      console.log("Mensaje ya procesado anteriormente, ignorando");
+      // console.log("Mensaje ya procesado anteriormente, ignorando");
       return;
     }
 
@@ -365,16 +365,16 @@ const setupSocketEventHandlers = () => {
 
     if (existingIndex === -1) {
       // Si no existe mensaje similar, agregar este nuevo
-      console.log("Mensaje nuevo, agregando:", messageData);
+      // console.log("Mensaje nuevo, agregando:", messageData);
       messages.value.push(messageData);
       scrollToBottom();
     } else {
       // Si ya existe un mensaje similar, actualizar sus propiedades si es necesario
-      console.log("Mensaje similar encontrado en índice:", existingIndex);
+      // console.log("Mensaje similar encontrado en índice:", existingIndex);
 
       // Si el mensaje existente es local y el nuevo tiene ID del servidor, actualizar
       if (messages.value[existingIndex].local && messageData.id) {
-        console.log("Actualizando mensaje local con datos del servidor");
+        // console.log("Actualizando mensaje local con datos del servidor");
         messages.value[existingIndex].id = messageData.id;
         messages.value[existingIndex].sending = false;
       }
@@ -437,7 +437,7 @@ const sendMessage = async () => {
         local: true, // Marcar como mensaje local para evitar duplicación
       };
 
-      console.log("Agregando mensaje local:", localMessage);
+      // console.log("Agregando mensaje local:", localMessage);
       messages.value.push(localMessage);
 
       // Hacer scroll para mostrar el nuevo mensaje
@@ -447,16 +447,16 @@ const sendMessage = async () => {
       const isFirstMessage = messages.value.length === 1;
 
       // Enviar el mensaje a través del API
-      console.log(
-        `Enviando mensaje a la API. Chat: ${chatId.value}, teacherId: ${currentUserId.value}`
-      );
+      // console.log(
+      //   `Enviando mensaje a la API. Chat: ${chatId.value}, teacherId: ${currentUserId.value}`
+      // );
       const result = await chatManager.sendMessage(
         chatId.value,
         currentUserId.value, // teacherId como string
         messageText
       );
 
-      console.log("Respuesta de la API al enviar mensaje:", result);
+      // console.log("Respuesta de la API al enviar mensaje:", result);
 
       // Actualizar el mensaje local con el ID real
       const messageIndex = messages.value.findIndex((m) => m.id === tempId);
@@ -470,10 +470,10 @@ const sendMessage = async () => {
             sending: false,
             local: true, // Mantener la marca para evitar duplicación
           };
-          console.log(
-            "Mensaje actualizado con ID del servidor:",
-            messages.value[messageIndex]
-          );
+          // console.log(
+          //   "Mensaje actualizado con ID del servidor:",
+          //   messages.value[messageIndex]
+          // );
         } else {
           // Solo marcar como enviado si no tenemos el ID real
           messages.value[messageIndex].sending = false;
@@ -482,7 +482,7 @@ const sendMessage = async () => {
 
       // Si este es el primer mensaje, notificar para actualizar la lista de chats
       if (isFirstMessage && socket.value) {
-        console.log("Enviando notificación de primer mensaje en el chat");
+        // console.log("Enviando notificación de primer mensaje en el chat");
 
         // Emitir evento personalizado para primer mensaje
         socket.value.emit("first_message_sent", {
@@ -553,23 +553,23 @@ const scrollToBottom = async () => {
 const retryMessage = async (message, index) => {
   if (message.failed && chatId.value) {
     try {
-      console.log("Reintentando enviar mensaje:", message);
+      // console.log("Reintentando enviar mensaje:", message);
 
       // Marcar el mensaje como en proceso de envío
       messages.value[index].failed = false;
       messages.value[index].sending = true;
 
       // Solo usar la API para evitar duplicaciones
-      console.log(
-        `Reenviando mensaje a la API. Chat: ${chatId.value}, teacherId: ${message.userId}`
-      );
+      // console.log(
+      //   `Reenviando mensaje a la API. Chat: ${chatId.value}, teacherId: ${message.userId}`
+      // );
       const result = await chatManager.sendMessage(
         chatId.value,
         message.userId, // teacherId
         message.message
       );
 
-      console.log("Respuesta de la API al reenviar mensaje:", result);
+      // console.log("Respuesta de la API al reenviar mensaje:", result);
 
       // Actualizar el mensaje con el ID real
       if (result.interaction && result.interaction.length > 0) {
@@ -581,10 +581,10 @@ const retryMessage = async (message, index) => {
           failed: false,
           local: true, // Mantener la marca para evitar duplicación
         };
-        console.log(
-          "Mensaje actualizado después del reintento:",
-          messages.value[index]
-        );
+        // console.log(
+        //   "Mensaje actualizado después del reintento:",
+        //   messages.value[index]
+        // );
       } else {
         // Solo marcar como enviado si no tenemos el ID real
         messages.value[index].sending = false;
@@ -627,9 +627,9 @@ const updateChatPartnerInfo = (chatData) => {
       chatPartnerName.value = `Profesor ${partnerId}`;
     }
 
-    console.log(
-      `Compañero de chat identificado: ${chatPartnerName.value} (ID: ${chatPartnerUserId.value})`
-    );
+    // console.log(
+    //   `Compañero de chat identificado: ${chatPartnerName.value} (ID: ${chatPartnerUserId.value})`
+    // );
   } else {
     console.warn("No se pudo identificar al compañero de chat");
     chatPartnerName.value = "Chat";
