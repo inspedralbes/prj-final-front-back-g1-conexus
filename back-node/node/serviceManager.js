@@ -292,3 +292,34 @@ app.listen(PORT, () => {
         return { success: false, message: `Error al crear servicio: ${error.message}` };
     }
 }
+
+// Eliminar un servicio
+export function deleteService(serviceName) {
+    const service = services[serviceName];
+    
+    if (!service) {
+        return { success: false, message: `Servicio ${serviceName} no encontrado` };
+    }
+    
+    try {
+        // Si el servicio está en ejecución, detenerlo primero
+        if (service.state === "running") {
+            stopService(serviceName);
+        }
+        
+        // Eliminar el archivo si existe
+        const scriptPath = path.join(__dirname, service.script);
+        if (fs.existsSync(scriptPath)) {
+            fs.unlinkSync(scriptPath);
+        }
+        
+        // Eliminar el servicio del registro
+        delete services[serviceName];
+        
+        console.log(`Servicio ${serviceName} eliminado correctamente`);
+        return { success: true, message: `Servicio ${serviceName} eliminado correctamente` };
+    } catch (error) {
+        console.error(`Error al eliminar servicio ${serviceName}:`, error);
+        return { success: false, message: `Error al eliminar servicio: ${error.message}` };
+    }
+}

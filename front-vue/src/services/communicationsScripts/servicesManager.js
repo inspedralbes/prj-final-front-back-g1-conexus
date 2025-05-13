@@ -147,3 +147,24 @@ export const createService = async (serviceData) => {
         throw error;
     }
 };
+
+/**
+ * Delete a service
+ */
+export const deleteService = async (serviceName) => {
+    try {
+        const response = await fetch(`${BACKEND_URL}api/services/${serviceName}`, {
+            method: 'DELETE',
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error(`Error deleting service ${serviceName}:`, error);
+        throw error;
+    }
+};

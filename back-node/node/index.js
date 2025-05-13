@@ -120,6 +120,33 @@ app.post("/api/services", (req, res) => {
     }
 });
 
+// Endpoint para eliminar un servicio
+app.delete("/api/services/:serviceName", async (req, res) => {
+    const serviceName = req.params.serviceName;
+    try {
+        // Asegurarse de que el servicio esté detenido primero
+        const service = getServiceStatus(serviceName);
+        if (service && service.state === 'running') {
+            stopService(serviceName);
+        }
+        
+        // Importar la función para eliminar servicios
+        const { deleteService } = await import("./serviceManager.js");
+        const result = deleteService(serviceName);
+        
+        if (result.success) {
+            res.json(result);
+        } else {
+            res.status(400).json(result);
+        }
+    } catch (error) {
+        res.status(500).json({ 
+            success: false, 
+            message: `Error al eliminar el servicio: ${error.message}`
+        });
+    }
+});
+
 // Rutas para saber las ultimas actividades
 app.get("/api/activities", async (req, res) => {
     try {

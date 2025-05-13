@@ -103,10 +103,10 @@
                                     d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                             </svg>
                         </button>
-                        <button class="p-2 text-gray-400 hover:text-yellow-400 transition-colors">
+                        <button @click="showDeleteConfirm(name)" class="p-2 text-gray-400 hover:text-red-400 transition-colors">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                             </svg>
                         </button>
                     </div>
@@ -180,7 +180,8 @@
                         <input type="number" v-model="newService.port" min="1024" max="65535"
                             class="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             placeholder="3100">
-                        <p class="text-xs text-gray-400 mt-1">Opcional. Si no s'especifica, s'assignarà un port automàticament.</p>
+                        <p class="text-xs text-gray-400 mt-1">Opcional. Si no s'especifica, s'assignarà un port
+                            automàticament.</p>
                     </div>
                     <div class="flex items-center">
                         <input id="auto-start" type="checkbox" v-model="newService.autoStart"
@@ -202,7 +203,7 @@
         </div>
 
         <!-- Modal de Detalls del Servei (ocult per defecte) -->
-        <div v-if="showDetailsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <!-- <div v-if="showDetailsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div class="bg-slate-800 rounded-xl p-6 w-full max-w-lg">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-xl font-semibold">Detalls del Servei</h2>
@@ -275,6 +276,191 @@
                     </div>
                 </div>
             </div>
+        </div> -->
+        <div v-if="showDetailsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-slate-800 rounded-xl p-6 w-full max-w-lg">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold">Detalls del Servei</h2>
+                    <button @click="showDetailsModal = false" class="text-gray-400 hover:text-white">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Estado de carga -->
+                <div v-if="selectedService && selectedService.loading" class="flex justify-center py-8">
+                    <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500"></div>
+                    <p class="ml-3 text-gray-400">Obteniendo detalles...</p>
+                </div>
+
+                <!-- Estado de error -->
+                <div v-else-if="selectedService && selectedService.error"
+                    class="bg-red-500/10 text-red-400 p-4 rounded-lg">
+                    <p class="text-center">{{ selectedService.error }}</p>
+                    <div class="flex justify-center mt-4">
+                        <button @click="viewServiceDetails(selectedService.name)"
+                            class="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors">
+                            Reintentar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Detalles del servicio -->
+                <div v-else-if="selectedService" class="space-y-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="p-3 bg-blue-500/10 rounded-lg">
+                            <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-medium">{{ selectedService.displayName || selectedService.name }}
+                            </h3>
+                            <p class="text-sm text-gray-400">{{ selectedService.tech || 'Servicio' }}</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-slate-700/50 p-4 rounded-lg">
+                            <h4 class="text-sm font-medium text-gray-300 mb-2">Estat</h4>
+                            <div class="flex items-center">
+                                <span class="w-3 h-3 rounded-full mr-2"
+                                    :class="selectedService.state === 'running' ? 'bg-green-500' : 'bg-red-500'"></span>
+                                <span>{{ selectedService.state === 'running' ? 'Actiu' : 'Inactiu' }}</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-700/50 p-4 rounded-lg">
+                            <h4 class="text-sm font-medium text-gray-300 mb-2">Port</h4>
+                            <div class="text-xl font-semibold">
+                                {{ selectedService.port || 'No especificat' }}
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-700/50 p-4 rounded-lg">
+                            <h4 class="text-sm font-medium text-gray-300 mb-2">Ús de CPU</h4>
+                            <div class="flex items-center">
+                                <div class="w-full bg-slate-600 rounded-full h-2 mr-2">
+                                    <div class="h-2 rounded-full"
+                                        :class="getUsageColorClass(selectedService.stats?.cpu || selectedService.usage || 0)"
+                                        :style="{ width: `${selectedService.stats?.cpu || selectedService.usage || 0}%` }">
+                                    </div>
+                                </div>
+                                <span>{{ selectedService.stats?.cpu || selectedService.usage || 0 }}%</span>
+                            </div>
+                        </div>
+
+                        <!-- Solo mostrar la memoria si hay datos reales -->
+                        <div v-if="selectedService.stats && selectedService.stats.memory" class="bg-slate-700/50 p-4 rounded-lg">
+                            <h4 class="text-sm font-medium text-gray-300 mb-2">Memòria</h4>
+                            <div class="text-xl font-semibold">
+                                {{ selectedService.stats.memory }}
+                                <span class="text-sm text-gray-400">MB</span>
+                            </div>
+                        </div>
+
+                        <!-- Solo mostrar tiempo de ejecución si hay datos reales -->
+                        <div v-if="selectedService.stats && selectedService.stats.elapsed" 
+                            class="bg-slate-700/50 p-4 rounded-lg"
+                            :class="{'col-span-2': !selectedService.stats || !selectedService.stats.memory}">
+                            <h4 class="text-sm font-medium text-gray-300 mb-2">Temps d'execució</h4>
+                            <div class="text-xl font-semibold">
+                                {{ formatTime(selectedService.stats.elapsed) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 flex justify-end space-x-3">
+                        <button @click="showDeleteConfirm(selectedService.name)"
+                            class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition-colors">
+                            Eliminar Servei
+                        </button>
+                        <button @click="showDetailsModal = false"
+                            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors">
+                            Tancar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Confirmació per Eliminar Servei -->
+        <div v-if="showDeleteModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-slate-800 rounded-xl p-6 w-full max-w-md">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold text-red-400">Eliminar Servei</h2>
+                    <button @click="showDeleteModal = false" class="text-gray-400 hover:text-white">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                
+                <p class="text-gray-300">Estàs segur que vols eliminar el servei <span class="font-semibold text-white">{{ serviceToDelete }}</span>?</p>
+                <p class="text-gray-400 text-sm mt-2">Aquesta acció no es pot desfer. Si el servei està en execució, es tancarà abans d'eliminar-lo.</p>
+                
+                <div class="flex justify-end space-x-3 mt-6">
+                    <button @click="showDeleteModal = false"
+                        class="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors">
+                        Cancel·lar
+                    </button>
+                    <button @click="deleteService" :disabled="deleting"
+                        class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition-colors">
+                        {{ deleting ? 'Eliminant...' : 'Eliminar' }}
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Información de Puertos -->
+        <div v-if="showPortInfoModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-slate-800 rounded-xl p-6 w-full max-w-md">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold text-blue-400">Informació Important</h2>
+                    <button @click="showPortInfoModal = false" class="text-gray-400 hover:text-white">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="flex items-start">
+                        <svg class="w-6 h-6 text-yellow-400 mr-2 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        <div>
+                            <h3 class="font-medium text-gray-200">Recordatori sobre ports</h3>
+                            <p class="text-gray-400 text-sm mt-1">
+                                El servei s'ha creat correctament al port {{ newServicePort }}, però pot ser necessari configurar el tallafocs del servidor per permetre connexions entrants a aquest port.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-slate-700/50 p-4 rounded-lg">
+                        <h4 class="text-sm font-medium text-gray-300 mb-2">Comanda per Linux/Ubuntu:</h4>
+                        <pre class="bg-slate-800 p-2 rounded text-xs overflow-x-auto">sudo ufw allow {{ newServicePort }}/tcp</pre>
+                    </div>
+                    
+                    <div class="bg-slate-700/50 p-4 rounded-lg">
+                        <h4 class="text-sm font-medium text-gray-300 mb-2">Comanda per Windows:</h4>
+                        <pre class="bg-slate-800 p-2 rounded text-xs overflow-x-auto">netsh advfirewall firewall add rule name="Allow {{ newServicePort }}" dir=in action=allow protocol=TCP localport={{ newServicePort }}</pre>
+                    </div>
+                </div>
+                
+                <div class="flex justify-end mt-6">
+                    <button @click="showPortInfoModal = false"
+                        class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors">
+                        Entès
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -288,17 +474,22 @@ import {
     stopService,
     startAllServices as startAll,
     stopAllServices as stopAll,
-    createService // Importar la nueva función
+    createService
 } from '@/services/communicationsScripts/servicesManager';
 
 const showAddModal = ref(false);
 const showDetailsModal = ref(false);
+const showDeleteModal = ref(false);
+const showPortInfoModal = ref(false);
 const selectedService = ref(null);
 const services = ref({});
 const loading = ref(true);
 const error = ref(null);
 const addingService = ref(false);
+const deleting = ref(false);
 const refreshInterval = ref(null);
+const serviceToDelete = ref('');
+const newServicePort = ref(null);
 
 const newService = ref({
     name: '',
@@ -314,7 +505,7 @@ const formatTime = (ms) => {
     const minutes = Math.floor(seconds / 60);
     const hours = Math.floor(minutes / 60);
     const days = Math.floor(hours / 24);
-    
+
     if (days > 0) {
         return `${days}d ${hours % 24}h`;
     }
@@ -345,7 +536,7 @@ const refreshServices = async () => {
         services.value = data;
     } catch (err) {
         console.error('Error al cargar los servicios:', err);
-        error.value = 'Error al cargar los servicios. Por favor, inténtalo de nuevo.';
+        error.value = 'Error al carregar els serveis. Si us plau, torna-ho a intentar.';
     } finally {
         loading.value = false;
     }
@@ -394,36 +585,42 @@ const stopAllServices = async () => {
 const addService = async () => {
     addingService.value = true;
     error.value = null;
-    
+
     try {
         // Preparar datos del servicio
         const serviceData = {
             name: newService.value.name.toLowerCase().replace(/\s+/g, '-'),
-            script: newService.value.script.endsWith('.js') 
-                ? newService.value.script 
+            script: newService.value.script.endsWith('.js')
+                ? newService.value.script
                 : `${newService.value.script}.js`,
             description: newService.value.name,
             tech: `${newService.value.type} (Node.js)`,
             port: newService.value.port ? parseInt(newService.value.port) : null,
             autoStart: newService.value.autoStart
         };
-        
+
         // Crear el servicio
         const result = await createService(serviceData);
-        
+
         if (result.success) {
             showAddModal.value = false;
-            // Mostrar mensaje de éxito
-            alert(`Servei ${newService.value.name} creat correctament`);
+            
+            // Guardar el puerto para mostrarlo en el modal informativo
+            // Usar el puerto especificado o el que asignó el servidor
+            const serviceInfo = await getServiceStatus(serviceData.name);
+            newServicePort.value = serviceInfo?.port || serviceData.port || 'No especificado';
+            
+            // Mostrar modal de información sobre puertos
+            showPortInfoModal.value = true;
         } else {
             error.value = result.message;
         }
-        
+
         // Refrescar la lista de servicios
         await refreshServices();
     } catch (err) {
         console.error('Error al añadir servicio:', err);
-        error.value = `Error al añadir servicio: ${err.message || err}`;
+        error.value = `Error al afegir servei: ${err.message || err}`;
     } finally {
         addingService.value = false;
         // Resetear el formulario
@@ -440,12 +637,90 @@ const addService = async () => {
 // Modificar la función para ver detalles del servicio
 const viewServiceDetails = async (serviceName) => {
     try {
-        // Obtener datos actualizados del servicio específico
-        const serviceData = await getServiceStatus(serviceName);
-        selectedService.value = serviceData;
+        // Mostrar un estado de carga en el detalle
+        selectedService.value = { ...services.value[serviceName], loading: true };
         showDetailsModal.value = true;
+
+        // Obtener datos actualizados y detallados del servicio específico
+        const serviceData = await getServiceStatus(serviceName);
+
+        // Si no hay datos o hay un error, mantener los datos básicos
+        if (!serviceData) {
+            selectedService.value = {
+                ...services.value[serviceName],
+                loading: false,
+                error: 'No se pudieron cargar los detalles del servei'
+            };
+            return;
+        }
+
+        // Actualizar con los datos detallados
+        selectedService.value = {
+            ...serviceData,
+            loading: false,
+            // Añadir estadísticas reales o valores por defecto si no existen
+            stats: serviceData.stats || {
+                memory: "N/A",
+                elapsed: 0,
+                cpu: serviceData.usage || 0
+            }
+        };
     } catch (err) {
-        console.error(`Error al obtener detalles del servicio ${serviceName}:`, err);
+        console.error(`Error al obtenir detalls del servei ${serviceName}:`, err);
+        // Mantener la ventana abierta pero mostrar el error
+        if (selectedService.value) {
+            selectedService.value = {
+                ...selectedService.value,
+                loading: false,
+                error: `Error al carregar detalls: ${err.message || 'Desconegut'}`
+            };
+        }
+    }
+};
+
+// Función para mostrar el modal de confirmación de eliminación
+const showDeleteConfirm = (serviceName) => {
+    serviceToDelete.value = serviceName;
+    showDeleteModal.value = true;
+};
+
+// Función para eliminar un servicio
+const deleteService = async () => {
+    if (!serviceToDelete.value) return;
+    
+    deleting.value = true;
+    try {
+        // Primero detener el servicio si está en ejecución
+        if (services.value[serviceToDelete.value]?.state === 'running') {
+            await stopService(serviceToDelete.value);
+        }
+        
+        // Llamada a la API para eliminar el servicio
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/services/${serviceToDelete.value}`, {
+            method: 'DELETE',
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        // Cerrar modales
+        showDeleteModal.value = false;
+        if (selectedService.value?.name === serviceToDelete.value) {
+            showDetailsModal.value = false;
+        }
+        
+        // Actualizar la lista de servicios
+        await refreshServices();
+        
+        // Mostrar mensaje de éxito
+        alert(`El servei ${serviceToDelete.value} s'ha eliminat correctament.`);
+    } catch (err) {
+        console.error('Error al eliminar el servicio:', err);
+        alert(`Error al eliminar el servei: ${err.message || 'Error desconegut'}`);
+    } finally {
+        deleting.value = false;
+        serviceToDelete.value = '';
     }
 };
 
