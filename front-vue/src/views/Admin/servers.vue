@@ -205,80 +205,6 @@
         </div>
 
         <!-- Modal de Detalls del Servei (ocult per defecte) -->
-        <!-- <div v-if="showDetailsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div class="bg-slate-800 rounded-xl p-6 w-full max-w-lg">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-xl font-semibold">Detalls del Servei</h2>
-                    <button @click="showDetailsModal = false" class="text-gray-400 hover:text-white">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
-                
-                <div v-if="selectedService" class="space-y-4">
-                    <div class="flex items-center space-x-3">
-                        <div class="p-3 bg-blue-500/10 rounded-lg">
-                            <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 class="text-lg font-medium">{{ selectedService.displayName }}</h3>
-                            <p class="text-sm text-gray-400">{{ selectedService.tech }}</p>
-                        </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="bg-slate-700/50 p-4 rounded-lg">
-                            <h4 class="text-sm font-medium text-gray-300 mb-2">Estat</h4>
-                            <div class="flex items-center">
-                                <span class="w-3 h-3 rounded-full mr-2"
-                                    :class="selectedService.state === 'running' ? 'bg-green-500' : 'bg-red-500'"></span>
-                                <span>{{ selectedService.state === 'running' ? 'Actiu' : 'Inactiu' }}</span>
-                            </div>
-                        </div>
-                        
-                        <div class="bg-slate-700/50 p-4 rounded-lg">
-                            <h4 class="text-sm font-medium text-gray-300 mb-2">Port</h4>
-                            <div class="text-xl font-semibold">
-                                {{ selectedService.port || 'No especificat' }}
-                            </div>
-                        </div>
-                        
-                        <div class="bg-slate-700/50 p-4 rounded-lg">
-                            <h4 class="text-sm font-medium text-gray-300 mb-2">Ús de CPU</h4>
-                            <div class="flex items-center">
-                                <div class="w-full bg-slate-600 rounded-full h-2 mr-2">
-                                    <div class="h-2 rounded-full" :class="getUsageColorClass(selectedService.usage)"
-                                        :style="{ width: `${selectedService.usage}%` }"></div>
-                                </div>
-                                <span>{{ selectedService.usage }}%</span>
-                            </div>
-                        </div>
-                        
-                        <div v-if="selectedService.stats" class="bg-slate-700/50 p-4 rounded-lg">
-                            <h4 class="text-sm font-medium text-gray-300 mb-2">Memòria</h4>
-                            <div class="text-xl font-semibold">{{ selectedService.stats.memory }} MB</div>
-                        </div>
-                        
-                        <div v-if="selectedService.stats" class="bg-slate-700/50 p-4 rounded-lg col-span-2">
-                            <h4 class="text-sm font-medium text-gray-300 mb-2">Temps d'execució</h4>
-                            <div class="text-xl font-semibold">{{ formatTime(selectedService.stats.elapsed) }}</div>
-                        </div>
-                    </div>
-                    
-                    <div class="mt-6 flex justify-end">
-                        <button @click="showDetailsModal = false"
-                            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors">
-                            Tancar
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div> -->
         <div v-if="showDetailsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div class="bg-slate-800 rounded-xl p-6 w-full max-w-lg">
                 <div class="flex justify-between items-center mb-4">
@@ -449,18 +375,6 @@
                                 configurar el tallafocs del servidor per permetre connexions entrants a aquest port.
                             </p>
                         </div>
-                    </div>
-
-                    <div class="bg-slate-700/50 p-4 rounded-lg">
-                        <h4 class="text-sm font-medium text-gray-300 mb-2">Comanda per Linux/Ubuntu:</h4>
-                        <pre
-                            class="bg-slate-800 p-2 rounded text-xs overflow-x-auto">sudo ufw allow {{ newServicePort }}/tcp</pre>
-                    </div>
-
-                    <div class="bg-slate-700/50 p-4 rounded-lg">
-                        <h4 class="text-sm font-medium text-gray-300 mb-2">Comanda per Windows:</h4>
-                        <pre
-                            class="bg-slate-800 p-2 rounded text-xs overflow-x-auto">netsh advfirewall firewall add rule name="Allow {{ newServicePort }}" dir=in action=allow protocol=TCP localport={{ newServicePort }}</pre>
                     </div>
                 </div>
 
@@ -638,7 +552,7 @@ const addService = async () => {
 
         if (result.success) {
             showAddModal.value = false;
-            
+
             // Guardar el puerto para mostrarlo en el modal informativo
             // Usar el puerto especificado o el que asignó el servidor
             const serviceInfo = await getServiceStatus(serviceData.name);
@@ -653,7 +567,7 @@ const addService = async () => {
             error.value = result.message;
             showNotification(result.message, 'error');
         }
-        
+
         // Refrescar la lista de servicios
         await refreshServices();
     } catch (err) {
@@ -726,14 +640,14 @@ const showDeleteConfirm = (serviceName) => {
 // Función para eliminar un servicio
 const deleteService = async () => {
     if (!serviceToDelete.value) return;
-    
+
     deleting.value = true;
     try {
         // Primero detener el servicio si está en ejecución
         if (services.value[serviceToDelete.value]?.state === 'running') {
             await stopService(serviceToDelete.value);
         }
-        
+
         // Llamada a la API para eliminar el servicio
         const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/services/${serviceToDelete.value}`, {
             method: 'DELETE',
@@ -742,16 +656,16 @@ const deleteService = async () => {
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+
         // Cerrar modales
         showDeleteModal.value = false;
         if (selectedService.value?.name === serviceToDelete.value) {
             showDetailsModal.value = false;
         }
-        
+
         // Actualizar la lista de servicios
         await refreshServices();
-        
+
         // Mostrar notificación de éxito
         showNotification(`El servei ${serviceToDelete.value} s'ha eliminat correctament.`);
     } catch (err) {
@@ -770,7 +684,7 @@ const showNotification = (message, type = 'success') => {
         message,
         type
     };
-    
+
     // Auto-ocultar después de 3 segundos
     setTimeout(() => {
         notification.value.show = false;
