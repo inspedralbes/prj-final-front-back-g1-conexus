@@ -15,7 +15,15 @@ import roomRoutes from "./routes/roomRoutes.js";
 import typeUserRoutes from "./routes/typeUserRoutes.js";
 import userCourseRoutes from "./routes/userCourseRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
-import { startService, stopService, startAllServices, stopAllServices, getServiceStatus, getAllServicesStatus } from "./serviceManager.js";
+import { 
+    startService, 
+    stopService, 
+    startAllServices, 
+    stopAllServices, 
+    getServiceStatus, 
+    getAllServicesStatus,
+    addService 
+} from "./serviceManager.js";
 // Importar las funciones para obtener últimos registros
 import { getLatestUser } from './routes/userRoutes.js';
 import { getLatestCourse } from './routes/courseRoutes.js';
