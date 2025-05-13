@@ -103,8 +103,8 @@
           <h2 class="text-xl font-bold mb-2">{{ user.name }}</h2>
           <p class="text-gray-700 mb-2">Email: {{ user.email }}</p>
           <p class="text-gray-700 mb-2">Rol: {{ getRoleName(user.typeUsers_id) }}</p>
-          <p class="text-gray-700 mb-2">Fecha de creación: {{ formatDate(user.created_at) }}</p>
-          <button @click="handleDeleteUser(user.id)" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Eliminar</button>
+          <p class="text-gray-700 mb-2">Fecha de creación: {{ getUserCreationDate(user) }}</p>
+          <button @click="confirmDelete(user)" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Eliminar</button>
           <button @click="handleUpdateUser(user.id)" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Modificar rol</button>
       </div>
   </div>
@@ -113,7 +113,7 @@
   <div v-if="showModal" class="fixed inset-0 flex items-center justify-center z-50">
       <div class="fixed inset-0 bg-black opacity-50" @click="closeModal"></div>
       <div class="bg-white p-6 rounded-lg shadow-lg z-10 w-full max-w-md">
-          <h2 class="text-xl font-bold mb-4">Cambiar rol de usuario</h2>
+          <h2 class="text-xl font-bold mb-4 text-gray-700">Cambiar rol de usuario</h2>
           
           <div v-if="modalError" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
               {{ modalError }}
@@ -124,14 +124,14 @@
           </div>
           
           <div class="mb-4">
-              <p class="mb-2"><strong>Usuario:</strong> {{ selectedUser?.name }}</p>
-              <p class="mb-2"><strong>Rol actual:</strong> {{ selectedUser ? getRoleName(selectedUser.typeUsers_id) : '' }}</p>
+              <p class="mb-2 text-gray-700"><strong>Usuario:</strong> {{ selectedUser?.name }}</p>
+              <p class="mb-2 text-gray-700"><strong>Rol actual:</strong> {{ selectedUser ? getRoleName(selectedUser.typeUsers_id) : '' }}</p>
               
               <div class="mt-4">
                   <label class="block text-gray-700 mb-2">Nuevo rol:</label>
                   <select 
                       v-model="newRoleId" 
-                      class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                      class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 text-gray-700"
                   >
                       <option v-for="type in typeUsers" :key="type.id" :value="type.id">
                           {{ type.name }}
@@ -157,11 +157,44 @@
           </div>
       </div>
   </div>
+  
+  <!-- Modal de confirmación para eliminar usuario -->
+  <transition name="fade">
+    <div v-if="showDeleteModal" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" @click="showDeleteModal = false"></div>
+        <transition name="pop">
+            <div class="relative bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 max-w-md w-full border border-slate-700/50 shadow-2xl">
+                <h2 class="text-xl font-bold text-white mb-4">Confirmar eliminación</h2>
+                
+                <p class="text-slate-300 mb-6">
+                    ¿Estás seguro que quieres eliminar al usuario "{{ userToDelete?.name }}"? 
+                    <br>
+                    <span class="text-red-400">Esta acción no se puede deshacer.</span>
+                </p>
+                
+                <div class="flex justify-end space-x-3">
+                    <button 
+                        @click="showDeleteModal = false"
+                        class="px-4 py-2 border border-slate-600 text-slate-300 rounded-lg hover:bg-slate-700 transition-colors"
+                    >
+                        Cancelar
+                    </button>
+                    <button 
+                        @click="handleDeleteUser"
+                        class="px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg shadow hover:from-red-600 hover:to-red-700 transition-all duration-300"
+                    >
+                        Eliminar
+                    </button>
+                </div>
+            </div>
+        </transition>
+    </div>
+  </transition>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { getAllUsers, deleteUser, updateUserRole, getAllTypeUsers, createUser } from '@/services/communicationsScripts/mainManager.js';
+import { getAllUsers, deleteUser as deleteUserAPI, updateUserRole, getAllTypeUsers, createUser } from '@/services/communicationsScripts/mainManager.js';
 
 // Variables generales
 const users = ref([]);
@@ -179,6 +212,10 @@ const modalSuccess = ref(null);
 const updating = ref(false);
 const selectedFileName = ref('');
 const selectedFile = ref(null);
+
+// Variables para el modal de confirmación de eliminación
+const showDeleteModal = ref(false);
+const userToDelete = ref(null);
 
 const handleFileUpload = (event) => {
   const file = event.target.files[0];
@@ -246,8 +283,6 @@ const closeCreateModal = () => {
 
 // Función para guardar un nuevo usuario
 const saveNewUser = async () => {
-  
-
   if (!newUser.value.name || !newUser.value.email || !newUser.value.password || !newUser.value.typeUsers_id) {
     createModalError.value = "Por favor, completa todos los campos obligatorios";
     return;
@@ -258,7 +293,6 @@ const saveNewUser = async () => {
   createModalSuccess.value = null;
 
   try {
-
     const formData = new FormData();
     formData.append('name', newUser.value.name);
     formData.append('email', newUser.value.email);
@@ -268,7 +302,6 @@ const saveNewUser = async () => {
       formData.append('profile', selectedFile.value);
     }
 
-    // Importa la nueva función al principio del archivo
     const response = await createUser(formData);
     
     if (response.error) {
@@ -291,15 +324,35 @@ const saveNewUser = async () => {
   }
 };
 
+// Función para obtener la fecha de creación del usuario (maneja diferentes formatos)
+const getUserCreationDate = (user) => {
+  // Intenta diferentes campos de fecha posibles
+  const dateField = user.created_at || user.createdAt || user.created || user.date_created;
+  return dateField ? formatDate(dateField) : 'No disponible';
+};
+
 // Función para formatear fechas
 const formatDate = (dateString) => {
   if (!dateString) return 'N/A';
-  const date = new Date(dateString);
-  return date.toLocaleDateString('es-ES', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric'
-  });
+  
+  try {
+    const date = new Date(dateString);
+    
+    // Verificar si la fecha es válida
+    if (isNaN(date.getTime())) {
+      console.warn('Fecha inválida recibida:', dateString);
+      return 'Fecha no válida';
+    }
+    
+    return date.toLocaleDateString('es-ES', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+  } catch (err) {
+    console.error('Error al formatear fecha:', err, dateString);
+    return 'Error en formato';
+  }
 };
 
 // Función para obtener tipos de usuarios
@@ -344,23 +397,30 @@ const fetchUsers = async () => {
   }
 };
 
-// Función para eliminar usuario
-const handleDeleteUser = async (userId) => {
-  if (confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
-    try {
-      const response = await deleteUser(userId);
+// Función para confirmar la eliminación
+const confirmDelete = (user) => {
+  userToDelete.value = user;
+  showDeleteModal.value = true;
+};
+
+// Función para eliminar el usuario
+const handleDeleteUser = async () => {
+  try {
+    if (userToDelete.value && userToDelete.value.id) {
+      const response = await deleteUserAPI(userToDelete.value.id);
       
       if (response.error) {
         error.value = response.error;
         console.error('Error al eliminar el usuario:', response.error);
       } else {
-        // Filtrar el usuario eliminado de la lista
-        users.value = users.value.filter(user => user.id !== userId);
+        users.value = users.value.filter(user => user.id !== userToDelete.value.id);
+        showDeleteModal.value = false;
+        userToDelete.value = null;
       }
-    } catch (err) {
-      error.value = 'Error al eliminar el usuario: ' + err.message;
-      console.error('Error deleting user:', err);
     }
+  } catch (err) {
+    error.value = 'Error al eliminar el usuario: ' + err.message;
+    console.error('Error deleting user:', err);
   }
 };
 
@@ -438,11 +498,43 @@ onMounted(() => {
 
 <style scoped>
 .animate-fade-in {
-animation: fadeIn 0.5s ease forwards;
+  animation: fadeIn 0.5s ease forwards;
 }
 
 @keyframes fadeIn {
-from { opacity: 0; transform: translateY(10px); }
-to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Transiciones para los diálogos */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.pop-enter-active,
+.pop-leave-active {
+  transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+
+.pop-enter-from,
+.pop-leave-to {
+  opacity: 0;
+  transform: scale(0.9) translateY(10px);
+}
+
+/* Transiciones suaves */
+button {
+  transition: all 0.2s ease;
+}
+
+/* Efectos hover */
+button:hover {
+  transform: translateY(-1px);
 }
 </style>
