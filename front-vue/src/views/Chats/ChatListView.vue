@@ -11,20 +11,52 @@
           placeholder="Buscar usuario..."
           class="search-input"
         />
-        <select
-          v-model="selectedUserType"
-          @change="filterUsers"
-          class="user-type-select"
-        >
-          <option value="all">Todos los tipos</option>
-          <option
-            v-for="type in filteredUserTypes"
-            :key="type.id"
-            :value="type.id"
+        <div class="filter-container" ref="filterRef">
+          <button
+            class="filter-icon-btn"
+            @click="(event) => toggleFilterMenu(event)"
+            title="Filtrar por tipo"
+            :class="{
+              'filter-active': selectedUserType !== 'all',
+              'menu-open': showFilterMenu,
+            }"
           >
-            {{ type.name }}
-          </option>
-        </select>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="filter-icon"
+            >
+              <polygon
+                points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"
+              ></polygon>
+            </svg>
+          </button>
+          <div v-if="showFilterMenu" class="filter-dropdown">
+            <div
+              class="filter-option"
+              :class="{ active: selectedUserType === 'all' }"
+              @click="selectFilter('all')"
+            >
+              <span>Todos los tipos</span>
+            </div>
+            <div
+              v-for="type in filteredUserTypes"
+              :key="type.id"
+              class="filter-option"
+              :class="{ active: selectedUserType === type.id }"
+              @click="selectFilter(type.id)"
+            >
+              <span>{{ type.name }}</span>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="view-tabs">
@@ -168,6 +200,8 @@ const hasNewMessages = ref({}); // Para marcar chats con mensajes nuevos
 const deletedChats = ref(new Set());
 const activeChats = ref(new Set());
 const typingUsers = ref({}); // Para almacenar qué usuarios están escribiendo
+const showFilterMenu = ref(false);
+const filterRef = ref(null); // Referencia al contenedor del filtro
 
 // Obtener el store de la aplicación
 const appStore = useAppStore();
@@ -1140,9 +1174,19 @@ watch(
   { deep: true }
 );
 
+// Cerrar el menú de filtro cuando se hace clic fuera
+const handleClickOutside = (event) => {
+  if (filterRef.value && !filterRef.value.contains(event.target)) {
+    showFilterMenu.value = false;
+  }
+};
+
 // Cargar datos
 onMounted(async () => {
   try {
+    // Agregar listener para click outside
+    document.addEventListener("click", handleClickOutside);
+
     // Configurar listeners para cambios en visualización de chat
     setupChatViewListeners();
 
@@ -1206,6 +1250,9 @@ onMounted(async () => {
 
 // Limpiar al desmontar
 onUnmounted(() => {
+  // Eliminar listener de click outside
+  document.removeEventListener("click", handleClickOutside);
+
   // Desconectar socket
   if (socket.value) {
     socket.value.disconnect();
@@ -1216,6 +1263,18 @@ onUnmounted(() => {
   window.removeEventListener("chat-view-entered", () => {});
   window.removeEventListener("chat-view-exited", () => {});
 });
+
+const toggleFilterMenu = (event) => {
+  // Prevent the click from propagating to the document
+  event.stopPropagation();
+  showFilterMenu.value = !showFilterMenu.value;
+};
+
+const selectFilter = (typeId) => {
+  selectedUserType.value = typeId;
+  showFilterMenu.value = false;
+  filterUsers();
+};
 </script>
 
 <style scoped>
@@ -1256,12 +1315,101 @@ h2 {
   flex: 1;
 }
 
-.user-type-select {
-  padding: 10px;
+.filter-container {
+  position: relative;
+}
+
+.filter-icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  color: #6c757d;
+  position: relative;
+}
+
+/* Small dot indicator for when menu is open */
+.filter-icon-btn::after {
+  content: "";
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: transparent;
+  transition: background-color 0.3s ease;
+}
+
+/* Show the indicator when the menu is open */
+.filter-icon-btn.menu-open::after {
+  background-color: #007bff;
+}
+
+.filter-icon-btn:hover {
+  background-color: rgba(0, 123, 255, 0.1);
+  color: #007bff;
+}
+
+.filter-icon {
+  transition: transform 0.3s ease;
+}
+
+.filter-icon-btn:hover .filter-icon {
+  transform: rotate(5deg);
+}
+
+.filter-dropdown {
+  position: absolute;
+  top: calc(100% + 5px);
+  right: 0;
+  background-color: white;
   border: 1px solid #ddd;
   border-radius: 4px;
-  font-size: 14px;
-  min-width: 120px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  width: 180px;
+  max-height: 250px;
+  overflow-y: auto;
+  animation: dropdownFadeIn 0.2s ease;
+  transform-origin: top right;
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.filter-option {
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.filter-option:last-child {
+  border-bottom: none;
+}
+
+.filter-option:hover {
+  background-color: #f5f5f5;
+}
+
+.filter-option.active {
+  font-weight: bold;
+  background-color: #f0f8ff;
+  color: #007bff;
 }
 
 .view-tabs {
@@ -1511,5 +1659,14 @@ h2 {
   background-color: #218838;
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.filter-icon-btn.filter-active {
+  background-color: rgba(0, 123, 255, 0.2);
+  color: #007bff;
+}
+
+.filter-icon-btn.filter-active .filter-icon {
+  transform: rotate(5deg);
 }
 </style> 

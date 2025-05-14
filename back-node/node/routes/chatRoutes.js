@@ -1,6 +1,7 @@
 import express from "express";
 import Message from "../models/Message.js";
 import mongoose from 'mongoose';
+import { getLinkPreview } from 'link-preview-js';
 
 const router = express.Router();
 
@@ -20,6 +21,52 @@ const logMongoConnectionState = () => {
 // Función para obtener la instancia de Socket.io
 const getIo = (req) => {
     return req.app.get('socketio');
+};
+
+// Función para obtener previsualizaciones de enlaces
+const fetchLinkPreviews = async (links) => {
+    const previews = [];
+
+    // Procesar hasta 3 enlaces como máximo para evitar sobrecarga
+    const linksToProcess = links.slice(0, 3);
+
+    for (const url of linksToProcess) {
+        try {
+            console.log(`Obteniendo previsualización para: ${url}`);
+            const preview = await getLinkPreview(url, {
+                timeout: 3000,
+                followRedirects: 'follow',
+                headers: {
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+                    'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+                }
+            });
+
+            // Formatear la respuesta para guardar solo lo necesario
+            const formattedPreview = {
+                url: url,
+                title: preview.title || '',
+                description: preview.description || '',
+                image: preview.images && preview.images.length > 0 ? preview.images[0] : '',
+                siteName: preview.siteName || ''
+            };
+
+            previews.push(formattedPreview);
+            console.log(`Previsualización obtenida para ${url}:`, formattedPreview);
+        } catch (error) {
+            console.error(`Error al obtener previsualización para ${url}:`, error.message);
+            // Añadir una previsualización básica en caso de error
+            previews.push({
+                url: url,
+                title: url,
+                description: '',
+                image: '',
+                siteName: ''
+            });
+        }
+    }
+
+    return previews;
 };
 
 /**
@@ -239,9 +286,24 @@ router.post("/:id/message", async (req, res) => {
             return res.status(404).json({ message: "Chat no encontrado" });
         }
 
+        // Detectar enlaces en el mensaje
+        const messageText = req.body.message;
+        const urlRegex = /(https?:\/\/[^\s]+)/g;
+        const links = messageText.match(urlRegex) || [];
+        const hasLinks = links.length > 0;
+
+        // Obtener previsualizaciones de los enlaces si hay alguno
+        let linkPreviews = [];
+        if (hasLinks) {
+            linkPreviews = await fetchLinkPreviews(links);
+        }
+
         const newInteraction = {
             teacherId: req.body.teacherId,
-            message: req.body.message,
+            message: messageText,
+            hasLinks: hasLinks,
+            links: links,
+            linkPreviews: linkPreviews,
             date: new Date()
         };
 
@@ -260,6 +322,9 @@ router.post("/:id/message", async (req, res) => {
                 userId: newInteraction.teacherId,
                 id: newInteraction._id,
                 message: newInteraction.message,
+                hasLinks: newInteraction.hasLinks,
+                links: newInteraction.links,
+                linkPreviews: newInteraction.linkPreviews,
                 timestamp: newInteraction.date
             };
 

@@ -99,6 +99,11 @@ export const sendMessage = async (chatId, teacherId, message) => {
     try {
         console.log(`Enviando mensaje al chat ${chatId}:`, { teacherId, message });
 
+        // Detectar enlaces en el mensaje (como respaldo al procesamiento del servidor)
+        const urlRegex = /(https?:\/\/[^\s]+)/g;
+        const links = message.match(urlRegex) || [];
+        const hasLinks = links.length > 0;
+
         const response = await fetch(`${API_URL}/${chatId}/message`, {
             method: 'POST',
             headers: {
@@ -106,7 +111,9 @@ export const sendMessage = async (chatId, teacherId, message) => {
             },
             body: JSON.stringify({
                 teacherId,
-                message
+                message,
+                hasLinks,
+                links
             })
         });
 

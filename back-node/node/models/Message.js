@@ -10,6 +10,24 @@ const interactionSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    hasLinks: {
+        type: Boolean,
+        default: false
+    },
+    links: {
+        type: [String],
+        default: []
+    },
+    linkPreviews: {
+        type: [{
+            url: String,
+            title: String,
+            description: String,
+            image: String,
+            siteName: String
+        }],
+        default: []
+    },
     date: {
         type: Date,
         default: Date.now

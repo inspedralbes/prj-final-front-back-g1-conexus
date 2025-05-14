@@ -47,7 +47,7 @@
       <input
         v-model="newMessage"
         @keyup.enter="sendMessage"
-        placeholder="Escribe un mensaje..."
+        placeholder="Escriu un missatge..."
         @input="handleTyping"
       />
       <button @click="sendMessage">Enviar</button>
