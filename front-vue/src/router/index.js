@@ -22,6 +22,11 @@ const router = createRouter({
       },
       children: [
         {
+          path: 'panel',
+          name: 'student-panel',
+          component: () => import('@/views/Students/panel.vue')
+        },
+        {
           path: 'inscriptions',
           name: 'student-inscriptions',
           component: () => import('@/views/Students/courses.vue')
