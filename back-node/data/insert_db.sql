@@ -1,3 +1,8 @@
+-- Configurar codificación para este archivo
+SET NAMES utf8mb4;
+SET CHARACTER SET utf8mb4;
+SET collation_connection = utf8mb4_unicode_ci;
+
 -- Insert data into departments
 INSERT INTO Departments (name) VALUES 
 ('Administració i Gestió'),
