@@ -8,6 +8,7 @@ import { sequelize } from './models/index.js';
 
 import assistenceRoutes from './routes/assistenceRoutes.js';
 import reportRoutes from "./routes/reportRoutes.js";
+import nodemailer from 'nodemailer';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -15,6 +16,24 @@ const __dirname = path.dirname(__filename);
 dotenv.config();
 const app = express();
 const PORT = process.env.NODE_INCIDENT_PORT || 3004;
+const transporter = nodemailer.createTransport({
+    service: 'smtp.gmail.com',
+    host: process.env.EMAIL_HOST,
+    port: 587,
+    secure: false,
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+    }
+});
+
+transporter.verify((error, success) => {
+    if (error) {
+        console.error('Error with email transporter:', error);
+    } else {
+        console.log('Email transporter is ready');
+    }
+});
 
 app.use(bodyParser.json());
 app.use(cors());

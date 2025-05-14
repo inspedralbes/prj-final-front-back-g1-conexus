@@ -169,6 +169,7 @@ CREATE TABLE
         image TEXT,
         room_id INT NOT NULL,
         user_assigned INT DEFAULT NULL,
+        note TEXT DEFAULT NULL,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES Users (id) ON DELETE SET NULL,

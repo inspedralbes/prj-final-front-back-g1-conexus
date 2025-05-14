@@ -148,7 +148,7 @@ const confirmCloseReport = async (reportId) => {
     try {
         await updateReportApi(reportId, { 
             status: 'revised', 
-            closure_comment: closureComment.value || 'Incidència tancada satisfactòriament'
+            note: closureComment.value || 'Incidència tancada satisfactòriament'
         });
         
         const report = allReports.value.find(r => r.id === reportId);

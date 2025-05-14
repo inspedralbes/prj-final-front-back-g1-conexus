@@ -22,6 +22,11 @@ const router = createRouter({
       },
       children: [
         {
+          path: 'inscriptions',
+          name: 'student-inscriptions',
+          component: () => import('@/views/Students/courses.vue')
+        },
+        {
           path: 'incidents',
           name: 'student-incidents',
           component: () => import('@/views/Incidents/index.vue')
@@ -58,6 +63,11 @@ const router = createRouter({
         allowedRoles: ['Professor'],
       },
       children: [
+        {
+          path: 'inscription',
+          name: 'teacher-inscriptions',
+          component: () => import('@/views/Teachers/courses.vue')
+        },
         {
           path: 'canteen',
           name: 'teacher-canteen',

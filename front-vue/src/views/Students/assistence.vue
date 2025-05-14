@@ -1,6 +1,6 @@
 <template>
     <div class="grades">
-        <h1>Notes</h1>
+        <h1>Assistencia</h1>
         <p>Aquí pots veure la teva asistencia a un curs</p>
         <button @click="goToHome()">Tornar</button>
         <table  class="table table-striped table-bordered table-hover">
@@ -46,11 +46,12 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 const courseId = ref(null);
 const assistance = ref([]);
+const appStore=useAppStore()
 onMounted(async () => {
     const route = useRoute();
     courseId.value = route.params.id;
     console.log(courseId.value);
-    assistance.value = await getAttendanceFromUserAndCourse(3, route.params.id);
+    assistance.value = await getAttendanceFromUserAndCourse(appStore.user.id, route.params.id);
 });
 function goToHome() {
     router.push({ name: 'student-assistence' });

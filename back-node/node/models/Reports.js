@@ -12,6 +12,7 @@ const Report = sequelize.define('Report', {
     image: { type: DataTypes.TEXT, allowNull: true },
     room_id: { type: DataTypes.INTEGER, allowNull: false },
     user_assigned: { type: DataTypes.INTEGER, allowNull: true },
+    note: { type: DataTypes.TEXT, allowNull: true },
     createdAt: { field: 'created_at', type: DataTypes.DATE },
     updatedAt: { field: 'updated_at', type: DataTypes.DATE },
 }, {    

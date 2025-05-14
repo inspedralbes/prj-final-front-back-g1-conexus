@@ -2,7 +2,7 @@
     <div class="container">
         <h1>My Courses</h1>
         <div class="course-list">
-            <div class="course-item" v-for="course in courses" :key="course.course_id">
+            <div class="course-item" v-for="course in courses" :key="course.course_id" v-if="courses.length > 0">
                 <h2>{{ course.course_name }}</h2>
                 <p>{{ course.course_description }}</p>
                 <div class="Buttons">
@@ -10,6 +10,7 @@
         
                 </div>
             </div>
+            <div v-else>No estàs inscrit a cap curs</div>
         </div>
     </div>
 </template>
@@ -22,8 +23,9 @@ import { useRouter } from 'vue-router'
 const store = useAppStore()
 const courses = ref([])
 const route = useRouter()
+const user = store.user
 onMounted(async () => {
-    courses.value = await getCoursesWithUser(3)
+    courses.value = await getCoursesWithUser(user.id)
     console.log(courses.value)
 })
 

@@ -6,7 +6,7 @@ RUN apk add --no-cache bash
 
 COPY package*.json ./
 
-RUN npm install
+RUN npm ci
 
 RUN npm install -g nodemon
 

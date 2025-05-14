@@ -25,11 +25,12 @@ import { useRouter } from 'vue-router';
 const router=useRouter();
 const courseId = ref(null);
 const grades = ref([]);
+const appStore=useAppStore()
 onMounted(async () => {
     const route = useRoute();
     courseId.value = route.params.id;
     console.log(courseId.value);
-    grades.value=await getGradesFromUserAndCourse(3, route.params.id);
+    grades.value=await getGradesFromUserAndCourse(appStore.user.id, route.params.id);
     console.log(grades.value);
 });
 function goToHome() {
