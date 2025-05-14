@@ -160,6 +160,11 @@ const router = createRouter({
           component: () => import('@/views/Technicians/lost-objects.vue')
         },
         {
+          path: 'lost-objects/:id/responses',
+          name: 'technician-lost-object-responses',
+          component: () => import('@/views/Technicians/responses.vue')
+        },
+        {
           path: 'assignations',
           name: 'technician-assignations',
           component: () => import('@/views/Incidents/assignations.vue')
@@ -199,6 +204,11 @@ const router = createRouter({
           path: 'config-lost-objects',
           name: 'admin-config-lost-objects',
           component: () => import('@/views/Admin/lost-objects.vue')
+        },
+        {
+          path: 'config-lost-objects/:id/responses',
+          name: 'admin-config-lost-object-responses',
+          component: () => import('@/views/Admin/responses.vue')
         },
         {
           path: 'config-incidents',

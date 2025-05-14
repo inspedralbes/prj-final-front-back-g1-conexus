@@ -81,7 +81,7 @@
                         <p class="text-slate-300">{{ response.comment }}</p>
                         <button 
                             v-if="canDeleteResponse(response)"
-                            @click="deleteResponse(response.id)"
+                            @click="deleteResponseHandler(response.id)"
                             class="text-slate-400 hover:text-red-400 transition-colors"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -151,9 +151,18 @@ const loadData = async () => {
 const submitResponse = async () => {
     try {
         const objectId = route.params.id;
+        
+        // El currentUser debe obtenerse directamente del store
+        const currentUser = store.user;
+        
+        if (!currentUser || !currentUser.id) {
+            console.error('No hi ha usuari actual o falta l\'ID');
+            return;
+        }
+        
         await createResponse(objectId, {
             comment: newResponse.value.comment,
-            user_id: store.getUser().id
+            user_id: currentUser.id // Usar el ID directamente, no desde getUser()
         });
         
         newResponse.value.comment = '';
@@ -164,7 +173,7 @@ const submitResponse = async () => {
 };
 
 const canDeleteResponse = (response) => {
-    const user = store.getUser();
+    const user = store.user;
     return user && (user.id === response.user_id || user.typeusers?.name === 'Administrador');
 };
 
