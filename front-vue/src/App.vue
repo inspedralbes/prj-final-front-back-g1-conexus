@@ -4,8 +4,7 @@
   <router-view></router-view>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>
 
 <script setup>
 import { onMounted, computed } from 'vue';
@@ -45,11 +44,13 @@ const redirectUserBasedOnRole = (user) => {
       case 4:
         userRole = 'Tècnic';
         break;
+      case 5:
+        userRole = 'Cantina'
+        break;
     }
   }
-  
-  console.log('Redirigiendo usuario con rol:', userRole);
 
+  console.log('Redirigiendo usuario con rol:', userRole);
   switch (userRole) {
     case 'Administrador':
       router.push('/admin');
@@ -62,6 +63,9 @@ const redirectUserBasedOnRole = (user) => {
       break;
     case 'Tècnic':
       router.push('/technicians');
+      break;
+    case 'Cantina':
+      router.push('/canteen');
       break;
     default:
       console.error('No se pudo determinar un rol válido para el usuario:', user);
@@ -81,13 +85,13 @@ onMounted(async () => {
 
       // Obtener datos del usuario con el email
       const userData = await getUserByEmail(JSON.parse(userEmail));
-      
+
       // Comprobar si la respuesta contiene datos válidos (no error)
       if (userData && !userData.error) {
         // Guardar el usuario en el store
         store.setUser(userData);
         console.log('Usuario recuperado:', userData);
-        
+
         // Redirigir al usuario según su rol
         redirectUserBasedOnRole(userData);
       } else {

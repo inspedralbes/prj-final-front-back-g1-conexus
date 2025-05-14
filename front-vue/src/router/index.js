@@ -213,6 +213,27 @@ const router = createRouter({
       ]
     },
     {
+      path: '/canteen',
+      name: 'canteen',
+      component: () => import('@/views/Canteen/index.vue'),
+      meta: {
+        requiresAuth: true,
+        allowedRoles: ['Cantina'],
+      },
+      children: [
+        {
+          path: 'chat',
+          name: 'canteen-chat',
+          component: () => import('@/views/Canteen/chat.vue')
+        },
+        {
+          path: 'menu-admin',
+          name: 'canteen-menu-admin',
+          component: () => import('@/views/Canteen/MenuAdmin.vue')
+        }
+      ]
+    },
+    {
       path: '/unauthorized',
       name: 'Unauthorized',
       component: () => import('@/views/errors/Unauthorized.vue'),

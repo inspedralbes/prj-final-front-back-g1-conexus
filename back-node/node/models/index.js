@@ -12,6 +12,7 @@ import Report from "./Reports.js";
 import Course from "./Course.js";
 import UserCourse from "./UserCourse.js";
 import Task from "./Task.js";
+import CateenItem from "./CanteenItem.js";
 
 // Define relationships
 
@@ -87,6 +88,8 @@ User.hasMany(Report, { foreignKey: 'user_id' });
 Report.belongsTo(Room, { foreignKey: 'room_id' });
 Room.hasMany(Report, { foreignKey: 'room_id' });
 
+// Report - LostObject relationship (Many-to-One)
+
 await sequelize.sync();
 
 export {
@@ -102,5 +105,6 @@ export {
     Department,
     Report,
     Course,
-    UserCourse
+    UserCourse,
+    CateenItem
 };
