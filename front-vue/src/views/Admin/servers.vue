@@ -171,20 +171,63 @@
                             <option>Altres</option>
                         </select>
                     </div>
+                    
+                    <!-- Modo de creación -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-1">Script del Servei</label>
-                        <input type="text" v-model="newService.script" required
-                            class="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="exemple.js">
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Mode de Creació</label>
+                        <div class="flex space-x-4">
+                            <label class="flex items-center">
+                                <input type="radio" v-model="newService.creationMode" value="generate"
+                                    class="w-4 h-4 text-blue-600 bg-slate-700 border-slate-600 focus:ring-blue-500">
+                                <span class="ml-2 text-sm text-gray-300">Generar script</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" v-model="newService.creationMode" value="upload"
+                                    class="w-4 h-4 text-blue-600 bg-slate-700 border-slate-600 focus:ring-blue-500">
+                                <span class="ml-2 text-sm text-gray-300">Pujar arxiu</span>
+                            </label>
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-1">Puerto del Servei</label>
-                        <input type="number" v-model="newService.port" min="1024" max="65535"
-                            class="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="3100">
-                        <p class="text-xs text-gray-400 mt-1">Opcional. Si no s'especifica, s'assignarà un port
-                            automàticament.</p>
+                    
+                    <!-- Campos específicos según el modo seleccionado -->
+                    <div v-if="newService.creationMode === 'generate'">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-1">Script del Servei</label>
+                            <input type="text" v-model="newService.script" :required="newService.creationMode === 'generate'"
+                                class="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="exemple.js">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-1">Puerto del Servei</label>
+                            <input type="number" v-model="newService.port" min="1024" max="65535"
+                                class="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="3100">
+                            <p class="text-xs text-gray-400 mt-1">Opcional. Si no s'especifica, s'assignarà un port automàticament.</p>
+                        </div>
                     </div>
+                    
+                    <div v-else>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-1">Pujar arxiu JavaScript</label>
+                            <div class="flex items-center space-x-2">
+                                <label class="w-full flex items-center justify-center px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg cursor-pointer hover:bg-slate-600 transition-colors">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                    </svg>
+                                    <span>{{ newService.file ? newService.file.name : 'Selecciona un arxiu .js' }}</span>
+                                    <input type="file" accept=".js" @change="handleFileUpload" class="hidden" :required="newService.creationMode === 'upload'">
+                                </label>
+                                <button v-if="newService.file" type="button" @click="clearSelectedFile"
+                                    class="p-2 text-gray-400 hover:text-red-400 transition-colors">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <p class="text-xs text-gray-400 mt-1">Selecciona un arxiu JavaScript amb el codi del servei.</p>
+                        </div>
+                    </div>
+                    
                     <div class="flex items-center">
                         <input id="auto-start" type="checkbox" v-model="newService.autoStart"
                             class="w-4 h-4 text-blue-600 bg-slate-700 border-slate-600 rounded focus:ring-blue-500">
@@ -415,7 +458,8 @@ import {
     stopService,
     startAllServices as startAll,
     stopAllServices as stopAll,
-    createService
+    createService,
+    uploadServiceFile
 } from '@/services/communicationsScripts/servicesManager';
 
 const showAddModal = ref(false);
@@ -437,7 +481,9 @@ const newService = ref({
     type: 'Servidor d\'API',
     script: '',
     port: null,
-    autoStart: true
+    autoStart: true,
+    creationMode: 'generate', // Modo por defecto
+    file: null // Para almacenar el archivo cuando se cargue
 });
 
 // Notificación
@@ -529,6 +575,25 @@ const stopAllServices = async () => {
     }
 };
 
+// Función para manejar la subida de archivo
+const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (file && file.name.endsWith('.js')) {
+        newService.value.file = file;
+        // Establecer el nombre del script a partir del nombre del archivo
+        newService.value.script = file.name;
+    } else {
+        showNotification('Per favor, selecciona un arxiu JavaScript (.js)', 'error');
+        event.target.value = null;
+    }
+};
+
+// Función para limpiar el archivo seleccionado
+const clearSelectedFile = () => {
+    newService.value.file = null;
+    newService.value.script = '';
+};
+
 // Añadir un nuevo servicio
 const addService = async () => {
     addingService.value = true;
@@ -536,33 +601,53 @@ const addService = async () => {
 
     try {
         // Preparar datos del servicio
-        const serviceData = {
-            name: newService.value.name.toLowerCase().replace(/\s+/g, '-'),
-            script: newService.value.script.endsWith('.js')
-                ? newService.value.script
-                : `${newService.value.script}.js`,
-            description: newService.value.name,
-            tech: `${newService.value.type} (Node.js)`,
-            port: newService.value.port ? parseInt(newService.value.port) : null,
-            autoStart: newService.value.autoStart
-        };
-
-        // Crear el servicio
-        const result = await createService(serviceData);
+        const serviceName = newService.value.name.toLowerCase().replace(/\s+/g, '-');
+        
+        if (newService.value.creationMode === 'upload' && !newService.value.file) {
+            throw new Error("Cal seleccionar un arxiu JavaScript");
+        }
+        
+        // Crear el servicio según el modo elegido
+        let result;
+        
+        if (newService.value.creationMode === 'upload') {
+            // Subir el archivo
+            const formData = new FormData();
+            formData.append('file', newService.value.file);
+            formData.append('name', serviceName);
+            formData.append('description', newService.value.name);
+            formData.append('tech', `${newService.value.type} (Node.js)`);
+            formData.append('autoStart', newService.value.autoStart);
+            
+            result = await uploadServiceFile(formData);
+        } else {
+            // Crear servicio generando el script
+            const serviceData = {
+                name: serviceName,
+                script: newService.value.script.endsWith('.js')
+                    ? newService.value.script
+                    : `${newService.value.script}.js`,
+                description: newService.value.name,
+                tech: `${newService.value.type} (Node.js)`,
+                port: newService.value.port ? parseInt(newService.value.port) : null,
+                autoStart: newService.value.autoStart
+            };
+            
+            result = await createService(serviceData);
+        }
 
         if (result.success) {
             showAddModal.value = false;
 
-            // Guardar el puerto para mostrarlo en el modal informativo
-            // Usar el puerto especificado o el que asignó el servidor
-            const serviceInfo = await getServiceStatus(serviceData.name);
-            newServicePort.value = serviceInfo?.port || serviceData.port || 'No especificat';
+            // Obtener información del servicio creado
+            const serviceInfo = await getServiceStatus(serviceName);
+            newServicePort.value = serviceInfo?.port || newService.value.port || 'No especificat';
 
             // Mostrar modal de información sobre puertos
             showPortInfoModal.value = true;
 
             // Mostrar notificación de éxito
-            showNotification(`Servei ${serviceData.name} creat correctament.`);
+            showNotification(`Servei ${serviceName} creat correctament.`);
         } else {
             error.value = result.message;
             showNotification(result.message, 'error');
@@ -582,7 +667,9 @@ const addService = async () => {
             type: 'Servidor d\'API',
             script: '',
             port: null,
-            autoStart: true
+            autoStart: true,
+            creationMode: 'generate',
+            file: null
         };
     }
 };

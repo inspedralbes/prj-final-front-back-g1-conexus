@@ -32,9 +32,40 @@ import { getLatestLostObject } from './routes/lostObjectRoutes.js';
 import { getLatestRoomReservation } from './routes/roomReservationRoutes.js';
 import { getLatestTask } from './routes/taskRoutes.js';
 
+// Importar multer para manejar la subida de archivos
+import multer from "multer";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config();
+
+// Configuración de multer para manejo de archivos
+const storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+        // Guardar en el mismo directorio que index.js
+        cb(null, __dirname);
+    },
+    filename: function(req, file, cb) {
+        // Usar el nombre enviado o el original del archivo
+        const serviceName = req.body.name || path.parse(file.originalname).name;
+        cb(null, `${serviceName}.js`);
+    }
+});
+
+const upload = multer({ 
+    storage: storage,
+    fileFilter: function (req, file, callback) {
+        // Verificar que sea un archivo JavaScript
+        const ext = path.extname(file.originalname).toLowerCase();
+        if (ext !== '.js') {
+            return callback(new Error('Solo se permiten archivos JavaScript (.js)'));
+        }
+        callback(null, true);
+    },
+    limits: {
+        fileSize: 1024 * 1024 // Límite de 1MB
+    }
+});
 
 const app = express();
 const PORT = process.env.NODE_PORT || 3000;
@@ -151,6 +182,42 @@ app.delete("/api/services/:serviceName", async (req, res) => {
         res.status(500).json({ 
             success: false, 
             message: `Error al eliminar el servicio: ${error.message}`
+        });
+    }
+});
+
+// Nuevo endpoint para subir un archivo JavaScript como servicio
+app.post("/api/services/upload", upload.single('file'), async (req, res) => {
+    try {
+        const { name, description, tech, autoStart } = req.body;
+        
+        if (!name || !req.file) {
+            return res.status(400).json({ 
+                success: false, 
+                message: "El nombre y el archivo son obligatorios" 
+            });
+        }
+        
+        // Obtener el nombre del archivo subido
+        const filename = req.file.filename;
+        
+        // Añadir el servicio utilizando la función existente
+        const result = addService(name, filename, { 
+            name: description || `Servei ${name}`, 
+            tech: tech || 'Node.js 18.x'
+        });
+        
+        // Si se solicita, iniciar el servicio automáticamente
+        if (result.success && autoStart === 'true') {
+            startService(name);
+        }
+        
+        res.status(201).json(result);
+    } catch (error) {
+        console.error('Error en la subida del archivo:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: `Error al crear el servicio: ${error.message}` 
         });
     }
 });

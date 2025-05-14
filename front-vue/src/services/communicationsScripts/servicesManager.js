@@ -149,6 +149,29 @@ export const createService = async (serviceData) => {
 };
 
 /**
+ * Create a new service by uploading a file
+ */
+export const uploadServiceFile = async (formData) => {
+    try {
+        const response = await fetch(`${BACKEND_URL}api/services/upload`, {
+            method: 'POST',
+            body: formData, // No establecemos Content-Type, fetch lo hará automáticamente con FormData
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error uploading service file:', error);
+        throw error;
+    }
+};
+
+/**
  * Delete a service
  */
 export const deleteService = async (serviceName) => {
