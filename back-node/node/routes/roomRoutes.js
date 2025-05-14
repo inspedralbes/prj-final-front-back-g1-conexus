@@ -53,9 +53,10 @@ router.get("/:id", async (req, res) => {
     }
 });
 
+// Para POST - creación de aulas, asegúrate de incluir el campo available
 router.post("/", async (req, res) => {
     try {
-        const { room_name, room_hours_available, room_description } = req.body;
+        const { room_name, room_hours_available, room_description, available } = req.body;
         if (!room_name || !room_hours_available || !room_description) {
             return res.status(400).json({ message: "room_name, room_hours_available i room_description són obligatoris" });
         }
@@ -64,19 +65,22 @@ router.post("/", async (req, res) => {
         if (roomExists) {
             return res.status(400).json({ message: "Ja hi ha una sala amb aquest nom" });
         }
-        //check if the room_hours_available is a number
-        const room = await Room.create({ room_name, room_hours_available, room_description });
+        const room = await Room.create({ room_name, room_hours_available, room_description, available: available !== undefined ? available : true });
         res.status(201).json(room);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 });
 
+// Para PUT - actualización de aulas, incluir el campo available
 router.put("/:id", async (req, res) => {
     try {
-        const { room_name, room_hours_available, room_description } = req.body;
+        const { room_name, room_hours_available, room_description, available } = req.body;
 
-        const room = await Room.update({ room_name, room_hours_available, room_description }, { where: { id: req.params.id } });
+        const room = await Room.update(
+            { room_name, room_hours_available, room_description, available }, 
+            { where: { id: req.params.id } }
+        );
         res.json(room);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -96,7 +100,50 @@ router.delete("/:id", async (req, res) => {
     }
 });
 
+// Obtener estadísticas de aulas (total y disponibles/mantenimiento)
+router.get("/stats/count", async (req, res) => {
+    try {
+        // Contar todas las aulas
+        const totalRooms = await Room.count();
+        
+        // Contar aulas disponibles
+        const availableRooms = await Room.count({
+            where: { available: true }
+        });
+        
+        // Contar aulas en mantenimiento
+        const maintenanceRooms = await Room.count({
+            where: { available: false }
+        });
+        
+        res.json({
+            total: totalRooms,
+            available: availableRooms,
+            maintenance: maintenanceRooms
+        });
+    } catch (error) {
+        console.error("Error al obtener estadísticas de aulas:", error);
+        res.status(500).json({ message: error.message });
+    }
+});
 
+// Actualizar disponibilidad de un aula
+router.put("/:id/availability", async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { available } = req.body;
+        
+        const room = await Room.findByPk(id);
+        if (!room) {
+            return res.status(404).json({ message: "Aula no encontrada" });
+        }
+        
+        await room.update({ available });
+        res.json(room);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
 
 export default router;
 

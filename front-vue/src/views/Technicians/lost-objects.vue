@@ -106,6 +106,23 @@
                     <p class="text-slate-300">
                         <span class="text-slate-400 font-medium">Data de trobada:</span> {{ formatDate(item.created_at || item.createdAt || item.foundDate) }}
                     </p>
+                    <div class="flex items-center justify-between mt-2">
+                        <div class="flex items-center space-x-2 text-slate-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clip-rule="evenodd" />
+                            </svg>
+                            <span class="text-sm">{{ item.responses_count || item.responses?.length || 0 }} comentaris</span>
+                        </div>
+                        <button 
+                            @click="goToResponses(item.id)"
+                            class="px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg shadow hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 flex items-center text-sm"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clip-rule="evenodd" />
+                            </svg>
+                            Comentar
+                        </button>
+                    </div>
                 </div>
 
                 <div v-if="item.image" class="mt-4">
@@ -132,7 +149,11 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { getAllLostObjects, createLostObject } from '@/services/communicationsScripts/lostObjectManager.js';
+import { useAppStore } from '@/stores/index.js';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
+const store = useAppStore();
 const lostObjects = ref([]);
 const showForm = ref(false);
 const baseUrl = import.meta.env.VITE_LOST_OBJECT_URL;
@@ -160,7 +181,14 @@ const handleImageUpload = (event) => {
 
 const submitLostObject = async () => {
     try {
-        await createLostObject(lostObject.value);
+        const currentUser = store.user;
+
+        if (!currentUser || !currentUser.id) {
+            console.error('No hi ha usuari actual o falta l\'ID');
+            return;
+        }
+
+        await createLostObject(lostObject.value, currentUser.id);
         
         lostObjects.value = await getAllLostObjects();
         
@@ -175,6 +203,10 @@ const submitLostObject = async () => {
     } catch (error) {
         console.error('Error al registrar objeto perdido:', error);
     }
+};
+
+const goToResponses = (objectId) => {
+    router.push(`/teachers/lost-objects/${objectId}/responses`);
 };
 
 onMounted(async () => {

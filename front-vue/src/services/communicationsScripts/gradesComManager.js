@@ -37,7 +37,7 @@ export const getTasksFromCourse = async (courseId) => {
 }
 export const createTask = async (task) => {
     try {
-        
+
 
         const response = await fetch(`${BACK_URL}api/tasks`, {
             method: 'POST',
@@ -55,7 +55,7 @@ export const createTask = async (task) => {
         console.error('Error creating task:', error);
     }
 }
-export const getTask=async (taskId, courseId) => {
+export const getTask = async (taskId, courseId) => {
     try {
         const alumns = await getAlumns(courseId);
         alumns.forEach(alumn => {
@@ -74,7 +74,7 @@ export const getTask=async (taskId, courseId) => {
         console.log(alumns)
         console.log(data);
         data.forEach(grade => {
-           alumns.forEach(alumn => {
+            alumns.forEach(alumn => {
                 if (alumn.user_id == grade.user_id) {
                     alumn.grades = grade.grade;
                 }
@@ -113,3 +113,22 @@ export const updateGrade = async (user_id, grade, task_id) => {
         console.error('Error updating grade:', error);
     }
 }
+
+export const getCourseStats = async () => {
+    try {
+        const response = await fetch(`${BACK_URL}api/courses/stats/count`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching course stats:', error);
+        return { total: 0, createdThisMonth: 0 };
+    }
+};

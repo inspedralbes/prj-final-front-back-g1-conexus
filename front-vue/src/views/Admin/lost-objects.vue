@@ -96,28 +96,33 @@
         <div v-else class="space-y-4">
             <div v-for="item in lostObjects" :key="item.id"
                 class="p-4 bg-slate-800/50 rounded-lg border border-slate-700/30 hover:border-slate-600 transition-colors">
-                <div class="flex justify-between items-start">
-                    <div class="mt-3 space-y-2 flex-grow">
-                        <h1 class="text-slate-300">
-                            <span class="text-slate-400 font-medium">Titol:</span> {{ item.title }}
-                        </h1>
-                        <p class="text-slate-300">
-                            <span class="text-slate-400 font-medium">Descripció:</span> {{ item.description }}
-                        </p>
-                        <p class="text-slate-300">
-                            <span class="text-slate-400 font-medium">Data de trobada:</span> {{ formatDate(item.created_at || item.createdAt || item.foundDate) }}
-                        </p>
+                <div class="mt-3 space-y-2">
+                    <h1 class="text-slate-300">
+                        <span class="text-slate-400 font-medium">Titol</span> {{ item.title }}
+                    </h1>
+                    <p class="text-slate-300">
+                        <span class="text-slate-400 font-medium">Descripció:</span> {{ item.description }}
+                    </p>
+                    <p class="text-slate-300">
+                        <span class="text-slate-400 font-medium">Data de trobada:</span> {{ formatDate(item.created_at || item.createdAt || item.foundDate) }}
+                    </p>
+                    <div class="flex items-center justify-between mt-2">
+                        <div class="flex items-center space-x-2 text-slate-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clip-rule="evenodd" />
+                            </svg>
+                            <span class="text-sm">{{ item.responses_count || item.responses?.length || 0 }} comentaris</span>
+                        </div>
+                        <button 
+                            @click="goToResponses(item.id)"
+                            class="px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg shadow hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 flex items-center text-sm"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clip-rule="evenodd" />
+                            </svg>
+                            Comentar
+                        </button>
                     </div>
-                    
-                    <button 
-                        @click="confirmDelete(item)"
-                        class="p-2 text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded-full transition-all"
-                        title="Eliminar objecte"
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
-                        </svg>
-                    </button>
                 </div>
 
                 <div v-if="item.image" class="mt-4">
@@ -126,34 +131,6 @@
                 </div>
             </div>
         </div>
-        
-        <!-- Modal de confirmación para eliminar -->
-        <transition name="fade">
-            <div v-if="showDeleteModal" class="fixed inset-0 z-50 flex items-center justify-center p-4">
-                <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" @click="showDeleteModal = false"></div>
-                <transition name="pop">
-                    <div class="relative bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 max-w-md w-full border border-slate-700/50 shadow-2xl">
-                        <h2 class="text-xl font-bold text-white mb-4">Confirmar eliminació</h2>
-                        <p class="text-slate-300 mb-6">Estàs segur que vols eliminar l'objecte "{{ objectToDelete?.title }}"?</p>
-                        
-                        <div class="flex justify-end space-x-3">
-                            <button 
-                                @click="showDeleteModal = false"
-                                class="px-4 py-2 border border-slate-600 text-slate-300 rounded-lg hover:bg-slate-700 transition-colors"
-                            >
-                                Cancel·lar
-                            </button>
-                            <button 
-                                @click="deleteObject"
-                                class="px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg shadow hover:from-red-600 hover:to-red-700 transition-all duration-300"
-                            >
-                                Eliminar
-                            </button>
-                        </div>
-                    </div>
-                </transition>
-            </div>
-        </transition>
     </div>
 
     <!-- Botón con tooltip -->
@@ -171,12 +148,14 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { getAllLostObjects, createLostObject, deleteLostObject } from '@/services/communicationsScripts/lostObjectManager.js';
+import { getAllLostObjects, createLostObject } from '@/services/communicationsScripts/lostObjectManager.js';
+import { useAppStore } from '@/stores/index.js';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
+const store = useAppStore();
 const lostObjects = ref([]);
 const showForm = ref(false);
-const showDeleteModal = ref(false);
-const objectToDelete = ref(null);
 const baseUrl = import.meta.env.VITE_LOST_OBJECT_URL;
 
 const lostObject = ref({
@@ -188,21 +167,12 @@ const lostObject = ref({
 });
 
 const formatDate = (dateString) => {
-    if (!dateString) return 'Data no disponible';
-    
-    try {
-        const date = new Date(dateString);
-        if (isNaN(date.getTime())) return 'Data no disponible';
-        
-        return date.toLocaleDateString('ca-ES', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        });
-    } catch (error) {
-        console.error('Error formatting date:', error);
-        return 'Data no disponible';
-    }
+    const date = new Date(dateString);
+    return date.toLocaleDateString('ca-ES', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
 };
 
 const handleImageUpload = (event) => {
@@ -211,7 +181,14 @@ const handleImageUpload = (event) => {
 
 const submitLostObject = async () => {
     try {
-        await createLostObject(lostObject.value);
+        const currentUser = store.user;
+
+        if (!currentUser || !currentUser.id) {
+            console.error('No hi ha usuari actual o falta l\'ID');
+            return;
+        }
+
+        await createLostObject(lostObject.value, currentUser.id);
         
         lostObjects.value = await getAllLostObjects();
         
@@ -228,6 +205,10 @@ const submitLostObject = async () => {
     }
 };
 
+const goToResponses = (objectId) => {
+    router.push(`/admin/config-lost-objects/${objectId}/responses`);
+};
+
 onMounted(async () => {
     try {
         lostObjects.value = await getAllLostObjects();
@@ -235,26 +216,6 @@ onMounted(async () => {
         console.error('Error fetching lost objects:', error);
     }
 });
-
-// Función para confirmar la eliminación
-const confirmDelete = (item) => {
-    objectToDelete.value = item;
-    showDeleteModal.value = true;
-};
-
-// Función para eliminar el objeto
-const deleteObject = async () => {
-    try {
-        if (objectToDelete.value && objectToDelete.value.id) {
-            await deleteLostObject(objectToDelete.value.id);
-            lostObjects.value = lostObjects.value.filter(obj => obj.id !== objectToDelete.value.id);
-            showDeleteModal.value = false;
-            objectToDelete.value = null;
-        }
-    } catch (error) {
-        console.error('Error al eliminar objeto perdido:', error);
-    }
-};
 </script>
 
 <style scoped>

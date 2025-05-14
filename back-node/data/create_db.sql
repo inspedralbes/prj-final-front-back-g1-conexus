@@ -140,6 +140,7 @@ CREATE TABLE
         room_name TEXT NOT NULL,
         room_hours_available JSON DEFAULT NULL,
         room_description TEXT NOT NULL,
+        available BOOLEAN NOT NULL DEFAULT TRUE,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     );

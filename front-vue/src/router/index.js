@@ -88,6 +88,11 @@ const router = createRouter({
           name: 'teacher-lost-objects',
           component: () => import('@/views/Teachers/lost-objects.vue')
         },
+        {
+          path: 'lost-objects/:id/responses',
+          name: 'teacher-lost-object-responses',
+          component: () => import('@/views/Teachers/responses.vue')
+        },
         { 
           path: 'assistence',
           name: 'teacher-assistence',
@@ -155,6 +160,11 @@ const router = createRouter({
           component: () => import('@/views/Technicians/lost-objects.vue')
         },
         {
+          path: 'lost-objects/:id/responses',
+          name: 'technician-lost-object-responses',
+          component: () => import('@/views/Technicians/responses.vue')
+        },
+        {
           path: 'assignations',
           name: 'technician-assignations',
           component: () => import('@/views/Incidents/assignations.vue')
@@ -176,6 +186,11 @@ const router = createRouter({
       },
       children: [
         {
+          path: 'panel',
+          name: 'admin-panel',
+          component: () => import('@/views/Admin/panel.vue')
+        },
+        {
           path: 'config-users',
           name: 'admin-config-users',
           component: () => import('@/views/Admin/users.vue')
@@ -188,12 +203,17 @@ const router = createRouter({
         {
           path: 'config-servers',
           name: 'admin-config-servers',
-          // component: () => import('@/views/Admin/servers.vue')
+          component: () => import('@/views/Admin/servers.vue')
         },
         {
           path: 'config-lost-objects',
           name: 'admin-config-lost-objects',
           component: () => import('@/views/Admin/lost-objects.vue')
+        },
+        {
+          path: 'config-lost-objects/:id/responses',
+          name: 'admin-config-lost-object-responses',
+          component: () => import('@/views/Admin/responses.vue')
         },
         {
           path: 'config-incidents',

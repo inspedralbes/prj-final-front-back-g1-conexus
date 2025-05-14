@@ -53,7 +53,7 @@ const redirectUserBasedOnRole = (user) => {
   console.log('Redirigiendo usuario con rol:', userRole);
   switch (userRole) {
     case 'Administrador':
-      router.push('/admin');
+      router.push('/admin/panel');
       break;
     case 'Professor':
       router.push('/teachers');
