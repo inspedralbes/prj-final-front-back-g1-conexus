@@ -27,51 +27,55 @@
             </button>
           </div>
 
-          <div class="menu-items-grid">
+          <div class="menu-items-list">
             <div
               v-for="item in menuItems"
               :key="item.id"
-              class="menu-item-card"
+              class="menu-item-row"
               :class="{ selected: isItemInCart(item) }"
               @click="toggleItemSelection(item)"
             >
-              <div class="menu-item-name">{{ item.product_name }}</div>
-              <div class="menu-item-price">
-                {{ formatPrice(item.product_price) }} €
+              <div class="menu-item-info">
+                <div class="menu-item-name">{{ item.product_name }}</div>
+                <div class="menu-item-price">
+                  {{ formatPrice(item.product_price) }} €
+                </div>
               </div>
-              <div
-                class="quantity-controls"
-                v-if="isItemInCart(item)"
-                @click.stop
-              >
-                <button
-                  class="quantity-btn"
-                  @click.stop="decrementQuantity(item)"
+              <div class="menu-item-actions">
+                <div
+                  class="quantity-controls"
+                  v-if="isItemInCart(item)"
+                  @click.stop
                 >
-                  -
-                </button>
-                <span class="quantity-display">{{
-                  getItemQuantity(item)
-                }}</span>
-                <button
-                  class="quantity-btn"
-                  @click.stop="incrementQuantity(item)"
-                >
-                  +
-                </button>
-              </div>
-              <div class="selection-indicator" v-if="isItemInCart(item)">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"
-                  />
-                </svg>
+                  <button
+                    class="quantity-btn"
+                    @click.stop="decrementQuantity(item)"
+                  >
+                    -
+                  </button>
+                  <span class="quantity-display">{{
+                    getItemQuantity(item)
+                  }}</span>
+                  <button
+                    class="quantity-btn"
+                    @click.stop="incrementQuantity(item)"
+                  >
+                    +
+                  </button>
+                </div>
+                <div class="selection-indicator" v-if="isItemInCart(item)">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"
+                    />
+                  </svg>
+                </div>
               </div>
             </div>
           </div>
@@ -115,7 +119,7 @@
               />
             </svg>
             <span>{{
-              chatLoading ? "Iniciando chat..." : "Iniciar Chat con Cantina"
+              chatLoading ? "Iniciant chat..." : "Iniciar Chat amb Cantina"
             }}</span>
           </button>
 
@@ -429,37 +433,51 @@ h4 {
   color: white;
 }
 
-.menu-items-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 15px;
+.menu-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 500px;
+  overflow-y: auto;
+  padding-right: 5px;
 }
 
-.menu-item-card {
+.menu-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   background-color: #f8f9fa;
   border-radius: 8px;
-  padding: 15px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  padding: 12px 15px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   cursor: pointer;
   position: relative;
-  border: 2px solid transparent;
+  border-left: 4px solid transparent;
+  transition: all 0.2s ease;
 }
 
-.menu-item-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.menu-item-row:hover {
+  background-color: #f0f0f0;
+  transform: translateX(3px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.menu-item-card.selected {
-  border-color: #28a745;
+.menu-item-row.selected {
+  border-left-color: #28a745;
   background-color: #f0fff4;
+}
+
+.menu-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1;
 }
 
 .menu-item-name {
   font-weight: bold;
-  margin-bottom: 8px;
   color: #333;
+  font-size: 1rem;
 }
 
 .menu-item-price {
@@ -468,10 +486,13 @@ h4 {
   font-size: 1.1rem;
 }
 
+.menu-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
 .selection-indicator {
-  position: absolute;
-  top: 10px;
-  right: 10px;
   width: 20px;
   height: 20px;
   border-radius: 50%;
@@ -486,8 +507,10 @@ h4 {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 10px;
-  gap: 10px;
+  gap: 8px;
+  background-color: rgba(255, 255, 255, 0.5);
+  padding: 4px 8px;
+  border-radius: 20px;
 }
 
 .quantity-btn {
@@ -582,8 +605,10 @@ h4 {
 }
 
 .selected-items-list li {
-  padding: 5px 0;
+  padding: 8px 10px;
   border-bottom: 1px solid #e9ecef;
+  display: flex;
+  justify-content: space-between;
 }
 
 .selected-items-list li:last-child {

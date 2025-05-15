@@ -66,6 +66,13 @@
             @click="sendQuickResponse('❌ No està disponible')"
             >❌ No està disponible</span
           >
+          <span
+            class="response-btn menu-btn"
+            @click="sendMenuResponse"
+            :class="{ loading: menuLoading }"
+          >
+            🍽️ Enviar menú disponible
+          </span>
         </div>
       </div>
     </div>
@@ -74,37 +81,155 @@
       <p>No hay chats activos</p>
     </div>
 
-    <ul v-else class="user-list">
-      <li
-        v-for="chat in chats"
-        :key="chat._id"
-        class="user-item"
-        @click="openChat(chat)"
-      >
-        <div class="user-avatar">
-          <img
-            :src="getUserAvatar(chat)"
-            :alt="getUserName(chat)"
-            onerror="this.src='/img/default-avatar.png'"
-          />
+    <div v-else class="chats-container">
+      <!-- Acordeón de categorías -->
+      <div class="chats-accordion">
+        <!-- NUEVOS PEDIDOS -->
+        <div class="accordion-section">
           <div
-            v-if="hasNewMessages[getUserId(chat)]"
-            class="new-message-indicator"
-          ></div>
-        </div>
-        <div class="user-info">
-          <h3>{{ getUserName(chat) }}</h3>
-          <p class="user-type">{{ getUserType(chat) }}</p>
-          <p
-            v-if="getLastMessage(chat)"
-            class="last-message"
-            :class="{ 'new-message': hasNewMessages[getUserId(chat)] }"
+            class="accordion-header"
+            @click="toggleSection('new')"
+            :class="{ active: openSection === 'new' }"
           >
-            {{ getLastMessage(chat) }}
-          </p>
+            <h3>
+              <span class="category-icon">🛒</span>
+              Noves comandes
+              <span v-if="newOrderChats.length > 0" class="category-count">{{
+                newOrderChats.length
+              }}</span>
+            </h3>
+            <span class="accordion-arrow">{{
+              openSection === "new" ? "▼" : "▶"
+            }}</span>
+          </div>
+          <div v-show="openSection === 'new'" class="accordion-content">
+            <ul v-if="newOrderChats.length > 0" class="user-list">
+              <li
+                v-for="chat in newOrderChats"
+                :key="chat._id"
+                class="user-item"
+                @click="openChat(chat)"
+              >
+                <div class="user-avatar">
+                  <img
+                    :src="getUserAvatar(chat)"
+                    :alt="getUserName(chat)"
+                    onerror="this.src='/img/default-avatar.png'"
+                  />
+                  <div
+                    v-if="hasNewMessages[getUserId(chat)]"
+                    class="new-message-indicator"
+                  ></div>
+                </div>
+                <div class="user-info">
+                  <h3>{{ getUserName(chat) }}</h3>
+                  <p class="user-type">{{ getUserType(chat) }}</p>
+                </div>
+              </li>
+            </ul>
+            <p v-else class="empty-category">No hay nuevos pedidos</p>
+          </div>
         </div>
-      </li>
-    </ul>
+
+        <!-- EN PREPARACIÓN -->
+        <div class="accordion-section">
+          <div
+            class="accordion-header"
+            @click="toggleSection('preparing')"
+            :class="{ active: openSection === 'preparing' }"
+          >
+            <h3>
+              <span class="category-icon">👨‍🍳</span>
+              En Preparació
+              <span
+                v-if="preparingOrderChats.length > 0"
+                class="category-count"
+                >{{ preparingOrderChats.length }}</span
+              >
+            </h3>
+            <span class="accordion-arrow">{{
+              openSection === "preparing" ? "▼" : "▶"
+            }}</span>
+          </div>
+          <div v-show="openSection === 'preparing'" class="accordion-content">
+            <ul v-if="preparingOrderChats.length > 0" class="user-list">
+              <li
+                v-for="chat in preparingOrderChats"
+                :key="chat._id"
+                class="user-item"
+                @click="openChat(chat)"
+              >
+                <div class="user-avatar">
+                  <img
+                    :src="getUserAvatar(chat)"
+                    :alt="getUserName(chat)"
+                    onerror="this.src='/img/default-avatar.png'"
+                  />
+                  <div
+                    v-if="hasNewMessages[getUserId(chat)]"
+                    class="new-message-indicator"
+                  ></div>
+                </div>
+                <div class="user-info">
+                  <h3>{{ getUserName(chat) }}</h3>
+                  <p class="user-type">{{ getUserType(chat) }}</p>
+                </div>
+              </li>
+            </ul>
+            <p v-else class="empty-category">No hay pedidos en preparación</p>
+          </div>
+        </div>
+
+        <!-- LISTOS PARA RECOGER -->
+        <div class="accordion-section">
+          <div
+            class="accordion-header"
+            @click="toggleSection('ready')"
+            :class="{ active: openSection === 'ready' }"
+          >
+            <h3>
+              <span class="category-icon">✅</span>
+              Llest per recollir
+              <span v-if="readyOrderChats.length > 0" class="category-count">{{
+                readyOrderChats.length
+              }}</span>
+            </h3>
+            <span class="accordion-arrow">{{
+              openSection === "ready" ? "▼" : "▶"
+            }}</span>
+          </div>
+          <div v-show="openSection === 'ready'" class="accordion-content">
+            <ul v-if="readyOrderChats.length > 0" class="user-list">
+              <li
+                v-for="chat in readyOrderChats"
+                :key="chat._id"
+                class="user-item"
+                @click="openChat(chat)"
+              >
+                <div class="user-avatar">
+                  <img
+                    :src="getUserAvatar(chat)"
+                    :alt="getUserName(chat)"
+                    onerror="this.src='/img/default-avatar.png'"
+                  />
+                  <div
+                    v-if="hasNewMessages[getUserId(chat)]"
+                    class="new-message-indicator"
+                  ></div>
+                </div>
+                <div class="user-info">
+                  <h3>{{ getUserName(chat) }}</h3>
+                  <p class="user-type">{{ getUserType(chat) }}</p>
+                </div>
+              </li>
+            </ul>
+            <p v-else class="empty-category">
+              No hay pedidos listos para recoger
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -118,6 +243,7 @@ import {
 import chatManager from "@/services/communicationsScripts/chatsComManager";
 import { useAppStore } from "@/stores";
 import io from "socket.io-client";
+import { getAllCanteenItems } from "@/services/communicationsScripts/canteenComManager";
 
 // Estado
 const loading = ref(true);
@@ -132,6 +258,8 @@ const socket = ref(null);
 const userTypes = ref([]);
 const users = ref([]);
 const messagesContainer = ref(null);
+const menuItems = ref([]);
+const menuLoading = ref(false);
 
 // Obtener el store y router
 const appStore = useAppStore();
@@ -227,8 +355,22 @@ const getUserAvatar = (chat) => {
 
   if (!otherUserId) return "/img/default-avatar.png";
 
+  // Usar caché para reducir solicitudes
+  if (usersCache[otherUserId] && usersCache[otherUserId].profile) {
+    return usersCache[otherUserId].profile;
+  }
+
   const user = users.value.find((u) => u.id === otherUserId);
-  return user && user.profile ? user.profile : "/img/default-avatar.png";
+  if (user && user.profile) {
+    // Guardar en caché
+    usersCache[otherUserId] = {
+      ...usersCache[otherUserId],
+      profile: user.profile,
+    };
+    return user.profile;
+  }
+
+  return "/img/default-avatar.png";
 };
 
 // Obtener el tipo de usuario
@@ -386,6 +528,17 @@ const sendQuickResponse = async (message) => {
     if (messageIndex !== -1) {
       messages.value[messageIndex].sending = false;
     }
+
+    // Actualizar el estado del pedido según el mensaje
+    if (message.includes("Comanda rebuda")) {
+      // Marcar como "en preparación"
+      appStore.setOrderAsPreparing(activeChat.value);
+      console.log(`Pedido ${activeChat.value} marcado como "en preparación"`);
+    } else if (message.includes("llesta per a recollir")) {
+      // Marcar como "listo"
+      appStore.setOrderAsReady(activeChat.value);
+      console.log(`Pedido ${activeChat.value} marcado como "listo"`);
+    }
   } catch (err) {
     console.error("Error al enviar respuesta rápida:", err);
     // Marcar mensaje como fallido
@@ -394,6 +547,38 @@ const sendQuickResponse = async (message) => {
       messages.value[messageIndex].failed = true;
       messages.value[messageIndex].sending = false;
     }
+  }
+};
+
+// Cargar y enviar el menú disponible
+const sendMenuResponse = async () => {
+  try {
+    menuLoading.value = true;
+
+    // Si ya tenemos el menú cargado, lo usamos, sino lo cargamos
+    if (menuItems.value.length === 0) {
+      const items = await getAllCanteenItems();
+      menuItems.value = items || [];
+    }
+
+    // Formatear el mensaje con los ítems del menú
+    let menuMessage = "🍽️ *MENÚ DISPONIBLE* 🍽️\n\n";
+
+    if (menuItems.value.length === 0) {
+      menuMessage += "No hay productos disponibles en este momento.";
+    } else {
+      menuItems.value.forEach((item) => {
+        const price = Number(item.product_price).toFixed(2);
+        menuMessage += `• ${item.product_name} - ${price} €\n`;
+      });
+    }
+
+    // Enviar el mensaje formateado
+    await sendQuickResponse(menuMessage);
+  } catch (err) {
+    console.error("Error al cargar el menú:", err);
+  } finally {
+    menuLoading.value = false;
   }
 };
 
@@ -453,30 +638,223 @@ const connectSocket = () => {
     socket.value.on("new_message", async (data) => {
       console.log("📩 Mensaje nuevo recibido:", data);
 
-      // Si estamos viendo este chat, actualizar los mensajes
-      if (activeChat.value === data.chatId) {
-        // Código existente para actualizar mensajes
-        // ...
-      } else {
-        // Marcar como mensaje no leído y actualizar lista
-        const chatIndex = chats.value.findIndex(
-          (chat) => chat._id === data.chatId
-        );
-        if (chatIndex !== -1) {
-          const otherUserId = getUserId(chats.value[chatIndex]);
-          if (otherUserId) {
-            hasNewMessages.value[otherUserId] = true;
+      try {
+        // Extraer información relevante del mensaje según el formato
+        let messageInfo = {
+          chatId: null,
+          userId: null,
+          userName: null,
+          message: null,
+          timestamp: null,
+          messageId: null,
+        };
+
+        // Manejar diferentes formatos de datos que pueden venir del servidor
+        if (data.chatId && data.userId && data.message) {
+          // Formato simple
+          messageInfo = {
+            chatId: data.chatId,
+            userId: data.userId,
+            userName: data.userName || "Usuario",
+            message: data.message,
+            timestamp: data.timestamp || new Date(),
+            messageId: data._id || Date.now().toString(),
+          };
+        } else if (
+          data.interaction &&
+          typeof data.interaction === "object" &&
+          !Array.isArray(data.interaction)
+        ) {
+          // Objeto de interacción individual
+          messageInfo = {
+            chatId: data.chatId || data._id,
+            userId: data.interaction.teacherId,
+            message: data.interaction.message,
+            timestamp: data.interaction.date || new Date(),
+            messageId: data.interaction._id || Date.now().toString(),
+          };
+        } else if (
+          data._id &&
+          data.teachers &&
+          data.interaction &&
+          Array.isArray(data.interaction) &&
+          data.interaction.length > 0
+        ) {
+          // Objeto de chat completo con array de interacciones
+          const lastMsg = data.interaction[data.interaction.length - 1];
+          messageInfo = {
+            chatId: data._id,
+            userId: lastMsg.teacherId,
+            message: lastMsg.message,
+            timestamp: lastMsg.date || new Date(),
+            messageId: lastMsg._id || Date.now().toString(),
+          };
+        }
+
+        // Si no se pudo extraer la información mínima necesaria, salir
+        if (!messageInfo.chatId || !messageInfo.message) {
+          console.error("❌ Formato de mensaje no reconocido:", data);
+          return;
+        }
+
+        // Detectar si es un pedido y el mensaje no es del usuario cantina
+        if (messageInfo.userId.toString() !== currentUserId.value.toString()) {
+          // Buscar el remitente para mostrar su nombre
+          let senderName = "Usuario";
+          const otherUserId = messageInfo.userId;
+          const otherUser = users.value.find(
+            (u) => u.id === parseInt(otherUserId)
+          );
+          if (otherUser) {
+            senderName =
+              otherUser.name || otherUser.username || `Usuario ${otherUserId}`;
           }
 
-          // Actualizar último mensaje
-          // ...
-        } else {
-          // Si no existe el chat en nuestra lista, forzar actualización
-          console.log(
-            "⚠️ Chat no encontrado en la lista actual, actualizando..."
-          );
-          forceRefreshChats();
+          // Detectar si es un pedido por su contenido
+          if (
+            messageInfo.message.includes("🛒") ||
+            messageInfo.message.includes("Nuevo Pedido") ||
+            messageInfo.message.includes("Total:") ||
+            (messageInfo.message.includes("Pedido") &&
+              messageInfo.message.includes("€"))
+          ) {
+            // Marcar el chat como pedido nuevo
+            appStore.setOrderAsNew(messageInfo.chatId);
+            console.log(`Nuevo pedido detectado en chat ${messageInfo.chatId}`);
+
+            // Mostrar notificación de nuevo pedido
+            showOrderNotification(senderName);
+          }
         }
+
+        // Si estamos viendo este chat, actualizar los mensajes en tiempo real
+        if (activeChat.value === messageInfo.chatId) {
+          // Verificar si el mensaje ya existe para evitar duplicados
+          const messageExists = messages.value.some(
+            (m) =>
+              m.id === messageInfo.messageId ||
+              (m.message === messageInfo.message &&
+                m.userId === messageInfo.userId.toString() &&
+                Math.abs(
+                  new Date(m.timestamp) - new Date(messageInfo.timestamp)
+                ) < 5000)
+          );
+
+          if (!messageExists) {
+            // Buscar el remitente para mostrar su nombre
+            let senderName = "Usuario";
+            if (
+              messageInfo.userId.toString() === currentUserId.value.toString()
+            ) {
+              senderName = currentUserName.value;
+            } else {
+              // Buscar el otro usuario en el chat
+              const otherUserId = messageInfo.userId;
+              const otherUser = users.value.find(
+                (u) => u.id === parseInt(otherUserId)
+              );
+              if (otherUser) {
+                senderName =
+                  otherUser.name ||
+                  otherUser.username ||
+                  `Usuario ${otherUserId}`;
+              }
+            }
+
+            // Añadir el nuevo mensaje a la lista actual
+            const newMessage = {
+              id: messageInfo.messageId,
+              userId: messageInfo.userId.toString(),
+              userName: messageInfo.userName || senderName,
+              message: messageInfo.message,
+              timestamp: new Date(messageInfo.timestamp),
+            };
+
+            messages.value.push(newMessage);
+
+            // Ordenar mensajes por fecha (por si acaso)
+            messages.value.sort(
+              (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
+            );
+
+            // Hacer scroll al final
+            await nextTick();
+            scrollToBottom();
+
+            console.log("✅ Mensaje añadido al chat activo");
+          }
+        } else {
+          // Si no estamos en este chat, buscar el chat en la lista y actualizar su último mensaje
+          const chatIndex = chats.value.findIndex(
+            (chat) => chat._id === messageInfo.chatId
+          );
+
+          if (chatIndex !== -1) {
+            // Marcar como no leído
+            const otherUserId = getUserId(chats.value[chatIndex]);
+            if (otherUserId) {
+              hasNewMessages.value[otherUserId] = true;
+            }
+
+            // Actualizar último mensaje en la lista de chats
+            if (
+              chats.value[chatIndex].interaction &&
+              Array.isArray(chats.value[chatIndex].interaction)
+            ) {
+              // Verificar si este mensaje ya está en el array de interacciones
+              const msgExists = chats.value[chatIndex].interaction.some(
+                (msg) =>
+                  msg._id === messageInfo.messageId ||
+                  (msg.message === messageInfo.message &&
+                    msg.teacherId === messageInfo.userId.toString() &&
+                    Math.abs(
+                      new Date(msg.date) - new Date(messageInfo.timestamp)
+                    ) < 5000)
+              );
+
+              if (!msgExists) {
+                // Añadir el mensaje a las interacciones del chat
+                chats.value[chatIndex].interaction.push({
+                  _id: messageInfo.messageId,
+                  teacherId: messageInfo.userId.toString(),
+                  message: messageInfo.message,
+                  date: messageInfo.timestamp,
+                });
+
+                console.log(
+                  "✅ Mensaje añadido a la lista de interacciones del chat"
+                );
+              }
+            }
+
+            // Forzar actualización reactiva del array de chats
+            chats.value = [...chats.value];
+          } else {
+            // Si no existe el chat en nuestra lista, forzar actualización
+            console.log(
+              "⚠️ Chat no encontrado en la lista actual, actualizando..."
+            );
+            await forceRefreshChats();
+          }
+        }
+
+        // Mostrar notificación si el mensaje no es propio
+        if (messageInfo.userId.toString() !== currentUserId.value.toString()) {
+          // Buscar nombre del remitente
+          let senderName = "Usuario";
+          const otherUserId = messageInfo.userId;
+          const otherUser = users.value.find(
+            (u) => u.id === parseInt(otherUserId)
+          );
+          if (otherUser) {
+            senderName =
+              otherUser.name || otherUser.username || `Usuario ${otherUserId}`;
+          }
+
+          showNotification(senderName, messageInfo.message);
+        }
+      } catch (error) {
+        console.error("❌ Error al procesar mensaje nuevo:", error);
       }
     });
 
@@ -485,7 +863,7 @@ const connectSocket = () => {
       console.log("🆕 Notificación de nuevo chat para cantina:", data);
 
       // Forzar actualización de la lista de chats
-      forceRefreshChats();
+      await forceRefreshChats();
 
       // Mostrar notificación visual
       showNotification("Nuevo chat", "Se ha creado un nuevo chat");
@@ -494,13 +872,37 @@ const connectSocket = () => {
     // Escuchar cualquier evento de nuevo chat (respaldo)
     socket.value.on("new_chat_created", async (data) => {
       console.log("📝 Notificación general de nuevo chat:", data);
-      forceRefreshChats();
+      await forceRefreshChats();
     });
 
     // Escuchar el evento de primer mensaje en un chat (respaldo)
     socket.value.on("chat_first_message", async (data) => {
       console.log("🔔 Notificación de primer mensaje en chat:", data);
-      forceRefreshChats();
+      await forceRefreshChats();
+    });
+
+    // Manejar reconexiones
+    socket.value.on("reconnect", () => {
+      console.log("🔄 Reconectado al servidor de chat");
+
+      // Re-suscribirse a todos los chats al reconectar
+      chats.value.forEach((chat) => {
+        socket.value.emit("join_chat", {
+          chatId: chat._id,
+          userId: currentUserId.value,
+          userName: currentUserName.value,
+        });
+      });
+
+      // Re-suscribirse a las notificaciones de cantina
+      socket.value.emit("join_canteen", {
+        canteenId: currentUserId.value,
+      });
+
+      // Actualizar el chat activo si estamos en uno
+      if (activeChat.value) {
+        refreshActiveChat();
+      }
     });
 
     // Manejar desconexiones
@@ -514,6 +916,89 @@ const connectSocket = () => {
     });
   } catch (error) {
     console.error("Error al conectar con socket.io:", error);
+  }
+};
+
+// Función para actualizar el chat activo con la última información
+let activeChatInterval; // Variable para el intervalo
+const refreshActiveChat = async () => {
+  if (!activeChat.value) return;
+
+  try {
+    // Obtenemos la última versión del chat desde el servidor
+    const chatData = await chatManager.getChatById(activeChat.value);
+
+    if (!chatData || !chatData.interaction) {
+      console.warn("No se pudo actualizar el chat activo: datos incompletos");
+      return;
+    }
+
+    // Verificar si hay nuevos mensajes que no estamos mostrando
+    if (chatData.interaction.length > messages.value.length) {
+      console.log(
+        `🔄 Actualizando chat: ${
+          chatData.interaction.length - messages.value.length
+        } mensajes nuevos`
+      );
+
+      // Convertir los nuevos mensajes al formato esperado
+      const updatedMessages = chatData.interaction.map((msg) => {
+        const isOwnMessage = msg.teacherId === currentUserId.value.toString();
+        const otherUserId = getUserId(chatData);
+        const otherUser = users.value.find((u) => u.id === otherUserId);
+
+        // Asegurarnos que se use el nombre de usuario, no el tipo
+        let userName = isOwnMessage ? currentUserName.value : null;
+        if (!userName && otherUser) {
+          userName =
+            otherUser.name || otherUser.username || `Usuario ${otherUserId}`;
+        } else if (!userName) {
+          userName = `Usuario ${msg.teacherId}`;
+        }
+
+        return {
+          id: msg._id,
+          userId: msg.teacherId,
+          userName: userName,
+          message: msg.message,
+          timestamp: new Date(msg.date),
+        };
+      });
+
+      // Buscar mensajes que no estén ya en nuestra lista
+      const newMessages = updatedMessages.filter(
+        (newMsg) =>
+          !messages.value.some(
+            (existingMsg) =>
+              existingMsg.id === newMsg.id ||
+              (existingMsg.message === newMsg.message &&
+                existingMsg.userId === newMsg.userId &&
+                Math.abs(
+                  new Date(existingMsg.timestamp) - new Date(newMsg.timestamp)
+                ) < 5000)
+          )
+      );
+
+      // Si hay mensajes nuevos, añadirlos y hacer scroll
+      if (newMessages.length > 0) {
+        messages.value = [...messages.value, ...newMessages];
+
+        // Ordenar mensajes por fecha
+        messages.value.sort(
+          (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
+        );
+
+        // Hacer scroll al final
+        await nextTick();
+        scrollToBottom();
+
+        console.log(
+          `✅ ${newMessages.length} mensajes nuevos añadidos al chat activo`
+        );
+      }
+    }
+  } catch (error) {
+    console.error("Error al actualizar chat activo:", error);
   }
 };
 
@@ -587,8 +1072,18 @@ const requestNotificationPermission = () => {
   }
 };
 
-// Configurar un intervalo para verificar nuevos chats periódicamente como respaldo
+// Configurar un intervalo para verificar nuevos chats y mensajes periódicamente como respaldo
 let refreshInterval;
+let activeRefreshInterval;
+let usersCache = {};
+
+// Variable para controlar las secciones acordeón
+const openSection = ref("new"); // Por defecto, mostrar los nuevos pedidos
+
+// Método para cambiar la sección visualizada
+const toggleSection = (section) => {
+  openSection.value = openSection.value === section ? null : section;
+};
 
 // Modificar onMounted para incluir las nuevas funciones
 onMounted(async () => {
@@ -606,14 +1101,40 @@ onMounted(async () => {
   // Cargar chats
   await loadChats();
 
+  // Inicializar caché de usuarios
+  users.value.forEach((user) => {
+    usersCache[user.id] = {
+      name: user.name || user.username,
+      profile: user.profile,
+      typeUsersId: user.typeUsers_id,
+    };
+  });
+
   // Conectar al socket para actualizaciones en tiempo real
   connectSocket();
 
-  // Configurar intervalo de respaldo
-  refreshInterval = setInterval(forceRefreshChats, 15000);
+  // Configurar intervalo de respaldo para la lista de chats
+  // Aumentamos a 45 segundos para reducir carga
+  refreshInterval = setInterval(forceRefreshChats, 45000);
 });
 
-// Modificar onUnmounted para limpiar el intervalo
+// Watch para gestionar el chat activo
+watch(activeChat, (newVal, oldVal) => {
+  // Limpiar intervalo anterior si existía
+  if (activeRefreshInterval) {
+    clearInterval(activeRefreshInterval);
+    activeRefreshInterval = null;
+  }
+
+  // Si hay un nuevo chat activo, configurar intervalo de actualización
+  if (newVal) {
+    // Actualizar inicialmente y luego cada 8 segundos (reducido de 3 segundos)
+    refreshActiveChat();
+    activeRefreshInterval = setInterval(refreshActiveChat, 8000);
+  }
+});
+
+// Modificar onUnmounted para limpiar los intervalos
 onUnmounted(() => {
   // Desconectar socket
   if (socket.value) {
@@ -621,11 +1142,76 @@ onUnmounted(() => {
     socket.value = null;
   }
 
-  // Limpiar intervalo
+  // Limpiar intervalos
   if (refreshInterval) {
     clearInterval(refreshInterval);
   }
+
+  if (activeRefreshInterval) {
+    clearInterval(activeRefreshInterval);
+  }
 });
+
+// Computar los chats filtrados por estado
+const newOrderChats = computed(() => {
+  const newChatsIds = appStore.getCanteenOrdersByStatus("new");
+  return chats.value.filter(
+    (chat) =>
+      newChatsIds.includes(chat._id) || !appStore.canteenOrderStatus[chat._id]
+  );
+});
+
+const preparingOrderChats = computed(() => {
+  const preparingChatsIds = appStore.getCanteenOrdersByStatus("preparing");
+  return chats.value.filter((chat) => preparingChatsIds.includes(chat._id));
+});
+
+const readyOrderChats = computed(() => {
+  const readyChatsIds = appStore.getCanteenOrdersByStatus("ready");
+  return chats.value.filter((chat) => readyChatsIds.includes(chat._id));
+});
+
+// Mostrar una notificación de éxito para nuevos pedidos
+const showOrderNotification = (userName) => {
+  // Crear un elemento de notificación
+  const notification = document.createElement("div");
+  notification.classList.add("order-notification");
+  notification.innerHTML = `
+    <div class="notification-content">
+      <span class="notification-icon">🛒</span>
+      <div class="notification-text">
+        <strong>¡Nueva comanda!</strong>
+        <p>De: ${userName || "Usuario"}</p>
+      </div>
+      <button class="close-notification">×</button>
+    </div>
+  `;
+
+  // Añadir al DOM
+  document.body.appendChild(notification);
+
+  // Añadir evento al botón de cerrar
+  notification
+    .querySelector(".close-notification")
+    .addEventListener("click", () => {
+      notification.classList.add("closing");
+      setTimeout(() => {
+        notification.remove();
+      }, 300);
+    });
+
+  // Auto-eliminar después de 5 segundos
+  setTimeout(() => {
+    if (document.body.contains(notification)) {
+      notification.classList.add("closing");
+      setTimeout(() => {
+        if (document.body.contains(notification)) {
+          notification.remove();
+        }
+      }, 300);
+    }
+  }, 5000);
+};
 </script>
 
 <style scoped>
@@ -636,6 +1222,7 @@ onUnmounted(() => {
   height: 100vh;
   display: flex;
   flex-direction: column;
+  background-color: transparent;
 }
 
 h2 {
@@ -648,6 +1235,9 @@ h2 {
 h3 {
   margin: 0;
   font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .loading,
@@ -678,22 +1268,30 @@ h3 {
 .user-list {
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin: 0 0 10px 0;
   overflow-y: auto;
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
 .user-item {
   display: flex;
   align-items: center;
   padding: 15px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid rgba(238, 238, 238, 0.5);
   cursor: pointer;
   transition: background-color 0.2s ease;
+  background-color: rgba(255, 255, 255, 0.6);
+  border-radius: 8px;
+  margin-bottom: 5px;
 }
 
 .user-item:hover {
-  background-color: #f5f5f5;
+  background-color: rgba(245, 245, 245, 0.8);
+  transform: translateX(3px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .user-avatar {
@@ -756,20 +1354,6 @@ h3 {
   margin: 5px 0 0;
   font-size: 14px;
   color: #6c757d;
-}
-
-.last-message {
-  margin: 5px 0 0;
-  font-size: 13px;
-  color: #6c757d;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.last-message.new-message {
-  font-weight: bold;
-  color: #212529;
 }
 
 /* Estilos para la vista de chat */
@@ -891,5 +1475,245 @@ h3 {
   justify-content: center;
   align-items: center;
   height: 200px;
+}
+
+/* Estilos para el acordeón */
+.chats-container {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background-color: transparent;
+  max-height: calc(100vh - 120px); /* Altura máxima ajustada */
+}
+
+.chats-accordion {
+  background-color: transparent;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.accordion-section {
+  border-bottom: 1px solid rgba(233, 236, 239, 0.5);
+  background-color: transparent;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+}
+
+.accordion-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.accordion-header,
+.section-header {
+  padding: 15px;
+  background-color: rgba(248, 249, 250, 0.5);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.2s ease;
+  border-radius: 8px;
+}
+
+.accordion-header:hover,
+.section-header:hover {
+  background-color: rgba(233, 236, 239, 0.7);
+}
+
+.accordion-header.active,
+.section-header.active {
+  background-color: rgba(233, 236, 239, 0.7);
+  border-left: 4px solid #28a745;
+}
+
+.accordion-arrow {
+  font-size: 12px;
+  color: #6c757d;
+}
+
+.section-content {
+  max-height: none;
+  overflow-y: auto;
+  transition: all 0.3s ease;
+  background-color: transparent;
+  padding: 0 5px;
+  flex: 1;
+}
+
+/* Ocultar la barra de desplazamiento pero mantener la funcionalidad */
+.accordion-content::-webkit-scrollbar,
+.section-content::-webkit-scrollbar,
+.chat-messages::-webkit-scrollbar,
+.user-list::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+.accordion-content,
+.section-content,
+.chat-messages,
+.user-list {
+  -ms-overflow-style: none; /* IE y Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.category-icon {
+  font-size: 20px;
+  margin-right: 10px;
+}
+
+.category-count {
+  background-color: #dc3545;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  margin-left: 8px;
+}
+
+.empty-category {
+  padding: 20px;
+  text-align: center;
+  color: #6c757d;
+  background-color: rgba(255, 255, 255, 0.6);
+  border-radius: 8px;
+}
+
+.response-btn.menu-btn {
+  background-color: #007bff;
+}
+
+.response-btn.menu-btn:hover {
+  background-color: #0069d9;
+}
+
+.response-btn.menu-btn.loading {
+  opacity: 0.7;
+  cursor: not-allowed;
+  position: relative;
+}
+
+.response-btn.menu-btn.loading::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  top: 50%;
+  right: 15px;
+  margin-top: -8px;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s ease-in-out infinite;
+}
+
+/* Estilos para notificaciones */
+.order-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: white;
+  border-left: 4px solid #28a745;
+  border-radius: 4px;
+  padding: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 9999;
+  max-width: 300px;
+  transform: translateX(0);
+  animation: slideIn 0.3s ease-out;
+}
+
+.notification-content {
+  display: flex;
+  padding: 15px;
+  align-items: center;
+}
+
+.notification-icon {
+  background-color: #ebf9f0;
+  color: #28a745;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+  font-size: 20px;
+}
+
+.notification-text {
+  flex: 1;
+}
+
+.notification-text strong {
+  display: block;
+  color: #212529;
+  margin-bottom: 3px;
+}
+
+.notification-text p {
+  color: #6c757d;
+  margin: 0;
+  font-size: 14px;
+}
+
+.close-notification {
+  background: none;
+  border: none;
+  color: #adb5bd;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 10px;
+  line-height: 1;
+}
+
+.close-notification:hover {
+  color: #6c757d;
+}
+
+.order-notification.closing {
+  animation: slideOut 0.3s ease-in forwards;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>

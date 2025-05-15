@@ -7,10 +7,18 @@ export const useAppStore = defineStore('appStore', {
     unreadMessagesCount: 0,
     testMode: false, // Desactivar el modo de prueba
     cartCantinaItems: [],
+    // Estado para gestionar los pedidos de la cantina
+    canteenOrderStatus: JSON.parse(localStorage.getItem('canteenOrderStatus') || '{}'),
   }),
   getters: {
     isAuthenticated: (state) => !!state.accessToken && !!state.user,
     getUnreadCount: (state) => state.unreadMessagesCount,
+    // Obtener chats por estado
+    getCanteenOrdersByStatus: (state) => (status) => {
+      return Object.entries(state.canteenOrderStatus)
+        .filter(([_, orderStatus]) => orderStatus === status)
+        .map(([chatId, _]) => chatId);
+    }
   },
   actions: {
     setUser(user) {
@@ -97,5 +105,31 @@ export const useAppStore = defineStore('appStore', {
     removeFromCartCantina(item) {
       this.cartCantinaItems = this.cartCantinaItems.filter((i) => i !== item);
     },
+
+    // Nuevos métodos para gestionar el estado de los pedidos de cantina
+    updateOrderStatus(chatId, status) {
+      // Actualizar el estado del pedido
+      this.canteenOrderStatus[chatId] = status;
+
+      // Persistir en localStorage
+      localStorage.setItem('canteenOrderStatus', JSON.stringify(this.canteenOrderStatus));
+    },
+
+    getOrderStatus(chatId) {
+      return this.canteenOrderStatus[chatId] || 'new';
+    },
+
+    // Estados posibles: 'new', 'preparing', 'ready'
+    setOrderAsNew(chatId) {
+      this.updateOrderStatus(chatId, 'new');
+    },
+
+    setOrderAsPreparing(chatId) {
+      this.updateOrderStatus(chatId, 'preparing');
+    },
+
+    setOrderAsReady(chatId) {
+      this.updateOrderStatus(chatId, 'ready');
+    }
   },
 }); 
