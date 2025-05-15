@@ -123,6 +123,7 @@ export const getCoursesWithUser = async (userId) => {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
 
@@ -143,6 +144,7 @@ export const getCoursesFromUser = async (userId) => {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
         if (!response.ok) {
@@ -161,6 +163,7 @@ export const getHoursOfCourse = async (courseId) => {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
         if (!response.ok) {
@@ -211,6 +214,7 @@ export const getAlumns = async (courseId) => {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
         },
     })
         .then(response => response.json())
@@ -223,6 +227,7 @@ export const getUser = async (userId) => {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
 
@@ -274,6 +279,7 @@ export const updateUser = async (userId, user) => {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
             body: JSON.stringify(user),
         });
@@ -295,6 +301,7 @@ export const deleteUser = async (userId) => {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
 
@@ -333,6 +340,7 @@ export const updateUserRole = async (userId, typesUsersId) => {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
             body: JSON.stringify({ typeUsers_id: typesUsersId }),
         });
@@ -363,6 +371,7 @@ export const getAllTypeUsers = async () => {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
 
@@ -383,6 +392,7 @@ export const getAllCourses = async () => {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
 
@@ -400,6 +410,7 @@ export const getAllCourses = async () => {
                         method: "GET",
                         headers: {
                             "Content-Type": "application/json",
+                            'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
                         },
                     });
                     console.log(teacherResponse);
@@ -431,6 +442,7 @@ export const deleteCourse = async (courseId) => {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
 
@@ -453,6 +465,7 @@ export const createCourse = async (course) => {
             method: "POST",
             headers: {
             "Content-Type": "application/json",
+            'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
             body: JSON.stringify(course),
         });
@@ -474,6 +487,7 @@ export const updateCourse = async (courseId, course) => {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
             body: JSON.stringify(course),
         });
@@ -495,6 +509,7 @@ export const getAllDepartments = async () => {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
 
@@ -515,6 +530,7 @@ export const getAllTeachersFromDepartment = async (departmentId) => {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
 
@@ -534,6 +550,7 @@ export const getCoursesWithoutUser = async (userId) => {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
 
@@ -554,6 +571,7 @@ export const inscribeUser= async (courseId, userId) => {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
             body: JSON.stringify({ user_id: userId, course_id: courseId }),
         });
@@ -574,6 +592,7 @@ export const getCoursesWithoutTeacher = async () => {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
 
@@ -593,6 +612,7 @@ export const deleteUserFromCourse = async (userId, courseId) => {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
 
@@ -612,6 +632,7 @@ export const desassignTeacher = async (courseId) => {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
             body: JSON.stringify({ course_teacher_id: null }),
         });
@@ -633,6 +654,7 @@ export const assignTeacher = async (courseId, teacherId) => {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
             body: JSON.stringify({ course_id: courseId, teacher_id: teacherId }),
         });
@@ -655,6 +677,7 @@ export const countUsers = async () => {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
         if (!response.ok) {

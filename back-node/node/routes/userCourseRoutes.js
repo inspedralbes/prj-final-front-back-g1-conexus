@@ -2,11 +2,12 @@ import express from "express";
 import UserCourse from "../models/UserCourse.js";
 import User from "../models/User.js";
 import Course from "../models/Course.js";
+import { verifyTokenMiddleware } from "../token.js";
 import { Op } from "sequelize";
 const router = express.Router();
 
 // Obtener todas las relaciones usuario-curso
-router.get("/", async (req, res) => {
+router.get("/", verifyTokenMiddleware, async (req, res) => {
     try {
         const userCourses = await UserCourse.findAll();
         res.json(userCourses);
@@ -16,7 +17,7 @@ router.get("/", async (req, res) => {
 });
 
 // Crear una nueva relación usuario-curso
-router.post("/", async (req, res) => {
+router.post("/", verifyTokenMiddleware, async (req, res) => {
     try {
         const { course_id, user_id } = req.body;
         if (!course_id || !user_id) {
@@ -55,7 +56,7 @@ router.post("/", async (req, res) => {
 });
 
 // Eliminar una relación usuario-curso por ID
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", verifyTokenMiddleware, async (req, res) => {
     try {
         const { id } = req.params;
         const userCourse = await UserCourse.findByPk(id);
@@ -72,7 +73,7 @@ router.delete("/:id", async (req, res) => {
 });
 
 // Obtener una relación usuario-curso por ID del curso
-router.get("/course/:course_id", async (req, res) => {
+router.get("/course/:course_id",verifyTokenMiddleware, async (req, res) => {
     try {
         const { course_id } = req.params;
         const userCourses = await UserCourse.findAll({ where: { course_id } });
@@ -93,7 +94,7 @@ router.get("/course/:course_id", async (req, res) => {
 
 
 // Obtener cursos por ID de usuario
-router.get("/user/:userId", async (req, res) => {
+router.get("/user/:userId", verifyTokenMiddleware, async (req, res) => {
     try {
         const { userId } = req.params;
         const userCourses = await UserCourse.findAll({
@@ -115,7 +116,7 @@ router.get("/user/:userId", async (req, res) => {
 });
 
 //Obtener todos los cursos en los que no está inscrito un usuario
-router.get("/not-enrolled/:userId", async (req, res) => {
+router.get("/not-enrolled/:userId", verifyTokenMiddleware, async (req, res) => {
     try {
         const { userId } = req.params;
         const userCourses = await UserCourse.findAll({
@@ -135,7 +136,7 @@ router.get("/not-enrolled/:userId", async (req, res) => {
     }
 });
 // eliminar una relación usuario-curso por ID de usuario y ID de curso
-router.delete("/:userId/:courseId", async (req, res) => {
+router.delete("/:userId/:courseId", verifyTokenMiddleware, async (req, res) => {
     try {
         const { userId, courseId } = req.params;
         const userCourse = await UserCourse.findOne({

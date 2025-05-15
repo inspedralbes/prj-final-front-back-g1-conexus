@@ -3,10 +3,11 @@ import RoomReservation from "../models/RoomReservation.js";
 import { Op } from "sequelize";
 import Room from "../models/Room.js";
 import User from "../models/User.js";  // Si no está ya importado
+import { verifyTokenMiddleware } from "../token.js";
 const router = express.Router();
 
 // GET /room-reservations - Obtenir totes les reserves d'habitacions
-router.get("/", async (req, res) => {
+router.get("/", verifyTokenMiddleware, async (req, res) => {
   try {
     const reservations = await RoomReservation.findAll();
     //retornar l'array de reserves d'habitacions
@@ -16,7 +17,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/user/:user_id", async (req, res) => {
+router.get("/user/:user_id", verifyTokenMiddleware, async (req, res) => {
   const { user_id } = req.params;
   try {
     const reservations = await RoomReservation.findAll({
@@ -39,7 +40,7 @@ router.get("/user/:user_id", async (req, res) => {
   }
 });
 
-router.get("/reserved", async (req, res) => {
+router.get("/reserved", verifyTokenMiddleware, async (req, res) => {
     try {
         const reservations = await RoomReservation.findAll({
         where: {
@@ -56,7 +57,7 @@ router.get("/reserved", async (req, res) => {
     }
 });
 // GET /room-reservations/:id - Obtenir una reserva d'habitació per ID
-router.get("/:id", async (req, res) => {
+router.get("/:id", verifyTokenMiddleware, async (req, res) => {
   const { id } = req.params;
   try {
     const reservation = await RoomReservation.findOne({ where: { id } });
@@ -73,7 +74,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // POST /room-reservations - Crear una nova reserva d'habitació
-router.post("/", async (req, res) => {
+router.post("/", verifyTokenMiddleware, async (req, res) => {
   try {
     const { user_id, room_id, start_time, end_time } = req.body;
 
@@ -128,7 +129,7 @@ router.post("/", async (req, res) => {
 });
 
 // PUT /room-reservations/:id - Actualitzar una reserva d'habitació per ID
-router.put("/:id", async (req, res) => {
+router.put("/:id", verifyTokenMiddleware, async (req, res) => {
   const { id } = req.params;
   try {
     const reservation = await RoomReservation.findOne({ where: { id } });
@@ -146,7 +147,7 @@ router.put("/:id", async (req, res) => {
 });
 
 // DELETE /room-reservations/:id - Eliminar una reserva d'habitació per ID
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", verifyTokenMiddleware, async (req, res) => {
   const { id } = req.params;
   try {
     const reservation = await RoomReservation.findOne({ where: { id } });
@@ -163,7 +164,7 @@ router.delete("/:id", async (req, res) => {
   }
 });
 //Get reservations from a room
-router.get("/room/:id", async (req, res) => {
+router.get("/room/:id", verifyTokenMiddleware, async (req, res) => {
     try {
         const { id } = req.params;
         const reservations = await RoomReservation.findAll({
