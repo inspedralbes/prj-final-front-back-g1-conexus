@@ -41,8 +41,8 @@
                     <p class="text-slate-300">
                         <span class="text-slate-400 font-medium">Aula:</span> {{ report.Room?.room_name || 'Desconeguda' }}
                     </p>
-                    <p v-if="report.closure_comment" class="text-slate-300">
-                        <span class="text-slate-400 font-medium">Comentari de tancament:</span> {{ report.closure_comment }}
+                    <p class="text-slate-300">
+                        <span class="text-slate-400 font-medium">Nota tècnica:</span> {{ report.note }}
                     </p>
                 </div>
 

@@ -11,7 +11,14 @@ const handleResponse = async (response) => {
 
 export const getAllLostObjects = async () => {
     try {
-        const response = await fetch(`${API_URL}api/lost-objects`);
+        const response = await fetch(`${API_URL}api/lost-objects`, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+        }
+        );
         const objects = await handleResponse(response);
         
         // Para cada objeto, carga sus respuestas
@@ -37,7 +44,14 @@ export const getAllLostObjects = async () => {
 // Añadir esta función:
 export const getLostObjectsResponsesCount = async () => {
     try {
-        const response = await fetch(`${API_URL}api/lost-objects/responses-count`);
+        const response = await fetch(`${API_URL}api/lost-objects/responses-count`, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+        }
+        );
         return await handleResponse(response);
     } catch (error) {
         console.error('Error fetching response counts:', error);
@@ -47,7 +61,14 @@ export const getLostObjectsResponsesCount = async () => {
 
 export const getLostObjectById = async (id) => {
     try {
-        const response = await fetch(`${API_URL}api/lost-objects/${id}`);
+        const response = await fetch(`${API_URL}api/lost-objects/${id}`, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+        }
+        );
         return await handleResponse(response);
     } catch (error) {
         console.error(`Error fetching lost object ${id}:`, error);
@@ -76,6 +97,9 @@ export const createLostObject = async (lostObjectData, userId) => {
         
         const response = await fetch(`${API_URL}api/lost-objects`, {
             method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            },
             body: formData,
         });
         return await handleResponse(response);
@@ -89,6 +113,9 @@ export const deleteLostObject = async (id) => {
     try {
         const response = await fetch(`${API_URL}api/lost-objects/${id}`, {
             method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            },
         });
         
         if (response.status === 204) {
@@ -104,7 +131,14 @@ export const deleteLostObject = async (id) => {
 
 export const getLostObjectResponses = async (lostObjectId) => {
     try {
-        const response = await fetch(`${API_URL}api/lost-objects/${lostObjectId}/responses`);
+        const response = await fetch(`${API_URL}api/lost-objects/${lostObjectId}/responses`, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+        }
+        );
         return await handleResponse(response);
     } catch (error) {
         console.error(`Error fetching responses for lost object ${lostObjectId}:`, error);
@@ -121,6 +155,7 @@ export const createResponse = async (lostObjectId, responseData) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
             body: JSON.stringify({
                 user_id: responseData.user_id,
@@ -139,6 +174,9 @@ export const deleteResponse = async (lostObjectId, responseId) => {
     try {
         const response = await fetch(`${API_URL}api/lost-objects/${lostObjectId}/responses/${responseId}`, {
             method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            },
         });
         
         if (response.status === 204) {

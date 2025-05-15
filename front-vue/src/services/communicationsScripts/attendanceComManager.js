@@ -17,6 +17,7 @@ export const updateAttendance = async (courseId, userId, hour, assisted, day) =>
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
             body: JSON.stringify(dataToSend),
         });
@@ -35,6 +36,7 @@ export const getAttendanceFromCourse = async (courseId) => {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
         if (!response.ok) {
@@ -53,6 +55,7 @@ export const getAlumns = async (courseId) => {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
         if (!response.ok) {
@@ -71,6 +74,7 @@ export const getAttendanceFromDay = async (courseId, day) => {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
         if (!response.ok) {
@@ -88,6 +92,7 @@ export const getAttendanceFromUserAndCourse = async (userId, courseId) => {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
         if (!response.ok) {

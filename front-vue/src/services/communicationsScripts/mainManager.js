@@ -320,6 +320,9 @@ export const createUser = async (formData) => {
     try {
         const response = await fetch(`${BACK_URL}api/user`, {
             method: "POST",
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            },
             body: formData,
         });
 
