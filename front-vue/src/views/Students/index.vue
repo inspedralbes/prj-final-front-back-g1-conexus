@@ -12,10 +12,10 @@
         <aside
             :class="['w-64 bg-slate-900/80 backdrop-blur-sm fixed h-screen p-4 shadow-lg transform transition-transform duration-300 z-40 lg:hidden', isSidebarOpen ? 'translate-x-0' : '-translate-x-full']">
             <div class="text-center mb-8">
-                <h2
+                <router-link to="/students/panel"
                     class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
                     Conexus
-                </h2>
+                </router-link>
             </div>
             <nav class="space-y-2">
                 <router-link to="/students/grades"
@@ -112,9 +112,9 @@
             <div class="container mx-auto flex justify-between items-center px-4">
                 <!-- Menú Hamburguesa i Títol -->
                 <div class="flex items-center ml-12 p-2">
-                    <h1 class="text-xl font-bold text-gray-300">
+                    <router-link to="/students/panel" class="text-xl font-bold text-gray-300">
                         {{ currentPageTitle }}
-                    </h1>
+                    </router-link>
                 </div>
             </div>
         </nav>

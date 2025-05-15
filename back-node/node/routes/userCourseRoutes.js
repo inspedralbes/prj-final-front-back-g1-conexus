@@ -104,7 +104,8 @@ router.get("/user/:userId", async (req, res) => {
             const course = await Course.findOne({ where: { id: userCourse.course_id } });
             return { 
                 ...userCourse.toJSON(), 
-                course_name: course ? course.course_name : "Curso no encontrado" 
+                course_name: course ? course.course_name : "Curso no encontrado",
+                course_description: course ? course.course_description : "Sin descripción disponible"
             };
             })
         );
