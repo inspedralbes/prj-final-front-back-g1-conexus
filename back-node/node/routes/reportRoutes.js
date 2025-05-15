@@ -6,6 +6,8 @@ import multer from "multer";
 import path from "path";
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
+import { Op } from "sequelize";
+
 dotenv.config();
 
 const host = process.env.EMAIL_HOST;
@@ -31,6 +33,7 @@ transporter.verify((error, success) => {
     console.log("Email transporter is ready");
   }
 });
+
 const router = express.Router();
 
 const storage = multer.diskStorage({
@@ -205,11 +208,11 @@ router.put("/:id", async (req, res) => {
       const user = await User.findOne({ where: { id: report.user_id } });
       let note = null;
       if (report.note) {
-        note=`Benvolgut/da ${user.name},\n\nEns complau informar-lo/la que l'informe amb ID ${report.id} amb descripció: ${report.report}\n\n  ha estat revisat i s'ha completat amb èxit.\n\nAtentament,\nL'equip de gestió d'informes. \n\nNota: ${report.note}`;
-          
+        note = `Benvolgut/da ${user.name},\n\nEns complau informar-lo/la que l'informe amb ID ${report.id} amb descripció: ${report.report}\n\n  ha estat revisat i s'ha completat amb èxit.\n\nAtentament,\nL'equip de gestió d'informes. \n\nNota: ${report.note}`;
+
       } else {
-       note=`Benvolgut/da ${user.name},\n\nEns complau informar-lo/la que l'informe amb ID ${report.id}amb descripció: ${report.report}\n\n ha estat revisat i s'ha completat amb èxit.\n\nAtentament,\nL'equip de gestió d'informes.`;
-        
+        note = `Benvolgut/da ${user.name},\n\nEns complau informar-lo/la que l'informe amb ID ${report.id}amb descripció: ${report.report}\n\n ha estat revisat i s'ha completat amb èxit.\n\nAtentament,\nL'equip de gestió d'informes.`;
+
       }
       const mailOptions = {
         from: process.env.EMAIL_USER,
@@ -287,5 +290,60 @@ router.put("/:id/assign", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
+// Obtener estadísticas de incidencias (total i sense resoldre)
+router.get("/stats/count", async (req, res) => {
+  try {
+    // Contar totes les incidències
+    const totalReports = await Reports.count();
+
+    // Contar incidències pendents (no resoltes)
+    const pendingReports = await Reports.count({
+      where: {
+        status: {
+          [Op.in]: ['pending', 'revising']
+        }
+      }
+    });
+
+    // Contar incidències resoltes
+    const resolvedReports = await Reports.count({
+      where: { status: 'revised' }
+    });
+
+    res.json({
+      total: totalReports,
+      pending: pendingReports,
+      resolved: resolvedReports
+    });
+  } catch (error) {
+    console.error("Error al obtener estadísticas de incidencias:", error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
+export async function getLatestReport() {
+  try {
+    const latestReport = await Reports.findOne({
+      order: [['createdAt', 'DESC']],
+      include: [
+        {
+          model: User,
+          as: 'User',
+          attributes: ['name']
+        },
+        {
+          model: Room,
+          attributes: ['room_name']
+        }
+      ]
+    });
+
+    return latestReport;
+  } catch (error) {
+    console.error("Error al obtener incidencia reciente:", error);
+    throw error;
+  }
+}
 
 export default router;

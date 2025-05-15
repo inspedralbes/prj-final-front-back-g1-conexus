@@ -4,8 +4,7 @@
   <router-view></router-view>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>
 
 <script setup>
 import { onMounted, computed } from "vue";
@@ -43,14 +42,18 @@ const redirectUserBasedOnRole = (user) => {
       case 4:
         userRole = "Tècnic";
         break;
+      case 5:
+        userRole = "Cantina";
+        break;
     }
   }
 
   console.log("Redirigiendo usuario con rol:", userRole);
 
+  console.log("Redirigiendo usuario con rol:", userRole);
   switch (userRole) {
     case "Administrador":
-      router.push("/admin");
+      router.push("/admin/panel");
       break;
     case "Professor":
       router.push("/teachers");
@@ -58,8 +61,11 @@ const redirectUserBasedOnRole = (user) => {
     case "Estudiant":
       router.push("/students");
       break;
-    case "Tècnic":
-      router.push("/technicians");
+    case "Cantina":
+      router.push("/canteen");
+      break;
+    case "Cantina":
+      router.push("/canteen");
       break;
     default:
       console.error(

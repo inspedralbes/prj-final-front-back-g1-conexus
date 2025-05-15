@@ -64,7 +64,7 @@ services:
       retries: 5
 
   conexus-hub-mysql:
-    image: mysql:5.7
+    image: mysql:8.0
     ports:
       - "3306:3306"
     environment:
@@ -72,10 +72,12 @@ services:
       - MYSQL_DATABASE=conexushub
       - MYSQL_USER=user
       - MYSQL_PASSWORD=password
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     volumes:
       - conexus-hub-mysql-data:/var/lib/mysql
-      - ./back-node/data/create_db.sql:/docker-entrypoint-initdb.d/create.sql
-      - ./back-node/data/insert_db.sql:/docker-entrypoint-initdb.d/inserts.sql
+      - ./back-node/data/00-charset.sql:/docker-entrypoint-initdb.d/00-charset.sql
+      - ./back-node/data/create_db.sql:/docker-entrypoint-initdb.d/01-create.sql
+      - ./back-node/data/insert_db.sql:/docker-entrypoint-initdb.d/02-inserts.sql
     restart: unless-stopped
     networks:
       - conexus-hub-network

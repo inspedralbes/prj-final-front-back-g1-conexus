@@ -165,6 +165,7 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+
 async function checkIfGradeAlreadyExists(user_id, task_id) {
   let auxGrade = await Grade.findOne({
     where: { user_id: user_id, task_id: task_id },
@@ -176,4 +177,5 @@ async function checkIfGradeAlreadyExists(user_id, task_id) {
     return false;
   }
 }
+
 export default router;

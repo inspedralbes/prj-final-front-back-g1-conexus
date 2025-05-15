@@ -1,13 +1,31 @@
 import express from "express";
 import LostObjects from "../models/LostObjects.js";
+import User from "../models/User.js";
+import Room from "../models/Room.js";
+import Response from "../models/Response.js";
+import multer from "multer";
+import path from "path";
+import { Op } from "sequelize"; // Añade esta importación al principi
 
 const router = express.Router();
 
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/");
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(null, uniqueSuffix + path.extname(file.originalname));
+  },
+});
+
+const upload = multer({ storage: storage });
+
 // GET /lost-objects - Obtenir tots els objectes perduts
 router.get("/", async (req, res) => {
-  const LostObjects = await LostObjects.findAll({ order: [["createdAt", "DESC"]] });
+  const lostObjectsList = await LostObjects.findAll({ order: [["createdAt", "DESC"]] });
   //return the LostObjects array
-  res.json(LostObjects);
+  res.json(lostObjectsList);
 });
 
 // GET /lost-objects/:id - Obtenir un objecte perdut per ID
@@ -25,9 +43,13 @@ router.get("/:id", async (req, res) => {
   }
 });
 // POST /lost-objects - Crear un nou objecte perdut
-router.post("/", async (req, res) => {
+router.post("/", upload.single('image'),async (req, res) => {
   try {
-    const { title, description, image, user_id, expired_at } = req.body;
+
+    const lostObjectData = JSON.parse(req.body.data);
+    const { title, description, user_id, expired_at } = lostObjectData;
+    const image = req.file ? req.file.path : null;
+
     /**
      * Crea un nou objecte perdut a la base de dades.
      *
@@ -83,5 +105,163 @@ router.delete("/:id", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
+// GET /lost-objects/:id/responses - Obtenir totes les respostes d'un objecte perdut
+router.get("/:id/responses", async (req, res) => {
+    const { id } = req.params;
+    try {
+        const responses = await Response.findAll({
+            where: { lostAndFound_id: id },
+            order: [["createdAt", "DESC"]]
+        });
+        res.json(responses);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// POST /lost-objects/:id/responses - Crear una nova resposta per un objecte perdut
+router.post("/:id/responses", async (req, res) => {
+    const { id } = req.params;
+    try {
+        const { user_id, comment } = req.body;
+
+        if (!user_id || !comment) {
+            return res.status(400).json({ message: "user_id i comment són obligatoris" });
+        }
+
+        const newResponse = await Response.create({
+            user_id,
+            lostAndFound_id: id,
+            comment
+        });
+        res.status(201).json(newResponse);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// DELETE /lost-objects/:id/responses/:responseId - Eliminar una resposta d'un objecte perdut
+router.delete("/:id/responses/:responseId", async (req, res) => {
+    const { id, responseId } = req.params;
+    try {
+        const response = await Response.findOne({
+            where: {
+                id: responseId,
+                lostAndFound_id: id
+            }
+        });
+
+        if (!response) {
+            return res.status(404).json({ message: "Resposta no trobada" });
+        }
+
+        await response.destroy();
+        res.status(204).send();
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// GET /lost-objects/:id/responses - Obtenir totes les respostes d'un objecte perdut
+router.get("/:id/responses", async (req, res) => {
+    const { id } = req.params;
+    try {
+        const responses = await Response.findAll({
+            where: { lostAndFound_id: id },
+            order: [["createdAt", "DESC"]]
+        });
+        res.json(responses);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// POST /lost-objects/:id/responses - Crear una nova resposta per un objecte perdut
+router.post("/:id/responses", async (req, res) => {
+    const { id } = req.params;
+    try {
+        const { user_id, comment } = req.body;
+
+        if (!user_id || !comment) {
+            return res.status(400).json({ message: "user_id i comment són obligatoris" });
+        }
+
+        const newResponse = await Response.create({
+            user_id,
+            lostAndFound_id: id,
+            comment
+        });
+        res.status(201).json(newResponse);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// DELETE /lost-objects/:id/responses/:responseId - Eliminar una resposta d'un objecte perdut
+router.delete("/:id/responses/:responseId", async (req, res) => {
+    const { id, responseId } = req.params;
+    try {
+        const response = await Response.findOne({
+            where: {
+                id: responseId,
+                lostAndFound_id: id
+            }
+        });
+
+        if (!response) {
+            return res.status(404).json({ message: "Resposta no trobada" });
+        }
+
+        await response.destroy();
+        res.status(204).send();
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Obtener estadísticas de objetos perdidos (total i d'avui)
+router.get("/stats/count", async (req, res) => {
+  try {
+    // Contar tots els objectes perduts
+    const totalLostObjects = await LostObjects.count();
+    
+    // Preparar dates per avui
+    const today = new Date();
+    const startOfDay = new Date(today.setHours(0, 0, 0, 0));
+    const endOfDay = new Date(today.setHours(23, 59, 59, 999));
+    
+    // Contar objectes perduts reportats avui
+    const todayLostObjects = await LostObjects.count({
+      where: {
+        createdAt: {
+          [Op.between]: [startOfDay, endOfDay]
+        }
+      }
+    });
+    
+    res.json({
+      total: totalLostObjects,
+      reportedToday: todayLostObjects
+    });
+  } catch (error) {
+    console.error("Error al obtener estadísticas de objetos perdidos:", error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Añadir esta función al final del archivo, antes de export default router
+export async function getLatestLostObject() {
+    try {
+        const latestLostObject = await LostObjects.findOne({
+            order: [['createdAt', 'DESC']]
+        });
+        
+        return latestLostObject;
+    } catch (error) {
+        console.error("Error al obtener objeto perdido reciente:", error);
+        throw error;
+    }
+}
 
 export default router;

@@ -140,6 +140,7 @@ CREATE TABLE
         room_name TEXT NOT NULL,
         room_hours_available JSON DEFAULT NULL,
         room_description TEXT NOT NULL,
+        available BOOLEAN NOT NULL DEFAULT TRUE,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     );
@@ -174,3 +175,14 @@ CREATE TABLE
         FOREIGN KEY (user_id) REFERENCES Users (id) ON DELETE SET NULL,
         FOREIGN KEY (room_id) REFERENCES Rooms (id)
     );
+
+    -- Table 14: CanteenItems
+    CREATE TABLE
+        IF NOT EXISTS CanteenItems (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            product_name TEXT NOT NULL,
+            product_price FLOAT NOT NULL,
+            product_enabled BOOLEAN DEFAULT TRUE,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        );

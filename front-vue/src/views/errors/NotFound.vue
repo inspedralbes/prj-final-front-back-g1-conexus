@@ -54,7 +54,7 @@ const goBack = () => {
     // Redireccionar según el rol
     switch (userRole) {
         case 'Administrador':
-            router.push('/admin');
+            router.push('/admin/panel');
             break;
         case 'Professor':
             router.push('/teachers');

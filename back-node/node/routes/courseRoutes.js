@@ -1,6 +1,7 @@
 import express from "express";
-import Course from "../models/Course.js";
+import Course from "../models/Course.js"; // Verifica la ruta exacta y el nombre
 import User from "../models/User.js";
+import { Op } from "sequelize"; // Añade esta importación al principio
 
 const router = express.Router();
 
@@ -45,7 +46,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/updateCourse/:id", async (req, res) => {
   try {
     const {
       course_name,
@@ -84,20 +85,32 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-router.post("/assingTeacher", async (req, res) => {
+//assign teacher to course
+router.put("/assignTeacher", async (req, res) => {
   try {
     const { course_id, teacher_id } = req.body;
-    console.log(course_id, teacher_id);
     const course = await Course.findByPk(course_id);
     if (!course) {
       return res.status(404).json({ message: "Course not found" });
     }
-    if (checkIfUserIsTeacher(teacher_id) == false) {
+    let teacher = await User.findByPk(teacher_id);
+    if(teacher==null){
       return res.status(404).json({ message: "Teacher not found" });
+    }else if(teacher.typeUsers_id!=1){
+      return res.status(404).json({ teacher:teacher});
+    } else{
+      course.course_teacher_id = teacher_id;
+      await course.save();
+      res.json(course);
     }
-    course.course_teacher_id = teacher_id;
-    await course.save();
-    res.json(course);
+
+    // const teacherExists = await checkIfUserIsTeacher(teacher_id);
+    // if (!teacherExists) {
+    //   return res.status(404).json({ message: "Teacher not found" });
+    // }
+    // course.course_teacher_id = teacher_id;
+    // await course.save();
+    // res.json(course);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -116,11 +129,92 @@ router.get("/teacher/:teacher_id", async (req, res) => {
   }
 });
 
-async function checkIfUserIsTeacher(teacher_id) {
-    const user = await User.findByPk(teacher_id);
-    if (!user) {
-        return false;
+// Get all courses without a teacher 
+router.put("/withoutTeacher", async (req, res) => {
+  try {
+    const courses = await Course.findAll({
+      where: { course_teacher_id: null },
+    });
+    res.json(courses);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// desassign teacher from course
+router.put("/desassignTeacher/:course_id", async (req, res) => {
+  try {
+    const { course_id } = req.params;
+    const course = await Course.findByPk(course_id);
+    if (!course) {
+      return res.status(404).json({ message: "Course not found" });
     }
-    return user.user_type == 1;
+    course.course_teacher_id = null;
+    await course.save();
+    res.json(course);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Obtener estadísticas de cursos (total y de este mes)
+router.get("/stats/count", async (req, res) => {
+  try {
+    // Contar todos los cursos
+    const totalCourses = await Course.count();
+
+    // Preparar fechas para este mes
+    const today = new Date();
+    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    const endOfMonth = new Date(
+      today.getFullYear(),
+      today.getMonth() + 1,
+      0,
+      23,
+      59,
+      59,
+      999
+    );
+
+    // Contar cursos creados este mes
+    const thisMonthCourses = await Course.count({
+      where: {
+        createdAt: {
+          [Op.between]: [startOfMonth, endOfMonth],
+        },
+      },
+    });
+
+    res.json({
+      total: totalCourses,
+      createdThisMonth: thisMonthCourses,
+    });
+  } catch (error) {
+    console.error("Error al obtener estadísticas de cursos:", error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Añadir esta función al final del archivo, antes de la función checkIfUserIsTeacher y export default router
+export async function getLatestCourse() {
+    try {
+        const latestCourse = await Course.findOne({
+            order: [['createdAt', 'DESC']]
+        });
+        
+        return latestCourse;
+    } catch (error) {
+        console.error("Error al obtener curso reciente:", error);
+        throw error;
+    }
+}
+
+async function checkIfUserIsTeacher(teacher_id) {
+  const user = await User.findByPk(teacher_id);
+  if (!user) {
+    return false;
+  }
+  return user.user_type == 1;
 }
 export default router;
+

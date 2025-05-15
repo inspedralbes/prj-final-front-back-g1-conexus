@@ -22,6 +22,11 @@ const router = createRouter({
       },
       children: [
         {
+          path: 'inscriptions',
+          name: 'student-inscriptions',
+          component: () => import('@/views/Students/courses.vue')
+        },
+        {
           path: 'incidents',
           name: 'student-incidents',
           component: () => import('@/views/Incidents/index.vue')
@@ -59,6 +64,11 @@ const router = createRouter({
       },
       children: [
         {
+          path: 'inscription',
+          name: 'teacher-inscriptions',
+          component: () => import('@/views/Teachers/courses.vue')
+        },
+        {
           path: 'canteen',
           name: 'teacher-canteen',
           component: () => import('@/views/Canteen/index.vue')
@@ -82,6 +92,11 @@ const router = createRouter({
           path: 'lost-objects',
           name: 'teacher-lost-objects',
           component: () => import('@/views/Teachers/lost-objects.vue')
+        },
+        {
+          path: 'lost-objects/:id/responses',
+          name: 'teacher-lost-object-responses',
+          component: () => import('@/views/Teachers/responses.vue')
         },
         {
           path: 'assistence',
@@ -155,6 +170,11 @@ const router = createRouter({
           component: () => import('@/views/Technicians/lost-objects.vue')
         },
         {
+          path: 'lost-objects/:id/responses',
+          name: 'technician-lost-object-responses',
+          component: () => import('@/views/Technicians/responses.vue')
+        },
+        {
           path: 'assignations',
           name: 'technician-assignations',
           component: () => import('@/views/Incidents/assignations.vue')
@@ -176,6 +196,11 @@ const router = createRouter({
       },
       children: [
         {
+          path: 'panel',
+          name: 'admin-panel',
+          component: () => import('@/views/Admin/panel.vue')
+        },
+        {
           path: 'config-users',
           name: 'admin-config-users',
           component: () => import('@/views/Admin/users.vue')
@@ -188,12 +213,17 @@ const router = createRouter({
         {
           path: 'config-servers',
           name: 'admin-config-servers',
-          // component: () => import('@/views/Admin/servers.vue')
+          component: () => import('@/views/Admin/servers.vue')
         },
         {
           path: 'config-lost-objects',
           name: 'admin-config-lost-objects',
           component: () => import('@/views/Admin/lost-objects.vue')
+        },
+        {
+          path: 'config-lost-objects/:id/responses',
+          name: 'admin-config-lost-object-responses',
+          component: () => import('@/views/Admin/responses.vue')
         },
         {
           path: 'config-incidents',
@@ -209,6 +239,48 @@ const router = createRouter({
           name: "config-courses",
           path: "config-courses",
           component: () => import('@/views/Admin/courses.vue')
+        }
+      ]
+    },
+    {
+      path: '/canteen',
+      name: 'canteen',
+      component: () => import('@/views/Canteen/index.vue'),
+      meta: {
+        requiresAuth: true,
+        allowedRoles: ['Cantina'],
+      },
+      children: [
+        {
+          path: 'chat',
+          name: 'canteen-chat',
+          component: () => import('@/views/Canteen/chat.vue')
+        },
+        {
+          path: 'menu-admin',
+          name: 'canteen-menu-admin',
+          component: () => import('@/views/Canteen/MenuAdmin.vue')
+        }
+      ]
+    },
+    {
+      path: '/canteen',
+      name: 'canteen',
+      component: () => import('@/views/Canteen/index.vue'),
+      meta: {
+        requiresAuth: true,
+        allowedRoles: ['Cantina'],
+      },
+      children: [
+        {
+          path: 'chat',
+          name: 'canteen-chat',
+          component: () => import('@/views/Canteen/chat.vue')
+        },
+        {
+          path: 'menu-admin',
+          name: 'canteen-menu-admin',
+          component: () => import('@/views/Canteen/MenuAdmin.vue')
         }
       ]
     },

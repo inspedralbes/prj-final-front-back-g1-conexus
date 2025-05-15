@@ -8,13 +8,14 @@ import assistenceRoutes from './routes/assistenceRoutes.js';
 import courseRoutes from './routes/courseRoutes.js';
 import departmentRoutes from './routes/departmentRoutes.js';
 
-
 dotenv.config();
 
 const app = express();
 const PORT = process.env.NODE_ASSISTENCE_PORT || 3001;
+
 app.use(bodyParser.json());
 app.use(cors());
+
 app.use("/api/assistences", assistenceRoutes);
 app.use("/api/courses", courseRoutes);
 app.use("/api/departments", departmentRoutes);
