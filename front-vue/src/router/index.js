@@ -71,7 +71,7 @@ const router = createRouter({
         {
           path: 'canteen',
           name: 'teacher-canteen',
-          component: () => import('@/views/Canteen/index.vue')
+          component: () => import('@/views/Teachers/canteen.vue')
         },
         {
           path: 'chats',
@@ -142,7 +142,7 @@ const router = createRouter({
         {
           path: 'canteen',
           name: 'technician-canteen',
-          component: () => import('@/views/Canteen/index.vue')
+          component: () => import('@/views/Technicians/canteen.vue')
         },
         {
           path: 'chats',
