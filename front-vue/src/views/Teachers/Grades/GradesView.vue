@@ -5,8 +5,8 @@
             <button @click="goToMenu()">Volver al menú</button>
             <button @click="goToCreateTask()">Crear nueva tarea</button>
             <div>
-                <label >
-                    <input type="checkbox" @click="changeFilter()"/>
+                <label>
+                    <input type="checkbox" @click="changeFilter()" />
                     Ocultar tasques tancades
                 </label>
             </div>
@@ -15,13 +15,17 @@
                     <th>Tasca</th>
                     <th>Tancada</th>
                 </tr>
-                
-                    <tr v-for="task in filteredTasks" :key="task.id">
-                        <td>{{ task.task_name }}</td>
-                        <td>{{ task.task_ended ? 'Sí' : 'No' }}</td>
-                        <td><button @click="goToEvaluar(task.id)">Evaluar</button></td>
-                    </tr>
-       
+
+                <tr v-for="task in filteredTasks" :key="task.id">
+                    <td>{{ task.task_name }}</td>
+                    <td>{{ task.task_ended ? 'Sí' : 'No' }}</td>
+                    <td><button @click="goToEvaluar(task.id)">Evaluar</button></td>
+                    <td>
+                        <button v-if="task.task_ended" @click="reopenTask(task)">Reobrir</button>
+                        <button v-else @click="close(task)">Tancar</button>
+                    </td>
+                </tr>
+
             </table>
 
         </div>
@@ -33,7 +37,7 @@ import { useRoute } from 'vue-router'
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { onMounted, ref } from 'vue'
-import { getTasksFromCourse } from '@/services/communicationsScripts/gradesComManager.js'
+import { getTasksFromCourse, updateTask } from '@/services/communicationsScripts/gradesComManager.js'
 const route = useRoute()
 const tasks = ref([]);
 const courseId = ref(null)
@@ -50,6 +54,29 @@ onMounted(async () => {
     tasks.value = await getTasksFromCourse(courseId.value)
 }
 )
+
+function reopenTask(task) {
+    task.task_ended = false
+    updateTask(task, task.id)
+        .then((response) => {
+            console.log('Tasca reoberta:', response.data);
+        })
+        .catch((error) => {
+            console.error('Error reobrint tasca:', error);
+        });
+
+}
+
+function close(task) {
+    task.task_ended = true
+    updateTask(task, task.id)
+        .then((response) => {
+            console.log('Tasca tancada:', response.data);
+        })
+        .catch((error) => {
+            console.error('Error tancant tasca:', error);
+        });
+}
 
 function goToCreateTask() {
     router.push({ name: 'createTask', params: { courseId: courseId.value } })

@@ -132,3 +132,22 @@ export const getCourseStats = async () => {
         return { total: 0, createdThisMonth: 0 };
     }
 };
+
+export const updateTask = async (task, taskId) => {
+    try {
+        const response = await fetch(`${BACK_URL}api/tasks/${taskId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(task),
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error updating task:', error);
+    }
+}

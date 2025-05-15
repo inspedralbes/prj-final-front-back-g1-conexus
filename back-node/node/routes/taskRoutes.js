@@ -40,9 +40,17 @@ router.post("/", async (req, res) => {
 // Actualitzar una tasca existent
 router.put("/:id", async (req, res) => {
     try {
-        const { name } = req.body;
-        const Task = await Task.update({ name }, { where: { id: req.params.id } });
-        res.json(Task);
+        const { task_name, course_id, task_description, task_ended } = req.body;
+        const auxTask = await Task.findByPk(req.params.id);
+        if (!auxTask) {
+            return res.status(404).json({ message: "Task not found" });
+        }
+        auxTask.task_name = task_name;
+        auxTask.course_id = course_id;
+        auxTask.task_description = task_description;
+        auxTask.task_ended = task_ended;
+        await auxTask.save();
+        res.json(auxTask);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
