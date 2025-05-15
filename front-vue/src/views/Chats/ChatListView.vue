@@ -150,26 +150,6 @@
         </button>
       </li>
     </ul>
-
-    <!-- Canteen Chat Button -->
-    <button
-      @click="startCanteenChat"
-      class="canteen-chat-button"
-      title="Chat con cantina"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        fill="currentColor"
-        viewBox="0 0 16 16"
-      >
-        <path
-          d="M5 6a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5A.5.5 0 0 1 5 6zm0 2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5A.5.5 0 0 1 5 8zm0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm8-6a4 4 0 0 1-3.479 3.972v.026a2.5 2.5 0 0 1 .5 4.476.5.5 0 0 1-.461-.865 1.5 1.5 0 0 0-.3-2.615v.026a3 3 0 0 1 1.3-5.026A4 4 0 0 1 13 4z"
-        />
-      </svg>
-      <span>Chat Cantina</span>
-    </button>
   </div>
 </template>
 
@@ -194,7 +174,6 @@ const selectedUserType = ref("all");
 const existingChats = ref([]);
 const activeTab = ref("existing"); // "existing" o "all"
 const userMessages = ref({}); // Para almacenar el último mensaje de cada usuario
-const canteenUserId = ref(null); // Para almacenar el ID del usuario cantina
 const socket = ref(null); // Socket.io connection
 const hasNewMessages = ref({}); // Para marcar chats con mensajes nuevos
 const deletedChats = ref(new Set());
@@ -345,78 +324,6 @@ const loadUnreadMessagesState = () => {
     }
   } catch (error) {
     console.error("Error al cargar estado de mensajes no leídos:", error);
-  }
-};
-
-// Iniciar chat con la cantina
-const startCanteenChat = async () => {
-  try {
-    loading.value = true;
-
-    // Buscar explícitamente el usuario cantina (tipo 5)
-    const canteenUser = users.value.find((user) => user.typeUsers_id === 5);
-
-    if (!canteenUser) {
-      throw new Error(
-        "No se pudo encontrar el usuario de cantina (typeUser 5)"
-      );
-    }
-
-    // Guardar el ID para referencias futuras
-    canteenUserId.value = canteenUser.id;
-    // console.log("Usuario cantina identificado:", canteenUser);
-
-    // Verificar si ya existe un chat entre el usuario actual y la cantina
-    const existingChat = existingChats.value.find(
-      (chat) =>
-        chat.teachers &&
-        chat.teachers.includes(parseInt(currentUserId.value)) &&
-        chat.teachers.includes(parseInt(canteenUserId.value))
-    );
-
-    let chatId;
-
-    if (existingChat) {
-      // Usar el chat existente
-      chatId = existingChat._id;
-      // console.log("Usando chat de cantina existente:", chatId);
-    } else {
-      // Crear un nuevo chat con la cantina
-      const canteenName = canteenUser.name || canteenUser.username || "Cantina";
-
-      // console.log("Creando nuevo chat con cantina:", {
-      //   currentUserId: currentUserId.value,
-      //   canteenUserId: canteenUserId.value,
-      // });
-
-      const newChat = await chatManager.createChat({
-        name: `Chat de ${appStore.getUser().name} con ${canteenName}`,
-        teachers: [
-          parseInt(currentUserId.value),
-          parseInt(canteenUserId.value),
-        ],
-        interaction: [],
-        requesterId: currentUserId.value,
-      });
-
-      chatId = newChat._id;
-      // console.log("Nuevo chat con cantina creado:", newChat);
-
-      // Actualizar la lista de chats existentes
-      await loadUserChats();
-    }
-
-    // Navegar al chat
-    router.push({
-      name: "chat-detail",
-      params: { chatId },
-    });
-  } catch (error) {
-    console.error("Error al iniciar chat con cantina:", error);
-    error.value =
-      "No se pudo iniciar el chat con la cantina. Intente de nuevo más tarde.";
-  } finally {
-    loading.value = false;
   }
 };
 
@@ -1212,13 +1119,6 @@ onMounted(async () => {
       throw new Error(usersResponse.error);
     }
 
-    // Buscar usuario de cantina (typeUsers_id = 5)
-    const canteenUser = usersResponse.find((user) => user.typeUsers_id === 5);
-    if (canteenUser) {
-      canteenUserId.value = canteenUser.id;
-      // console.log("Usuario de cantina encontrado:", canteenUser);
-    }
-
     // Usar todos los usuarios (filtrado se hace en el computed property)
     users.value = usersResponse;
 
@@ -1634,31 +1534,6 @@ h2 {
 .delete-button:hover {
   background-color: rgba(220, 53, 69, 0.1);
   color: #dc3545;
-}
-
-/* Botones nuevos */
-.canteen-chat-button {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background-color: #28a745;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  padding: 12px 20px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  z-index: 10;
-}
-
-.canteen-chat-button:hover {
-  background-color: #218838;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
 }
 
 .filter-icon-btn.filter-active {
