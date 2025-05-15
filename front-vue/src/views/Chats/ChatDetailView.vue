@@ -105,6 +105,49 @@
     </div>
 
     <div class="chat-input">
+      <!-- Área para mostrar los productos de cantina -->
+      <div v-if="hasCantinaItems" class="cantina-order-container">
+        <div class="cantina-order-header">
+          <h4>🛒 Pedido de Cantina</h4>
+          <button
+            class="remove-order-btn"
+            @click="clearCantinaOrder"
+            title="Eliminar pedido"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        <div class="cantina-order-items">
+          <div
+            v-for="(item, index) in appStore.cartCantinaItems"
+            :key="index"
+            class="cantina-order-item"
+          >
+            <span class="item-quantity">{{ item.quantity }}x</span>
+            <span class="item-name">{{ item.product_name }}</span>
+            <span class="item-price"
+              >{{ formatPrice(item.product_price * item.quantity) }} €</span
+            >
+          </div>
+        </div>
+        <div class="cantina-order-total">
+          Total: {{ calculateCantinaTotal() }} €
+        </div>
+      </div>
+
       <!-- Popup para insertar enlaces -->
       <div v-if="showLinkPopup" class="link-popup">
         <div class="link-popup-content">
@@ -590,6 +633,53 @@ const goBack = () => {
   router.push({ name: "chats-list" });
 };
 
+// Referencia para el mensaje de pedido de cantina
+const cantinaOrderMessage = ref(null);
+
+// Verificar si hay productos en el carrito de cantina
+const hasCantinaItems = computed(() => appStore.cartCantinaItems.length > 0);
+
+// Función para formatear precio
+const formatPrice = (price) => {
+  return Number(price).toFixed(2);
+};
+
+// Calcular el total del pedido de cantina
+const calculateCantinaTotal = () => {
+  return formatPrice(
+    appStore.cartCantinaItems.reduce((total, item) => {
+      return total + item.product_price * item.quantity;
+    }, 0)
+  );
+};
+
+// Función para limpiar el pedido de cantina
+const clearCantinaOrder = () => {
+  // Eliminar todos los items del carrito
+  while (appStore.cartCantinaItems.length > 0) {
+    appStore.removeFromCartCantina(appStore.cartCantinaItems[0]);
+  }
+};
+
+// Generar mensaje con los productos del carrito
+const generateCantinaOrderMessage = () => {
+  if (!hasCantinaItems.value) {
+    return null;
+  }
+
+  let message = "🛒 *Nuevo Pedido*\n\n";
+
+  appStore.cartCantinaItems.forEach((item) => {
+    message += `• ${item.quantity}x ${item.product_name} - ${formatPrice(
+      item.product_price * item.quantity
+    )} €\n`;
+  });
+
+  message += `\n*Total: ${calculateCantinaTotal()} €*`;
+
+  return message;
+};
+
 // Conectar al socket cuando el componente se monta
 onMounted(async () => {
   // Verificar si el usuario está autenticado
@@ -597,6 +687,12 @@ onMounted(async () => {
     console.warn("No se puede iniciar el chat: usuario no autenticado");
     router.push("/login");
     return;
+  }
+
+  // Verificar si hay un pedido de cantina en la URL
+  if (route.query.order) {
+    cantinaOrderMessage.value = decodeURIComponent(route.query.order);
+    // Ya no colocamos el mensaje en el input
   }
 
   // Cargar datos del chat
@@ -1291,8 +1387,8 @@ const detectLinks = (text) => {
   return [...new Set(allLinks)]; // Eliminar duplicados
 };
 
-// Enviar mensaje
-const sendMessage = async () => {
+// Función original para enviar mensajes
+const originalSendMessage = async () => {
   if (!currentUserId.value) {
     console.error("No se puede enviar mensaje: usuario no autenticado");
     return;
@@ -1395,6 +1491,81 @@ const sendMessage = async () => {
         messages.value[failedMessageIndex].sending = false;
       }
     }
+  }
+};
+
+// Nueva función de envío de mensaje que usa la original y limpia el carrito
+const sendMessage = async () => {
+  // Verificar si hay un pedido de cantina para enviar
+  if (hasCantinaItems.value && !newMessage.value.trim()) {
+    // Crear el mensaje completo con el pedido
+    let fullMessage = generateCantinaOrderMessage();
+
+    // Enviar el mensaje directamente sin colocarlo en el input
+    try {
+      const tempId = Date.now().toString();
+
+      // Detectar enlaces en el mensaje
+      const links = detectLinks(fullMessage);
+      const hasLinks = links.length > 0;
+
+      // Agregar el mensaje localmente para que aparezca inmediatamente
+      const localMessage = {
+        id: tempId,
+        userId: currentUserId.value,
+        userName: currentUserName.value,
+        message: fullMessage,
+        hasLinks: hasLinks,
+        links: links,
+        linkPreviews: [],
+        timestamp: new Date(),
+        sending: true,
+        local: true,
+      };
+
+      // Agregar el mensaje a la lista
+      messages.value.push(localMessage);
+
+      // Hacer scroll para mostrar el nuevo mensaje
+      scrollToBottom();
+
+      // Enviar el mensaje a través del API
+      const result = await chatManager.sendMessage(
+        chatId.value,
+        currentUserId.value,
+        fullMessage
+      );
+
+      // Actualizar el mensaje local con el ID real
+      const messageIndex = messages.value.findIndex((m) => m.id === tempId);
+      if (messageIndex !== -1) {
+        // Si el último mensaje recibido tiene el interaction array, actualizar
+        if (result.interaction && result.interaction.length > 0) {
+          const newMsg = result.interaction[result.interaction.length - 1];
+          messages.value[messageIndex] = {
+            ...messages.value[messageIndex],
+            id: newMsg._id,
+            hasLinks: newMsg.hasLinks || hasLinks,
+            links: newMsg.links || links,
+            linkPreviews: newMsg.linkPreviews || [],
+            sending: false,
+            local: true, // Mantener la marca para evitar duplicación
+          };
+        } else {
+          // Solo marcar como enviado si no tenemos el ID real
+          messages.value[messageIndex].sending = false;
+        }
+      }
+
+      // Limpiar el carrito después de enviar
+      clearCantinaOrder();
+    } catch (error) {
+      console.error("Error al enviar pedido de cantina:", error);
+      // Mostrar error al usuario
+    }
+  } else {
+    // Si hay texto en el input o no hay productos en el carrito, usar la función original
+    await originalSendMessage();
   }
 };
 
@@ -2496,5 +2667,87 @@ button:disabled {
 .emoji-btn:hover {
   background-color: #f0f0f0;
   transform: scale(1.2);
+}
+
+/* Estilos para el contenedor de pedido de cantina */
+.cantina-order-container {
+  width: 100%;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+  border: 1px solid #e9ecef;
+}
+
+.cantina-order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.cantina-order-header h4 {
+  margin: 0;
+  color: #28a745;
+  font-size: 1rem;
+}
+
+.remove-order-btn {
+  background: none;
+  border: none;
+  color: #6c757d;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.remove-order-btn:hover {
+  background-color: #f1f1f1;
+  color: #dc3545;
+}
+
+.cantina-order-items {
+  max-height: 150px;
+  overflow-y: auto;
+  margin-bottom: 10px;
+}
+
+.cantina-order-item {
+  display: flex;
+  align-items: center;
+  padding: 5px 0;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.cantina-order-item:last-child {
+  border-bottom: none;
+}
+
+.item-quantity {
+  font-weight: bold;
+  margin-right: 8px;
+  color: #495057;
+}
+
+.item-name {
+  flex: 1;
+  color: #212529;
+}
+
+.item-price {
+  font-weight: bold;
+  color: #28a745;
+}
+
+.cantina-order-total {
+  text-align: right;
+  font-weight: bold;
+  color: #28a745;
+  padding-top: 5px;
+  border-top: 1px solid #e9ecef;
 }
 </style>

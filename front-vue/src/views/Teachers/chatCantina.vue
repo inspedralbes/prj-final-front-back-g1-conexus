@@ -18,11 +18,61 @@
           <p>No hay productos disponibles en este momento.</p>
         </div>
 
-        <div v-else class="menu-items-grid">
-          <div v-for="item in menuItems" :key="item.id" class="menu-item-card">
-            <div class="menu-item-name">{{ item.product_name }}</div>
-            <div class="menu-item-price">
-              {{ formatPrice(item.product_price) }} €
+        <div v-else>
+          <div class="selected-items-summary" v-if="cartItems.length > 0">
+            <h4>Productos seleccionados: {{ cartItems.length }}</h4>
+            <div class="total-price">Total: {{ calculateTotal() }} €</div>
+            <button @click="clearCart" class="clear-selection-btn">
+              Limpiar selección
+            </button>
+          </div>
+
+          <div class="menu-items-grid">
+            <div
+              v-for="item in menuItems"
+              :key="item.id"
+              class="menu-item-card"
+              :class="{ selected: isItemInCart(item) }"
+              @click="toggleItemSelection(item)"
+            >
+              <div class="menu-item-name">{{ item.product_name }}</div>
+              <div class="menu-item-price">
+                {{ formatPrice(item.product_price) }} €
+              </div>
+              <div
+                class="quantity-controls"
+                v-if="isItemInCart(item)"
+                @click.stop
+              >
+                <button
+                  class="quantity-btn"
+                  @click.stop="decrementQuantity(item)"
+                >
+                  -
+                </button>
+                <span class="quantity-display">{{
+                  getItemQuantity(item)
+                }}</span>
+                <button
+                  class="quantity-btn"
+                  @click.stop="incrementQuantity(item)"
+                >
+                  +
+                </button>
+              </div>
+              <div class="selection-indicator" v-if="isItemInCart(item)">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"
+                  />
+                </svg>
+              </div>
             </div>
           </div>
         </div>
@@ -35,6 +85,17 @@
             Inicia un chat con el servicio de cantina para realizar consultas
             sobre el menú, horarios o cualquier otra información.
           </p>
+
+          <div class="selected-items-preview" v-if="cartItems.length > 0">
+            <h4>Productos a enviar:</h4>
+            <ul class="selected-items-list">
+              <li v-for="item in cartItems" :key="item.id">
+                {{ item.quantity }}x {{ item.product_name }} -
+                {{ formatPrice(item.product_price * item.quantity) }} €
+              </li>
+            </ul>
+            <div class="preview-total">Total: {{ calculateTotal() }} €</div>
+          </div>
 
           <button
             @click="startCanteenChat"
@@ -72,7 +133,7 @@ import { ref, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
 import { getAllUsers } from "@/services/communicationsScripts/mainManager";
 import chatManager from "@/services/communicationsScripts/chatsComManager";
-import { getAllEnabledCanteenItems } from "@/services/communicationsScripts/canteenComManager";
+import { getAllCanteenItems } from "@/services/communicationsScripts/canteenComManager";
 import { useAppStore } from "@/stores";
 
 // Estado
@@ -92,9 +153,96 @@ const currentUserId = computed(() =>
   appStore.getUserId() ? appStore.getUserId().toString() : null
 );
 
+// Acceder a los items del carrito desde la store
+const cartItems = computed(() => appStore.cartCantinaItems);
+
 // Formatear precio para mostrar dos decimales
 const formatPrice = (price) => {
   return Number(price).toFixed(2);
+};
+
+// Calcular el total del pedido
+const calculateTotal = () => {
+  return formatPrice(
+    cartItems.value.reduce((total, item) => {
+      return total + item.product_price * item.quantity;
+    }, 0)
+  );
+};
+
+// Verificar si un item está en el carrito
+const isItemInCart = (item) => {
+  return cartItems.value.some((cartItem) => cartItem.id === item.id);
+};
+
+// Obtener la cantidad de un item en el carrito
+const getItemQuantity = (item) => {
+  const cartItem = cartItems.value.find((i) => i.id === item.id);
+  return cartItem ? cartItem.quantity : 0;
+};
+
+// Alternar la selección de un item
+const toggleItemSelection = (item) => {
+  const index = cartItems.value.findIndex((i) => i.id === item.id);
+
+  if (index === -1) {
+    // Si no está en el carrito, agregarlo con cantidad 1
+    appStore.addToCartCantina({
+      ...item,
+      quantity: 1,
+    });
+  } else {
+    // Si ya está en el carrito, quitarlo
+    appStore.removeFromCartCantina(cartItems.value[index]);
+  }
+};
+
+// Incrementar la cantidad de un item
+const incrementQuantity = (item) => {
+  const cartItem = cartItems.value.find((i) => i.id === item.id);
+  if (cartItem) {
+    cartItem.quantity++;
+  }
+};
+
+// Decrementar la cantidad de un item
+const decrementQuantity = (item) => {
+  const cartItem = cartItems.value.find((i) => i.id === item.id);
+  if (cartItem) {
+    if (cartItem.quantity > 1) {
+      cartItem.quantity--;
+    } else {
+      // Si la cantidad llega a 0, quitar el item
+      appStore.removeFromCartCantina(cartItem);
+    }
+  }
+};
+
+// Limpiar el carrito
+const clearCart = () => {
+  // Eliminar todos los items del carrito
+  while (cartItems.value.length > 0) {
+    appStore.removeFromCartCantina(cartItems.value[0]);
+  }
+};
+
+// Generar el mensaje del pedido
+const generateOrderMessage = () => {
+  if (cartItems.value.length === 0) {
+    return null;
+  }
+
+  let message = "🛒 *Nuevo Pedido*\n\n";
+
+  cartItems.value.forEach((item) => {
+    message += `• ${item.quantity}x ${item.product_name} - ${formatPrice(
+      item.product_price * item.quantity
+    )} €\n`;
+  });
+
+  message += `\n*Total: ${calculateTotal()} €*`;
+
+  return message;
 };
 
 // Cargar productos de la cantina
@@ -103,7 +251,7 @@ const loadMenuItems = async () => {
     loading.value = true;
     error.value = null;
 
-    const items = await getAllEnabledCanteenItems();
+    const items = await getAllCanteenItems();
 
     if (!items) {
       throw new Error("No se pudieron cargar los productos del menú");
@@ -169,11 +317,17 @@ const startCanteenChat = async () => {
       chatId = newChat._id;
     }
 
+    // Generar mensaje de pedido si hay items en el carrito
+    const orderMessage = generateOrderMessage();
+
     // Navegar al chat
     router.push({
       name: "chat-detail",
       params: { chatId },
+      query: orderMessage ? { order: encodeURIComponent(orderMessage) } : {},
     });
+
+    // No limpiar el carrito aquí para que los productos permanezcan disponibles en el chat
   } catch (error) {
     console.error("Error al iniciar chat con cantina:", error);
     chatError.value =
@@ -216,6 +370,12 @@ h3 {
   font-size: 1.5rem;
 }
 
+h4 {
+  margin-bottom: 10px;
+  color: #555;
+  font-size: 1.1rem;
+}
+
 .canteen-content {
   display: grid;
   grid-template-columns: 1fr;
@@ -236,6 +396,39 @@ h3 {
   padding: 25px;
 }
 
+.selected-items-summary {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.total-price {
+  font-weight: bold;
+  color: #28a745;
+  font-size: 1.1rem;
+}
+
+.clear-selection-btn {
+  background-color: #f8f9fa;
+  border: 1px solid #dc3545;
+  color: #dc3545;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.clear-selection-btn:hover {
+  background-color: #dc3545;
+  color: white;
+}
+
 .menu-items-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -248,11 +441,19 @@ h3 {
   padding: 15px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  position: relative;
+  border: 2px solid transparent;
 }
 
 .menu-item-card:hover {
   transform: translateY(-3px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.menu-item-card.selected {
+  border-color: #28a745;
+  background-color: #f0fff4;
 }
 
 .menu-item-name {
@@ -265,6 +466,53 @@ h3 {
   color: #28a745;
   font-weight: 600;
   font-size: 1.1rem;
+}
+
+.selection-indicator {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #28a745;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+  gap: 10px;
+}
+
+.quantity-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: none;
+  background-color: #e9ecef;
+  color: #495057;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.quantity-btn:hover {
+  background-color: #dee2e6;
+}
+
+.quantity-display {
+  font-weight: bold;
+  min-width: 20px;
+  text-align: center;
 }
 
 .loading-spinner {
@@ -316,6 +564,37 @@ h3 {
   margin-bottom: 25px;
   color: #6c757d;
   line-height: 1.6;
+}
+
+.selected-items-preview {
+  width: 100%;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.selected-items-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0;
+}
+
+.selected-items-list li {
+  padding: 5px 0;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.selected-items-list li:last-child {
+  border-bottom: none;
+}
+
+.preview-total {
+  margin-top: 10px;
+  font-weight: bold;
+  color: #28a745;
+  text-align: right;
 }
 
 .canteen-chat-button {

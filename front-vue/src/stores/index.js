@@ -5,7 +5,8 @@ export const useAppStore = defineStore('appStore', {
     user: {},
     accessToken: localStorage.getItem('accessToken') || '',
     unreadMessagesCount: 0,
-    testMode: false // Desactivar el modo de prueba
+    testMode: false, // Desactivar el modo de prueba
+    cartCantinaItems: [],
   }),
   getters: {
     isAuthenticated: (state) => !!state.accessToken && !!state.user,
@@ -89,6 +90,12 @@ export const useAppStore = defineStore('appStore', {
         console.error("Error updating unread message count:", e);
         this.unreadMessagesCount = 0;
       }
-    }
-  }
-});
+    },
+    addToCartCantina(item) {
+      this.cartCantinaItems.push(item);
+    },
+    removeFromCartCantina(item) {
+      this.cartCantinaItems = this.cartCantinaItems.filter((i) => i !== item);
+    },
+  },
+}); 
