@@ -4,7 +4,7 @@
  */
 
 // URL base del servicio de chat
-const API_URL = 'http://localhost:3007/api/chat';
+const API_URL_CHAT = import.meta.env.VITE_CHAT_URL;
 
 /**
  * Obtiene todos los chats disponibles
@@ -12,7 +12,7 @@ const API_URL = 'http://localhost:3007/api/chat';
  */
 export const getAllChats = async () => {
     try {
-        const response = await fetch(API_URL);
+        const response = await fetch(`${API_URL_CHAT}api/chat`);
         if (!response.ok) {
             throw new Error(`Error al obtener chats: ${response.statusText}`);
         }
@@ -30,7 +30,7 @@ export const getAllChats = async () => {
  */
 export const getChatById = async (chatId) => {
     try {
-        const response = await fetch(`${API_URL}/${chatId}`);
+        const response = await fetch(`${API_URL_CHAT}api/chat/${chatId}`);
         if (!response.ok) {
             throw new Error(`Error al obtener chat: ${response.statusText}`);
         }
@@ -48,7 +48,7 @@ export const getChatById = async (chatId) => {
  */
 export const getChatByName = async (chatName) => {
     try {
-        const response = await fetch(`${API_URL}/name/${encodeURIComponent(chatName)}`);
+        const response = await fetch(`${API_URL_CHAT}api/chat/name/${encodeURIComponent(chatName)}`);
         if (!response.ok) {
             throw new Error(`Error al obtener chat por nombre: ${response.statusText}`);
         }
@@ -69,7 +69,7 @@ export const getChatByName = async (chatName) => {
  */
 export const createChat = async (chatData) => {
     try {
-        const response = await fetch(API_URL, {
+        const response = await fetch(`${API_URL_CHAT}api/chat`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -104,7 +104,7 @@ export const sendMessage = async (chatId, teacherId, message) => {
         const links = message.match(urlRegex) || [];
         const hasLinks = links.length > 0;
 
-        const response = await fetch(`${API_URL}/${chatId}/message`, {
+        const response = await fetch(`${API_URL_CHAT}api/chat/${chatId}/message`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -138,7 +138,7 @@ export const sendMessage = async (chatId, teacherId, message) => {
  */
 export const deleteMessage = async (chatId, messageId) => {
     try {
-        const response = await fetch(`${API_URL}/${chatId}/message/${messageId}`, {
+        const response = await fetch(`${API_URL_CHAT}api/chat/${chatId}/message/${messageId}`, {
             method: 'DELETE'
         });
 
@@ -160,7 +160,7 @@ export const deleteMessage = async (chatId, messageId) => {
  */
 export const deleteChat = async (chatId) => {
     try {
-        const response = await fetch(`${API_URL}/${chatId}`, {
+        const response = await fetch(`${API_URL_CHAT}api/chat/${chatId}`, {
             method: 'DELETE'
         });
 
@@ -182,7 +182,7 @@ export const deleteChat = async (chatId) => {
  */
 export const getChatsByUser = async (teacherId) => {
     try {
-        const response = await fetch(`${API_URL}/user/${teacherId}`);
+        const response = await fetch(`${API_URL_CHAT}api/chat/user/${teacherId}`);
         if (!response.ok) {
             throw new Error(`Error al obtener chats del usuario: ${response.statusText}`);
         }
