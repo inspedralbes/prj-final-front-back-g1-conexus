@@ -39,7 +39,7 @@ import chatRoutes from "./routes/chatRoutes.js";
 import mongoose from 'mongoose';
 import './models/Message.js';  // Import to register the Message model
 
-import { startService, stopService, startAllServices, stopAllServices, getServiceStatus, getAllServicesStatus } from "./serviceManager.js";
+// import { startService, stopService, startAllServices, stopAllServices, getServiceStatus, getAllServicesStatus } from "./serviceManager.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

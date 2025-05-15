@@ -71,7 +71,7 @@ const router = createRouter({
         {
           path: 'canteen',
           name: 'teacher-canteen',
-          component: () => import('@/views/Canteen/index.vue')
+          component: () => import('@/views/Teachers/chatCantina.vue')
         },
         {
           path: 'chats',
