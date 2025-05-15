@@ -19,7 +19,7 @@
                 <label for="productName">Nom del producte:</label>
                 <input type="text" id="productName" v-model="newProductName" required />
                 <label for="productPrice">Preu:</label>
-                <input type="number" id="productPrice" v-model="newProductPrice" required />
+                <input type="number" id="productPrice" v-model.number="newProductPrice" step="0.01" required />
                 <button type="submit">Crear</button>
             </form>
             <button @click="toggleShowModal()">Tancar</button>
@@ -28,8 +28,7 @@
 
 </template>
 <script setup>
-import { onMounted, computed } from 'vue';
-import { useRouter } from 'vue-router';
+import { onMounted } from 'vue';
 import { getAllCanteenItems, createItem, deleteItem } from '@/services/communicationsScripts/canteenComManager';
 import { ref } from 'vue';
 import CanteenItemCard from '@/components/Canteen/CanteenItemCard.vue';
