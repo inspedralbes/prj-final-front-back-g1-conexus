@@ -36,11 +36,13 @@ const props = defineProps({
     item: {
         type: Object,
         required: true
+    },
+    callDeleteItem: {
+        type: Function,
+        required: true
     }
 });
-function callDeleteItem(id) {
-    props.callDeleteItem(id);
-}
+
 function ToggleModal() {
     showModal.value = !showModal.value;
 }

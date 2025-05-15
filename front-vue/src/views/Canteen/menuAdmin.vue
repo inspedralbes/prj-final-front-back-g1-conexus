@@ -4,10 +4,7 @@
         <button @click="toggleShowModal()">Crear nou producte</button>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div v-for="item in canteenItems" :key="item.id" class="bg-white rounded-lg shadow-md p-4">
-                <CanteenItemCard :item="item" @callDeleteItem="async (id) => { 
-                    await deleteItem(id);
-                    canteenItems.value = await getAllCanteenItems();
-                }" />
+                <CanteenItemCard :item="item" :callDeleteItem="handleDeleteItem" />
             </div>
         </div>
     </div>
@@ -30,8 +27,13 @@
 <script setup>
 import { onMounted } from 'vue';
 import { getAllCanteenItems, createItem, deleteItem } from '@/services/communicationsScripts/canteenComManager';
-import { ref } from 'vue';
+const handleDeleteItem = async (id) => {
+    await deleteItem(id);
+    canteenItems.value = await getAllCanteenItems();
+};
 import CanteenItemCard from '@/components/Canteen/CanteenItemCard.vue';
+import { ref } from 'vue';
+
 
 const canteenItems = ref([]);
 const showModal = ref(false);
