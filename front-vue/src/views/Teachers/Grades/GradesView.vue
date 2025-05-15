@@ -86,7 +86,7 @@ function changeFilter() {
     hideClosed.value = !hideClosed.value
 }
 function goToMenu() {
-    router.push({ name: 'home' })
+    router.push({ name: 'teacher' })
 }
 
 function goToEvaluar(taskId) {
