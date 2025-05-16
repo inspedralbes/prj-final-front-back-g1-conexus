@@ -30,7 +30,8 @@
                     </div>
                     <div class="form-group">
                         <label for="course_teacher_id">Professor:</label>
-                        <select id="course_teacher_id" v-model="newCourse.course_teacher_id" required>
+                        <select id="course_teacher_id" v-model="newCourse.course_teacher_id">
+                            <option :value="null">Sense professor assignat</option>
                             <option v-for="teacher in teachers" :key="teacher.id" :value="teacher.id">{{ teacher.name }}</option>
                         </select>
                     </div>
@@ -201,7 +202,13 @@ function callCreateCourse() {
     createCourse(newCourse.value).then(async () => {
         courses.value = await getAllCourses();
         toggleCreateCourse();
-
+        newCourse.value = {
+            course_name: '',
+            course_description: '',
+            course_hours_available: [],
+            course_department_id: null,
+            course_teacher_id: null,
+        };
     }).catch((error) => {
         console.error('Error creating course:', error);
     });
