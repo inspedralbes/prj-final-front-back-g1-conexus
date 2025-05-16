@@ -25,7 +25,13 @@ export const getLostObjectStats = async () => {
 // Obtener todos los objetos perdidos
 export const getAllLostObjects = async () => {
     try {
-        const response = await fetch(`${BACK_URL}api/lost-objects`);
+        const response = await fetch(`${BACK_URL}api/lost-objects`, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+        });
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
