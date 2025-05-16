@@ -42,7 +42,17 @@ router.post("/", upload.single('profile'), async (req, res) => {
     console.log(req.body);
     try {
         const { typeUsers_id, name, email, password, profile } = req.body;
-        // const profile = req.file ? req.file.path : null; // Guardar la ruta de la imagen si se proporciona
+        
+        // Verificar si ya existe un usuario con ese correo
+        const existingUser = await User.findOne({ where: { email } });
+        
+        if (existingUser) {
+            return res.status(400).json({ 
+                message: "Ya existe un usuario con este correo electrónico" 
+            });
+        }
+        
+        // Si no existe, crear el nuevo usuario
         const user = await User.create({ typeUsers_id, name, email, password, profile });
         res.json(user);
     } catch (error) {
