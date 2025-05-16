@@ -20,8 +20,8 @@ const Report = sequelize.define('Report', {
     timestamps: true,
 });
 
-Report.belongsTo(Room  , { foreignKey: 'room_id'});
-Report.belongsTo(User, { foreignKey: 'user_id', as: 'User' });
-Report.belongsTo(User, { foreignKey: 'user_assigned', as: 'AssignedUser' });
+Report.belongsTo(Room, { foreignKey: 'room_id', onDelete: 'CASCADE' });
+Report.belongsTo(User, { foreignKey: 'user_id', as: 'User', onDelete: 'SET NULL' });
+Report.belongsTo(User, { foreignKey: 'user_assigned', as: 'AssignedUser', onDelete: 'SET NULL' });
 
 export default Report;

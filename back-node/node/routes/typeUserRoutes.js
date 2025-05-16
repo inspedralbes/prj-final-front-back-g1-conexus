@@ -4,7 +4,7 @@ import TypeUser from "../models/TypeUser.js";
 
 const router = express.Router();
 
-router.get("/", verifyTokenMiddleware, async (req, res) => {
+router.get("/", async (req, res) => {
     try {
         const typeUsers = await TypeUser.findAll();
         res.json(typeUsers);
@@ -14,7 +14,7 @@ router.get("/", verifyTokenMiddleware, async (req, res) => {
 });
 
 // Get type user by ID
-router.get("/:id", verifyTokenMiddleware, async (req, res) => {
+router.get("/:id", async (req, res) => {
     try {
         const typeUser = await TypeUser.findByPk(req.params.id);
         if (!typeUser) {
@@ -27,7 +27,7 @@ router.get("/:id", verifyTokenMiddleware, async (req, res) => {
 });
 
 // Create a new type user
-router.post("/", verifyTokenMiddleware,async (req, res) => {
+router.post("/",verifyTokenMiddleware,async (req, res) => {
     try {
         const { name } = req.body;
         // Check if type user already exists

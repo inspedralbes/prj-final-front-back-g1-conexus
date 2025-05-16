@@ -4,14 +4,14 @@
         <h1>Gestió de Sales</h1>
         <h2>Llistat de Sales</h2>
         <div v-for="room in rooms" :key="room.id">
-            <roomCardAdmin :room="room" />
+            <roomCardAdmin :room="room" @callDeleteRoom="callDeleteRoom"/>
         </div>
     </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-import { getAllRooms } from '@/services/communicationsScripts/roomReservationsComManager';
+import { getAllRooms,deleteRoom } from '@/services/communicationsScripts/roomReservationsComManager';
 import { useRouter } from 'vue-router';
 import roomCardAdmin from '@/components/RoomReservation/roomCardAdmin.vue';
 const router = useRouter();
@@ -23,6 +23,16 @@ onMounted(async () => {
     rooms.value = response;
     console.log(rooms.value);
 });
+
+function callDeleteRoom(roomId) {
+    deleteRoom(roomId)
+        .then(() => {
+            rooms.value = rooms.value.filter(room => room.id !== roomId);
+        })
+        .catch(error => {
+            console.error('Error deleting room:', error);
+        });
+}
 
 function goToNewRoom() {
     // Logic to navigate to the new room creation page
