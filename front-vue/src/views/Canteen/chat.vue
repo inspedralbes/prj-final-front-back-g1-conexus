@@ -377,59 +377,59 @@ const getUserName = (chat) => {
 
   // Si no encontramos al usuario, programar una actualización asíncrona
   // y devolver un valor temporal mientras tanto
-  updateUserInfoAsync(otherUserId);
+  // updateUserInfoAsync(otherUserId);
   return `Profesor ${otherUserId}`;
 };
 
 // Función para actualizar información de usuario de forma asíncrona
-const updateUserInfoAsync = async (userId) => {
-  try {
-    console.log(`Actualizando información para usuario ID: ${userId}`);
+// const updateUserInfoAsync = async (userId) => {
+//   try {
+//     // console.log(`Actualizando información para usuario ID: ${userId}`);
 
-    // Verificar si ya hay una actualización en curso para este usuario
-    if (usersCache[userId] && usersCache[userId].updating) {
-      return;
-    }
+//     // Verificar si ya hay una actualización en curso para este usuario
+//     if (usersCache[userId] && usersCache[userId].updating) {
+//       return;
+//     }
 
-    // Marcar como actualizando
-    usersCache[userId] = {
-      ...(usersCache[userId] || {}),
-      updating: true,
-    };
+//     // Marcar como actualizando
+//     usersCache[userId] = {
+//       ...(usersCache[userId] || {}),
+//       updating: true,
+//     };
 
-    // Obtener datos actualizados de todos los usuarios
-    const updatedUsers = await getAllUsers();
+//     // Obtener datos actualizados de todos los usuarios
+//     const updatedUsers = await getAllUsers();
 
-    // Actualizar la lista completa
-    if (Array.isArray(updatedUsers) && updatedUsers.length > 0) {
-      users.value = updatedUsers;
+//     // Actualizar la lista completa
+//     if (Array.isArray(updatedUsers) && updatedUsers.length > 0) {
+//       users.value = updatedUsers;
 
-      // Buscar el usuario específico y actualizar la caché
-      const user = updatedUsers.find((u) => u.id === userId);
-      if (user) {
-        usersCache[userId] = {
-          name: user.name || user.username,
-          profile: user.profile,
-          typeUsersId: user.typeUsers_id,
-          updating: false,
-        };
+//       // Buscar el usuario específico y actualizar la caché
+//       const user = updatedUsers.find((u) => u.id === userId);
+//       if (user) {
+//         usersCache[userId] = {
+//           name: user.name || user.username,
+//           profile: user.profile,
+//           typeUsersId: user.typeUsers_id,
+//           updating: false,
+//         };
 
-        // Forzar actualización de la UI
-        chats.value = [...chats.value];
-      }
-    }
-  } catch (err) {
-    console.error(
-      `Error al actualizar información del usuario ${userId}:`,
-      err
-    );
-  } finally {
-    // Asegurar que se quita la marca de actualización
-    if (usersCache[userId]) {
-      usersCache[userId].updating = false;
-    }
-  }
-};
+//         // Forzar actualización de la UI
+//         chats.value = [...chats.value];
+//       }
+//     }
+//   } catch (err) {
+//     console.error(
+//       `Error al actualizar información del usuario ${userId}:`,
+//       err
+//     );
+//   } finally {
+//     // Asegurar que se quita la marca de actualización
+//     if (usersCache[userId]) {
+//       usersCache[userId].updating = false;
+//     }
+//   }
+// };
 
 // Obtener el avatar del usuario
 const getUserAvatar = (chat) => {
