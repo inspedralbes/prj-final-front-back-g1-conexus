@@ -78,7 +78,7 @@
         <nav class="lg:block hidden bg-slate-800/80 backdrop-blur-sm py-4 fixed w-full z-30 shadow-lg">
             <div class="container mx-auto flex justify-between items-center px-4">
                 <!-- Nom de la Marca -->
-                <router-link to="/technicians"
+                <router-link to="/technicians/panel"
                     class="text-white text-2xl font-bold hover:text-gray-300 transition-colors duration-300">
                     Conexus
                 </router-link>
