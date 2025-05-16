@@ -696,7 +696,13 @@ export const countUsers = async () => {
 
 export const getLatestActivities = async () => {
     try {
-        const response = await fetch(`${BACK_URL}api/activities`);
+        const response = await fetch(`${BACK_URL}api/activities`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+        });
         
         // Verificar si la respuesta es exitosa
         if (!response.ok) {

@@ -5,7 +5,13 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
  */
 export const getAllServices = async () => {
     try {
-        const response = await fetch(`${BACKEND_URL}api/services`);
+        const response = await fetch(`${BACKEND_URL}api/services`, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+        });
 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -24,7 +30,13 @@ export const getAllServices = async () => {
  */
 export const getServiceStatus = async (serviceName) => {
     try {
-        const response = await fetch(`${BACKEND_URL}api/services/${serviceName}`);
+        const response = await fetch(`${BACKEND_URL}api/services/${serviceName}`, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+        });
 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -45,6 +57,10 @@ export const startService = async (serviceName) => {
     try {
         const response = await fetch(`${BACKEND_URL}api/services/${serviceName}/start`, {
             method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            },
         });
 
         if (!response.ok) {
@@ -66,6 +82,10 @@ export const stopService = async (serviceName) => {
     try {
         const response = await fetch(`${BACKEND_URL}api/services/${serviceName}/stop`, {
             method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            },
         });
 
         if (!response.ok) {
@@ -87,6 +107,10 @@ export const startAllServices = async () => {
     try {
         const response = await fetch(`${BACKEND_URL}api/services/start-all`, {
             method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            },
         });
 
         if (!response.ok) {
@@ -108,6 +132,10 @@ export const stopAllServices = async () => {
     try {
         const response = await fetch(`${BACKEND_URL}api/services/stop-all`, {
             method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            },
         });
 
         if (!response.ok) {
@@ -130,7 +158,8 @@ export const createService = async (serviceData) => {
         const response = await fetch(`${BACKEND_URL}api/services`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
             body: JSON.stringify(serviceData)
         });
@@ -155,7 +184,11 @@ export const uploadServiceFile = async (formData) => {
     try {
         const response = await fetch(`${BACKEND_URL}api/services/upload`, {
             method: 'POST',
-            body: formData, // No establecemos Content-Type, fetch lo hará automáticamente con FormData
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+            body: formData,
         });
 
         if (!response.ok) {
@@ -178,6 +211,10 @@ export const deleteService = async (serviceName) => {
     try {
         const response = await fetch(`${BACKEND_URL}api/services/${serviceName}`, {
             method: 'DELETE',
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            },
         });
 
         if (!response.ok) {
