@@ -13,7 +13,7 @@ const handleResponse = async (response) => {
 // Obtener estadísticas de aulas
 export const getRoomsStats = async () => {
     try {
-        const response = await fetch(`${API_URL}api/rooms/stats/count`,{
+        const response = await fetch(`${API_URL}api/rooms/stats/count`, {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
@@ -34,7 +34,13 @@ export const getRoomsStats = async () => {
 // Get all rooms
 export const getAllRooms = async () => {
     try {
-        const response = await fetch(`${API_URL}api/rooms`);
+        const response = await fetch(`${API_URL}api/rooms`, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+        });
         return await handleResponse(response);
     } catch (error) {
         console.error('Error fetching rooms:', error);
@@ -45,7 +51,13 @@ export const getAllRooms = async () => {
 // Get a single room by ID
 export const getRoomById = async (id) => {
     try {
-        const response = await fetch(`${API_URL}api/rooms/${id}`);
+        const response = await fetch(`${API_URL}api/rooms/${id}`, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+        });
         return await handleResponse(response);
     } catch (error) {
         console.error(`Error fetching room ${id}:`, error);
