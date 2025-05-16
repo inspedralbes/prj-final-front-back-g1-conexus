@@ -1,23 +1,23 @@
 <template>
     <div class="animate-fade-in mt-9 mb-9">
-        <!-- Encabezado -->
+        <!-- Capçalera -->
         <div class="mb-8 text-center">
             <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
-                Panel de Administración
+                Panell d'Administració
             </h1>
-            <p class="text-gray-300 mt-2">Bienvenido al centro de control de la plataforma</p>
+            <p class="text-gray-300 mt-2">Benvingut/uda al centre de control de la plataforma</p>
         </div>
 
-        <!-- Tarjetas de Resumen -->
+        <!-- Targetes de Resum -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            <!-- Usuarios -->
+            <!-- Usuaris -->
             <div
                 class="bg-slate-800/50 backdrop-blur-sm rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
                 <div class="flex items-center justify-between">
                     <div>
-                        <h3 class="text-lg font-semibold text-gray-300">Usuarios</h3>
+                        <h3 class="text-lg font-semibold text-gray-300">Usuaris</h3>
                         <p class="text-3xl font-bold mt-2">{{ userStats.total || 0 }}</p>
-                        <p class="text-sm text-gray-400 mt-1">+{{ userStats.registeredToday || 0 }} nuevos hoy</p>
+                        <p class="text-sm text-gray-400 mt-1">+{{ userStats.registeredToday || 0 }} nous avui</p>
                     </div>
                     <div class="p-3 rounded-full bg-blue-500/20">
                         <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -28,21 +28,21 @@
                 </div>
                 <router-link to="/admin/config-users"
                     class="mt-4 inline-flex items-center text-sm text-blue-400 hover:text-blue-300 transition-colors">
-                    Gestionar usuarios
+                    Gestionar usuaris
                     <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                     </svg>
                 </router-link>
             </div>
 
-            <!-- Aulas -->
+            <!-- Aules -->
             <div
                 class="bg-slate-800/50 backdrop-blur-sm rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
                 <div class="flex items-center justify-between">
                     <div>
-                        <h3 class="text-lg font-semibold text-gray-300">Aulas</h3>
+                        <h3 class="text-lg font-semibold text-gray-300">Aules</h3>
                         <p class="text-3xl font-bold mt-2">{{ roomStats.total || 0 }}</p>
-                        <p class="text-sm text-gray-400 mt-1">{{ roomStats.maintenance || 0 }} en mantenimiento</p>
+                        <p class="text-sm text-gray-400 mt-1">{{ roomStats.maintenance || 0 }} en manteniment</p>
                     </div>
                     <div class="p-3 rounded-full bg-purple-500/20">
                         <svg class="w-8 h-8 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -53,21 +53,21 @@
                 </div>
                 <router-link to="/admin/config-rooms"
                     class="mt-4 inline-flex items-center text-sm text-purple-400 hover:text-purple-300 transition-colors">
-                    Gestionar aulas
+                    Gestionar aules
                     <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                     </svg>
                 </router-link>
             </div>
 
-            <!-- Incidencias -->
+            <!-- Incidències -->
             <div
                 class="bg-slate-800/50 backdrop-blur-sm rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
                 <div class="flex items-center justify-between">
                     <div>
-                        <h3 class="text-lg font-semibold text-gray-300">Incidencias</h3>
+                        <h3 class="text-lg font-semibold text-gray-300">Incidències</h3>
                         <p class="text-3xl font-bold mt-2">{{ reportStats.total || 0 }}</p>
-                        <p class="text-sm text-gray-400 mt-1">{{ reportStats.pending || 0 }} sin resolver</p>
+                        <p class="text-sm text-gray-400 mt-1">{{ reportStats.pending || 0 }} sense resoldre</p>
                     </div>
                     <div class="p-3 rounded-full bg-red-500/20">
                         <svg class="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -78,21 +78,21 @@
                 </div>
                 <router-link to="/admin/config-incidents"
                     class="mt-4 inline-flex items-center text-sm text-red-400 hover:text-red-300 transition-colors">
-                    Ver incidencias
+                    Veure incidències
                     <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                     </svg>
                 </router-link>
             </div>
 
-            <!-- Objetos Perdidos -->
+            <!-- Objectes Perduts -->
             <div
                 class="bg-slate-800/50 backdrop-blur-sm rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
                 <div class="flex items-center justify-between">
                     <div>
-                        <h3 class="text-lg font-semibold text-gray-300">Objetos Perdidos</h3>
+                        <h3 class="text-lg font-semibold text-gray-300">Objectes Perduts</h3>
                         <p class="text-3xl font-bold mt-2">{{ lostObjectStats.total || 0 }}</p>
-                        <p class="text-sm text-gray-400 mt-1">{{ lostObjectStats.reportedToday || 0 }} nuevos hoy</p>
+                        <p class="text-sm text-gray-400 mt-1">{{ lostObjectStats.reportedToday || 0 }} nous avui</p>
                     </div>
                     <div class="p-3 rounded-full bg-yellow-500/20">
                         <svg class="w-8 h-8 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -103,23 +103,23 @@
                 </div>
                 <router-link to="/admin/config-lost-objects"
                     class="mt-4 inline-flex items-center text-sm text-yellow-400 hover:text-yellow-300 transition-colors">
-                    Ver objetos
+                    Veure objectes
                     <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                     </svg>
                 </router-link>
             </div>
 
-            <!-- Servicios -->
+            <!-- Serveis -->
             <div
                 class="bg-slate-800/50 backdrop-blur-sm rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
                 <div class="flex items-center justify-between">
                     <div>
-                        <h3 class="text-lg font-semibold text-gray-300">Servicios</h3>
+                        <h3 class="text-lg font-semibold text-gray-300">Serveis</h3>
                         <p class="text-3xl font-bold mt-2">{{ serviceStats.total || 0 }}</p>
                         <p class="text-sm text-gray-400 mt-1">
-                            <span v-if="serviceStats.allRunning" class="text-green-400">Todos operativos</span>
-                            <span v-else>{{ serviceStats.running || 0 }} operativos</span>
+                            <span v-if="serviceStats.allRunning" class="text-green-400">Tots operatius</span>
+                            <span v-else>{{ serviceStats.running || 0 }} operatius</span>
                         </p>
                     </div>
                     <div class="p-3 rounded-full"
@@ -133,7 +133,7 @@
                 </div>
                 <router-link to="/admin/config-servers"
                     class="mt-4 inline-flex items-center text-sm text-green-400 hover:text-green-300 transition-colors">
-                    Ver servicios
+                    Veure serveis
                     <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                     </svg>
@@ -147,7 +147,7 @@
                     <div>
                         <h3 class="text-lg font-semibold text-gray-300">Cursos</h3>
                         <p class="text-3xl font-bold mt-2">{{ courseStats.total || 0 }}</p>
-                        <p class="text-sm text-gray-400 mt-1">{{ courseStats.createdThisMonth || 0 }} nuevos este mes
+                        <p class="text-sm text-gray-400 mt-1">{{ courseStats.createdThisMonth || 0 }} nous aquest mes
                         </p>
                     </div>
                     <div class="p-3 rounded-full bg-indigo-500/20">
@@ -167,12 +167,12 @@
             </div>
         </div>
 
-        <!-- Sección de Actividad Reciente -->
+        <!-- Secció d'Activitat Recent -->
         <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl p-6 shadow-lg mb-8">
             <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-semibold text-gray-300">Actividad Reciente</h2>
+                <h2 class="text-xl font-semibold text-gray-300">Activitat Recent</h2>
                 <button @click="loadActivities" class="text-sm text-blue-400 hover:text-blue-300 transition-colors">
-                    Actualizar
+                    Actualitzar
                 </button>
             </div>
 
@@ -181,14 +181,14 @@
             </div>
 
             <div v-else-if="activities.length === 0" class="text-center py-4 text-gray-400">
-                No hay actividades recientes
+                No hi ha activitats recents
             </div>
 
             <div v-else class="space-y-4">
-                <!-- Actividad de usuario -->
+                <!-- Activitat d'usuari -->
                 <div v-for="(activity, index) in activities" :key="index"
                     class="flex items-start p-3 hover:bg-slate-700/30 rounded-lg transition-colors">
-                    <!-- Icono según tipo de actividad -->
+                    <!-- Icona segons tipus d'activitat -->
                     <div class="p-2 rounded-lg mr-3" :class="getActivityIconClass(activity.type).bgColor">
                         <svg class="w-5 h-5" :class="getActivityIconClass(activity.type).textColor" fill="none"
                             stroke="currentColor" viewBox="0 0 24 24">
@@ -205,16 +205,16 @@
             </div>
         </div>
 
-        <!-- Acciones Rápidas -->
+        <!-- Accions Ràpides -->
         <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl p-6 shadow-lg">
-            <h2 class="text-xl font-semibold text-gray-300 mb-4">Acciones Rápidas</h2>
+            <h2 class="text-xl font-semibold text-gray-300 mb-4">Accions Ràpides</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <router-link to="/admin/config-users?action=new"
                     class="flex items-center justify-center p-4 bg-blue-500/10 hover:bg-blue-500/20 rounded-lg transition-colors">
                     <svg class="w-5 h-5 mr-2 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                     </svg>
-                    <span>Nuevo Usuario</span>
+                    <span>Nou Usuari</span>
                 </router-link>
 
                 <router-link to="/admin/new-room"
@@ -222,7 +222,7 @@
                     <svg class="w-5 h-5 mr-2 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                     </svg>
-                    <span>Nueva Aula</span>
+                    <span>Nova Aula</span>
                 </router-link>
 
                 <router-link to="/admin/config-courses?action=new"
@@ -230,7 +230,7 @@
                     <svg class="w-5 h-5 mr-2 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                     </svg>
-                    <span>Nuevo Curso</span>
+                    <span>Nou Curs</span>
                 </router-link>
             </div>
         </div>
@@ -246,7 +246,7 @@ import { getLostObjectStats } from '@/services/communicationsScripts/lostObjects
 import { getCourseStats } from '@/services/communicationsScripts/gradesComManager.js';
 import { getAllServices } from '@/services/communicationsScripts/servicesManager.js';
 
-// Definir variables reactivas para almacenar las estadísticas
+// Definir variables reactives per emmagatzemar les estadístiques
 const userStats = ref({ total: 0, registeredToday: 0 });
 const roomStats = ref({ total: 0, available: 0, maintenance: 0 });
 const reportStats = ref({ total: 0, pending: 0, resolved: 0 });
@@ -254,29 +254,29 @@ const lostObjectStats = ref({ total: 0, reportedToday: 0 });
 const courseStats = ref({ total: 0, createdThisMonth: 0 });
 const serviceStats = ref({ total: 0, running: 0, allRunning: true });
 
-// Variables para actividades recientes
+// Variables per activitats recents
 const activities = ref([]);
 const isLoadingActivities = ref(false);
 
-// Función para cargar estadísticas y actividades recientes
+// Funció per carregar estadístiques i activitats recents
 const loadAllStats = async () => {
     try {
-        // Cargar estadísticas de usuarios
+        // Carregar estadístiques d'usuaris
         userStats.value = await countUsers();
 
-        // Cargar estadísticas de aulas
+        // Carregar estadístiques d'aules
         roomStats.value = await getRoomsStats();
 
-        // Cargar estadísticas de incidencias
+        // Carregar estadístiques d'incidències
         reportStats.value = await getReportStats();
 
-        // Cargar estadísticas de objetos perdidos
+        // Carregar estadístiques d'objectes perduts
         lostObjectStats.value = await getLostObjectStats();
 
-        // Cargar estadísticas de cursos
+        // Carregar estadístiques de cursos
         courseStats.value = await getCourseStats();
 
-        // Cargar estadísticas de servicios
+        // Carregar estadístiques de serveis
         const services = await getAllServices();
         const serviceNames = Object.keys(services);
         const totalServices = serviceNames.length;
@@ -288,66 +288,66 @@ const loadAllStats = async () => {
             allRunning: runningServices === totalServices
         };
 
-        // Cargar actividades recientes
+        // Carregar activitats recents
         await loadActivities();
     } catch (error) {
-        console.error("Error loading stats:", error);
+        console.error("Error carregant estadístiques:", error);
     }
 };
 
-// Función para cargar actividades recientes con mejor manejo de errores
+// Funció per carregar activitats recents amb millor maneig d'errors
 const loadActivities = async () => {
     isLoadingActivities.value = true;
     try {
-        console.log("Solicitando actividades recientes...");
+        console.log("Sol·licitant activitats recents...");
         const result = await getLatestActivities();
         
         if (Array.isArray(result) && result.length > 0) {
-            console.log(`Actividades recibidas: ${result.length}`, result);
+            console.log(`Activitats rebudes: ${result.length}`, result);
             activities.value = result;
         } else {
-            console.log("No se recibieron actividades o formato incorrecto:", result);
+            console.log("No es van rebre activitats o format incorrecte:", result);
             activities.value = [];
         }
     } catch (error) {
-        console.error("Error al cargar actividades:", error);
+        console.error("Error al carregar activitats:", error);
         activities.value = [];
     } finally {
         isLoadingActivities.value = false;
     }
 };
 
-// Formatear tiempo transcurrido con manejo de errores
+// Formatejar temps transcorregut amb maneig d'errors
 const formatTimeAgo = (dateString) => {
     try {
-        if (!dateString) return 'Fecha desconocida';
+        if (!dateString) return 'Data desconeguda';
         
         const now = new Date();
         const date = new Date(dateString);
         
-        // Verificar que la fecha sea válida
-        if (isNaN(date.getTime())) return 'Fecha inválida';
+        // Verificar que la data siga vàlida
+        if (isNaN(date.getTime())) return 'Data invàlida';
         
         const diffMs = now - date;
-        if (diffMs < 0) return 'Fecha futura';
+        if (diffMs < 0) return 'Data futura';
         
         const diffMins = Math.round(diffMs / 60000);
         
-        if (diffMins < 1) return 'Justo ahora';
-        if (diffMins < 60) return `Hace ${diffMins} min`;
+        if (diffMins < 1) return 'Ara mateix';
+        if (diffMins < 60) return `Fa ${diffMins} min`;
         
         const diffHours = Math.floor(diffMins / 60);
-        if (diffHours < 24) return `Hace ${diffHours} hora${diffHours > 1 ? 's' : ''}`;
+        if (diffHours < 24) return `Fa ${diffHours} hora${diffHours > 1 ? 's' : ''}`;
         
         const diffDays = Math.floor(diffHours / 24);
-        return `Hace ${diffDays} día${diffDays > 1 ? 's' : ''}`;
+        return `Fa ${diffDays} dia${diffDays > 1 ? 's' : ''}`;
     } catch (error) {
-        console.error("Error al formatear fecha:", error);
-        return "Fecha desconocida";
+        console.error("Error al formatejar data:", error);
+        return "Data desconeguda";
     }
 };
 
-// Obtener clase de icono según tipo de actividad
+// Obtenir classe d'icona segons tipus d'activitat
 const getActivityIconClass = (type) => {
     switch (type) {
         case 'user':
@@ -395,59 +395,59 @@ const getActivityIconClass = (type) => {
     }
 };
 
-// Obtener título según tipo de actividad
+// Obtenir títol segons tipus d'activitat
 const getActivityTitle = (activity) => {
     switch (activity.type) {
         case 'user':
-            return 'Nuevo usuario registrado';
+            return 'Nou usuari registrat';
         case 'report':
-            return 'Nueva incidencia reportada';
+            return 'Nova incidència reportada';
         case 'lostObject':
-            return 'Objeto perdido registrado';
+            return 'Objecte perdut registrat';
         case 'course':
-            return 'Nuevo curso creado';
+            return 'Nou curs creat';
         case 'roomReservation':
-            return 'Nueva reserva de aula';
+            return 'Nova reserva d\'aula';
         case 'task':
-            return 'Nueva tarea creada';
+            return 'Nova tasca creada';
         default:
-            return 'Nueva actividad';
+            return 'Nova activitat';
     }
 };
 
-// Obtener descripción según tipo de actividad con manejo de errores
+// Obtenir descripció segons tipus d'activitat amb maneig d'errors
 const getActivityDescription = (activity) => {
     try {
         if (!activity || !activity.data) {
-            return 'Información no disponible';
+            return 'Informació no disponible';
         }
         
         switch (activity.type) {
             case 'user':
-                return `${activity.data.name || 'Usuario'} se ha registrado como ${activity.data.typeusers?.name || 'usuario'}`;
+                return `${activity.data.name || 'Usuari'} s'ha registrat com a ${activity.data.typeusers?.name || 'usuari'}`;
             case 'report':
-                const reportText = activity.data.report || 'Incidencia';
+                const reportText = activity.data.report || 'Incidència';
                 const shortReport = reportText.substring(0, 30) + (reportText.length > 30 ? '...' : '');
-                return `${shortReport} en ${activity.data.Room?.room_name || 'un aula'}`;
+                return `${shortReport} a ${activity.data.Room?.room_name || 'una aula'}`;
             case 'lostObject':
-                return `${activity.data.title || 'Objeto'} - ${activity.data.description?.substring(0, 20) || 'sin descripción'}${activity.data.description?.length > 20 ? '...' : ''}`;
+                return `${activity.data.title || 'Objecte'} - ${activity.data.description?.substring(0, 20) || 'sense descripció'}${activity.data.description?.length > 20 ? '...' : ''}`;
             case 'course':
-                return `${activity.data.course_name || 'Curso'} (${activity.data.course_description?.substring(0, 20) || 'sin descripción'}${activity.data.course_description?.length > 20 ? '...' : ''})`;
+                return `${activity.data.course_name || 'Curs'} (${activity.data.course_description?.substring(0, 20) || 'sense descripció'}${activity.data.course_description?.length > 20 ? '...' : ''})`;
             case 'roomReservation':
                 const roomName = activity.data.Room?.room_name || `ID: ${activity.data.room_id || '?'}`;
-                return `Reserva para ${roomName} por ${activity.data.User?.name || 'un usuario'}`;
+                return `Reserva per a ${roomName} per ${activity.data.User?.name || 'un usuari'}`;
             case 'task':
-                return `${activity.data.task_name || 'Tarea'} en curso ${activity.data.Course?.course_name || ''}`;
+                return `${activity.data.task_name || 'Tasca'} en curs ${activity.data.Course?.course_name || ''}`;
             default:
-                return 'Se ha registrado una nueva actividad';
+                return 'S\'ha registrat una nova activitat';
         }
     } catch (error) {
-        console.error("Error generando descripción:", error);
-        return "Información no disponible";
+        console.error("Error generant descripció:", error);
+        return "Informació no disponible";
     }
 };
 
-// Cargar los datos cuando el componente se monte
+// Carregar les dades quan el component es munte
 onMounted(() => {
     loadAllStats();
 });
