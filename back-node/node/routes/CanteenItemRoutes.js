@@ -1,11 +1,12 @@
 import express from "express";
 import CanteenItem from "../models/CanteenItem.js";
 import e from "express";
+import { verifyTokenMiddleware } from "../token.js"; // Si no está ya importado
 
 const router = express.Router();
 
 //Get all canteen items
-router.get("/", async (req, res) => {
+router.get("/", verifyTokenMiddleware, async (req, res) => {
     try {
         const canteenItems = await CanteenItem.findAll();
         res.json(canteenItems);
@@ -16,7 +17,7 @@ router.get("/", async (req, res) => {
 );
 
 // Get a specific canteen item by ID
-router.get("/:id", async (req, res) => {
+router.get("/:id", verifyTokenMiddleware, async (req, res) => {
     try {
         const canteenItem = await CanteenItem.findByPk(req.params.id);
         if (!canteenItem) {
@@ -30,7 +31,7 @@ router.get("/:id", async (req, res) => {
 );
 
 //Post a new canteen item
-router.post("/", async (req, res) => {
+router.post("/", verifyTokenMiddleware, async (req, res) => {
     try {
         const { product_name, product_price } = req.body;
         const canteenItem = await CanteenItem.create({ product_name, product_price, product_enabled: true });
@@ -42,7 +43,7 @@ router.post("/", async (req, res) => {
 );
 
 // Update a canteen item
-router.put("/:id", async (req, res) => {
+router.put("/:id", verifyTokenMiddleware, async (req, res) => {
     try {
         const { product_name, product_price, product_enabled } = req.body;
         const canteenItem = await CanteenItem.update(
@@ -60,7 +61,7 @@ router.put("/:id", async (req, res) => {
 );
 
 // Delete a canteen item
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", verifyTokenMiddleware, async (req, res) => {
     try {
         const canteenItem = await CanteenItem.destroy({ where: { id: req.params.id } });
         if (!canteenItem) {
@@ -74,7 +75,7 @@ router.delete("/:id", async (req, res) => {
 );
 
 // Get all enabled canteen items
-router.get("/enabled", async (req, res) => {
+router.get("/enabled", verifyTokenMiddleware, async (req, res) => {
     try {
         const canteenItems = await CanteenItem.findAll({ where: { product_enabled: true } });
         res.json(canteenItems);
@@ -85,7 +86,7 @@ router.get("/enabled", async (req, res) => {
 );
 
 // Get all disabled canteen items
-router.get("/disabled", async (req, res) => {
+router.get("/disabled", verifyTokenMiddleware, async (req, res) => {
     try {
         const canteenItems = await CanteenItem.findAll({ where: { product_enabled: false } });
         res.json(canteenItems);

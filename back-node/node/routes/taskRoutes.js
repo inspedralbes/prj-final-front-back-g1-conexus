@@ -2,11 +2,12 @@ import express from "express";
 import Task from "../models/Task.js";
 import Grade from "../models/Grade.js";
 import Course from "../models/Course.js";
+import { verifyTokenMiddleware } from "../token.js";
 
 const router = express.Router();
 
 // Obtenir totes les tasques
-router.get("/", async (req, res) => {
+router.get("/", verifyTokenMiddleware, async (req, res) => {
     try {
         const Tasks = await Task.findAll();
         res.json(Tasks);
@@ -16,7 +17,7 @@ router.get("/", async (req, res) => {
 });
 
 // Obtenir una tasca en concret
-router.get("/:id", async (req, res) => {
+router.get("/:id", verifyTokenMiddleware, async (req, res) => {
     try {
         const Task = await Task.findByPk(req.params.id);
         res.json(Task);
@@ -26,7 +27,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // Crear una tasca nova
-router.post("/", async (req, res) => {
+router.post("/", verifyTokenMiddleware, async (req, res) => {
     try {
         const { task_name, course_id, task_description } = req.body;
         const task_ended = false; // Valor per defecte
@@ -38,7 +39,7 @@ router.post("/", async (req, res) => {
 });
 
 // Actualitzar una tasca existent
-router.put("/:id", async (req, res) => {
+router.put("/:id",verifyTokenMiddleware, async (req, res) => {
     try {
         const { task_name, course_id, task_description, task_ended } = req.body;
         const auxTask = await Task.findByPk(req.params.id);
@@ -57,7 +58,7 @@ router.put("/:id", async (req, res) => {
 });
 
 // Eliminar una tasca
-router.delete("/:id", async (req, res) => {
+router.delete("/:id",verifyTokenMiddleware, async (req, res) => {
     try {
         const Task = await Task.findByPk(req.params.id);
         if (!Task) {
@@ -72,7 +73,7 @@ router.delete("/:id", async (req, res) => {
 });
 
 // Obtenir totes les notes d'una tasca
-router.get("/getAllGradesFromTask/:id", async (req, res) => {
+router.get("/getAllGradesFromTask/:id", verifyTokenMiddleware, async (req, res) => {
     try {
         const task = await Task.findByPk(req.params.id, {
             include: [
@@ -92,7 +93,7 @@ router.get("/getAllGradesFromTask/:id", async (req, res) => {
 }
 );
 //Obtenir totes les tasques d'un curs
-router.get("/getAllTasksFromCourse/:id", async (req, res) => {
+router.get("/getAllTasksFromCourse/:id", verifyTokenMiddleware, async (req, res) => {
     try {
         const task = await Task.findAll({ where: { course_id: req.params.id } });
         if (!task) {
@@ -105,7 +106,7 @@ router.get("/getAllTasksFromCourse/:id", async (req, res) => {
 }
 );
 //Obtenir totes les tasques d'un alumne
-router.get("/getAllTasksFromStudent/:id", async (req, res) => {
+router.get("/getAllTasksFromStudent/:id", verifyTokenMiddleware, async (req, res) => {
     try {
         const task = await Task.findAll({ where: { user_id: req.params.id } });
         if (!task) {
@@ -118,7 +119,7 @@ router.get("/getAllTasksFromStudent/:id", async (req, res) => {
 }
 );
 //Obtenir totes les tasques d'un alumne d'un curs
-router.get("/getAllTasksFromStudentFromCourse/:courseId/:studentId", async (req, res) => {
+router.get("/getAllTasksFromStudentFromCourse/:courseId/:studentId", verifyTokenMiddleware, async (req, res) => {
     try {
         const task = await Task.findAll({ where: { course_id: req.params.courseId, user_id: req.params.studentId } });
         if (!task) {

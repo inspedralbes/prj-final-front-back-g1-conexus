@@ -1,10 +1,11 @@
 import express from "express";
 import Response from "../models/Response.js";
+import { verifyTokenMiddleware } from "../token.js";
 
 const router = express.Router();
 
 // GET /responses - Obtenir totes les respostes
-router.get("/", async (req, res) => {
+router.get("/", verifyTokenMiddleware, async (req, res) => {
     const responses = await Response.findAll();
     res.json(responses);
 });
@@ -24,7 +25,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // POST /responses - Crear una nova resposta
-router.post("/", async (req, res) => {
+router.post("/", verifyTokenMiddleware, async (req, res) => {
     try {
         const { user_id, lostAndFound_id, comment } = req.body;
 
@@ -50,7 +51,7 @@ router.post("/", async (req, res) => {
 });
 
 // PUT /responses/:id - Actualitzar una resposta per ID
-router.put("/:id", async (req, res) => {
+router.put("/:id", verifyTokenMiddleware, async (req, res) => {
     const { id } = req.params;
     try {
         const response = await Response.findOne({ where: { id } });
@@ -65,7 +66,7 @@ router.put("/:id", async (req, res) => {
 });
 
 // DELETE /responses/:id - Eliminar una resposta per ID
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", verifyTokenMiddleware, async (req, res) => {
     const { id } = req.params;
     try {
         const response = await Response.findOne({ where: { id } });
