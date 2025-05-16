@@ -89,6 +89,39 @@
             </div>
         </transition>
 
+        <!-- Modal de confirmación para eliminar objeto perdido -->
+        <transition name="fade">
+          <div v-if="showDeleteModal" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" @click="showDeleteModal = false"></div>
+            <transition name="pop">
+              <div class="relative bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 max-w-md w-full border border-slate-700/50 shadow-2xl">
+                <h2 class="text-xl font-bold text-white mb-4">Confirmar eliminación</h2>
+                
+                <p class="text-slate-300 mb-6">
+                  ¿Estás seguro que quieres eliminar el objeto "{{ objectToDelete?.title }}"? 
+                  <br>
+                  <span class="text-red-400">Esta acción no se puede deshacer.</span>
+                </p>
+                
+                <div class="flex justify-end space-x-3">
+                  <button 
+                    @click="showDeleteModal = false"
+                    class="px-4 py-2 border border-slate-600 text-slate-300 rounded-lg hover:bg-slate-700 transition-colors"
+                  >
+                    Cancelar
+                  </button>
+                  <button 
+                    @click="handleDeleteObject"
+                    class="px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg shadow hover:from-red-600 hover:to-red-700 transition-all duration-300"
+                  >
+                    Eliminar
+                  </button>
+                </div>
+              </div>
+            </transition>
+          </div>
+        </transition>
+
         <div v-if="lostObjects.length === 0" class="text-center py-8">
             <p class="text-slate-400">No hi ha objectes perduts registrats</p>
         </div>
@@ -113,15 +146,26 @@
                             </svg>
                             <span class="text-sm">{{ item.responses_count || item.responses?.length || 0 }} comentaris</span>
                         </div>
-                        <button 
-                            @click="goToResponses(item.id)"
-                            class="px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg shadow hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 flex items-center text-sm"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clip-rule="evenodd" />
-                            </svg>
-                            Comentar
-                        </button>
+                        <div class="flex space-x-2">
+                            <button 
+                                @click="goToResponses(item.id)"
+                                class="px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg shadow hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 flex items-center text-sm"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clip-rule="evenodd" />
+                                </svg>
+                                Comentar
+                            </button>
+                            <button 
+                                @click="confirmDelete(item)"
+                                class="px-3 py-1.5 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg shadow hover:from-red-600 hover:to-red-700 transition-all duration-300 flex items-center text-sm"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                </svg>
+                                Eliminar
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -148,7 +192,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { getAllLostObjects, createLostObject } from '@/services/communicationsScripts/lostObjectManager.js';
+import { getAllLostObjects, createLostObject, deleteLostObject } from '@/services/communicationsScripts/lostObjectManager.js';
 import { useAppStore } from '@/stores/index.js';
 import { useRouter } from 'vue-router';
 
@@ -156,6 +200,9 @@ const router = useRouter();
 const store = useAppStore();
 const lostObjects = ref([]);
 const showForm = ref(false);
+const showDeleteModal = ref(false);
+const objectToDelete = ref(null);
+const deleting = ref(false);
 const baseUrl = import.meta.env.VITE_LOST_OBJECT_URL;
 
 const lostObject = ref({
@@ -207,6 +254,31 @@ const submitLostObject = async () => {
 
 const goToResponses = (objectId) => {
     router.push(`/admin/config-lost-objects/${objectId}/responses`);
+};
+
+const confirmDelete = (object) => {
+  objectToDelete.value = object;
+  showDeleteModal.value = true;
+};
+
+const handleDeleteObject = async () => {
+  if (!objectToDelete.value) return;
+  
+  try {
+    deleting.value = true;
+    await deleteLostObject(objectToDelete.value.id);
+    
+    // Actualizar la lista de objetos perdidos
+    lostObjects.value = lostObjects.value.filter(obj => obj.id !== objectToDelete.value.id);
+    
+    // Cerrar el modal
+    showDeleteModal.value = false;
+    objectToDelete.value = null;
+  } catch (error) {
+    console.error('Error al eliminar objeto perdido:', error);
+  } finally {
+    deleting.value = false;
+  }
 };
 
 onMounted(async () => {
