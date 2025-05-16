@@ -11,10 +11,11 @@
             <div class="flex items-center space-x-4">
                 <div class="text-right">
                     <p class="text-gray-300 text-sm">Benvingut/da</p>
-                    <p class="text-white font-medium">{{ store.user.nom || 'Tècnic' }}</p>
+                    <p class="text-white font-medium">{{ store.user.name || store.user.nom || 'Tècnic' }}</p>
                 </div>
-                <div class="h-10 w-10 rounded-full bg-slate-700 flex items-center justify-center">
-                    <svg class="h-6 w-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="h-10 w-10 rounded-full bg-slate-700 flex items-center justify-center overflow-hidden">
+                    <img v-if="userProfileImage" :src="userProfileImage" alt="Perfil" class="h-full w-full object-cover" />
+                    <svg v-else class="h-6 w-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
                 </div>
@@ -27,7 +28,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-gray-400 text-sm">Incidències Actives</p>
-                        <p class="text-2xl font-bold text-white">12</p>
+                        <p class="text-2xl font-bold text-white">{{ activeIncidents }}</p>
                     </div>
                     <div class="h-10 w-10 rounded-full bg-blue-500/20 flex items-center justify-center">
                         <svg class="h-5 w-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -35,14 +36,14 @@
                         </svg>
                     </div>
                 </div>
-                <p class="text-xs text-gray-400 mt-2">+2 avui</p>
+                <p class="text-xs text-gray-400 mt-2">+{{ todayIncidents }} avui</p>
             </div>
 
             <div class="bg-slate-800/50 rounded-lg p-4 border-l-4 border-green-500">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-gray-400 text-sm">Solucions Registrades</p>
-                        <p class="text-2xl font-bold text-white">24</p>
+                        <p class="text-2xl font-bold text-white">{{ registeredSolutions }}</p>
                     </div>
                     <div class="h-10 w-10 rounded-full bg-green-500/20 flex items-center justify-center">
                         <svg class="h-5 w-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -50,14 +51,14 @@
                         </svg>
                     </div>
                 </div>
-                <p class="text-xs text-gray-400 mt-2">+5 aquesta setmana</p>
+                <p class="text-xs text-gray-400 mt-2">+{{ thisWeekSolutions }} aquesta setmana</p>
             </div>
 
             <div class="bg-slate-800/50 rounded-lg p-4 border-l-4 border-purple-500">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-gray-400 text-sm">Assignacions Pendents</p>
-                        <p class="text-2xl font-bold text-white">3</p>
+                        <p class="text-2xl font-bold text-white">{{ pendingAssignments }}</p>
                     </div>
                     <div class="h-10 w-10 rounded-full bg-purple-500/20 flex items-center justify-center">
                         <svg class="h-5 w-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -65,7 +66,7 @@
                         </svg>
                     </div>
                 </div>
-                <p class="text-xs text-gray-400 mt-2">1 urgent</p>
+                <p class="text-xs text-gray-400 mt-2">{{ urgentCount }} urgent{{ urgentCount !== 1 ? 's' : '' }}</p>
             </div>
         </div>
 
@@ -222,7 +223,7 @@
             <h3 class="text-lg font-semibold text-white mb-6">Accions Ràpides</h3>
             
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <router-link to="/technicians/incidents/new" class="bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 rounded-lg p-4 flex flex-col items-center text-center transition-colors">
+                <router-link to="/technicians/incidents" class="bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 rounded-lg p-4 flex flex-col items-center text-center transition-colors">
                     <div class="h-12 w-12 rounded-full bg-blue-500/20 flex items-center justify-center mb-3">
                         <svg class="h-6 w-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -232,7 +233,7 @@
                     <span class="text-gray-400 text-xs mt-1">Registra un nou problema</span>
                 </router-link>
 
-                <router-link to="/technicians/solutions/new" class="bg-green-500/10 hover:bg-green-500/20 border border-green-500/30 rounded-lg p-4 flex flex-col items-center text-center transition-colors">
+                <router-link to="/technicians/solutions" class="bg-green-500/10 hover:bg-green-500/20 border border-green-500/30 rounded-lg p-4 flex flex-col items-center text-center transition-colors">
                     <div class="h-12 w-12 rounded-full bg-green-500/20 flex items-center justify-center mb-3">
                         <svg class="h-6 w-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
@@ -267,7 +268,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAppStore } from '@/stores/index.js';
 import { getAllReports } from "@/services/communicationsScripts/incidentsManager";
@@ -279,7 +280,33 @@ const recentIncidents = ref([]);
 const urgentAssignments = ref([]);
 const allReports = ref([]);
 const loading = ref(true);
-const mySolutions = ref([]); // Add this line to define the mySolutions array
+const mySolutions = ref([]);
+
+// URL de la imagen de perfil del usuario
+const userProfileImage = computed(() => {
+    // Si el usuario tiene una imagen de perfil en el store, úsala
+    if (store.user.profile) {
+        return store.user.profile;
+    }
+    
+    // Otras propiedades possibles donde podría estar la URL de la imagen
+    if (store.user.profileImage) {
+        return store.user.profileImage;
+    }
+    
+    if (store.user.avatar) {
+        return store.user.avatar;
+    }
+    
+    // Si el usuario tiene un correo, intentamos usar una imagen predeterminada basada en el ID
+    if (store.user.id) {
+        const baseUrl = import.meta.env.VITE_IMAGE_URL || 'https://i.pravatar.cc';
+        return `${baseUrl}/${store.user.id}`;
+    }
+    
+    // Si no hay imagen, retornamos null y se mostrará el icono por defecto
+    return null;
+});
 
 const fetchAssignments = async () => {
     try {
@@ -300,7 +327,7 @@ const fetchAssignments = async () => {
             room: report.Room?.room_name || "Desconeguda"
         }));
         
-        // També podem actualitzar les incidències recents
+        // Actualitzar les incidències recents
         recentIncidents.value = allReports.value
             .slice(0, 4)
             .map(report => ({
@@ -311,12 +338,77 @@ const fetchAssignments = async () => {
                 date: report.created_at ? new Date(report.created_at).toLocaleDateString() : "Sense data"
             }));
         
+        // Afegir les incidències resoltes pel tècnic actual
+        const myResolvedReports = allReports.value.filter(report => 
+            report.user_assigned === store.user.id && report.status === 'revised'
+        );
+        
+        mySolutions.value = myResolvedReports.map(report => ({
+            id: report.id,
+            title: `Incidència #${report.id}`,
+            description: report.note || report.report || "Sense descripció",
+            date: report.updated_at ? new Date(report.updated_at).toLocaleDateString() : "Sense data",
+            timeSpent: "Completat",
+            room: report.Room?.room_name || "Desconeguda"
+        }));
+        
     } catch (error) {
         console.error("Error obtenint les assignacions:", error);
     } finally {
         loading.value = false;
     }
 };
+
+// Propiedades computadas per les estadístiques
+const activeIncidents = computed(() => {
+    return allReports.value.filter(report => report.status !== 'revised').length;
+});
+
+const todayIncidents = computed(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    return allReports.value.filter(report => {
+        const reportDate = new Date(report.created_at);
+        reportDate.setHours(0, 0, 0, 0);
+        return reportDate.getTime() === today.getTime();
+    }).length;
+});
+
+const registeredSolutions = computed(() => {
+    return allReports.value.filter(report => report.status === 'revised').length;
+});
+
+const thisWeekSolutions = computed(() => {
+    const today = new Date();
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - today.getDay()); // Domingo como primer día de la semana
+    startOfWeek.setHours(0, 0, 0, 0);
+    
+    return allReports.value.filter(report => {
+        if (report.status !== 'revised') return false;
+        const reportDate = new Date(report.updated_at || report.created_at);
+        return reportDate >= startOfWeek;
+    }).length;
+});
+
+const pendingAssignments = computed(() => {
+    return allReports.value.filter(report => 
+        report.user_assigned === store.user.id && report.status !== 'revised'
+    ).length;
+});
+
+const urgentCount = computed(() => {
+    // Podemos definir urgente como los que tienen más de X días o cualquier otro criterio
+    const threshold = new Date();
+    threshold.setDate(threshold.getDate() - 3); // Más de 3 días se considera urgente
+    
+    return allReports.value.filter(report => {
+        if (report.user_assigned !== store.user.id || report.status === 'revised') return false;
+        const reportDate = new Date(report.created_at);
+        return reportDate < threshold;
+    }).length;
+});
 
 const getStatusClass = (status) => {
     switch (status.toLowerCase()) {

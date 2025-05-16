@@ -101,6 +101,9 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import { getAllReports, updateReport as updateReportApi } from "@/services/communicationsScripts/incidentsManager";
+import { useAppStore } from '@/stores/index.js'; // Importar el store
+
+const store = useAppStore(); // Usar el store
 
 const allReports = ref([]);
 const loading = ref(true);
@@ -108,14 +111,9 @@ const baseURL = import.meta.env.VITE_INCIDENT_URL;
 const reportToClose = ref(null);
 const closureComment = ref('');
 
-const currentUser = ref({ 
-    id: 5, 
-    name: "Tech Support" 
-});
-
 const myReports = computed(() => {
     return allReports.value.filter(report => 
-        report.user_assigned === currentUser.value.id && report.status !== 'revised'
+        report.user_assigned === store.user.id && report.status !== 'revised'
     );
 });
 
@@ -127,6 +125,9 @@ const loadAssignedReports = async () => {
     try {
         loading.value = true;
         allReports.value = await getAllReports();
+        console.log("ID de usuario actual:", store.user.id);
+        console.log("Informes cargados:", allReports.value.length);
+        console.log("Mis informes:", myReports.value.length);
     } catch (error) {
         console.error("Error obtenint informes assignats:", error);
     } finally {
