@@ -59,7 +59,7 @@ const redirectUserBasedOnRole = (user) => {
       router.push("/teachers");
       break;
     case "Estudiant":
-      router.push("/students");
+      router.push("/students/panel");
       break;
     case "Cantina":
       router.push("/canteen");

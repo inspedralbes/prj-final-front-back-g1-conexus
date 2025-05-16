@@ -22,6 +22,11 @@ const router = createRouter({
       },
       children: [
         {
+          path: 'panel',
+          name: 'student-panel',
+          component: () => import('@/views/Students/panel.vue')
+        },
+        {
           path: 'inscriptions',
           name: 'student-inscriptions',
           component: () => import('@/views/Students/courses.vue')
@@ -147,7 +152,7 @@ const router = createRouter({
         {
           path: 'canteen',
           name: 'technician-canteen',
-          component: () => import('@/views/Canteen/index.vue')
+          component: () => import('@/views/Technicians/canteen.vue')
         },
         {
           path: 'chats',

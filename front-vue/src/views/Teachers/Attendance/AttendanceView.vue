@@ -83,7 +83,7 @@ async function getAttendanceOfTheDay() {
 }
 
 function goToMenu() {
-    router.push({ name: 'home'})
+    router.push({ name: 'teacher' })
 }
 
 function thereIsClassThatDay() {

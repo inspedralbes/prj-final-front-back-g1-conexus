@@ -31,6 +31,7 @@ import { getLatestReport } from './routes/reportRoutes.js';
 import { getLatestLostObject } from './routes/lostObjectRoutes.js';
 import { getLatestRoomReservation } from './routes/roomReservationRoutes.js';
 import { getLatestTask } from './routes/taskRoutes.js';
+import { verifyTokenMiddleware } from "./token.js";
 
 // Importar multer para manejar la subida de archivos
 import multer from "multer";
@@ -113,14 +114,14 @@ if (process.env.NODE_ENV === 'development') {
     console.log('Iniciando servicios en modo producción...');
 }
 
-// startAllServices();
+startAllServices();
 
 // Rutas para gestionar los servicios
-app.get("/api/services", (req, res) => {
+app.get("/api/services", verifyTokenMiddleware, (req, res) => {
     res.json(getAllServicesStatus());
 });
 
-app.get("/api/services/:serviceName", (req, res) => {
+app.get("/api/services/:serviceName", verifyTokenMiddleware, (req, res) => {
     const status = getServiceStatus(req.params.serviceName);
     if (status) {
         res.json(status);
@@ -129,17 +130,17 @@ app.get("/api/services/:serviceName", (req, res) => {
     }
 });
 
-app.post("/api/services/start-all", (req, res) => {
+app.post("/api/services/start-all", verifyTokenMiddleware, (req, res) => {
     const results = startAllServices();
     res.json({ message: "Iniciando todos los servicios", results });
 });
 
-app.post("/api/services/stop-all", (req, res) => {
+app.post("/api/services/stop-all",verifyTokenMiddleware, (req, res) => {
     const results = stopAllServices();
     res.json({ message: "Deteniendo todos los servicios", results });
 });
 
-app.post("/api/services/:serviceName/start", (req, res) => {
+app.post("/api/services/:serviceName/start", verifyTokenMiddleware, (req, res) => {
     const result = startService(req.params.serviceName);
     if (result.success) {
         res.json(result);
@@ -148,7 +149,7 @@ app.post("/api/services/:serviceName/start", (req, res) => {
     }
 });
 
-app.post("/api/services/:serviceName/stop", (req, res) => {
+app.post("/api/services/:serviceName/stop", verifyTokenMiddleware, (req, res) => {
     const result = stopService(req.params.serviceName);
     if (result.success) {
         res.json(result);
@@ -210,7 +211,7 @@ app.post("/api/services/:serviceName/stop", (req, res) => {
 });
 
 // Endpoint para crear un nuevo servicio
-app.post("/api/services", (req, res) => {
+app.post("/api/services", verifyTokenMiddleware, (req, res) => {
     const { name, script, description, tech, port, autoStart } = req.body;
 
     if (!name || !script) {
@@ -235,7 +236,7 @@ app.post("/api/services", (req, res) => {
 });
 
 // Endpoint para eliminar un servicio
-app.delete("/api/services/:serviceName", async (req, res) => {
+app.delete("/api/services/:serviceName", verifyTokenMiddleware, async (req, res) => {
     const serviceName = req.params.serviceName;
     try {
         // Asegurarse de que el servicio esté detenido primero
@@ -262,7 +263,7 @@ app.delete("/api/services/:serviceName", async (req, res) => {
 });
 
 // Nuevo endpoint para subir un archivo JavaScript como servicio
-app.post("/api/services/upload", upload.single('file'), async (req, res) => {
+app.post("/api/services/upload", verifyTokenMiddleware, upload.single('file'), async (req, res) => {
     try {
         const { name, description, tech, autoStart } = req.body;
 
@@ -298,7 +299,7 @@ app.post("/api/services/upload", upload.single('file'), async (req, res) => {
 });
 
 // Rutas para saber las ultimas actividades
-app.get("/api/activities", async (req, res) => {
+app.get("/api/activities", verifyTokenMiddleware, async (req, res) => {
     try {
         console.log("Obteniendo actividades recientes...");
 

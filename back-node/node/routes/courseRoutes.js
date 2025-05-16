@@ -2,10 +2,10 @@ import express from "express";
 import Course from "../models/Course.js"; // Verifica la ruta exacta y el nombre
 import User from "../models/User.js";
 import { Op } from "sequelize"; // Añade esta importación al principio
-
+import { verifyTokenMiddleware } from "../token.js"; // Si no está ya importado
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.get("/", verifyTokenMiddleware, async (req, res) => {
   try {
     const courses = await Course.findAll();
     res.json(courses);
@@ -14,7 +14,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", verifyTokenMiddleware, async (req, res) => {
   try {
     const course = await Course.findByPk(req.params.id);
     res.json(course);
@@ -23,7 +23,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", verifyTokenMiddleware, async (req, res) => {
   console.log(req.body);
   try {
     const {
@@ -46,7 +46,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/updateCourse/:id", async (req, res) => {
+router.put("/updateCourse/:id", verifyTokenMiddleware, async (req, res) => {
   try {
     const {
       course_name,
@@ -71,7 +71,7 @@ router.put("/updateCourse/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", verifyTokenMiddleware, async (req, res) => {
   const course = await Course.findByPk(req.params.id);
   if (!course) {
     return res.status(404).json({ message: "Course not found" });
@@ -86,7 +86,7 @@ router.delete("/:id", async (req, res) => {
 });
 
 //assign teacher to course
-router.put("/assignTeacher", async (req, res) => {
+router.put("/assignTeacher", verifyTokenMiddleware, async (req, res) => {
   try {
     const { course_id, teacher_id } = req.body;
     const course = await Course.findByPk(course_id);
@@ -117,7 +117,7 @@ router.put("/assignTeacher", async (req, res) => {
 });
 
 // Get all courses from a teacher_id
-router.get("/teacher/:teacher_id", async (req, res) => {
+router.get("/teacher/:teacher_id", verifyTokenMiddleware, async (req, res) => {
   try {
     const { teacher_id } = req.params;
     const courses = await Course.findAll({
@@ -130,7 +130,7 @@ router.get("/teacher/:teacher_id", async (req, res) => {
 });
 
 // Get all courses without a teacher 
-router.put("/withoutTeacher", async (req, res) => {
+router.put("/withoutTeacher", verifyTokenMiddleware, async (req, res) => {
   try {
     const courses = await Course.findAll({
       where: { course_teacher_id: null },
@@ -142,7 +142,7 @@ router.put("/withoutTeacher", async (req, res) => {
 });
 
 // desassign teacher from course
-router.put("/desassignTeacher/:course_id", async (req, res) => {
+router.put("/desassignTeacher/:course_id", verifyTokenMiddleware, async (req, res) => {
   try {
     const { course_id } = req.params;
     const course = await Course.findByPk(course_id);
@@ -158,7 +158,7 @@ router.put("/desassignTeacher/:course_id", async (req, res) => {
 });
 
 // Obtener estadísticas de cursos (total y de este mes)
-router.get("/stats/count", async (req, res) => {
+router.get("/stats/count", verifyTokenMiddleware, async (req, res) => {
   try {
     // Contar todos los cursos
     const totalCourses = await Course.count();

@@ -6,6 +6,7 @@ import multer from "multer";
 import path from "path";
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
+import { verifyTokenMiddleware } from "../token.js";
 import { Op } from "sequelize";
 
 dotenv.config();
@@ -49,7 +50,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // GET /reports - Obtenir tots els informes
-router.get("/", async (req, res) => {
+router.get("/", verifyTokenMiddleware, async (req, res) => {
   try {
     const reports = await Reports.findAll({
       include: [
@@ -76,7 +77,7 @@ router.get("/", async (req, res) => {
 });
 
 // Get /reports/user/:user_id - Obtenir informes per ID d'usuari
-router.get("/user/:user_id", async (req, res) => {
+router.get("/user/:user_id", verifyTokenMiddleware, async (req, res) => {
   const { user_id } = req.params;
   try {
     const reports = await Reports.findAll({ where: { user_id } });
@@ -93,7 +94,7 @@ router.get("/user/:user_id", async (req, res) => {
 });
 
 //Get /reports/room/:room_id - Obtenir informes per ID d'habitació
-router.get("/room/:room_id", async (req, res) => {
+router.get("/room/:room_id", verifyTokenMiddleware, async (req, res) => {
   const { room_id } = req.params;
   try {
     const reports = await Reports.findAll({ where: { room_id } });
@@ -110,7 +111,7 @@ router.get("/room/:room_id", async (req, res) => {
 });
 
 //Get /reports/finished - Obtenir informes acabats
-router.get("/finished", async (req, res) => {
+router.get("/finished", verifyTokenMiddleware, async (req, res) => {
   try {
     const reports = await Reports.findAll({ where: { finished: true } });
     if (!reports) {
@@ -126,7 +127,7 @@ router.get("/finished", async (req, res) => {
 });
 
 //Get /reports/not-finished - Obtenir informes no acabats
-router.get("/not-finished", async (req, res) => {
+router.get("/not-finished", verifyTokenMiddleware, async (req, res) => {
   try {
     const reports = await Reports.findAll({ where: { finished: false } });
     if (!reports) {
@@ -142,7 +143,7 @@ router.get("/not-finished", async (req, res) => {
 });
 
 // GET /reports/:id - Obtenir un informe per ID
-router.get("/:id", async (req, res) => {
+router.get("/:id", verifyTokenMiddleware, async (req, res) => {
   const { id } = req.params;
   try {
     const report = await Reports.findOne({ where: { id } });
@@ -157,7 +158,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // POST /reports - Crear un nou informe
-router.post("/", upload.single("image"), async (req, res) => {
+router.post("/", verifyTokenMiddleware, upload.single("image"), async (req, res) => {
   try {
     // Parse the JSON string from the data field
     const reportData = JSON.parse(req.body.data);
@@ -196,7 +197,7 @@ router.post("/", upload.single("image"), async (req, res) => {
   }
 });
 // PUT /reports/:id - Actualitzar un informe per ID
-router.put("/:id", async (req, res) => {
+router.put("/:id", verifyTokenMiddleware, async (req, res) => {
   const { id } = req.params;
   try {
     const report = await Reports.findOne({ where: { id } });
@@ -236,7 +237,7 @@ router.put("/:id", async (req, res) => {
 });
 
 // DELETE /reports/:id - Eliminar un informe per ID
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", verifyTokenMiddleware, async (req, res) => {
   const { id } = req.params;
   try {
     const report = await Reports.findOne({ where: { id } });
@@ -252,7 +253,7 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-router.put("/:id/assign", async (req, res) => {
+router.put("/:id/assign", verifyTokenMiddleware, async (req, res) => {
   const { id } = req.params;
   const { user_assigned } = req.body;
   try {
@@ -292,7 +293,7 @@ router.put("/:id/assign", async (req, res) => {
 });
 
 // Obtener estadísticas de incidencias (total i sense resoldre)
-router.get("/stats/count", async (req, res) => {
+router.get("/stats/count", verifyTokenMiddleware, async (req, res) => {
   try {
     // Contar totes les incidències
     const totalReports = await Reports.count();

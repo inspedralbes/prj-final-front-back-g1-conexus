@@ -1,10 +1,11 @@
 import express from "express";
 import Department from "../models/Department.js";
+import { verifyTokenMiddleware } from "../token.js";
 
 const router = express.Router();
 
 
-router.get("/", async (req, res) => {
+router.get("/", verifyTokenMiddleware, async (req, res) => {
     try {
         const departments = await Department.findAll();
         res.json(departments);
@@ -13,7 +14,7 @@ router.get("/", async (req, res) => {
     }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", verifyTokenMiddleware, async (req, res) => {
     try {
         const department = await Department.findByPk(req.params.id);
         res.json(department);
@@ -22,7 +23,7 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", verifyTokenMiddleware, async (req, res) => {
     try {
         const { name } = req.body;
         const department = await Department.create({ name });
@@ -32,7 +33,7 @@ router.post("/", async (req, res) => {
     }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", verifyTokenMiddleware, async (req, res) => {
     try {
         const { name } = req.body;
         const department = await Department.update({ name }, { where: { id: req.params.id } });
@@ -42,7 +43,7 @@ router.put("/:id", async (req, res) => {
     }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", verifyTokenMiddleware, async (req, res) => {
     try {
         const department = await Department.findByPk(req.params.id);
         if (!department) {

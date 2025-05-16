@@ -12,10 +12,10 @@
         <aside
             :class="['w-64 bg-slate-900/80 backdrop-blur-sm fixed h-screen p-4 shadow-lg transform transition-transform duration-300 z-40 lg:hidden', isSidebarOpen ? 'translate-x-0' : '-translate-x-full']">
             <div class="text-center mb-8">
-                <h2
+                <router-link to="/students/panel"
                     class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
                     Conexus
-                </h2>
+                </router-link>
             </div>
             <nav class="space-y-2">
                 <router-link to="/students/grades"
@@ -41,8 +41,9 @@
                 </router-link>
                 <router-link to="/students/inscriptions" class="flex items-center p-2 text-gray-300 hover:bg-slate-800/50 rounded-lg transition-colors duration-300">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M6.938 4h13.856c1.54 0 2.502 1.667 1.732 3L13.732 20c-.77 1.333-2.694 1.333-3.464 0L3.34 7c-.77-1.333.192-3 1.732-3z" />
-                    </svg>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
                     <span>Inscripcions</span>
                 </router-link>
             </nav>
@@ -63,7 +64,7 @@
         <nav class="lg:block hidden bg-slate-800/80 backdrop-blur-sm py-4 fixed w-full z-30 shadow-lg">
             <div class="container mx-auto flex justify-between items-center px-4">
                 <!-- Nom de la Marca -->
-                <router-link to="/students"
+                <router-link to="/students/panel"
                     class="text-white text-2xl font-bold hover:text-gray-300 transition-colors duration-300">
                     Conexus
                 </router-link>
@@ -90,7 +91,8 @@
                     </router-link>
                     <router-link to="/students/inscriptions" class="flex items-center text-white hover:text-gray-300 transition-colors duration-300">
                         <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 20c-.77 1.333-2.694 1.333-3.464 0L3.34 7c-.77-1.333.192-3 1.732-3z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         Inscripcions
                     </router-link>
@@ -110,9 +112,9 @@
             <div class="container mx-auto flex justify-between items-center px-4">
                 <!-- Menú Hamburguesa i Títol -->
                 <div class="flex items-center ml-12 p-2">
-                    <h1 class="text-xl font-bold text-gray-300">
+                    <router-link to="/students/panel" class="text-xl font-bold text-gray-300">
                         {{ currentPageTitle }}
-                    </h1>
+                    </router-link>
                 </div>
             </div>
         </nav>
@@ -145,6 +147,8 @@ const currentPageTitle = computed(() => {
             return 'Assistència';
         case '/students/incidents':
             return 'Incidències';
+        case '/students/inscriptions':
+            return 'Inscripcions';
         default:
             return 'Conexus';
     }
