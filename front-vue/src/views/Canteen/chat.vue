@@ -293,7 +293,21 @@ const loadChats = async () => {
 
     // Cargar todos los usuarios
     const usersResponse = await getAllUsers();
+
+    // Actualizar la lista principal de usuarios
     users.value = usersResponse;
+
+    // Actualizar la caché de usuarios con los datos más recientes
+    if (Array.isArray(usersResponse)) {
+      usersResponse.forEach((user) => {
+        usersCache[user.id] = {
+          name: user.name || user.username,
+          profile: user.profile,
+          typeUsersId: user.typeUsers_id,
+          updating: false,
+        };
+      });
+    }
 
     // Obtener todos los chats
     let chatsList = [];
@@ -340,9 +354,81 @@ const getUserName = (chat) => {
 
   if (!otherUserId) return "Usuario desconocido";
 
+  // Primero verificar en la caché de usuarios
+  if (usersCache[otherUserId] && usersCache[otherUserId].name) {
+    return usersCache[otherUserId].name;
+  }
+
   // Buscar el usuario en la lista de usuarios
   const user = users.value.find((u) => u.id === otherUserId);
-  return user ? user.name || user.username : `Profesor ${otherUserId}`;
+
+  // Si encontramos el usuario, actualizar la caché y devolver el nombre
+  if (user) {
+    const userName = user.name || user.username || `Profesor ${otherUserId}`;
+    // Actualizar la caché
+    usersCache[otherUserId] = {
+      ...usersCache[otherUserId],
+      name: userName,
+      profile: user.profile,
+      typeUsersId: user.typeUsers_id,
+    };
+    return userName;
+  }
+
+  // Si no encontramos al usuario, programar una actualización asíncrona
+  // y devolver un valor temporal mientras tanto
+  updateUserInfoAsync(otherUserId);
+  return `Profesor ${otherUserId}`;
+};
+
+// Función para actualizar información de usuario de forma asíncrona
+const updateUserInfoAsync = async (userId) => {
+  try {
+    console.log(`Actualizando información para usuario ID: ${userId}`);
+
+    // Verificar si ya hay una actualización en curso para este usuario
+    if (usersCache[userId] && usersCache[userId].updating) {
+      return;
+    }
+
+    // Marcar como actualizando
+    usersCache[userId] = {
+      ...(usersCache[userId] || {}),
+      updating: true,
+    };
+
+    // Obtener datos actualizados de todos los usuarios
+    const updatedUsers = await getAllUsers();
+
+    // Actualizar la lista completa
+    if (Array.isArray(updatedUsers) && updatedUsers.length > 0) {
+      users.value = updatedUsers;
+
+      // Buscar el usuario específico y actualizar la caché
+      const user = updatedUsers.find((u) => u.id === userId);
+      if (user) {
+        usersCache[userId] = {
+          name: user.name || user.username,
+          profile: user.profile,
+          typeUsersId: user.typeUsers_id,
+          updating: false,
+        };
+
+        // Forzar actualización de la UI
+        chats.value = [...chats.value];
+      }
+    }
+  } catch (err) {
+    console.error(
+      `Error al actualizar información del usuario ${userId}:`,
+      err
+    );
+  } finally {
+    // Asegurar que se quita la marca de actualización
+    if (usersCache[userId]) {
+      usersCache[userId].updating = false;
+    }
+  }
 };
 
 // Obtener el avatar del usuario
@@ -697,6 +783,24 @@ const connectSocket = () => {
           return;
         }
 
+        // Asegurarnos de tener la información de usuarios actualizada
+        try {
+          // Verificar si el usuario existe en la lista actual
+          const userId = messageInfo.userId;
+          const userExists = users.value.some((u) => u.id === parseInt(userId));
+
+          // Si no existe, actualizar la lista de usuarios
+          if (!userExists) {
+            console.log("Actualizando información de usuarios...");
+            const updatedUsers = await getAllUsers();
+            if (updatedUsers && updatedUsers.length > 0) {
+              users.value = updatedUsers;
+            }
+          }
+        } catch (err) {
+          console.error("Error al actualizar información de usuarios:", err);
+        }
+
         // Detectar si es un pedido y el mensaje no es del usuario cantina
         if (messageInfo.userId.toString() !== currentUserId.value.toString()) {
           // Buscar el remitente para mostrar su nombre
@@ -708,6 +812,13 @@ const connectSocket = () => {
           if (otherUser) {
             senderName =
               otherUser.name || otherUser.username || `Usuario ${otherUserId}`;
+
+            // Actualizar caché de usuarios
+            usersCache[otherUserId] = {
+              name: otherUser.name || otherUser.username,
+              profile: otherUser.profile,
+              typeUsersId: otherUser.typeUsers_id,
+            };
           }
 
           // Detectar si es un pedido por su contenido
@@ -750,14 +861,27 @@ const connectSocket = () => {
             } else {
               // Buscar el otro usuario en el chat
               const otherUserId = messageInfo.userId;
-              const otherUser = users.value.find(
-                (u) => u.id === parseInt(otherUserId)
-              );
-              if (otherUser) {
-                senderName =
-                  otherUser.name ||
-                  otherUser.username ||
-                  `Usuario ${otherUserId}`;
+              // Primero intentar buscar en la caché
+              if (usersCache[otherUserId] && usersCache[otherUserId].name) {
+                senderName = usersCache[otherUserId].name;
+              } else {
+                // Si no está en caché, buscarlo en la lista de usuarios
+                const otherUser = users.value.find(
+                  (u) => u.id === parseInt(otherUserId)
+                );
+                if (otherUser) {
+                  senderName =
+                    otherUser.name ||
+                    otherUser.username ||
+                    `Usuario ${otherUserId}`;
+
+                  // Actualizar caché para futuras referencias
+                  usersCache[otherUserId] = {
+                    name: senderName,
+                    profile: otherUser.profile,
+                    typeUsersId: otherUser.typeUsers_id,
+                  };
+                }
               }
             }
 
@@ -843,12 +967,28 @@ const connectSocket = () => {
           // Buscar nombre del remitente
           let senderName = "Usuario";
           const otherUserId = messageInfo.userId;
-          const otherUser = users.value.find(
-            (u) => u.id === parseInt(otherUserId)
-          );
-          if (otherUser) {
-            senderName =
-              otherUser.name || otherUser.username || `Usuario ${otherUserId}`;
+
+          // Primero intentar buscar en la caché
+          if (usersCache[otherUserId] && usersCache[otherUserId].name) {
+            senderName = usersCache[otherUserId].name;
+          } else {
+            // Si no está en caché, buscarlo en la lista de usuarios
+            const otherUser = users.value.find(
+              (u) => u.id === parseInt(otherUserId)
+            );
+            if (otherUser) {
+              senderName =
+                otherUser.name ||
+                otherUser.username ||
+                `Usuario ${otherUserId}`;
+
+              // Actualizar caché para futuras referencias
+              usersCache[otherUserId] = {
+                name: senderName,
+                profile: otherUser.profile,
+                typeUsersId: otherUser.typeUsers_id,
+              };
+            }
           }
 
           showNotification(senderName, messageInfo.message);
@@ -1006,6 +1146,22 @@ const refreshActiveChat = async () => {
 const forceRefreshChats = async () => {
   console.log("🔄 Forzando actualización de lista de chats...");
   try {
+    // Actualizar usuarios primero para tener nombres actualizados
+    const updatedUsers = await getAllUsers();
+    if (Array.isArray(updatedUsers) && updatedUsers.length > 0) {
+      users.value = updatedUsers;
+
+      // Actualizar caché de usuarios
+      updatedUsers.forEach((user) => {
+        usersCache[user.id] = {
+          name: user.name || user.username,
+          profile: user.profile,
+          typeUsersId: user.typeUsers_id,
+          updating: false,
+        };
+      });
+    }
+
     // Obtener todos los chats directamente
     const allChats = await chatManager.getAllChats();
 
@@ -1085,7 +1241,9 @@ const toggleSection = (section) => {
   openSection.value = openSection.value === section ? null : section;
 };
 
-// Modificar onMounted para incluir las nuevas funciones
+// Modificar onMounted y mover la declaración del intervalo al nivel superior
+let userRefreshInterval;
+
 onMounted(async () => {
   // Verificar si el usuario es de tipo cantina
   if (!isCanteenUser.value) {
@@ -1107,6 +1265,7 @@ onMounted(async () => {
       name: user.name || user.username,
       profile: user.profile,
       typeUsersId: user.typeUsers_id,
+      updating: false,
     };
   });
 
@@ -1116,6 +1275,54 @@ onMounted(async () => {
   // Configurar intervalo de respaldo para la lista de chats
   // Aumentamos a 45 segundos para reducir carga
   refreshInterval = setInterval(forceRefreshChats, 45000);
+
+  // Añadir intervalo para mantener la información de usuarios actualizada
+  userRefreshInterval = setInterval(async () => {
+    try {
+      const updatedUsers = await getAllUsers();
+      if (Array.isArray(updatedUsers) && updatedUsers.length > 0) {
+        users.value = updatedUsers;
+
+        // Actualizar caché de usuarios
+        updatedUsers.forEach((user) => {
+          usersCache[user.id] = {
+            name: user.name || user.username,
+            profile: user.profile,
+            typeUsersId: user.typeUsers_id,
+            updating: false,
+          };
+        });
+
+        // Forzar actualización de la UI después de actualizar usuarios
+        chats.value = [...chats.value];
+      }
+    } catch (err) {
+      console.error("Error al actualizar información de usuarios:", err);
+    }
+  }, 60000); // Actualizar usuarios cada minuto
+});
+
+// Modificar onUnmounted para limpiar todos los intervalos
+onUnmounted(() => {
+  // Desconectar socket
+  if (socket.value) {
+    socket.value.disconnect();
+    socket.value = null;
+  }
+
+  // Limpiar intervalos
+  if (refreshInterval) {
+    clearInterval(refreshInterval);
+  }
+
+  if (activeRefreshInterval) {
+    clearInterval(activeRefreshInterval);
+  }
+
+  // Limpiar nuevo intervalo de actualización de usuarios
+  if (userRefreshInterval) {
+    clearInterval(userRefreshInterval);
+  }
 });
 
 // Watch para gestionar el chat activo
@@ -1131,24 +1338,6 @@ watch(activeChat, (newVal, oldVal) => {
     // Actualizar inicialmente y luego cada 8 segundos (reducido de 3 segundos)
     refreshActiveChat();
     activeRefreshInterval = setInterval(refreshActiveChat, 8000);
-  }
-});
-
-// Modificar onUnmounted para limpiar los intervalos
-onUnmounted(() => {
-  // Desconectar socket
-  if (socket.value) {
-    socket.value.disconnect();
-    socket.value = null;
-  }
-
-  // Limpiar intervalos
-  if (refreshInterval) {
-    clearInterval(refreshInterval);
-  }
-
-  if (activeRefreshInterval) {
-    clearInterval(activeRefreshInterval);
   }
 });
 

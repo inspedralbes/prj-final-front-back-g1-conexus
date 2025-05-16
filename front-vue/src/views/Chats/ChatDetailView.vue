@@ -105,7 +105,7 @@
     </div>
 
     <div class="chat-input">
-      <!-- Área para mostrar los productos de cantina -->
+      <!-- Área para mostrar los productos de cantina - only shown when chatting with canteen -->
       <div v-if="hasCantinaItems" class="cantina-order-container">
         <div class="cantina-order-header">
           <h4>🛒 Pedido de Cantina</h4>
@@ -306,6 +306,7 @@ import io from "socket.io-client";
 import { useRoute, useRouter } from "vue-router";
 import chatManager from "@/services/communicationsScripts/chatsComManager";
 import { useAppStore } from "@/stores";
+import { getAllUsers } from "@/services/communicationsScripts/mainManager";
 
 // Obtener el store de la aplicación
 const appStore = useAppStore();
@@ -637,7 +638,14 @@ const goBack = () => {
 const cantinaOrderMessage = ref(null);
 
 // Verificar si hay productos en el carrito de cantina
-const hasCantinaItems = computed(() => appStore.cartCantinaItems.length > 0);
+const hasCantinaItems = computed(
+  () =>
+    // Only show canteen items if we're in a chat with the canteen AND there are items in the cart
+    isChatWithCanteen.value && appStore.cartCantinaItems.length > 0
+);
+
+// Add a new computed property to check if the current chat is with the canteen user
+const isChatWithCanteen = ref(false);
 
 // Función para formatear precio
 const formatPrice = (price) => {
@@ -727,6 +735,9 @@ watch(
       messages.value = [];
       processedMessages.value.clear();
 
+      // Reset the canteen chat flag when changing chats
+      isChatWithCanteen.value = false;
+
       // Emitir evento de salida del chat anterior
       if (oldChatId) {
         const exitEvent = new CustomEvent("chat-view-exited", {
@@ -790,7 +801,6 @@ const loadChatData = async () => {
     }
 
     loading.value = true;
-    // console.log(`Intentando cargar chat con ID: ${chatId.value}`);
 
     // Intentar cargar el chat directamente por ID
     let chatData;
@@ -803,9 +813,6 @@ const loadChatData = async () => {
 
     // Si no se encuentra el chat, intentar buscarlo entre todos los chats disponibles
     if (!chatData) {
-      // console.log(
-      //   "Chat no encontrado directamente, buscando entre todos los chats..."
-      // );
       try {
         // Obtener todos los chats y filtrar por el ID actual
         const allChats = await chatManager.getAllChats();
@@ -819,14 +826,9 @@ const loadChatData = async () => {
               chat.teachers.includes(parseInt(currentUserId.value))
           );
 
-          // console.log(
-          //   `Encontrados ${userChats.length} chats donde participa el usuario actual`
-          // );
-
           if (userChats.length > 0) {
             // Si no se encuentra el chat específico pero hay otros chats del usuario,
             // redirigir al primero de ellos
-            // console.log("Redirigiendo al primer chat disponible del usuario");
             router.replace({
               name: "chat-detail",
               params: { chatId: userChats[0]._id },
@@ -848,15 +850,39 @@ const loadChatData = async () => {
       return;
     }
 
-    // console.log("Chat encontrado:", chatData);
-
     // Establecer nombre del chat
     chatName.value = chatData.name || "Chat";
 
+    // Check if we're chatting with the canteen user
+    isChatWithCanteen.value = false; // Reset value
+
+    if (chatData.teachers && chatData.teachers.length > 0) {
+      // Get the other user in the chat (not current user)
+      const otherUserId = chatData.teachers.find(
+        (teacherId) => teacherId !== parseInt(currentUserId.value)
+      );
+
+      if (otherUserId) {
+        try {
+          // Get all users to check if the other user is canteen
+          const allUsers = await getAllUsers();
+          const otherUser = allUsers.find((user) => user.id === otherUserId);
+
+          // Check if other user is canteen (typeUsers_id = 5)
+          if (otherUser && otherUser.typeUsers_id === 5) {
+            isChatWithCanteen.value = true;
+          } else {
+            // If not chatting with canteen, clear the cart
+            clearCantinaOrder();
+          }
+        } catch (error) {
+          console.error("Error checking if chat is with canteen:", error);
+        }
+      }
+    }
+
     // Cargar mensajes
     if (chatData.interaction && chatData.interaction.length > 0) {
-      // console.log(`Cargando ${chatData.interaction.length} mensajes`);
-
       // Convertir los mensajes al formato esperado
       messages.value = chatData.interaction.map((msg) => {
         // Verificar si el mensaje es del usuario actual o de otro
@@ -1497,8 +1523,12 @@ const originalSendMessage = async () => {
 // Nueva función de envío de mensaje que usa la original y limpia el carrito
 const sendMessage = async () => {
   // Verificar si hay un pedido de cantina para enviar
-  if (hasCantinaItems.value && !newMessage.value.trim()) {
-    // Crear el mensaje completo con el pedido
+  if (
+    isChatWithCanteen.value &&
+    hasCantinaItems.value &&
+    !newMessage.value.trim()
+  ) {
+    // Create the complete message with the order
     let fullMessage = generateCantinaOrderMessage();
 
     // Enviar el mensaje directamente sin colocarlo en el input
