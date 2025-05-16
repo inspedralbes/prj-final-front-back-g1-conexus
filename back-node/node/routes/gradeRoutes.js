@@ -145,7 +145,7 @@ router.get(
     } catch (error) {
       res
         .status(500)
-        .json({ message: error.message, text: "Error hasta los huevos" });
+        .json({ message: error.message });
     }
   }
 );
