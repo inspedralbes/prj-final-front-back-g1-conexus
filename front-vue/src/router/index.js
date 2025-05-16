@@ -254,7 +254,7 @@ const router = createRouter({
         {
           path: 'menu-admin',
           name: 'canteen-menu-admin',
-          component: () => import('@/views/Canteen/MenuAdmin.vue')
+          component: () => import('@/views/Canteen/menuAdmin.vue')
         }
       ]
     },
