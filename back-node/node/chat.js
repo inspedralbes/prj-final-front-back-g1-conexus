@@ -206,6 +206,32 @@ io.on("connection", (socket) => {
         const { chatId, messageId, userId } = data;
 
         try {
+            // Primero obtener el mensaje para tener su contenido
+            let messageContent = null;
+            let messageDate = null;
+            let teacherId = null;
+
+            try {
+                // Intentar obtener el contenido del mensaje antes de borrarlo
+                const chatResponse = await fetch(`http://localhost:${PORT}/api/chat/${chatId}`);
+                if (chatResponse.ok) {
+                    const chatData = await chatResponse.json();
+                    if (chatData && chatData.interaction) {
+                        const msgToDelete = chatData.interaction.find(msg =>
+                            msg._id && msg._id.toString() === messageId
+                        );
+                        if (msgToDelete) {
+                            messageContent = msgToDelete.message;
+                            messageDate = msgToDelete.date;
+                            teacherId = msgToDelete.teacherId;
+                        }
+                    }
+                }
+            } catch (fetchError) {
+                console.log("Error al obtener contenido del mensaje:", fetchError);
+                // Continuar con el borrado aunque no tengamos el contenido
+            }
+
             // Hacer una petición al API para eliminar el mensaje
             const response = await fetch(`http://localhost:${PORT}/api/chat/${chatId}/message/${messageId}`, {
                 method: 'DELETE'
@@ -215,13 +241,22 @@ io.on("connection", (socket) => {
                 throw new Error(`Error al eliminar mensaje: ${response.statusText}`);
             }
 
-            // Notificar a todos en la sala
+            // Obtener la respuesta JSON
+            const deletedData = await response.json();
+
+            // Notificar a todos en la sala con información adicional
             io.to(chatId).emit("message_deleted", {
                 chatId,
                 messageId,
                 deletedBy: userId,
-                timestamp: new Date()
+                timestamp: new Date(),
+                messageContent: messageContent,
+                messageDate: messageDate,
+                teacherId: teacherId,
+                deleted: true
             });
+
+            console.log(`Mensaje ${messageId} eliminado y notificado a todos los usuarios en la sala ${chatId}`);
         } catch (error) {
             console.error("Error al eliminar mensaje:", error);
             socket.emit("error", {

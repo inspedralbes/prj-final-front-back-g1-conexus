@@ -27,22 +27,38 @@
             message.userId.toString() !== currentUserId.toString(),
           sending: message.sending,
           failed: message.failed,
+          'deleted-message': message.deleted,
         }"
       >
         <div class="message-header">
           <span class="user-name">{{ message.userName }}</span>
           <span class="timestamp">{{ formatDate(message.timestamp) }}</span>
         </div>
+
+        <!-- Message content -->
         <div
+          v-if="message.deleted"
+          class="message-deleted-content"
+          :title="getDeletedMessageTooltip(message)"
+        >
+          <i>Missatge eliminat</i>
+        </div>
+        <div
+          v-else-if="message.hasLinks"
           class="message-content"
-          v-if="message.hasLinks"
           v-html="formatMessageWithLinks(message)"
         ></div>
-        <div class="message-content" v-else>{{ message.message }}</div>
+        <div v-else class="message-content">
+          {{ message.message }}
+        </div>
 
         <!-- Link Previews -->
         <div
-          v-if="message.linkPreviews && message.linkPreviews.length > 0"
+          v-if="
+            message.linkPreviews &&
+            message.linkPreviews.length > 0 &&
+            !message.deleted
+          "
           class="link-previews"
         >
           <div
@@ -80,18 +96,35 @@
         >
           Error al enviar - Haz clic para reintentar
         </div>
+
+        <!-- Delete button - Only show for teacher-to-teacher chats -->
         <button
           v-if="
             message.userId.toString() === currentUserId.toString() &&
             !message.sending &&
             !message.failed &&
+            !message.deleted &&
             message.id
           "
           class="delete-message-btn"
           @click="deleteMessage(message)"
           title="Eliminar mensaje"
         >
-          <i class="fas fa-trash"></i>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M3 6h18"></path>
+            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+          </svg>
         </button>
       </div>
     </div>
@@ -898,6 +931,9 @@ const loadChatData = async () => {
         const finalHasLinks = hasLinks || detectedLinks.length > 0;
         const finalLinks = hasLinks ? links : detectedLinks;
 
+        // Check if the message is deleted
+        const isDeleted = msg.deleted || false;
+
         return {
           id: msg._id,
           userId: msg.teacherId,
@@ -909,6 +945,7 @@ const loadChatData = async () => {
           links: finalLinks,
           linkPreviews: linkPreviews,
           timestamp: new Date(msg.date),
+          deleted: isDeleted,
         };
       });
 
@@ -1261,15 +1298,111 @@ const setupSocketEventHandlers = () => {
 
   // Escuchar cuando un mensaje es eliminado
   socket.value.on("message_deleted", (data) => {
-    // console.log("Mensaje eliminado:", data);
+    console.log("Recibida notificación de mensaje eliminado:", data);
 
-    // Encontrar y eliminar el mensaje de la lista local
-    const messageIndex = messages.value.findIndex(
-      (msg) => msg.id === data.messageId
-    );
+    // Find the message that was deleted - with more flexible matching
+    let messageIndex = -1;
+
+    // First try exact ID match
+    messageIndex = messages.value.findIndex((msg) => msg.id === data.messageId);
+
+    // If not found but we have message content from the server, try to match by content
+    if (messageIndex === -1 && data.messageContent) {
+      messageIndex = messages.value.findIndex(
+        (msg) =>
+          msg.message === data.messageContent &&
+          msg.userId.toString() === data.teacherId
+      );
+
+      if (messageIndex !== -1) {
+        console.log("Mensaje encontrado por contenido y autor");
+      }
+    }
+
+    // If still not found and the messageId looks like a MongoDB ObjectID, try to find by temporary IDs
+    if (messageIndex === -1 && /^[0-9a-fA-F]{24}$/.test(data.messageId)) {
+      const possibleMatches = messages.value.filter((msg) => {
+        // Check if it's a temporary ID (likely a timestamp)
+        const isTemporary = /^\d{13,}$/.test(msg.id);
+        return (
+          isTemporary &&
+          (!data.teacherId ||
+            msg.userId.toString() === data.teacherId.toString())
+        );
+      });
+
+      if (possibleMatches.length > 0) {
+        console.log(
+          "Encontrados posibles mensajes con IDs temporales:",
+          possibleMatches
+        );
+
+        // Try to match by content if available
+        if (data.messageContent) {
+          const contentMatch = possibleMatches.find(
+            (msg) => msg.message === data.messageContent
+          );
+          if (contentMatch) {
+            messageIndex = messages.value.indexOf(contentMatch);
+            console.log("Mensaje con ID temporal encontrado por contenido");
+          }
+        }
+      }
+    }
+
     if (messageIndex !== -1) {
-      // console.log(`Eliminando mensaje en índice ${messageIndex}`);
-      messages.value.splice(messageIndex, 1);
+      // Mark the message as deleted instead of removing it
+      messages.value[messageIndex].deleted = true;
+
+      // If we receive additional data like deletedBy or deletedAt, update it
+      if (data.deletedBy) {
+        messages.value[messageIndex].deletedBy = data.deletedBy;
+      }
+
+      if (data.timestamp) {
+        messages.value[messageIndex].deletedAt = new Date(data.timestamp);
+      }
+
+      console.log(
+        "Mensaje marcado como eliminado:",
+        messages.value[messageIndex]
+      );
+    } else {
+      console.warn(
+        `No se encontró el mensaje con ID ${data.messageId} para marcar como eliminado`
+      );
+
+      // If we still couldn't find it but we have the content, create a new "deleted" message entry
+      if (data.messageContent && data.teacherId) {
+        console.log(
+          "Creando una entrada para el mensaje eliminado que no se encontró localmente"
+        );
+
+        // Create a new message object with deleted flag
+        const deletedMessage = {
+          id: data.messageId,
+          userId: data.teacherId,
+          userName:
+            data.teacherId === currentUserId.value
+              ? currentUserName.value
+              : `Profesor ${data.teacherId}`,
+          message: data.messageContent,
+          timestamp: data.messageDate ? new Date(data.messageDate) : new Date(),
+          deleted: true,
+          deletedBy: data.deletedBy,
+          deletedAt: data.timestamp ? new Date(data.timestamp) : new Date(),
+        };
+
+        // Add it to the messages array
+        messages.value.push(deletedMessage);
+
+        // Sort messages to ensure correct order
+        messages.value.sort(
+          (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
+        );
+
+        console.log("Mensaje eliminado añadido a la lista de mensajes");
+      }
     }
   });
 };
@@ -1792,37 +1925,80 @@ const deleteMessage = async (message) => {
   if (!message.id || !chatId.value) return;
 
   try {
-    // console.log(
-    //   `Intentando eliminar mensaje ${message.id} del chat ${chatId.value}`
-    // );
-
-    // Mostrar confirmación
+    // Confirm deletion
     if (!confirm("¿Estás seguro de que deseas eliminar este mensaje?")) {
       return;
     }
 
-    // Si estamos usando sockets, enviar evento de eliminación
-    if (socket.value) {
-      socket.value.emit("delete_message", {
-        chatId: chatId.value,
-        messageId: message.id,
-        userId: currentUserId.value,
-      });
-    } else {
-      // Si no hay socket, usar directamente el API
-      await chatManager.deleteMessage(chatId.value, message.id);
+    // Check if the message ID is a temporary ID (timestamp) vs MongoDB ObjectID
+    const isTemporaryId = /^\d{13,}$/.test(message.id);
 
-      // Eliminar el mensaje localmente
-      const messageIndex = messages.value.findIndex(
-        (msg) => msg.id === message.id
+    // Mark the message as deleted locally first for immediate feedback
+    const messageIndex = messages.value.findIndex(
+      (msg) => msg.id === message.id
+    );
+
+    if (messageIndex !== -1) {
+      messages.value[messageIndex].deleted = true;
+    }
+
+    // If it's a temporary ID, we need to get the real message ID from the server first
+    if (isTemporaryId) {
+      console.log(
+        `Detectado ID temporal: ${message.id}. Buscando mensaje en el servidor...`
       );
-      if (messageIndex !== -1) {
-        messages.value.splice(messageIndex, 1);
+      try {
+        // Get the current chat data to find the real message ID
+        const chatData = await chatManager.getChatById(chatId.value);
+        if (
+          chatData &&
+          chatData.interaction &&
+          Array.isArray(chatData.interaction)
+        ) {
+          // Try to find the message by comparing content and timestamp
+          const serverMsg = chatData.interaction.find((msg) => {
+            // Compare message content
+            const contentMatch = msg.message === message.message;
+            // Compare timestamps (allowing for some time difference)
+            const msgTime = new Date(msg.date).getTime();
+            const localTime = new Date(message.timestamp).getTime();
+            const timeMatch = Math.abs(msgTime - localTime) < 60000; // Within 1 minute
+
+            return contentMatch && timeMatch;
+          });
+
+          if (serverMsg && serverMsg._id) {
+            console.log(
+              `Encontrado ID real: ${serverMsg._id} para mensaje temporal: ${message.id}`
+            );
+            message.id = serverMsg._id; // Update the message ID to the real one
+          } else {
+            console.error("No se encontró el mensaje en el servidor");
+            throw new Error("No se encontró el mensaje en el servidor");
+          }
+        }
+      } catch (err) {
+        console.error("Error al buscar mensaje real:", err);
+        // Continue with deletion attempt anyway
       }
     }
+
+    // Always use the API to delete the message for consistency
+    // Socket.io will handle the propagation to other clients
+    await chatManager.deleteMessage(chatId.value, message.id);
+
+    console.log(`Mensaje ${message.id} eliminado exitosamente`);
   } catch (error) {
     console.error("Error al eliminar mensaje:", error);
     alert("No se pudo eliminar el mensaje. Inténtalo de nuevo.");
+
+    // Revert the deleted state if there was an error
+    const messageIndex = messages.value.findIndex(
+      (msg) => msg.id === message.id
+    );
+    if (messageIndex !== -1) {
+      messages.value[messageIndex].deleted = false;
+    }
   }
 };
 
@@ -1953,6 +2129,24 @@ const insertLink = async () => {
     console.error("Error al insertar enlace:", error);
     alert("No se pudo insertar el enlace. Inténtalo de nuevo.");
   }
+};
+
+// And add the tooltip function
+const getDeletedMessageTooltip = (message) => {
+  let tooltip = "Missatge eliminat";
+
+  if (message.deletedAt) {
+    const date = formatDate(message.deletedAt);
+    tooltip += ` el ${date}`;
+  }
+
+  if (message.deletedBy) {
+    tooltip += ` por ${
+      message.deletedBy === currentUserId.value ? "ti" : "otro usuario"
+    }`;
+  }
+
+  return tooltip;
 };
 </script>
 
@@ -2340,18 +2534,23 @@ button:disabled {
   position: absolute;
   top: 5px;
   right: 5px;
-  background: none;
+  background-color: rgba(255, 255, 255, 0.2);
   border: none;
   color: rgba(255, 255, 255, 0.7);
   font-size: 12px;
-  padding: 2px 5px;
+  padding: 4px;
+  border-radius: 4px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   opacity: 0;
-  transition: opacity 0.2s;
+  transition: opacity 0.2s, background-color 0.2s;
 }
 
 .other-message .delete-message-btn {
   color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 .message:hover .delete-message-btn {
@@ -2360,6 +2559,7 @@ button:disabled {
 
 .delete-message-btn:hover {
   color: #dc3545;
+  background-color: rgba(220, 53, 69, 0.1);
 }
 
 /* Link Preview Styles */
@@ -2779,5 +2979,35 @@ button:disabled {
   color: #28a745;
   padding-top: 5px;
   border-top: 1px solid #e9ecef;
+}
+
+.message-deleted-content {
+  color: #dc3545;
+  font-style: italic;
+}
+
+/* In the style section at the bottom of the file */
+
+.deleted-message {
+  opacity: 0.7;
+  background-color: #f8d7da !important;
+  border-left: 3px solid #dc3545;
+}
+
+.own-message.deleted-message {
+  background-color: #cfcfe7 !important;
+  border-left: 3px solid #6c757d;
+  color: #666;
+}
+
+.message-deleted-content {
+  font-style: italic;
+  color: #6c757d;
+  text-align: center;
+  padding: 5px;
+}
+
+.deleted-message .message-header {
+  opacity: 0.7;
 }
 </style>

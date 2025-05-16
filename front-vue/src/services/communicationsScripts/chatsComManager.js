@@ -138,14 +138,47 @@ export const sendMessage = async (chatId, teacherId, message) => {
  */
 export const deleteMessage = async (chatId, messageId) => {
     try {
+        console.log(`Intentando eliminar mensaje - Chat ID: ${chatId}, Mensaje ID: ${messageId}`);
+
+        // Verificar que los IDs sean válidos
+        if (!chatId || !messageId) {
+            throw new Error("IDs de chat o mensaje no válidos");
+        }
+
+        // Verificar formato de los IDs (básico)
+        const idRegex = /^[0-9a-fA-F]{24}$/;  // Formato común de ID de MongoDB
+        const isNumericId = /^\d+$/.test(messageId);  // Formato numérico común también
+
+        if (!idRegex.test(chatId)) {
+            console.warn(`El formato del ID de chat ${chatId} podría no ser válido`);
+        }
+
+        if (!idRegex.test(messageId) && !isNumericId) {
+            console.warn(`El formato del ID de mensaje ${messageId} podría no ser válido`);
+        }
+
+        // Realizar la solicitud DELETE
         const response = await fetch(`${API_URL_CHAT}api/chat/${chatId}/message/${messageId}`, {
             method: 'DELETE'
         });
 
+        // Si el mensaje no se encuentra, manejarlo de forma especial
+        if (response.status === 404) {
+            console.warn(`Mensaje ${messageId} no encontrado, puede que ya haya sido eliminado`);
+            // Devolver un objeto simulando una respuesta exitosa
+            return {
+                success: true,
+                message: "El mensaje ya no existe",
+                alreadyDeleted: true
+            };
+        }
+
+        // Para otros errores, lanzar excepción normal
         if (!response.ok) {
             throw new Error(`Error al eliminar mensaje: ${response.statusText}`);
         }
 
+        // Si todo fue exitoso, devolver la respuesta
         return await response.json();
     } catch (error) {
         console.error(`Error en deleteMessage (chat: ${chatId}, mensaje: ${messageId}):`, error);

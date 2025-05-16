@@ -409,9 +409,14 @@ router.delete("/:id/message/:messageId", async (req, res) => {
             return res.status(404).json({ message: "Mensaje no encontrado" });
         }
 
+        // Store the message content before deleting
+        const deletedMessage = message.interaction[messageIndex];
+
+        // Eliminar físicamente el mensaje del array (eliminarlo de la base de datos)
         message.interaction.splice(messageIndex, 1);
+
         const updatedMessage = await message.save();
-        console.log("Mensaje eliminado con éxito");
+        console.log("Mensaje eliminado con éxito de la base de datos");
 
         // Notificar a través de Socket.io que se ha eliminado un mensaje
         const io = getIo(req);
@@ -419,7 +424,11 @@ router.delete("/:id/message/:messageId", async (req, res) => {
             io.to(req.params.id).emit('message_deleted', {
                 chatId: req.params.id,
                 messageId: req.params.messageId,
-                timestamp: new Date()
+                timestamp: new Date(),
+                messageContent: deletedMessage.message,
+                messageDate: deletedMessage.date,
+                teacherId: deletedMessage.teacherId,
+                deleted: true
             });
         }
 
