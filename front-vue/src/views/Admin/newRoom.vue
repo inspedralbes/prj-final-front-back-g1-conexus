@@ -114,7 +114,7 @@ function createRoom() {
     createNewRoom(roomData)
         .then(response => {
             console.log('Room created successfully:', response.data);
-            routeer.push({ name: 'admin-config-rooms' });
+            router.push({ name: 'admin-config-rooms' });
         })
         .catch(error => {
             console.error('Error creating room:', error);
