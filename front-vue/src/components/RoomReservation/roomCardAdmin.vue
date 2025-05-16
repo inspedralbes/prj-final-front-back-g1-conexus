@@ -19,9 +19,9 @@
                         </li>
                     </ul>
                 </li>
-                <li v-if="props.room.room_hours_available_wensday.length > 0">
+                <li v-if="props.room.room_hours_available_wednesday.length > 0">
                     Dimecres: <ul>
-                        <li v-for="hour in props.room.room_hours_available_wensday" :key="hour">
+                        <li v-for="hour in props.room.room_hours_available_wednesday" :key="hour">
                             {{ hour }}
                         </li>
                     </ul>
@@ -134,7 +134,7 @@ function parseTimeRanges(hours) {
 const roomHours = ref({
     monday: room.value.room_hours_available_monday ? parseTimeRanges(room.value.room_hours_available_monday) : [],
     tuesday: room.value.room_hours_available_tuesday ? parseTimeRanges(room.value.room_hours_available_tuesday) : [],
-    wensday: room.value.room_hours_available_wensday ? parseTimeRanges(room.value.room_hours_available_wensday) : [],
+    wednesday: room.value.room_hours_available_wednesday ? parseTimeRanges(room.value.room_hours_available_wednesday) : [],
     thursday: room.value.room_hours_available_thursday ? parseTimeRanges(room.value.room_hours_available_thursday) : [],
     friday: room.value.room_hours_available_friday ? parseTimeRanges(room.value.room_hours_available_friday) : []
 });
@@ -142,7 +142,7 @@ const roomHours = ref({
 const dayEnabled = ref({
     monday: room.value.room_hours_available_monday.length > 0,
     tuesday: room.value.room_hours_available_tuesday.length > 0,
-    wensday: room.value.room_hours_available_wensday.length  >0,
+    wednesday: room.value.room_hours_available_wednesday.length  >0,
     thursday: room.value.room_hours_available_thursday.length >0,
     friday: room.value.room_hours_available_friday.length >0,
 });
@@ -209,7 +209,7 @@ function translatedDay(day) {
     const translations = {
         monday: 'Dilluns',
         tuesday: 'Dimarts',
-        wensday: 'Dimecres',
+        wednesday: 'Dimecres',
         thursday: 'Dijous',
         friday: 'Divendres'
     };

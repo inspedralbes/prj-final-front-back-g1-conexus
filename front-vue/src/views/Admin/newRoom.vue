@@ -60,14 +60,14 @@ const roomDescription = ref('');
 const roomHours = ref({
     monday: [{ startHour: 0, startMinute: 0, endHour: 0, endMinute: 0 }],
     tuesday: [{ startHour: 0, startMinute: 0, endHour: 0, endMinute: 0 }],
-    wensday: [{ startHour: 0, startMinute: 0, endHour: 0, endMinute: 0 }],
+    wednesday: [{ startHour: 0, startMinute: 0, endHour: 0, endMinute: 0 }],
     thursday: [{ startHour: 0, startMinute: 0, endHour: 0, endMinute: 0 }],
     friday: [{ startHour: 0, startMinute: 0, endHour: 0, endMinute: 0 }],
 });
 const dayEnabled = ref({
     monday: false,
     tuesday: false,
-    wensday: false,
+    wednesday: false,
     thursday: false,
     friday: false,
 });
@@ -125,7 +125,7 @@ function translatedDay(day) {
     const translations = {
         monday: 'Dilluns',
         tuesday: 'Dimarts',
-        wensday: 'Dimecres',
+        wednesday: 'Dimecres',
         thursday: 'Dijous',
         friday: 'Divendres',
     };
