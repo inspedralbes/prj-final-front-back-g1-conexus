@@ -477,6 +477,9 @@ const redirectUserBasedOnRole = (user) => {
         case 'Tècnic':
             router.push('/technicians');
             break;
+        case 'Cantina':
+            router.push('/canteen');
+            break;
         default:
             console.error('No se pudo determinar un rol válido para el usuario:', user);
             router.push('/');

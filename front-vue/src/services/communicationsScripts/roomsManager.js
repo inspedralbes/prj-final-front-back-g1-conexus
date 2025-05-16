@@ -13,7 +13,13 @@ const handleResponse = async (response) => {
 // Obtener estadísticas de aulas
 export const getRoomsStats = async () => {
     try {
-        const response = await fetch(`${API_URL}api/rooms/stats/count`);
+        const response = await fetch(`${API_URL}api/rooms/stats/count`,{
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+        });
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }

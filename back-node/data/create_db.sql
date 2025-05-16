@@ -159,19 +159,30 @@ CREATE TABLE
         FOREIGN KEY (room_id) REFERENCES Rooms (id)
     );
 
--- Table 13: reports
-CREATE TABLE
-    IF NOT EXISTS Reports (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        user_id INT,
-        report TEXT NOT NULL,
-        status ENUM ('pending', 'revising', 'revised') DEFAULT 'pending',
-        image TEXT,
-        room_id INT NOT NULL,
-        user_assigned INT DEFAULT NULL,
-        note TEXT DEFAULT NULL,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES Users (id) ON DELETE SET NULL,
-        FOREIGN KEY (room_id) REFERENCES Rooms (id)
-    );
+    CREATE TABLE
+        IF NOT EXISTS Reports (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            user_id INT,
+            report TEXT NOT NULL,
+            status ENUM ('pending', 'revising', 'revised') DEFAULT 'pending',
+            image TEXT,
+            room_id INT NOT NULL,
+            user_assigned INT DEFAULT NULL,
+            note TEXT DEFAULT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES Users (id) ON DELETE SET NULL,
+            FOREIGN KEY (room_id) REFERENCES Rooms (id) ON DELETE CASCADE,
+            FOREIGN KEY (user_assigned) REFERENCES Users (id) ON DELETE SET NULL
+        );
+
+    -- Table 14: CanteenItems
+    CREATE TABLE
+        IF NOT EXISTS CanteenItems (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            product_name TEXT NOT NULL,
+            product_price FLOAT NOT NULL,
+            product_enabled BOOLEAN DEFAULT TRUE,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        );

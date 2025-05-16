@@ -101,13 +101,19 @@
 <script setup>
 import { ref, toRefs } from 'vue';
 import { useRouter } from 'vue-router';
-import { deleteRoom, getAllRooms, updateRoom } from '@/services/communicationsScripts/roomReservationsComManager';
+import { getAllRooms, updateRoom } from '@/services/communicationsScripts/roomReservationsComManager';
+import { defineProps, defineEmits } from 'vue';
 const props = defineProps({
     room: {
         type: Object,
         required: true
+    },
+    callDeleteRoom: {
+        type: Function,
+        required: true
     }
 });
+const emit = defineEmits(['callDeleteRoom']);
 
 const showModal = ref(false);
 const { room } = toRefs(props);
@@ -161,12 +167,7 @@ function removeTimeRange(day, index) {
 
 function eliminar(id) {
     console.log(id);
-    deleteRoom(id).then(() => {
-        console.log('Sala eliminada');
-        rooms.value = getAllRooms();
-    }).catch(error => {
-        console.error('Error eliminant la sala:', error);
-    });
+    emit('callDeleteRoom', props.room.id);
 }
 function GoBack() {
     const router = useRouter();

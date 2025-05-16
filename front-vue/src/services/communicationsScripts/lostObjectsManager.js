@@ -3,7 +3,14 @@ const BACK_URL = import.meta.env.VITE_LOST_OBJECT_URL;
 // Obtener estadísticas de objetos perdidos
 export const getLostObjectStats = async () => {
     try {
-        const response = await fetch(`${BACK_URL}api/lost-objects/stats/count`);
+        const response = await fetch(`${BACK_URL}api/lost-objects/stats/count`, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+        }
+        );
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }

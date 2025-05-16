@@ -1,25 +1,52 @@
-const BACK_URL = import.meta.env.VITE_ASSISTENCE_URL;
-
-export const updateAttendance = async (courseId, userId, hour, assisted, day) => {
+const BACK_URL = import.meta.env.VITE_CANTEEN_URL;
+export const getAllCanteenItems=async () => {
     try {
-        console.log("course_id", courseId);
-        console.log("user_id", userId);
-        console.log("hour", hour);
-        console.log("assisted", assisted);
-        console.log("day", day);
-        const dataToSend = {};
-        dataToSend.course_id = courseId;
-        dataToSend.user_id = userId;
-        dataToSend.hour = hour;
-        dataToSend.assisted = assisted;
-        dataToSend.day = day;
-        const response = await fetch(`${BACK_URL}api/assistences`, {
+        const response = await fetch(`${BACK_URL}api/canteen`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        console.log(data);
+        return data;
+    } catch (error) {
+        console.error('Error fetching courses:', error);
+    }
+
+}
+export const getCanteenItemById=async (id) => {
+    try {
+        const response = await fetch(`${BACK_URL}api/canteen/${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching courses:', error);
+    }
+
+}
+export const createItem=async (canteenItem) => {
+    try {
+        const response = await fetch(`${BACK_URL}api/canteen`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
-            body: JSON.stringify(dataToSend),
+            body: JSON.stringify(canteenItem),
         });
         if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -27,12 +54,49 @@ export const updateAttendance = async (courseId, userId, hour, assisted, day) =>
         const data = await response.json();
         return data;
     } catch (error) {
-        console.error('Error fetching courses:', error);
+        console.error('Error creating course:', error);
     }
 }
-export const getAttendanceFromCourse = async (courseId) => {
+export const updateItem=async (canteenItem) => {
     try {
-        const response = await fetch(`${BACK_URL}api/assistences/course/${courseId}`, {
+        const response = await fetch(`${BACK_URL}api/canteen/${canteenItem.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+            body: JSON.stringify(canteenItem),
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error updating course:', error);
+    }
+}
+export const deleteItem=async (id) => {
+    try {
+        const response = await fetch(`${BACK_URL}api/canteen/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error deleting course:', error);
+    }
+}
+export const getAllEnabledCanteenItems=async () => {
+    try {
+        const response = await fetch(`${BACK_URL}api/canteen/enabled`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -47,60 +111,5 @@ export const getAttendanceFromCourse = async (courseId) => {
     } catch (error) {
         console.error('Error fetching courses:', error);
     }
-}
 
-export const getAlumns = async (courseId) => {
-    try {
-        const response = await fetch(`${BACK_URL}api/user-courses/${courseId}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-            },
-        });
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error('Error fetching courses:', error);
-    }
-}
-
-export const getAttendanceFromDay = async (courseId, day) => {
-    try {
-        const response = await fetch(`${BACK_URL}api/assistences/course/${courseId}/day/${day}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-            },
-        });
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error('Error fetching courses:', error);
-    }
-}
-export const getAttendanceFromUserAndCourse = async (userId, courseId) => {
-    try {
-        const response = await fetch(`${BACK_URL}api/assistences/user/${userId}/course/${courseId}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-            },
-        });
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error('Error fetching courses:', error);
-    }
 }

@@ -1,4 +1,5 @@
 import express from "express";
+import { verifyTokenMiddleware } from "../token.js";
 import TypeUser from "../models/TypeUser.js";
 
 const router = express.Router();
@@ -26,7 +27,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // Create a new type user
-router.post("/", async (req, res) => {
+router.post("/",verifyTokenMiddleware,async (req, res) => {
     try {
         const { name } = req.body;
         // Check if type user already exists
@@ -43,7 +44,7 @@ router.post("/", async (req, res) => {
 });
 
 // Update type user by ID
-router.put("/:id", async (req, res) => {
+router.put("/:id", verifyTokenMiddleware, async (req, res) => {
     try {
         const { name } = req.body;
         const [updated] = await TypeUser.update({ name }, { 
@@ -63,7 +64,7 @@ router.put("/:id", async (req, res) => {
 });
 
 // Delete type user by ID
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", verifyTokenMiddleware, async (req, res) => {
     try {
         const { id } = req.params;
         const typeUser = await TypeUser.findByPk(id);

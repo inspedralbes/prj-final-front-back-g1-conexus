@@ -1,9 +1,10 @@
 import express from "express";
 import Room from "../models/Room.js";
+import { verifyTokenMiddleware } from "../token.js";
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.get("/", verifyTokenMiddleware, async (req, res) => {
     try {
         const rooms = await Room.findAll();
         const processedRooms = rooms.map((room) => {
@@ -41,7 +42,7 @@ router.get("/", async (req, res) => {
     }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", verifyTokenMiddleware, async (req, res) => {
     try {
         const room = await Room.findByPk(req.params.id);
         if (!room) {
@@ -54,7 +55,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // Para POST - creación de aulas, asegúrate de incluir el campo available
-router.post("/", async (req, res) => {
+router.post("/", verifyTokenMiddleware, async (req, res) => {
     try {
         const { room_name, room_hours_available, room_description, available } = req.body;
         if (!room_name || !room_hours_available || !room_description) {
@@ -73,7 +74,7 @@ router.post("/", async (req, res) => {
 });
 
 // Para PUT - actualización de aulas, incluir el campo available
-router.put("/:id", async (req, res) => {
+router.put("/:id", verifyTokenMiddleware, async (req, res) => {
     try {
         const { room_name, room_hours_available, room_description, available } = req.body;
 
@@ -87,7 +88,7 @@ router.put("/:id", async (req, res) => {
     }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", verifyTokenMiddleware, async (req, res) => {
     const room = await Room.findByPk(req.params.id);
     if (!room) {
         return res.status(404).json({ message: "Room not found" });
@@ -101,7 +102,7 @@ router.delete("/:id", async (req, res) => {
 });
 
 // Obtener estadísticas de aulas (total y disponibles/mantenimiento)
-router.get("/stats/count", async (req, res) => {
+router.get("/stats/count", verifyTokenMiddleware, async (req, res) => {
     try {
         // Contar todas las aulas
         const totalRooms = await Room.count();
@@ -128,7 +129,7 @@ router.get("/stats/count", async (req, res) => {
 });
 
 // Actualizar disponibilidad de un aula
-router.put("/:id/availability", async (req, res) => {
+router.put("/:id/availability",verifyTokenMiddleware, async (req, res) => {
     try {
         const { id } = req.params;
         const { available } = req.body;

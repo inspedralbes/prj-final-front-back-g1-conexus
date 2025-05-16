@@ -7,6 +7,7 @@ export const getGradesFromUserAndCourse = async (userId, courseId) => {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
         if (!response.ok) {
@@ -24,6 +25,7 @@ export const getTasksFromCourse = async (courseId) => {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
         if (!response.ok) {
@@ -43,6 +45,7 @@ export const createTask = async (task) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
             body: JSON.stringify(task),
         });
@@ -65,6 +68,7 @@ export const getTask = async (taskId, courseId) => {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
         if (!response.ok) {
@@ -101,6 +105,7 @@ export const updateGrade = async (user_id, grade, task_id) => {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
             body: JSON.stringify(gradeData),
         });
@@ -120,6 +125,7 @@ export const getCourseStats = async () => {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
         if (!response.ok) {
@@ -132,3 +138,22 @@ export const getCourseStats = async () => {
         return { total: 0, createdThisMonth: 0 };
     }
 };
+
+export const updateTask = async (task, taskId) => {
+    try {
+        const response = await fetch(`${BACK_URL}api/tasks/${taskId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(task),
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error updating task:', error);
+    }
+}
