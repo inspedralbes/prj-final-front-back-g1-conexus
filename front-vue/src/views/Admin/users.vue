@@ -18,10 +18,11 @@
     </div>
 
     <div v-else>
-      <div class="mb-6">
+      <div class="mb-6 flex justify-between items-center">
         <button @click="handleCreateUser" class="bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-2 rounded-lg hover:from-green-600 hover:to-green-700 transition-all shadow-lg">
           Crear nou usuari
         </button>
+        <p class="text-gray-400 text-sm">{{ users.length }} usuaris trobats</p>
       </div>
     </div>
     
@@ -30,45 +31,50 @@
       <p>No hi ha usuaris per mostrar</p>
     </div>
 
-    <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div v-for="user in users" :key="user.id" class="bg-slate-800/50 backdrop-blur-sm rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 animate-fade-in">
-        <div class="flex items-center space-x-4 mb-4">
-          <img :src="`${baseURL}${user.profile}`" alt="Imatge de perfil" class="w-16 h-16 rounded-full object-cover border-2 border-slate-600">
-          <div>
-            <h2 class="text-xl font-bold text-gray-300">{{ user.name }}</h2>
-            <p class="text-sm text-gray-400">{{ getRoleName(user.typeUsers_id) }}</p>
+    <div v-else class="bg-slate-800/50 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden">
+      <!-- Capçalera de la taula -->
+      <div class="grid grid-cols-12 gap-2 p-4 border-b border-slate-700/50 bg-slate-700/30 text-sm font-medium text-gray-400">
+        <div class="col-span-1 text-center">Imatge</div>
+        <div class="col-span-3">Nom d'usuari</div>
+        <div class="col-span-3">Email</div>
+        <div class="col-span-2">Rol</div>
+        <div class="col-span-2">Data registre</div>
+        <div class="col-span-1 text-center">Accions</div>
+      </div>
+      
+      <!-- Files d'usuaris -->
+      <div class="divide-y divide-slate-700/30">
+        <div v-for="user in users" :key="user.id" class="grid grid-cols-12 gap-2 p-4 items-center hover:bg-slate-700/20 transition-colors animate-fade-in">
+          <div class="col-span-1 flex justify-center">
+            <img :src="`${baseURL}${user.profile}`" alt="Imatge de perfil" class="w-10 h-10 rounded-full object-cover border border-slate-600">
           </div>
-        </div>
-        
-        <div class="space-y-2 text-sm text-gray-300 mb-6">
-          <p class="flex items-center">
-            <svg class="w-4 h-4 mr-2 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-            </svg>
-            {{ user.email }}
-          </p>
-          <p class="flex items-center">
-            <svg class="w-4 h-4 mr-2 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-            Registrat el {{ getUserCreationDate(user) }}
-          </p>
-        </div>
-        
-        <div class="flex space-x-2">
-          <button @click="confirmDelete(user)" class="flex-1 bg-gradient-to-r from-red-500 to-red-600 text-white px-4 py-2 rounded-lg hover:from-red-600 hover:to-red-700 transition-all shadow">
-            Eliminar
-          </button>
-          <button @click="handleUpdateUser(user.id)" class="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 text-white px-4 py-2 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all shadow">
-            Modificar
-          </button>
+          <div class="col-span-3 font-medium text-gray-300">{{ user.name }}</div>
+          <div class="col-span-3 text-sm text-gray-400 truncate">{{ user.email }}</div>
+          <div class="col-span-2">
+            <span class="px-2 py-1 text-xs rounded-full" :class="getRoleClass(user.typeUsers_id)">
+              {{ getRoleName(user.typeUsers_id) }}
+            </span>
+          </div>
+          <div class="col-span-2 text-sm text-gray-400">{{ getUserCreationDate(user) }}</div>
+          <div class="col-span-1 flex justify-center space-x-1">
+            <button @click="handleUpdateUser(user.id)" class="p-1.5 rounded-md text-blue-400 hover:bg-blue-500/20 transition-colors" title="Modificar">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+            </button>
+            <button @click="confirmDelete(user)" class="p-1.5 rounded-md text-red-400 hover:bg-red-500/20 transition-colors" title="Eliminar">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Modal per crear usuari -->
     <div v-if="showCreateModal" class="fixed inset-0 flex items-center justify-center z-50 p-4">
-      <div class="fixed inset-0 backdrop-blur-sm" @click="closeCreateModal"></div>
+      <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" @click="closeCreateModal"></div>
       <div class="relative bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 max-w-md w-full border border-slate-700/50 shadow-2xl z-10">
         <h2 class="text-xl font-bold text-white mb-4">Crear nou usuari</h2>
         
@@ -317,6 +323,19 @@ const getRoleName = (roleId) => {
   };
   
   return roleNames[roleId] || `Rol ${roleId}`;
+};
+
+// Funció per obtenir classes CSS per rol
+const getRoleClass = (roleId) => {
+  const roleClasses = {
+    1: 'bg-blue-500/20 text-blue-400',
+    2: 'bg-purple-500/20 text-purple-400',
+    3: 'bg-yellow-500/20 text-yellow-400',
+    4: 'bg-red-500/20 text-red-400',
+    5: 'bg-green-500/20 text-green-400'
+  };
+  
+  return roleClasses[roleId] || 'bg-gray-500/20 text-gray-400';
 };
 
 // Funció per crear nou usuari
@@ -664,5 +683,44 @@ button {
 /* Efectes hover */
 button:hover {
   transform: translateY(-1px);
+}
+
+/* Asegura que los modales estén centrados y por encima de todo el contenido */
+.fixed.inset-0.flex {
+  position: fixed !important;
+  z-index: 9999 !important;
+}
+
+/* Mejora el backdrop para que cubra toda la pantalla */
+.fixed.inset-0.bg-black\/60 {
+  position: fixed !important;
+  z-index: 9998 !important;
+}
+
+/* Contenido del modal */
+.relative.bg-gradient-to-br {
+  max-height: 90vh;
+  overflow-y: auto;
+  z-index: 10000 !important;
+}
+
+/* Desplazamiento suave para modales con contenido extenso */
+.relative.bg-gradient-to-br::-webkit-scrollbar {
+  width: 6px;
+}
+
+.relative.bg-gradient-to-br::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+}
+
+.relative.bg-gradient-to-br::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+/* Previene el desplazamiento del cuerpo cuando el modal está abierto */
+body:has(.fixed.inset-0.flex) {
+  overflow: hidden;
 }
 </style>

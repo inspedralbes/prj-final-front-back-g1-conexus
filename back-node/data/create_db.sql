@@ -70,7 +70,7 @@ CREATE TABLE
         task_ended BOOLEAN DEFAULT FALSE,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        FOREIGN KEY (course_id) REFERENCES Courses (id)
+        FOREIGN KEY (course_id) REFERENCES Courses (id) ON DELETE CASCADE
     );
 
 -- Table 7: grades
@@ -83,7 +83,7 @@ CREATE TABLE
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES Users (id) ON DELETE CASCADE,
-        FOREIGN KEY (task_id) REFERENCES Tasks (id)
+        FOREIGN KEY (task_id) REFERENCES Tasks (id) ON DELETE CASCADE
     );
 
 -- Table 8: assistence
@@ -156,7 +156,7 @@ CREATE TABLE
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES Users (id) ON DELETE CASCADE,
-        FOREIGN KEY (room_id) REFERENCES Rooms (id)
+        FOREIGN KEY (room_id) REFERENCES Rooms (id) 
     );
 
     CREATE TABLE

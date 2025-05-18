@@ -20,7 +20,7 @@
         </div>
 
         <!-- Llistat de sales en format llista -->
-        <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl p-6 shadow-lg">
+        <div class="backdrop-blur-sm rounded-xl p-6 shadow-lg">
             <h2 class="text-xl font-semibold text-gray-300 mb-6 border-b border-slate-700 pb-2">
                 <svg class="w-6 h-6 inline-block mr-2 text-blue-400" fill="none" stroke="currentColor"
                     viewBox="0 0 24 24">
@@ -40,15 +40,15 @@
             </div>
 
             <div v-else class="space-y-4">
-                <div v-for="(room, index) in visibleRooms" :key="room.id" 
-                     class="animate-fade-in rounded-lg overflow-hidden"
-                     :style="{ animationDelay: `${index * 150}ms` }">
-                    
+                <div v-for="(room, index) in visibleRooms" :key="room.id"
+                    class="animate-fade-in rounded-lg overflow-hidden" :style="{ animationDelay: `${index * 150}ms` }">
+
                     <!-- Capçalera de la sala (sempre visible) -->
                     <div class="bg-slate-700/50 p-4 flex items-center justify-between cursor-pointer hover:bg-slate-700/70 transition-colors"
-                         @click="toggleRoomExpanded(room.id)">
+                        @click="toggleRoomExpanded(room.id)">
                         <div class="flex items-center">
-                            <svg class="w-5 h-5 mr-3 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-5 h-5 mr-3 text-blue-400" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                             </svg>
@@ -57,25 +57,26 @@
                                 <p class="text-sm text-gray-400 truncate max-w-md">{{ room.room_description }}</p>
                             </div>
                         </div>
-                        
+
                         <div class="flex items-center">
                             <!-- Contador de horarios disponibles -->
                             <span class="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-full text-xs mr-4">
                                 {{ getTotalHoursCount(room) }} hores disponibles
                             </span>
-                            
+
                             <!-- Icono para expandir/colapsar -->
-                            <svg class="w-5 h-5 text-gray-400 transform transition-transform" 
-                                 :class="expandedRooms.includes(room.id) ? 'rotate-180' : ''"
-                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            <svg class="w-5 h-5 text-gray-400 transform transition-transform"
+                                :class="expandedRooms.includes(room.id) ? 'rotate-180' : ''" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7" />
                             </svg>
                         </div>
                     </div>
-                    
+
                     <!-- Contenido expandido de la sala -->
-                    <div v-if="expandedRooms.includes(room.id)" 
-                         class="bg-slate-800/50 p-6 border border-slate-700/50 border-t-0 rounded-b-lg animate-expand">
+                    <div v-if="expandedRooms.includes(room.id)"
+                        class="bg-slate-800/50 p-6 border border-slate-700/50 border-t-0 rounded-b-lg animate-expand">
                         <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
                             <!-- Columna izquierda: Info general -->
                             <div class="md:col-span-2 space-y-4">
@@ -83,7 +84,7 @@
                                     <h4 class="text-sm font-semibold text-gray-400 mb-2">Descripció</h4>
                                     <p class="text-gray-300">{{ room.room_description }}</p>
                                 </div>
-                                
+
                                 <div class="flex space-x-2 pt-4">
                                     <button @click="showEditModal(room)"
                                         class="flex-1 py-2 px-4 bg-blue-500/20 rounded-lg hover:bg-blue-500/30 transition-colors text-blue-400 flex items-center justify-center">
@@ -103,17 +104,18 @@
                                     </button>
                                 </div>
                             </div>
-                            
+
                             <!-- Columna derecha: Horarios -->
                             <div class="md:col-span-3">
                                 <h4 class="text-sm font-semibold text-gray-400 mb-3 flex items-center">
-                                    <svg class="w-4 h-4 mr-1 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-4 h-4 mr-1 text-purple-400" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
                                     HORARI DE DISPONIBILITAT
                                 </h4>
-                                
+
                                 <div class="overflow-x-auto bg-slate-700/30 rounded-lg">
                                     <table class="w-full text-sm text-gray-400">
                                         <thead class="text-xs text-gray-300 bg-slate-700/50">
@@ -123,44 +125,52 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-if="room.room_hours_available_monday.length > 0" class="border-b border-slate-700/50">
+                                            <tr v-if="room.room_hours_available_monday.length > 0"
+                                                class="border-b border-slate-700/50">
                                                 <td class="px-4 py-3 font-medium">Dilluns</td>
                                                 <td class="px-4 py-3">
                                                     <div class="flex flex-wrap gap-2">
-                                                        <span v-for="hour in room.room_hours_available_monday" :key="hour"
+                                                        <span v-for="hour in room.room_hours_available_monday"
+                                                            :key="hour"
                                                             class="bg-slate-600/50 px-2 py-1 rounded text-blue-300">
                                                             {{ hour }}
                                                         </span>
                                                     </div>
                                                 </td>
                                             </tr>
-                                            <tr v-if="room.room_hours_available_tuesday.length > 0" class="border-b border-slate-700/50">
+                                            <tr v-if="room.room_hours_available_tuesday.length > 0"
+                                                class="border-b border-slate-700/50">
                                                 <td class="px-4 py-3 font-medium">Dimarts</td>
                                                 <td class="px-4 py-3">
                                                     <div class="flex flex-wrap gap-2">
-                                                        <span v-for="hour in room.room_hours_available_tuesday" :key="hour"
+                                                        <span v-for="hour in room.room_hours_available_tuesday"
+                                                            :key="hour"
                                                             class="bg-slate-600/50 px-2 py-1 rounded text-blue-300">
                                                             {{ hour }}
                                                         </span>
                                                     </div>
                                                 </td>
                                             </tr>
-                                            <tr v-if="room.room_hours_available_wensday.length > 0" class="border-b border-slate-700/50">
+                                            <tr v-if="room.room_hours_available_wensday.length > 0"
+                                                class="border-b border-slate-700/50">
                                                 <td class="px-4 py-3 font-medium">Dimecres</td>
                                                 <td class="px-4 py-3">
                                                     <div class="flex flex-wrap gap-2">
-                                                        <span v-for="hour in room.room_hours_available_wensday" :key="hour"
+                                                        <span v-for="hour in room.room_hours_available_wensday"
+                                                            :key="hour"
                                                             class="bg-slate-600/50 px-2 py-1 rounded text-blue-300">
                                                             {{ hour }}
                                                         </span>
                                                     </div>
                                                 </td>
                                             </tr>
-                                            <tr v-if="room.room_hours_available_thursday.length > 0" class="border-b border-slate-700/50">
+                                            <tr v-if="room.room_hours_available_thursday.length > 0"
+                                                class="border-b border-slate-700/50">
                                                 <td class="px-4 py-3 font-medium">Dijous</td>
                                                 <td class="px-4 py-3">
                                                     <div class="flex flex-wrap gap-2">
-                                                        <span v-for="hour in room.room_hours_available_thursday" :key="hour"
+                                                        <span v-for="hour in room.room_hours_available_thursday"
+                                                            :key="hour"
                                                             class="bg-slate-600/50 px-2 py-1 rounded text-blue-300">
                                                             {{ hour }}
                                                         </span>
@@ -171,7 +181,8 @@
                                                 <td class="px-4 py-3 font-medium">Divendres</td>
                                                 <td class="px-4 py-3">
                                                     <div class="flex flex-wrap gap-2">
-                                                        <span v-for="hour in room.room_hours_available_friday" :key="hour"
+                                                        <span v-for="hour in room.room_hours_available_friday"
+                                                            :key="hour"
                                                             class="bg-slate-600/50 px-2 py-1 rounded text-blue-300">
                                                             {{ hour }}
                                                         </span>
@@ -196,15 +207,20 @@
         <!-- Modal de confirmació d'eliminació -->
         <div v-if="roomToDelete" class="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" @click="roomToDelete = null"></div>
-            <div class="relative bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-6 max-w-md w-full border border-slate-700/50 shadow-2xl z-10 animate-fade-in">
+            <div
+                class="relative bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-6 max-w-md w-full border border-slate-700/50 shadow-2xl z-10 animate-fade-in">
                 <h3 class="text-xl font-bold text-white mb-3">Confirmar eliminació</h3>
-                <p class="text-gray-300 mb-6">Estàs segur que vols eliminar la sala <span class="font-semibold text-white">{{ roomToDelete.room_name }}</span>? Aquesta acció no es pot desfer.</p>
-                
+                <p class="text-gray-300 mb-6">Estàs segur que vols eliminar la sala <span
+                        class="font-semibold text-white">{{ roomToDelete.room_name }}</span>? Aquesta acció no es pot
+                    desfer.</p>
+
                 <div class="flex justify-end space-x-3">
-                    <button @click="roomToDelete = null" class="px-4 py-2 border border-slate-600 text-slate-300 rounded-lg hover:bg-slate-700 transition-colors">
+                    <button @click="roomToDelete = null"
+                        class="px-4 py-2 border border-slate-600 text-slate-300 rounded-lg hover:bg-slate-700 transition-colors">
                         Cancel·lar
                     </button>
-                    <button @click="confirmDelete" class="px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg shadow hover:from-red-600 hover:to-red-700 transition-all duration-300">
+                    <button @click="confirmDelete"
+                        class="px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg shadow hover:from-red-600 hover:to-red-700 transition-all duration-300">
                         Eliminar
                     </button>
                 </div>
@@ -212,12 +228,8 @@
         </div>
 
         <!-- Componente para la edición de salas (reutilizamos el componente) -->
-        <room-edit-modal 
-            v-if="roomToEdit"
-            :room="roomToEdit"
-            @close="roomToEdit = null"
-            @room-updated="handleRoomUpdated"
-        />
+        <room-edit-modal v-if="roomToEdit" :room="roomToEdit" @close="roomToEdit = null"
+            @room-updated="handleRoomUpdated" />
     </div>
 </template>
 
@@ -247,7 +259,17 @@ onMounted(async () => {
 async function loadRooms() {
     try {
         const response = await getAllRooms();
-        rooms.value = response;
+        
+        // Asegurarse de que todos los objetos room tenen les propietats de horarios inicializadas
+        rooms.value = response.map(room => ({
+            ...room,
+            room_hours_available_monday: room.room_hours_available_monday || [],
+            room_hours_available_tuesday: room.room_hours_available_tuesday || [],
+            room_hours_available_wensday: room.room_hours_available_wensday || [],
+            room_hours_available_thursday: room.room_hours_available_thursday || [],
+            room_hours_available_friday: room.room_hours_available_friday || []
+        }));
+        
         console.log('Sales carregades:', rooms.value);
 
         // Mostrar las salas progresivamente
@@ -275,17 +297,20 @@ function toggleRoomExpanded(roomId) {
 }
 
 function getTotalHoursCount(room) {
-    return (
-        room.room_hours_available_monday.length +
-        room.room_hours_available_tuesday.length +
-        room.room_hours_available_wensday.length +
-        room.room_hours_available_thursday.length +
-        room.room_hours_available_friday.length
-    );
+    if (!room) return 0;
+    
+    // Verificar que cada propiedad existe i és un array abans d'accedir a length
+    const mondayLength = Array.isArray(room.room_hours_available_monday) ? room.room_hours_available_monday.length : 0;
+    const tuesdayLength = Array.isArray(room.room_hours_available_tuesday) ? room.room_hours_available_tuesday.length : 0;
+    const wednesdayLength = Array.isArray(room.room_hours_available_wensday) ? room.room_hours_available_wensday.length : 0;
+    const thursdayLength = Array.isArray(room.room_hours_available_thursday) ? room.room_hours_available_thursday.length : 0;
+    const fridayLength = Array.isArray(room.room_hours_available_friday) ? room.room_hours_available_friday.length : 0;
+    
+    return mondayLength + tuesdayLength + wednesdayLength + thursdayLength + fridayLength;
 }
 
 function hasAnyHours(room) {
-    return getTotalHoursCount(room) > 0;
+    return room && getTotalHoursCount(room) > 0;
 }
 
 function showDeleteConfirm(room) {
@@ -294,7 +319,7 @@ function showDeleteConfirm(room) {
 
 function confirmDelete() {
     if (!roomToDelete.value) return;
-    
+
     deleteRoom(roomToDelete.value.id)
         .then(() => {
             rooms.value = rooms.value.filter(room => room.id !== roomToDelete.value.id);
@@ -306,11 +331,11 @@ function confirmDelete() {
 }
 
 function showEditModal(room) {
-    roomToEdit.value = {...room}; // Clonar para evitar modificaciones directas
+    roomToEdit.value = { ...room }; // Clonar per evitar modificacions directes
 }
 
 function handleRoomUpdated(updatedRoom) {
-    // Actualizar la sala en la lista
+    // Actualitzar la sala a la llista
     const index = rooms.value.findIndex(r => r.id === updatedRoom.id);
     if (index !== -1) {
         rooms.value[index] = updatedRoom;
@@ -339,6 +364,7 @@ function goToNewRoom() {
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -350,6 +376,7 @@ function goToNewRoom() {
         opacity: 0;
         transform: scaleY(0);
     }
+
     to {
         opacity: 1;
         transform: scaleY(1);

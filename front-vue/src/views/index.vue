@@ -211,6 +211,7 @@ import { login, getTypeUsers, register, checkEmailAndGetRoles, getFilteredRoles 
 
 const router = useRouter();
 const availableRoles = ref([]);
+const allRoles = ref([]);
 const loadingRoles = ref(true);
 
 // Obtener los tipos de usuario al montar el componente
@@ -220,6 +221,7 @@ onMounted(async () => {
         if (response && Array.isArray(response)) {
             // Filtrar los roles para excluir Administrador y Cantina
             availableRoles.value = getFilteredRoles(response);
+            allRoles.value = response; // Guardar todos los roles para futuras referencias
         } else {
             console.error("Formato de datos inesperado:", response);
             message.value = "Error al cargar els tipus d'usuari";
@@ -493,7 +495,7 @@ const redirectUserBasedOnRole = (user) => {
     // Si solo tenemos el ID del tipo de usuario
     else if (user?.typeUsers_id) {
         // Buscar en availableRoles el nombre que corresponde a este ID
-        const roleObj = availableRoles.value.find(role => role.id === user.typeUsers_id);
+        const roleObj = allRoles.value.find(role => role.id === user.typeUsers_id);
         if (roleObj) {
             userRole = roleObj.name;
         }
