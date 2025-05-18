@@ -125,17 +125,29 @@
           
           <div>
             <label class="block text-sm font-medium text-gray-300 mb-1">Imatge de perfil:</label>
-            <div class="flex items-center space-x-2">
-              <label class="flex-1 cursor-pointer bg-slate-700/50 border border-slate-600/50 rounded-lg px-4 py-2 text-gray-400 hover:bg-slate-700 transition-colors">
-                <span v-if="!selectedFileName">Seleccionar arxiu...</span>
-                <span v-else class="truncate">{{ selectedFileName }}</span>
-                <input 
-                  type="file" 
-                  @change="handleFileUpload" 
-                  accept="image/*"
-                  class="hidden"
-                >
-              </label>
+            <div class="flex flex-col space-y-3">
+              <!-- Vista previa de la imagen -->
+              <div v-if="imagePreview" class="mx-auto">
+                <img :src="imagePreview" alt="Vista previa" class="w-24 h-24 rounded-full object-cover border-2 border-slate-600">
+              </div>
+              
+              <div class="flex items-center space-x-2">
+                <label class="flex-1 cursor-pointer bg-slate-700/50 border border-slate-600/50 rounded-lg px-4 py-2 text-gray-400 hover:bg-slate-700 transition-colors">
+                  <span v-if="!selectedFileName">Seleccionar arxiu (màx 2MB, JPG/PNG)...</span>
+                  <span v-else class="truncate">{{ selectedFileName }}</span>
+                  <input 
+                    type="file" 
+                    @change="handleFileUpload" 
+                    accept="image/jpeg,image/png,image/jpg"
+                    class="hidden"
+                  >
+                </label>
+              </div>
+              
+              <!-- Mensaje de error para la imagen -->
+              <div v-if="imageError" class="text-xs text-red-400">
+                {{ imageError }}
+              </div>
             </div>
           </div>
           
@@ -272,17 +284,6 @@ const selectedFile = ref(null);
 const showDeleteModal = ref(false);
 const userToDelete = ref(null);
 
-const handleFileUpload = (event) => {
-  const file = event.target.files[0];
-  if (file) {
-    selectedFile.value = file;
-    selectedFileName.value = file.name;
-  } else {
-    selectedFile.value = null;
-    selectedFileName.value = '';
-  }
-};
-
 // Variables per al modal de creació
 const showCreateModal = ref(false);
 const newUser = ref({
@@ -295,6 +296,9 @@ const newUser = ref({
 const createModalError = ref(null);
 const createModalSuccess = ref(null);
 const creating = ref(false);
+const imagePreview = ref(null);
+const imageError = ref(null);
+const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB en bytes
 
 // Funció per obtenir el nom del rol
 const getRoleName = (roleId) => {
@@ -326,6 +330,8 @@ const handleCreateUser = () => {
   };
   createModalError.value = null;
   createModalSuccess.value = null;
+  imagePreview.value = null;
+  imageError.value = null;
   showCreateModal.value = true;
 };
 
@@ -334,6 +340,8 @@ const closeCreateModal = () => {
   showCreateModal.value = false;
   createModalError.value = null;
   createModalSuccess.value = null;
+  imagePreview.value = null;
+  imageError.value = null;
 };
 
 // Funció per guardar un nou usuari
@@ -348,13 +356,22 @@ const saveNewUser = async () => {
   createModalSuccess.value = null;
 
   try {
+    // Crear y configurar FormData correctamente
     const formData = new FormData();
     formData.append('name', newUser.value.name);
     formData.append('email', newUser.value.email);
     formData.append('password', newUser.value.password);
     formData.append('typeUsers_id', newUser.value.typeUsers_id);
+    
+    // Añadir imagen solo si se ha seleccionado
     if (selectedFile.value) {
       formData.append('profile', selectedFile.value);
+    }
+
+    // Verificar que formData contiene lo esperado
+    console.log("FormData entries:");
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}: ${value instanceof File ? `File: ${value.name}` : value}`);
     }
 
     const response = await createUser(formData);
@@ -363,11 +380,13 @@ const saveNewUser = async () => {
       createModalError.value = `Error: ${response.error}`;
       console.error('Error al crear l\'usuari:', response.error);
     } else {
+      // Añadir el usuario a la lista i tancar modal
       users.value.push(response);
       createModalSuccess.value = "Usuari creat correctament!";
       
-      // Tancar el modal després de 2 segons
+      // Recargar usuarios para asegurar que todo se actualiza correctamente
       setTimeout(() => {
+        fetchUsers();
         closeCreateModal();
       }, 2000);
     }
@@ -560,6 +579,49 @@ onMounted(() => {
   fetchUsers();
   checkUrlParams();
 });
+
+// Funció per gestionar la pujada d'imatges
+const handleFileUpload = (event) => {
+  imageError.value = null;
+  const file = event.target.files[0];
+  
+  if (!file) {
+    selectedFile.value = null;
+    selectedFileName.value = '';
+    imagePreview.value = null;
+    return;
+  }
+  
+  // Verificar tipo de archivo
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+  if (!allowedTypes.includes(file.type)) {
+    imageError.value = "Només s'accepten arxius JPG o PNG";
+    selectedFile.value = null;
+    selectedFileName.value = '';
+    imagePreview.value = null;
+    return;
+  }
+  
+  // Verificar tamaño del archivo
+  if (file.size > MAX_FILE_SIZE) {
+    imageError.value = "L'arxiu és massa gran. Mida màxima: 2MB";
+    selectedFile.value = null;
+    selectedFileName.value = '';
+    imagePreview.value = null;
+    return;
+  }
+  
+  // Guardar archivo y mostrar vista previa
+  selectedFile.value = file;
+  selectedFileName.value = file.name;
+  
+  // Crear vista previa
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    imagePreview.value = e.target.result;
+  };
+  reader.readAsDataURL(file);
+};
 </script>
 
 <style scoped>

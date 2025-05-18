@@ -48,7 +48,7 @@ export const getUserByEmail = async (email) => {
 
 export const register = async (user) => {
     try {
-        const response = await fetch(`${BACK_URL}api/user/`, {
+        const response = await fetch(`${BACK_URL}api/user/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
