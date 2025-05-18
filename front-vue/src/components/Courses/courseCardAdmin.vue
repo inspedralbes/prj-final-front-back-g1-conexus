@@ -2,7 +2,7 @@
     <div class="course-card">
         <h2>{{ course.course.course_name }}</h2>
         <p>{{ course.course.course_description }}</p>
-        <p>Professor: {{ course.course.teacher.name }}</p>
+        <p v-if="course.course.course_teacher_id!=null">Professor: {{ course.course.teacher.name }}</p>
         <p>Horari:</p>
         <div v-if="schedule.monday && schedule.monday.length > 0">
             <p>Dilluns:</p>

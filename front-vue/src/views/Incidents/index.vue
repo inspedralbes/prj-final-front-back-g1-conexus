@@ -28,7 +28,7 @@
                         class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         <option value="" disabled>Selecciona una aula</option>
                         <option v-for="room in rooms" :key="room.id" :value="room.id">
-                            {{ room.name || `Aula ${room.id}` }}{{ room.description ? ` - ${room.description}` : '' }}
+                            {{ room.room_name }}
                         </option>
                     </select>
                     <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
@@ -46,7 +46,20 @@
             <!-- Pujar imatge -->
             <div class="mb-8">
                 <label class="block text-sm font-medium text-gray-300 mb-2">Afegir imatge (opcional)</label>
-                <div class="flex items-center justify-center w-full">
+                
+                <!-- Preview de la imagen seleccionada -->
+                <div v-if="imagePreview" class="mb-4 relative">
+                    <img :src="imagePreview" alt="Preview" class="w-full h-48 object-cover rounded-lg border border-slate-600" />
+                    <button type="button" @click="removeImage" 
+                        class="absolute top-2 right-2 bg-red-600 p-1 rounded-full hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                        <svg class="h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- Selector de archivo (se muestra solo si no hay imagen seleccionada) -->
+                <div v-if="!imagePreview" class="flex items-center justify-center w-full">
                     <label for="upload-image"
                         class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-slate-600 rounded-lg cursor-pointer bg-slate-700/50 hover:bg-slate-700/70 transition-colors">
                         <div class="flex flex-col items-center justify-center pt-5 pb-6">
@@ -58,10 +71,11 @@
                             <p class="mb-2 text-sm text-gray-400">
                                 <span class="font-semibold">Fes clic per pujar</span> o arrossega una imatge
                             </p>
-                            <p class="text-xs text-gray-500" v-if="imageFile">{{ imageFile.name }}</p>
+                            <p class="text-xs text-gray-400">PNG, JPG, JPEG, GIF o WEBP (màx 5MB)</p>
+                            <p v-if="fileError" class="text-xs mt-2 text-red-400">{{ fileError }}</p>
                         </div>
                         <input id="upload-image" type="file" @change="handleFileUpload" class="hidden"
-                            accept="image/*" />
+                            accept="image/png, image/jpeg, image/jpg, image/gif, image/webp" />
                     </label>
                 </div>
             </div>
@@ -119,8 +133,11 @@ const reportData = ref({
 });
 
 const imageFile = ref(null);
+const imagePreview = ref(null);
 const isSubmitting = ref(false);
 const message = ref(null);
+const fileError = ref('');
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB en bytes
 
 // Carregar les aules disponibles
 onMounted(async () => {
@@ -128,6 +145,7 @@ onMounted(async () => {
         isLoading.value = true;
         const roomsData = await getAllRooms();
         rooms.value = roomsData;
+        console.log('Aules carregades:', rooms.value);
     } catch (error) {
         console.error('Error carregant aules:', error);
         loadError.value = 'No s\'han pogut carregar les aules. Si us plau, torna-ho a provar més tard.';
@@ -137,7 +155,49 @@ onMounted(async () => {
 });
 
 const handleFileUpload = (event) => {
-    imageFile.value = event.target.files[0];
+    const file = event.target.files[0];
+    fileError.value = '';
+    
+    if (!file) {
+        imageFile.value = null;
+        imagePreview.value = null; // Limpiar preview
+        return;
+    }
+    
+    // Validar tipo de archivo
+    const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/webp'];
+    if (!validTypes.includes(file.type)) {
+        fileError.value = 'Format d\'arxiu no vàlid. Només s\'accepten imatges (PNG, JPG, JPEG, GIF, WEBP).';
+        event.target.value = null;
+        imageFile.value = null;
+        imagePreview.value = null; // Limpiar preview
+        return;
+    }
+    
+    // Validar tamaño
+    if (file.size > MAX_FILE_SIZE) {
+        fileError.value = 'La mida de l\'arxiu no pot superar els 5MB.';
+        event.target.value = null;
+        imageFile.value = null;
+        imagePreview.value = null; // Limpiar preview
+        return;
+    }
+    
+    // Archivo válido
+    imageFile.value = file;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        imagePreview.value = e.target.result; // Mostrar preview
+    };
+    reader.readAsDataURL(file);
+};
+
+const removeImage = () => {
+    imageFile.value = null;
+    imagePreview.value = null;
+    // Reset también el input file si necesario
+    const fileInput = document.getElementById('upload-image');
+    if (fileInput) fileInput.value = "";
 };
 
 const submitReport = async () => {
@@ -173,6 +233,7 @@ const submitReport = async () => {
             image: '',
         };
         imageFile.value = null;
+        imagePreview.value = null; // Limpiar preview
     } catch (error) {
         console.error('Error en enviar la incidència:', error);
         message.value = {

@@ -42,7 +42,27 @@ router.post("/", upload.single('profile'), async (req, res) => {
     console.log(req.body);
     try {
         const { typeUsers_id, name, email, password, profile } = req.body;
-        // const profile = req.file ? req.file.path : null; // Guardar la ruta de la imagen si se proporciona
+        
+        // Verificar si ya existe un usuario con ese correo
+        const existingUser = await User.findOne({ where: { email } });
+        
+        if (existingUser) {
+            return res.status(400).json({ 
+                message: "Ya existe un usuario con este correo electrónico" 
+            });
+        }
+        
+        // Validar el rol según el dominio del correo
+        if (email.toLowerCase().includes('@gmail.com')) {
+            // Si es Gmail, no permitir rol de Administrador (id=3) o Cantina (id=5)
+            if (typeUsers_id == 3 || typeUsers_id == 5) {
+                return res.status(403).json({ 
+                    message: "Los usuarios con correo Gmail no pueden registrarse como Administrador o Cantina" 
+                });
+            }
+        }
+        
+        // Si no existe y el rol es válido, crear el nuevo usuario
         const user = await User.create({ typeUsers_id, name, email, password, profile });
         res.json(user);
     } catch (error) {
@@ -225,6 +245,40 @@ router.get("/stats/count", async (req, res) => {
         });
     } catch (error) {
         console.error("Error getting user stats:", error);
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Verificar si un correo ya está registrado y obtener los roles permitidos para ese dominio
+router.post("/check-email", async (req, res) => {
+    try {
+        const { email } = req.body;
+        
+        if (!email) {
+            return res.status(400).json({ message: "El correo es requerido" });
+        }
+        
+        // Verificar si el correo ya existe
+        const existingUser = await User.findOne({ where: { email } });
+        
+        // Obtener todos los roles disponibles
+        const allRoles = await TypeUser.findAll();
+        
+        // Filtrar roles según el dominio del correo
+        let allowedRoles = [...allRoles];
+        
+        if (email.toLowerCase().includes('@gmail.com')) {
+            // Si es gmail, excluir roles de Administrador (id=3) y Cantina (id=5)
+            allowedRoles = allRoles.filter(role => 
+                role.id !== 3 && role.id !== 5
+            );
+        }
+        
+        return res.json({ 
+            exists: !!existingUser,
+            allowedRoles: allowedRoles
+        });
+    } catch (error) {
         res.status(500).json({ message: error.message });
     }
 });

@@ -24,7 +24,6 @@ import {
     getAllServicesStatus,
     addService
 } from "./serviceManager.js";
-// Importar las funciones para obtener últimos registros
 import { getLatestUser } from './routes/userRoutes.js';
 import { getLatestCourse } from './routes/courseRoutes.js';
 import { getLatestReport } from './routes/reportRoutes.js';
