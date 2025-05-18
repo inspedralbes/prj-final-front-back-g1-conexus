@@ -28,11 +28,13 @@
       ]"
     >
       <div class="text-center mb-8">
-        <h2
-          class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400"
-        >
-          Conexus
-        </h2>
+        <router-link to="/teachers/panel">
+          <h2
+            class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400"
+          >
+            Conexus
+          </h2>
+        </router-link>
       </div>
       <nav class="space-y-2">
         <router-link
@@ -225,7 +227,7 @@
       <div class="container mx-auto flex justify-between items-center px-4">
         <!-- Nom de la Marca -->
         <router-link
-          to="/teachers"
+          to="/teachers/panel"
           class="text-white text-2xl font-bold hover:text-gray-300 transition-colors duration-300"
         >
           Conexus

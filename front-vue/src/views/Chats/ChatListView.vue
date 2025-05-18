@@ -1,47 +1,89 @@
 <template>
-  <div class="chat-list-container">
-    <h2>Conversaciones</h2>
+  <div
+    class="max-w-4xl mx-auto px-5 py-6 min-h-screen flex flex-col animate-fade-in"
+  >
+    <!-- Capçalera -->
+    <div class="mb-8">
+      <h2 class="text-2xl font-bold text-white mb-2">
+        <span
+          class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400"
+        >
+          Conversaciones
+        </span>
+      </h2>
+      <p class="text-gray-400 text-sm">
+        Gestiona tus conversaciones con otros usuarios
+      </p>
+    </div>
 
-    <div class="filters">
-      <div class="search-bar">
-        <input
-          type="text"
-          v-model="searchTerm"
-          @input="filterUsers"
-          placeholder="Buscar usuario..."
-          class="search-input"
-        />
-        <div class="filter-container" ref="filterRef">
+    <!-- Filtros -->
+    <div class="flex flex-col gap-4 mb-6">
+      <div class="flex gap-3 w-full">
+        <div class="flex-1 relative">
+          <input
+            type="text"
+            v-model="searchTerm"
+            @input="filterUsers"
+            placeholder="Buscar usuario..."
+            class="w-full px-4 py-3 pl-10 bg-slate-800/50 border border-slate-700/30 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all hover:border-purple-500/50"
+          />
+          <svg
+            class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
+          </svg>
+        </div>
+        <div class="relative" ref="filterRef">
           <button
-            class="filter-icon-btn"
+            class="p-3 rounded-xl bg-slate-800/50 border border-slate-700/30 text-gray-400 hover:text-purple-400 hover:border-purple-500/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            :class="{
+              'bg-purple-500/10 text-purple-400 border-purple-500/30':
+                selectedUserType !== 'all' || showFilterMenu,
+            }"
             @click="(event) => toggleFilterMenu(event)"
             title="Filtrar por tipo"
-            :class="{
-              'filter-active': selectedUserType !== 'all',
-              'menu-open': showFilterMenu,
-            }"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
+              class="w-5 h-5 transition-transform duration-300"
+              :class="{
+                'rotate-6': selectedUserType !== 'all' || showFilterMenu,
+              }"
               fill="none"
               stroke="currentColor"
+              viewBox="0 0 24 24"
               stroke-width="2"
               stroke-linecap="round"
               stroke-linejoin="round"
-              class="filter-icon"
             >
               <polygon
                 points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"
               ></polygon>
             </svg>
+            <!-- Indicador de filtro activo -->
+            <span
+              v-if="selectedUserType !== 'all'"
+              class="absolute bottom-1 right-1 w-2 h-2 bg-purple-500 rounded-full"
+            ></span>
           </button>
-          <div v-if="showFilterMenu" class="filter-dropdown">
+          <!-- Menú desplegable -->
+          <div
+            v-if="showFilterMenu"
+            class="absolute top-full right-0 mt-2 w-48 bg-slate-800 border border-slate-700/50 rounded-xl shadow-lg overflow-hidden z-10 animate-dropdown"
+          >
             <div
-              class="filter-option"
-              :class="{ active: selectedUserType === 'all' }"
+              class="p-3 hover:bg-slate-700/50 cursor-pointer transition-colors border-b border-slate-700/30"
+              :class="{
+                'bg-purple-500/10 text-purple-400': selectedUserType === 'all',
+              }"
               @click="selectFilter('all')"
             >
               <span>Todos los tipos</span>
@@ -49,8 +91,11 @@
             <div
               v-for="type in filteredUserTypes"
               :key="type.id"
-              class="filter-option"
-              :class="{ active: selectedUserType === type.id }"
+              class="p-3 hover:bg-slate-700/50 cursor-pointer transition-colors border-b border-slate-700/30 last:border-b-0"
+              :class="{
+                'bg-purple-500/10 text-purple-400':
+                  selectedUserType === type.id,
+              }"
               @click="selectFilter(type.id)"
             >
               <span>{{ type.name }}</span>
@@ -59,69 +104,142 @@
         </div>
       </div>
 
-      <div class="view-tabs">
+      <!-- Pestañas de navegación -->
+      <div class="flex border-b border-slate-700/30">
         <button
-          :class="['tab-button', { active: activeTab === 'existing' }]"
+          class="px-4 py-3 text-gray-400 hover:text-purple-400 transition-colors relative"
+          :class="{ 'text-purple-400 font-medium': activeTab === 'existing' }"
           @click="activeTab = 'existing'"
         >
           Existentes
+          <span
+            v-if="activeTab === 'existing'"
+            class="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-purple-500 to-blue-500"
+          ></span>
         </button>
         <button
-          :class="['tab-button', { active: activeTab === 'unread' }]"
+          class="px-4 py-3 text-gray-400 hover:text-purple-400 transition-colors relative flex items-center"
+          :class="{ 'text-purple-400 font-medium': activeTab === 'unread' }"
           @click="activeTab = 'unread'"
         >
           No leídos
-          <span v-if="unreadChatsCount > 0" class="badge">{{
-            unreadChatsCount
-          }}</span>
+          <span
+            v-if="unreadChatsCount > 0"
+            class="ml-1.5 flex items-center justify-center min-w-[18px] h-5 px-1 text-xs font-semibold rounded-full bg-gradient-to-r from-purple-500 to-blue-500 text-white"
+          >
+            {{ unreadChatsCount }}
+          </span>
+          <span
+            v-if="activeTab === 'unread'"
+            class="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-purple-500 to-blue-500"
+          ></span>
         </button>
         <button
-          :class="['tab-button', { active: activeTab === 'all' }]"
+          class="px-4 py-3 text-gray-400 hover:text-purple-400 transition-colors relative"
+          :class="{ 'text-purple-400 font-medium': activeTab === 'all' }"
           @click="activeTab = 'all'"
         >
           Todos
+          <span
+            v-if="activeTab === 'all'"
+            class="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-purple-500 to-blue-500"
+          ></span>
         </button>
       </div>
     </div>
 
-    <div v-if="loading" class="loading">
-      <p>Cargando usuarios...</p>
+    <!-- Estados de carga y vacíos -->
+    <div
+      v-if="loading"
+      class="flex-1 flex items-center justify-center bg-slate-800/30 rounded-xl p-8"
+    >
+      <div class="flex flex-col items-center">
+        <div
+          class="w-10 h-10 border-4 border-slate-600 border-t-purple-500 rounded-full animate-spin mb-4"
+        ></div>
+        <p class="text-gray-400">Cargando usuarios...</p>
+      </div>
     </div>
 
-    <div v-else-if="error" class="error">
-      <p>{{ error }}</p>
+    <div
+      v-else-if="error"
+      class="flex-1 flex items-center justify-center bg-slate-800/30 rounded-xl p-8 border border-red-500/20"
+    >
+      <p class="text-red-400">{{ error }}</p>
     </div>
 
-    <div v-else-if="displayedUsers.length === 0" class="empty-list">
-      <p v-if="activeTab === 'existing'">No tienes conversaciones existentes</p>
-      <p v-else>No se encontraron usuarios</p>
+    <div
+      v-else-if="displayedUsers.length === 0"
+      class="flex-1 flex items-center justify-center bg-slate-800/30 rounded-xl p-8"
+    >
+      <div class="text-center">
+        <svg
+          class="w-16 h-16 mx-auto text-gray-600 mb-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+          />
+        </svg>
+        <p v-if="activeTab === 'existing'" class="text-gray-400">
+          No tienes conversaciones existentes
+        </p>
+        <p v-else class="text-gray-400">No se encontraron usuarios</p>
+      </div>
     </div>
 
-    <ul v-else class="user-list">
-      <li v-for="user in displayedUsers" :key="user.id" class="user-item">
-        <div class="user-avatar" @click="selectUser(user)">
+    <!-- Lista de Usuarios -->
+    <ul v-else class="flex-1 overflow-y-auto space-y-2 custom-scrollbar">
+      <li
+        v-for="user in displayedUsers"
+        :key="user.id"
+        class="flex items-center p-3 bg-slate-800/50 rounded-xl border border-slate-700/30 hover:border-slate-600 transition-all duration-300 cursor-pointer"
+      >
+        <div class="relative" @click="selectUser(user)">
           <img
             :src="user.profile || '/img/default-avatar.png'"
             :alt="user.name || user.username"
             onerror="this.src='/img/default-avatar.png'"
+            class="w-12 h-12 rounded-full object-cover border-2 border-slate-700"
           />
           <div
             v-if="hasNewMessages[user.id]"
-            class="new-message-indicator"
+            class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-slate-800 animate-pulse"
           ></div>
         </div>
-        <div class="user-info" @click="selectUser(user)">
-          <h3>{{ user.name || user.username }}</h3>
-          <p class="user-type">{{ getUserTypeName(user.typeUsers_id) }}</p>
-          <p v-if="typingUsers[user.id]" class="typing-status">
-            <span class="typing-dot"></span>
-            <span class="typing-dot"></span>
-            <span class="typing-dot"></span>
+        <div class="flex-1 ml-4 overflow-hidden" @click="selectUser(user)">
+          <h3 class="font-medium text-white">
+            {{ user.name || user.username }}
+          </h3>
+          <p class="text-sm text-gray-400">
+            {{ getUserTypeName(user.typeUsers_id) }}
+          </p>
+          <p
+            v-if="typingUsers[user.id]"
+            class="text-xs text-gray-400 flex items-center mt-1"
+          >
+            <span
+              class="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mr-0.5 animate-typing-dot"
+            ></span>
+            <span
+              class="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mr-0.5 animate-typing-dot animation-delay-200"
+            ></span>
+            <span
+              class="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full animate-typing-dot animation-delay-400"
+            ></span>
           </p>
           <p
             v-else-if="getUserLastMessage(user)"
-            class="last-message"
-            :class="{ 'new-message': hasNewMessages[user.id] }"
+            class="text-xs truncate mt-1"
+            :class="{
+              'text-white font-medium': hasNewMessages[user.id],
+              'text-gray-400': !hasNewMessages[user.id],
+            }"
           >
             {{ getUserLastMessage(user) }}
           </p>
@@ -129,22 +247,21 @@
         <button
           v-if="hasExistingChat(user)"
           @click="deleteUserChat(user)"
-          class="delete-button"
+          class="p-2 text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded-full transition-colors focus:outline-none"
           title="Eliminar conversación"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            viewBox="0 0 16 16"
+            class="w-5 h-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
           >
             <path
-              d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"
-            />
-            <path
-              fill-rule="evenodd"
-              d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
             />
           </svg>
         </button>
@@ -1196,371 +1313,94 @@ const selectFilter = (typeId) => {
 };
 </script>
 
-<style scoped>
-.chat-list-container {
-  display: flex;
-  flex-direction: column;
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-  height: 100vh;
-  color: #333;
-  position: relative;
+<style>
+/* Animaciones personalizadas que no están en Tailwind por defecto */
+@keyframes pulse {
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+  }
 }
 
-h2 {
-  margin-bottom: 20px;
-  color: #333;
+.animate-pulse {
+  animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-.filters {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 20px;
-  gap: 15px;
-}
-
-.search-bar {
-  display: flex;
-  gap: 10px;
-  width: 100%;
-}
-
-.search-input {
-  padding: 10px 15px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 14px;
-  flex: 1;
-}
-
-.filter-container {
-  position: relative;
-}
-
-.filter-icon-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 8px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  color: #6c757d;
-  position: relative;
-}
-
-/* Small dot indicator for when menu is open */
-.filter-icon-btn::after {
-  content: "";
-  position: absolute;
-  bottom: 2px;
-  right: 2px;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background-color: transparent;
-  transition: background-color 0.3s ease;
-}
-
-/* Show the indicator when the menu is open */
-.filter-icon-btn.menu-open::after {
-  background-color: #007bff;
-}
-
-.filter-icon-btn:hover {
-  background-color: rgba(0, 123, 255, 0.1);
-  color: #007bff;
-}
-
-.filter-icon {
-  transition: transform 0.3s ease;
-}
-
-.filter-icon-btn:hover .filter-icon {
-  transform: rotate(5deg);
-}
-
-.filter-dropdown {
-  position: absolute;
-  top: calc(100% + 5px);
-  right: 0;
-  background-color: white;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  z-index: 10;
-  width: 180px;
-  max-height: 250px;
-  overflow-y: auto;
-  animation: dropdownFadeIn 0.2s ease;
-  transform-origin: top right;
-}
-
-@keyframes dropdownFadeIn {
+@keyframes fade-in {
   from {
     opacity: 0;
-    transform: scale(0.95);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
-    transform: scale(1);
+    transform: translateY(0);
   }
 }
 
-.filter-option {
-  padding: 10px 15px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  border-bottom: 1px solid #f0f0f0;
+.animate-fade-in {
+  animation: fade-in 0.6s ease-out forwards;
 }
 
-.filter-option:last-child {
-  border-bottom: none;
+@keyframes dropdown {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
-.filter-option:hover {
-  background-color: #f5f5f5;
+.animate-dropdown {
+  animation: dropdown 0.2s ease-out forwards;
+  transform-origin: top right;
 }
 
-.filter-option.active {
-  font-weight: bold;
-  background-color: #f0f8ff;
-  color: #007bff;
-}
-
-.view-tabs {
-  display: flex;
-  border-bottom: 1px solid #ddd;
-}
-
-.tab-button {
-  padding: 10px 20px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 15px;
-  color: #6c757d;
-  position: relative;
-  transition: all 0.3s ease;
-}
-
-.tab-button.active {
-  color: #007bff;
-  font-weight: 500;
-}
-
-.tab-button.active:after {
-  content: "";
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  width: 100%;
-  height: 3px;
-  background-color: #007bff;
-}
-
-.tab-button:hover {
-  color: #007bff;
-}
-
-.tab-button .badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 18px;
-  height: 18px;
-  padding: 0 5px;
-  font-size: 11px;
-  font-weight: 600;
-  line-height: 1;
-  color: white;
-  background-color: #dc3545;
-  border-radius: 9px;
-  margin-left: 5px;
-}
-
-.loading,
-.error,
-.empty-list {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 200px;
-  background-color: #f5f5f5;
-  border-radius: 8px;
-  color: #6c757d;
-}
-
-.error {
-  color: #dc3545;
-}
-
-.user-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  overflow-y: auto;
-  flex: 1;
-}
-
-.user-item {
-  display: flex;
-  align-items: center;
-  padding: 15px;
-  border-bottom: 1px solid #eee;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.user-item:hover {
-  background-color: #f5f5f5;
-}
-
-.user-avatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  overflow: hidden;
-  margin-right: 15px;
-  background-color: #e9ecef;
-  flex-shrink: 0;
-  position: relative;
-}
-
-.user-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.new-message-indicator {
-  position: absolute;
-  bottom: 3px;
-  right: 3px;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background-color: #28a745;
-  border: 2px solid white;
-  animation: pulse 1.5s infinite;
-}
-
-.user-info {
-  flex: 1;
-  overflow: hidden;
-}
-
-.user-info h3 {
-  margin: 0;
-  font-size: 16px;
-  color: #333;
-}
-
-.user-type {
-  margin: 5px 0 0;
-  font-size: 14px;
-  color: #6c757d;
-}
-
-.typing-status {
-  margin: 5px 0 0;
-  font-size: 13px;
-  color: #6c757d;
-  display: flex;
-  align-items: center;
-  gap: 2px;
-}
-
-.typing-dot {
-  display: inline-block;
-  width: 5px;
-  height: 5px;
-  background-color: #6c757d;
-  border-radius: 50%;
-  animation: typingAnimation 1.4s infinite ease-in-out;
-}
-
-.typing-dot:nth-child(1) {
-  animation-delay: 0s;
-}
-
-.typing-dot:nth-child(2) {
-  animation-delay: 0.2s;
-}
-
-.typing-dot:nth-child(3) {
-  animation-delay: 0.4s;
-}
-
-@keyframes typingAnimation {
+@keyframes typing-dot {
   0%,
   100% {
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-4px);
+    transform: translateY(-3px);
   }
 }
 
-.last-message {
-  margin: 5px 0 0;
-  font-size: 13px;
-  color: #6c757d;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.animate-typing-dot {
+  animation: typing-dot 1.4s infinite ease-in-out;
 }
 
-.last-message.new-message {
-  font-weight: bold;
-  color: #212529;
+.animation-delay-200 {
+  animation-delay: 0.2s;
 }
 
-@keyframes pulse {
-  0% {
-    transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7);
-  }
-
-  70% {
-    transform: scale(1);
-    box-shadow: 0 0 0 6px rgba(40, 167, 69, 0);
-  }
-
-  100% {
-    transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
-  }
+.animation-delay-400 {
+  animation-delay: 0.4s;
 }
 
-.delete-button {
-  background: none;
-  border: none;
-  padding: 8px;
-  margin-left: auto;
-  cursor: pointer;
-  color: #6c757d;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
+/* Scrollbar personalizado */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(124, 58, 237, 0.5) rgba(30, 41, 59, 0.5);
 }
 
-.delete-button:hover {
-  background-color: rgba(220, 53, 69, 0.1);
-  color: #dc3545;
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
 }
 
-.filter-icon-btn.filter-active {
-  background-color: rgba(0, 123, 255, 0.2);
-  color: #007bff;
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(30, 41, 59, 0.5);
+  border-radius: 10px;
 }
 
-.filter-icon-btn.filter-active .filter-icon {
-  transform: rotate(5deg);
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(124, 58, 237, 0.5);
+  border-radius: 10px;
 }
 </style> 

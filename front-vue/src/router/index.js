@@ -69,6 +69,11 @@ const router = createRouter({
       },
       children: [
         {
+          path: 'panel',
+          name: 'teacher-panel',
+          component: () => import('@/views/Teachers/panel.vue')
+        },
+        {
           path: 'inscription',
           name: 'teacher-inscriptions',
           component: () => import('@/views/Teachers/courses.vue')
@@ -76,7 +81,7 @@ const router = createRouter({
         {
           path: 'canteen',
           name: 'teacher-canteen',
-          component: () => import('@/views/Teachers/chatCantina.vue')
+          component: () => import('@/views/Teachers/canteen.vue')
         },
         {
           path: 'chats',
