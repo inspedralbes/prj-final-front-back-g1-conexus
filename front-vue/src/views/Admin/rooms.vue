@@ -204,33 +204,34 @@
             </div>
         </div>
 
-        <!-- Modal de confirmació d'eliminació -->
-        <div v-if="roomToDelete" class="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" @click="roomToDelete = null"></div>
-            <div
-                class="relative bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-6 max-w-md w-full border border-slate-700/50 shadow-2xl z-10 animate-fade-in">
-                <h3 class="text-xl font-bold text-white mb-3">Confirmar eliminació</h3>
-                <p class="text-gray-300 mb-6">Estàs segur que vols eliminar la sala <span
-                        class="font-semibold text-white">{{ roomToDelete.room_name }}</span>? Aquesta acció no es pot
-                    desfer.</p>
 
-                <div class="flex justify-end space-x-3">
-                    <button @click="roomToDelete = null"
-                        class="px-4 py-2 border border-slate-600 text-slate-300 rounded-lg hover:bg-slate-700 transition-colors">
-                        Cancel·lar
-                    </button>
-                    <button @click="confirmDelete"
-                        class="px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg shadow hover:from-red-600 hover:to-red-700 transition-all duration-300">
-                        Eliminar
-                    </button>
-                </div>
+    </div>
+    <!-- Modal de confirmació d'eliminació -->
+    <div v-if="roomToDelete" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" @click="roomToDelete = null"></div>
+        <div
+            class="relative bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-6 max-w-md w-full border border-slate-700/50 shadow-2xl z-10 animate-fade-in">
+            <h3 class="text-xl font-bold text-white mb-3">Confirmar eliminació</h3>
+            <p class="text-gray-300 mb-6">Estàs segur que vols eliminar la sala <span
+                    class="font-semibold text-white">{{ roomToDelete.room_name }}</span>? Aquesta acció no es pot
+                desfer.</p>
+
+            <div class="flex justify-end space-x-3">
+                <button @click="roomToDelete = null"
+                    class="px-4 py-2 border border-slate-600 text-slate-300 rounded-lg hover:bg-slate-700 transition-colors">
+                    Cancel·lar
+                </button>
+                <button @click="confirmDelete"
+                    class="px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg shadow hover:from-red-600 hover:to-red-700 transition-all duration-300">
+                    Eliminar
+                </button>
             </div>
         </div>
-
-        <!-- Componente para la edición de salas (reutilizamos el componente) -->
-        <room-edit-modal v-if="roomToEdit" :room="roomToEdit" @close="roomToEdit = null"
-            @room-updated="handleRoomUpdated" />
     </div>
+
+    <!-- Componente para la edición de salas (reutilizamos el componente) -->
+    <room-edit-modal v-if="roomToEdit" :room="roomToEdit" @close="roomToEdit = null"
+        @room-updated="handleRoomUpdated" />
 </template>
 
 <script setup>
@@ -259,7 +260,7 @@ onMounted(async () => {
 async function loadRooms() {
     try {
         const response = await getAllRooms();
-        
+
         // Asegurarse de que todos los objetos room tenen les propietats de horarios inicializadas
         rooms.value = response.map(room => ({
             ...room,
@@ -269,7 +270,7 @@ async function loadRooms() {
             room_hours_available_thursday: room.room_hours_available_thursday || [],
             room_hours_available_friday: room.room_hours_available_friday || []
         }));
-        
+
         console.log('Sales carregades:', rooms.value);
 
         // Mostrar las salas progresivamente
@@ -298,14 +299,14 @@ function toggleRoomExpanded(roomId) {
 
 function getTotalHoursCount(room) {
     if (!room) return 0;
-    
+
     // Verificar que cada propiedad existe i és un array abans d'accedir a length
     const mondayLength = Array.isArray(room.room_hours_available_monday) ? room.room_hours_available_monday.length : 0;
     const tuesdayLength = Array.isArray(room.room_hours_available_tuesday) ? room.room_hours_available_tuesday.length : 0;
     const wednesdayLength = Array.isArray(room.room_hours_available_wensday) ? room.room_hours_available_wensday.length : 0;
     const thursdayLength = Array.isArray(room.room_hours_available_thursday) ? room.room_hours_available_thursday.length : 0;
     const fridayLength = Array.isArray(room.room_hours_available_friday) ? room.room_hours_available_friday.length : 0;
-    
+
     return mondayLength + tuesdayLength + wednesdayLength + thursdayLength + fridayLength;
 }
 

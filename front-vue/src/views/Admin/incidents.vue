@@ -219,8 +219,9 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Modal para ver imagen ampliada -->
+    <!-- Modal para ver imagen ampliada -->
         <div v-if="showImageModal"
             class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 animate-fade-in"
             @click="showImageModal = false">
@@ -393,7 +394,6 @@
                 </div>
             </div>
         </div>
-    </div>
 </template>
 
 <script setup>
