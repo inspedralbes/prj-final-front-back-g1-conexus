@@ -58,15 +58,6 @@
                                 </svg>
                                 {{ formatDate(lostObject.created_at) }}
                             </div>
-                            <div class="flex items-center text-gray-400">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                </svg>
-                                {{ lostObject.location || 'Ubicació desconeguda' }}
-                            </div>
                         </div>
                     </div>
                     <div class="bg-purple-500/10 p-3 rounded-lg border border-purple-500/20">
@@ -121,7 +112,20 @@
                     class="p-6 bg-slate-800/50 rounded-xl border border-slate-700/30 hover:border-slate-600 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/5">
                     <div class="flex justify-between items-start">
                         <div class="flex-1">
+                            <!-- Autor de la resposta -->
+                            <div class="flex items-center mb-3">
+                                <div class="bg-purple-500/20 p-2 rounded-full mr-3">
+                                    <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                    </svg>
+                                </div>
+                                <span class="font-medium text-purple-300">{{ response.user?.name || 'Usuari desconegut' }}</span>
+                            </div>
+                            
                             <p class="text-gray-300 mb-3">{{ response.comment }}</p>
+                            
+                            <!-- Fecha formateada -->
                             <div class="flex items-center text-gray-400 text-sm">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
