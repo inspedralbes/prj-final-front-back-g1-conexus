@@ -171,7 +171,7 @@ router.get("/:id", verifyTokenMiddleware, async (req, res) => {
 });
 
 // Obtener un usuario por email
-router.post("/email", async (req, res) => {
+router.post("/email", verifyTokenMiddleware, async (req, res) => {
     try {
         const { email } = req.body;
         console.log(email);
