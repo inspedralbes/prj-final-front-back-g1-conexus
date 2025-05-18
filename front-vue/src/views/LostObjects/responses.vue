@@ -51,12 +51,17 @@
                         <h2 class="text-xl font-semibold text-white mb-2">{{ lostObject.title }}</h2>
                         <p class="text-gray-300 mb-4">{{ lostObject.description }}</p>
                         <div class="flex flex-wrap gap-4 text-sm">
-                            <div class="flex items-center text-gray-400">
+                            <div class="flex items-center text-gray-400 group relative cursor-help">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                 </svg>
-                                {{ formatDate(lostObject.created_at) }}
+                                {{ lostObject.createdAt ? formatDate(lostObject.createdAt) : (lostObject.created_at ? formatDate(lostObject.created_at) : 'Data no disponible') }}
+                                
+                                <!-- Tooltip con fecha completa al hacer hover -->
+                                <div class="absolute hidden group-hover:block top-full left-0 mt-2 p-2 bg-slate-800 rounded-md shadow-lg z-10 whitespace-nowrap">
+                                    Creat el {{ lostObject.createdAt ? formatExactDate(lostObject.createdAt) : (lostObject.created_at ? formatExactDate(lostObject.created_at) : 'Data no disponible') }}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -112,27 +117,40 @@
                     class="p-6 bg-slate-800/50 rounded-xl border border-slate-700/30 hover:border-slate-600 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/5">
                     <div class="flex justify-between items-start">
                         <div class="flex-1">
-                            <!-- Autor de la resposta -->
-                            <div class="flex items-center mb-3">
-                                <div class="bg-purple-500/20 p-2 rounded-full mr-3">
-                                    <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                    </svg>
+                            <!-- Autor y fecha de la respuesta -->
+                            <div class="flex flex-wrap items-center justify-between mb-3">
+                                <div class="flex items-center mb-2 md:mb-0">
+                                    <div class="bg-purple-500/20 p-2 rounded-full mr-3">
+                                        <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                        </svg>
+                                    </div>
+                                    <span class="font-medium text-purple-300">{{ response.user?.name || 'Usuari desconegut' }}</span>
                                 </div>
-                                <span class="font-medium text-purple-300">{{ response.user?.name || 'Usuari desconegut' }}</span>
+                                
+                                <!-- Fecha con diseño mejorado y más información -->
+                                <div class="flex flex-col">
+                                    <div class="flex items-center text-gray-400 text-sm px-3 py-1 bg-slate-700/30 rounded-full hover:bg-slate-700/50 transition-colors cursor-help group relative">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        {{ response.createdAt ? formatDate(response.createdAt) : (response.created_at ? formatDate(response.created_at) : 'Sin fecha') }}
+                                        
+                                        <!-- Tooltip con fecha completa al hacer hover -->
+                                        <div class="absolute hidden group-hover:block top-full left-0 mt-2 p-2 bg-slate-800 rounded-md shadow-lg z-10 whitespace-nowrap">
+                                            Creado el {{ response.createdAt ? formatExactDate(response.createdAt) : (response.created_at ? formatExactDate(response.created_at) : 'Sin fecha') }}
+                                        </div>
+                                    </div>
+                                    <!-- Mensaje de depuración temporal (quitar después) -->
+                                    <div v-if="false" class="text-xs text-gray-500 mt-1">
+                                        Debug: {{ JSON.stringify(response) }}
+                                    </div>
+                                </div>
                             </div>
                             
-                            <p class="text-gray-300 mb-3">{{ response.comment }}</p>
-                            
-                            <!-- Fecha formateada -->
-                            <div class="flex items-center text-gray-400 text-sm">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                {{ formatDate(response.created_at) }}
-                            </div>
+                            <p class="text-gray-300 mb-2">{{ response.comment }}</p>
                         </div>
                         <button v-if="canDeleteResponse(response)" @click="deleteResponseHandler(response.id)"
                             class="ml-4 p-2 text-gray-400 hover:text-red-400 transition-colors rounded-full hover:bg-red-500/10">
@@ -155,6 +173,7 @@ import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useAppStore } from '@/stores/index.js';
 import { getLostObjectById, getLostObjectResponses, createResponse, deleteResponse } from '@/services/communicationsScripts/lostObjectManager.js';
+import { getUser } from '@/services/communicationsScripts/mainManager.js'; // Añadir esta línea
 
 const route = useRoute();
 const router = useRouter();
@@ -173,16 +192,53 @@ const formatDate = (dateString) => {
     if (!dateString) return 'Data no disponible';
     try {
         const date = new Date(dateString);
+        
+        // Obtener tiempo transcurrido
+        const now = new Date();
+        const diffInSeconds = Math.floor((now - date) / 1000);
+        
+        if (diffInSeconds < 60) {
+            return 'Fa uns segons';
+        } else if (diffInSeconds < 3600) {
+            const minutes = Math.floor(diffInSeconds / 60);
+            return `Fa ${minutes} ${minutes === 1 ? 'minut' : 'minuts'}`;
+        } else if (diffInSeconds < 86400) {
+            const hours = Math.floor(diffInSeconds / 3600);
+            return `Fa ${hours} ${hours === 1 ? 'hora' : 'hores'}`;
+        } else if (diffInSeconds < 604800) {
+            const days = Math.floor(diffInSeconds / 86400);
+            return `Fa ${days} ${days === 1 ? 'dia' : 'dies'}`;
+        } else {
+            // Si pasó más de una semana, mostrar la fecha completa
+            return date.toLocaleDateString('ca-ES', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+    } catch (error) {
+        console.error('Error formatting date:', error);
+        return 'Data no disponible';
+    }
+};
+
+const formatExactDate = (dateString) => {
+    if (!dateString) return 'Fecha no disponible';
+    try {
+        const date = new Date(dateString);
         return date.toLocaleDateString('ca-ES', {
+            weekday: 'long',
             year: 'numeric',
-            month: 'long',
+            month: 'long', 
             day: 'numeric',
             hour: '2-digit',
             minute: '2-digit'
         });
     } catch (error) {
-        console.error('Error formatting date:', error);
-        return 'Data no disponible';
+        console.error('Error formatting exact date:', error);
+        return 'Fecha no disponible';
     }
 };
 
@@ -193,6 +249,39 @@ const loadData = async () => {
         const objectId = route.params.id;
         lostObject.value = await getLostObjectById(objectId);
         responses.value = await getLostObjectResponses(objectId);
+        
+        // Procesar y normalizar cada respuesta
+        const userPromises = responses.value.map(async (response) => {
+            // Asegurarse de que el campo de fecha esté accesible como created_at
+            if (response.createdAt && !response.created_at) {
+                response.created_at = response.createdAt;
+            }
+            
+            // Obtener información de usuario para cada respuesta
+            if (response.user_id) {
+                try {
+                    const userData = await getUser(response.user_id);
+                    response.user = userData;
+                } catch (err) {
+                    console.error(`Error loading user data for response ${response.id}:`, err);
+                    response.user = { name: `Usuario ID: ${response.user_id}` };
+                }
+            } else {
+                response.user = { name: 'Usuario desconocido' };
+            }
+            
+            // Asegurarse de que tengamos una fecha válida
+            if (!response.created_at && !response.createdAt) {
+                console.warn(`Response ${response.id} no tiene fecha de creación`);
+                // Usar la fecha actual como fallback
+                response.created_at = new Date().toISOString();
+            }
+            
+            return response;
+        });
+        
+        // Esperar a que todas las promesas se resuelvan
+        responses.value = await Promise.all(userPromises);
     } catch (error) {
         console.error('Error loading data:', error);
         error.value = 'No s\'han pogut carregar les dades. Si us plau, torna-ho a provar més tard.';
@@ -213,12 +302,26 @@ const submitResponse = async () => {
             return;
         }
 
-        await createResponse(objectId, {
+        // Crear la resposta en el servidor
+        const responseData = await createResponse(objectId, {
             comment: newResponse.value.comment,
-            user_id: currentUser.id // Usar el ID directamente, no desde getUser()
+            user_id: currentUser.id
         });
 
+        // Añadir información del usuario actual a la respuesta antes de añadirla al array
+        responseData.user = {
+            id: currentUser.id,
+            name: currentUser.name,
+            // otros datos relevantes del usuario actual
+        };
+
+        // Añadir la nova resposta al array (opció per no haver de tornar a carregar totes)
+        responses.value.push(responseData);
+        
+        // Netejar el formulari
         newResponse.value.comment = '';
+        
+        // Opcionalment, tornar a carregar totes les dades per assegurar la sincronització
         await loadData();
     } catch (error) {
         console.error('Error submitting response:', error);

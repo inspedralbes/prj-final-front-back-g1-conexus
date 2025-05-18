@@ -223,7 +223,7 @@ export const getAlumns = async (courseId) => {
 
 export const getUser = async (userId) => {
     try {
-        const response = await fetch(`${BACK_URL}api/users/${userId}`, {
+        const response = await fetch(`${BACK_URL}api/user/${userId}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
