@@ -29,8 +29,8 @@ CREATE TABLE
         description TEXT DEFAULT NULL,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        FOREIGN KEY (typeUsers_id) REFERENCES TypeUsers (id),
-        FOREIGN KEY (department_id) REFERENCES Departments (id)
+        FOREIGN KEY (typeUsers_id) REFERENCES TypeUsers (id) ON DELETE SET NULL,
+        FOREIGN KEY (department_id) REFERENCES Departments (id) ON DELETE SET NULL
     );
 
 -- Table 4: courses
@@ -45,7 +45,7 @@ CREATE TABLE
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         FOREIGN KEY (course_teacher_id) REFERENCES Users (id) ON DELETE SET NULL,
-        FOREIGN KEY (course_department_id) REFERENCES Departments (id)
+        FOREIGN KEY (course_department_id) REFERENCES Departments (id) ON DELETE CASCADE
     );
 
 -- Table 5: userCourses
@@ -57,7 +57,7 @@ CREATE TABLE
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES Users (id) ON DELETE CASCADE,
-        FOREIGN KEY (course_id) REFERENCES Courses (id) ON DELETE CASCADE
+        FOREIGN KEY (course_id) REFERENCES Courses (id) ON DELETE CASCADE ON UPDATE CASCADE
     );
 
 -- Table 6: tasks
@@ -130,7 +130,7 @@ CREATE TABLE
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES Users (id) ON DELETE SET NULL,
-        FOREIGN KEY (lostAndFound_id) REFERENCES LostObjects (id)
+        FOREIGN KEY (lostAndFound_id) REFERENCES LostObjects (id) ON DELETE CASCADE
     );
 
 -- Table 11: rooms
@@ -156,7 +156,7 @@ CREATE TABLE
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES Users (id) ON DELETE CASCADE,
-        FOREIGN KEY (room_id) REFERENCES Rooms (id) 
+        FOREIGN KEY (room_id) REFERENCES Rooms (id) ON DELETE CASCADE
     );
 
     CREATE TABLE

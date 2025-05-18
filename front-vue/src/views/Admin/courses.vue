@@ -818,12 +818,12 @@ function sendUpdateCourse() {
 
 function callDeleteCourse(courseId) {
     if (!courseId) return;
-    
-    // Buscar el curso a eliminar
-    const course = courses.value.find(c => 
+
+    // Always find the course and set courseToDelete
+    const course = courses.value.find(c =>
         (c.course?.id === courseId) || (c.id === courseId)
     );
-    
+
     if (course) {
         courseToDelete.value = course;
         showDeleteConfirm.value = true;
@@ -831,19 +831,21 @@ function callDeleteCourse(courseId) {
 }
 
 async function confirmDeleteCourse() {
-    if (!courseToDelete.value?.course?.id) return;
-    
+    // Support both structures
+    const id = courseToDelete.value?.course?.id || courseToDelete.value?.id;
+    if (!id) return;
+
     try {
-        await deleteCourse(courseToDelete.value.course.id);
-        // Cerrar modales
+        await deleteCourse(id);
         showDeleteConfirm.value = false;
         selectedCourse.value = null;
-        // Recargar lista de cursos
+        courseToDelete.value = null;
         courses.value = await getAllCourses();
     } catch (error) {
         console.error('Error en eliminar el curs:', error);
     }
 }
+
 
 function resetForm() {
     newCourse.value = {

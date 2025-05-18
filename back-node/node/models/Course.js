@@ -9,7 +9,6 @@ const Course = sequelize.define('Course', {
     course_teacher_id: { 
         type: DataTypes.INTEGER, 
         allowNull: true,
-        onDelete: 'SET NULL', // Ensures the teacher reference is set to NULL instead of deleting the course
     },
     course_department_id: { type: DataTypes.INTEGER, allowNull: false },
     createdAt: { field: 'created_at', type: DataTypes.DATE },
