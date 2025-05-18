@@ -104,7 +104,7 @@ CREATE TABLE
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES Users (id) ON DELETE CASCADE,
-        FOREIGN KEY (course_id) REFERENCES Courses (id)
+        FOREIGN KEY (course_id) REFERENCES Courses (id) ON DELETE CASCADE
     );
 
 -- Table 9: lostObjects

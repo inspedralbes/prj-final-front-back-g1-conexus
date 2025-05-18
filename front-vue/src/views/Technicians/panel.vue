@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-slate-900/10 backdrop-blur-sm rounded-xl p-6 shadow-2xl animate-fade-in">
+    <div class="backdrop-blur-sm rounded-xl p-6 shadow-2xl animate-fade-in mt-9 mb-9">
         <!-- Capçalera -->
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
             <h2 class="text-2xl font-bold text-white mb-4 md:mb-0">
@@ -263,6 +263,7 @@ import { useRouter } from 'vue-router';
 import { useAppStore } from '@/stores/index.js';
 import { getAllReports } from "@/services/communicationsScripts/incidentsManager";
 
+const baseUrl = import.meta.env.VITE_BACKEND_URL;
 const store = useAppStore();
 const router = useRouter();
 
@@ -274,24 +275,23 @@ const mySolutions = ref([]);
 
 // URL de la imagen de perfil del usuario
 const userProfileImage = computed(() => {
-    // Si el usuario tiene una imagen de perfil en el store, úsala
+    // Si el usuario tiene una imagen de perfil en el store
     if (store.user.profile) {
-        return store.user.profile;
+        return `${baseUrl}${store.user.profile}`;
     }
     
-    // Otras propiedades possibles donde podría estar la URL de la imagen
+    // Otras propiedades posibles donde podría estar la URL de la imagen
     if (store.user.profileImage) {
-        return store.user.profileImage;
+        return `${baseUrl}${store.user.profileImage}`;
     }
     
     if (store.user.avatar) {
-        return store.user.avatar;
+        return `${baseUrl}${store.user.avatar}`;
     }
     
-    // Si el usuario tiene un correo, intentamos usar una imagen predeterminada basada en el ID
+    // Si el usuario tiene un ID, intentamos usar una imagen predeterminada
     if (store.user.id) {
-        const baseUrl = import.meta.env.VITE_IMAGE_URL || 'https://i.pravatar.cc';
-        return `${baseUrl}/${store.user.id}`;
+        return `https://i.pravatar.cc/${store.user.id}`;
     }
     
     // Si no hay imagen, retornamos null y se mostrará el icono por defecto
