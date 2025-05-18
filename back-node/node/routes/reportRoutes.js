@@ -240,15 +240,37 @@ router.put("/:id", verifyTokenMiddleware, async (req, res) => {
 router.delete("/:id", verifyTokenMiddleware, async (req, res) => {
   const { id } = req.params;
   try {
+    // Primer obtenim l'informe per saber si té una imatge associada
     const report = await Reports.findOne({ where: { id } });
+    
     if (!report) {
       return res.status(404).json({ message: "Informe no trobat" });
     }
+    
+    // Si l'informe té una imatge, l'eliminem del sistema de fitxers
+    if (report.image) {
+      const fs = await import('fs');
+      const path = await import('path');
+      
+      const imagePath = path.default.join(process.cwd(), report.image);
+      
+      // Comprovem si el fitxer existeix abans d'intentar eliminar-lo
+      if (fs.default.existsSync(imagePath)) {
+        fs.default.unlinkSync(imagePath);
+        console.log(`Imatge eliminada: ${imagePath}`);
+      } else {
+        console.log(`Imatge no trobada al sistema de fitxers: ${imagePath}`);
+      }
+    }
+    
+    // Eliminar l'informe de la base de dades
     await report.destroy();
-    //retornar un codi d'estat 204 per indicar l'eliminació amb èxit
-    //i sense contingut al cos de la resposta
+    
+    // Retornar un codi d'estat 204 per indicar l'eliminació amb èxit
+    // i sense contingut al cos de la resposta
     res.status(204).send();
   } catch (error) {
+    console.error("Error eliminant informe:", error);
     res.status(500).json({ message: error.message });
   }
 });

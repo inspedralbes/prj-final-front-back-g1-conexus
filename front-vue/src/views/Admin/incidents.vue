@@ -634,8 +634,9 @@ async function confirmDelete() {
     if (!activeReport.value) return;
 
     try {
-        console.log(`Eliminant incidència ${activeReport.value.id}`);
+        console.log(`Eliminant incidència ${activeReport.value.id} amb imatge: ${activeReport.value.image || 'cap'}`);
         
+        // Eliminar informe (la API s'encarregarà d'eliminar la imatge associada)
         await deleteReportAPI(activeReport.value.id);
 
         // Eliminar l'informe de la llista local
@@ -645,6 +646,8 @@ async function confirmDelete() {
         
         // Actualitzar estadístiques
         await loadStats();
+        
+        console.log("Incidència eliminada correctament");
     } catch (error) {
         console.error("Error eliminant informe:", error);
         showDeleteModal.value = false;

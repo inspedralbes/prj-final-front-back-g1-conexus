@@ -91,10 +91,18 @@ export const deleteReport = async (id) => {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
-        await handleResponse(response);
-        return true;
+        
+        // Si l'eliminació és exitosa, retornarà una resposta satisfactòria
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.message || `Error eliminant l'informe ${id}`);
+        }
+        
+        // Intenta extreure el cos de la resposta si hi ha un
+        const text = await response.text();
+        return text ? JSON.parse(text) : { success: true };
     } catch (error) {
-        console.error(`Error deleting report ${id}:`, error);
+        console.error(`Error eliminant l'informe ${id}:`, error);
         throw error;
     }
 };
