@@ -67,6 +67,13 @@
                     </svg>
                     <span>Reserva d'Aules</span>
                 </router-link>
+                <router-link to="/teachers/departments"
+                    class="flex items-center p-2 text-gray-300 hover:bg-slate-800/50 rounded-lg transition-colors duration-300">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v4a1 1 0 001 1h3v2a1 1 0 001 1h4a1 1 0 001-1v-2h3a1 1 0 001-1V7a1 1 0 00-1-1H4a1 1 0 00-1 1zm0 10a1 1 0 001 1h16a1 1 0 001-1v-2a1 1 0 00-1-1H4a1 1 0 00-1 1v2z" />
+                    </svg>
+                    <span>Departaments</span>
+                </router-link>
                 <router-link to="/teachers/inscription" class="flex items-center p-2 text-gray-300 hover:bg-slate-800/50 rounded-lg transition-colors duration-300">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -139,6 +146,12 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                         </svg>
                         Reserva d'Aules
+                    </router-link>
+                    <router-link to="/teachers/departments" class="flex items-center text-white hover:text-gray-300 transition-colors duration-300">
+                        <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v4a1 1 0 001 1h3v2a1 1 0 001 1h4a1 1 0 001-1v-2h3a1 1 0 001-1V7a1 1 0 00-1-1H4a1 1 0 00-1 1zm0 10a1 1 0 001 1h16a1 1 0 001-1v-2a1 1 0 00-1-1H4a1 1 0 00-1 1v2z" />
+                        </svg>
+                        Departaments
                     </router-link>
                     <router-link to="/teachers/inscription" class="flex items-center text-white hover:text-gray-300 transition-colors duration-300">
                         <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

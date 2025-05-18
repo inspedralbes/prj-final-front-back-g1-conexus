@@ -526,6 +526,65 @@ export const getAllDepartments = async () => {
     }
 }
 
+export const createDepartment = async (department) => {
+    try {
+        console.log(department);
+        const response = await fetch(`${BACK_URL}api/departments`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+            },
+            body: JSON.stringify({ name: department }),
+        });
+        if (!response.ok) {
+            return { error: `HTTP error! status: ${response.status}` };
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("Network error:", error);
+        return { error: "Network error. Please try again later." };
+    }
+}
+
+export const updateDepartment = async (departmentId, department) => {
+    try {
+        const response = await fetch(`${BACK_URL}api/departments/${departmentId}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+            },
+            body: JSON.stringify({ name: department }),
+        });
+        if (!response.ok) {
+            return { error: `HTTP error! status: ${response.status}` };
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("Network error:", error);
+        return { error: "Network error. Please try again later." };
+    }
+}
+export const deleteDepartment = async (departmentId) => {
+    try {
+        const response = await fetch(`${BACK_URL}api/departments/${departmentId}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+            },
+        });
+        if (!response.ok) {
+            return { error: `HTTP error! status: ${response.status}` };
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("Network error:", error);
+        return { error: "Network error. Please try again later." };
+    }
+}
+
 export const getAllTeachersFromDepartment = async (departmentId) => {
     try {
         const response = await fetch(`${BACK_URL}api/user/teachers/${departmentId}`, {
@@ -748,6 +807,28 @@ export const checkEmailAndGetRoles = async (email) => {
         return { exists: false };
     }
 };
+
+export const updateUserDepartment = async (userId, departmentId) => {
+    try {
+        const response = await fetch(`${BACK_URL}api/user/updateDepartment/${userId}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+            body: JSON.stringify({ department_id: departmentId }),
+        });
+
+        if (!response.ok) {
+            return { error: `HTTP error! status: ${response.status}` };
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Network error:", error);
+        return { error: "Network error. Please try again later." };
+    }
+}
 
 // Funció auxiliar per filtrar rols (excloure Administrador i Cantina)
 export const getFilteredRoles = (roles) => {

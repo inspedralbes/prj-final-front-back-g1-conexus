@@ -30,6 +30,9 @@ export const useAppStore = defineStore('appStore', {
     clearUser() {
       this.user = {};
       this.accessToken = '';
-    }
+    },
+    setUserDepartment(department) {
+      this.user.department_id = department;
+    },
   }
 });

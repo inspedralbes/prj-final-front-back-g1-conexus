@@ -73,6 +73,11 @@ const router = createRouter({
           component: () => import('@/views/Teachers/courses.vue')
         },
         {
+          path:'departments',
+          name:'teacher-departments',
+          component: () => import('@/views/Teachers/departments.vue')
+        },
+        {
           path: 'canteen',
           name: 'teacher-canteen',
           component: () => import('@/views/Teachers/canteen.vue')
@@ -203,6 +208,11 @@ const router = createRouter({
           path: 'config-users',
           name: 'admin-config-users',
           component: () => import('@/views/Admin/users.vue')
+        },
+        {
+          path: 'config-departments',
+          name: 'admin-config-departments',
+          component: () => import('@/views/Admin/departments.vue')
         },
         {
           path: 'config-rooms',

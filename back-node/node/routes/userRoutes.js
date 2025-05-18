@@ -372,6 +372,25 @@ router.post("/check-email", async (req, res) => {
     }
 });
 
+router.put("/updateDepartment/:id", verifyTokenMiddleware, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { department_id } = req.body;
+
+        const user = await User.findByPk(id);
+
+        if (!user) {
+            return res.status(404).json({ message: "Usuario no encontrado" });
+        }
+
+        await user.update({ department_id });
+        res.json(user);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+);
+
 // Añadir esta función al final del archivo, antes de export default router
 export async function getLatestUser() {
     try {
