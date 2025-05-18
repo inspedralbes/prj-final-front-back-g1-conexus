@@ -1,13 +1,41 @@
 <template>
-  <div class="chat-canteen-container">
-    <h2>Gestión de Pedidos de Cantina</h2>
-
-    <div v-if="loading" class="loading">
-      <p>Cargando pedidos...</p>
+  <div class="animate-fade-in max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+    <!-- Capçalera -->
+    <div class="mb-8 text-center">
+      <h1
+        class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400"
+      >
+        Pedidos Activos
+      </h1>
+      <p class="text-gray-300 mt-2">Gestiona los pedidos de la cantina</p>
     </div>
 
-    <div v-else-if="error" class="error">
-      <p>{{ error }}</p>
+    <div
+      v-if="loading"
+      class="text-center py-8 bg-slate-800/50 backdrop-blur-sm rounded-xl shadow-lg border border-slate-700"
+    >
+      <div class="spinner mx-auto mb-4 h-8 w-8 text-blue-400"></div>
+      <p class="text-gray-300">Cargando pedidos...</p>
+    </div>
+
+    <div
+      v-else-if="error"
+      class="text-center py-8 bg-slate-800/50 backdrop-blur-sm rounded-xl shadow-lg border border-slate-700"
+    >
+      <svg
+        class="mx-auto h-12 w-12 text-red-400 mb-4"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+        />
+      </svg>
+      <p class="text-gray-300">{{ error }}</p>
     </div>
 
     <div v-else-if="activeChat" class="chat-detail">
@@ -77,8 +105,24 @@
       </div>
     </div>
 
-    <div v-else-if="chats.length === 0" class="empty-list">
-      <p>No hay pedidos activos</p>
+    <div
+      v-else-if="chats.length === 0"
+      class="text-center py-12 bg-slate-800/50 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden border border-slate-700"
+    >
+      <svg
+        class="mx-auto h-12 w-12 text-gray-400"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+        />
+      </svg>
+      <p class="mt-1 text-gray-400">Actualmente no hay pedidos en la cantina</p>
     </div>
 
     <div v-else class="orders-container">
@@ -1304,8 +1348,52 @@ const refreshChatCategories = () => {
   }, 50);
 };
 
+// Control de notificaciones recientes para evitar duplicados
+const recentNotifications = {
+  messages: new Set(),
+  clearTimer: null,
+
+  // Agregar un mensaje a la lista de notificaciones recientes
+  add(title, message) {
+    const signature = `${title}_${message.substring(0, 20)}`;
+
+    // Si ya existe esta notificación, no mostrar de nuevo
+    if (this.messages.has(signature)) {
+      return false;
+    }
+
+    // Agregar a la lista de recientes
+    this.messages.add(signature);
+
+    // Configurar limpieza automática después de 5 segundos
+    if (this.clearTimer) {
+      clearTimeout(this.clearTimer);
+    }
+
+    this.clearTimer = setTimeout(() => {
+      this.messages.clear();
+      this.clearTimer = null;
+    }, 5000);
+
+    return true;
+  },
+};
+
 // Función auxiliar para mostrar notificación
 const showNotification = (title, message) => {
+  // Usar el gestor global de notificaciones si existe
+  if (window.notificationManager) {
+    window.notificationManager.notify(title, message);
+    return;
+  }
+
+  // Método de respaldo si no existe el gestor global
+  // Evitar notificaciones duplicadas
+  if (!recentNotifications.add(title, message)) {
+    console.log("Evitando notificación duplicada:", title);
+    return;
+  }
+
   if (Notification.permission === "granted") {
     new Notification(title, { body: message });
   } else if (Notification.permission !== "denied") {
@@ -1870,14 +1958,9 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+/* Esta clase ya no se usa, sustituida por clases de Tailwind */
 .chat-canteen-container {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 20px;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background-color: transparent;
+  display: none;
 }
 
 h2 {
@@ -1895,29 +1978,15 @@ h3 {
   gap: 10px;
 }
 
+/* Estas clases ya no se usan, sustituidas por clases de Tailwind */
 .loading,
 .error {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 200px;
-  background-color: #f5f5f5;
-  border-radius: 8px;
-  color: #6c757d;
+  display: none;
 }
 
-.error {
-  color: #dc3545;
-}
-
+/* Este estilo ya no se usa, reemplazado por clases de Tailwind */
 .empty-list {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 200px;
-  background-color: #f5f5f5;
-  border-radius: 8px;
-  color: #6c757d;
+  display: none;
 }
 
 .user-list {
@@ -2296,5 +2365,19 @@ h3 {
   color: #adb5bd;
 }
 
-/* Mantener estilos adicionales... */
-</style>
+/* Mantener estilos adicionales... */ /* Spinner animation for loading state */
+.spinner {
+  border: 3px solid rgba(59, 130, 246, 0.2);
+  border-radius: 50%;
+  border-top: 3px solid rgba(59, 130, 246, 0.8);
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+</style><!-- The empty-list class has been replaced with Tailwind classes for the "no orders" display -->

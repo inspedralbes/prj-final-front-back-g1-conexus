@@ -50,7 +50,7 @@
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
-              d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8s-9-3.582-9-8 4.03-8 9-8 9 3.582 9 8zM7 16c1.333-1.333 2.667-2 4-2s2.667.667 4 2"
+              d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
             />
           </svg>
           <span>Chat</span>
@@ -69,7 +69,7 @@
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
-              d="M3 10h11M9 21V3M17 16h4M17 12h4M17 8h4"
+              d="M12 6v6m0 0v6m0-6h6m-6 0H6"
             />
           </svg>
           <span>Administrar menú</span>
@@ -125,7 +125,7 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
-                d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8s-9-3.582-9-8 4.03-8 9-8 9 3.582 9 8zM7 16c1.333-1.333 2.667-2 4-2s2.667.667 4 2"
+                d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
               />
             </svg>
             <span>Chat</span>
@@ -144,7 +144,7 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
-                d="M3 10h11M9 21V3M17 16h4M17 12h4M17 8h4"
+                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
               />
             </svg>
             <span>Administrar menú</span>

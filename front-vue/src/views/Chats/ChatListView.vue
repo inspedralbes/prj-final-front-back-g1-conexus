@@ -748,6 +748,80 @@ const connectToSocket = () => {
   }
 };
 
+// Objeto para rastrear notificaciones recientes y evitar duplicados
+const recentNotifications = {
+  messages: new Set(),
+  clearTimer: null,
+
+  // Agregar un mensaje a la lista de notificaciones recientes
+  add(chatId, userId, message) {
+    const signature = `${chatId}_${userId}_${message.substring(0, 20)}`;
+
+    // Si ya existe esta notificación, no mostrar de nuevo
+    if (this.messages.has(signature)) {
+      return false;
+    }
+
+    // Agregar a la lista de recientes
+    this.messages.add(signature);
+
+    // Configurar limpieza automática después de 3 segundos
+    if (this.clearTimer) {
+      clearTimeout(this.clearTimer);
+    }
+
+    this.clearTimer = setTimeout(() => {
+      this.messages.clear();
+      this.clearTimer = null;
+    }, 3000);
+
+    return true;
+  },
+};
+
+// Función para mostrar notificación
+const showNotification = (senderName, message) => {
+  // Usar el gestor global de notificaciones si existe
+  if (window.notificationManager) {
+    window.notificationManager.notify(
+      `Mensaje de ${senderName}`,
+      message.substring(0, 60) + (message.length > 60 ? "..." : "")
+    );
+    return;
+  }
+
+  // Método de respaldo si no existe el gestor global
+  // Comprobar si el navegador soporta notificaciones
+  if (!("Notification" in window)) {
+    return;
+  }
+
+  // Evitar notificaciones duplicadas
+  if (!recentNotifications.add(chatId?.value, senderName, message)) {
+    console.log("Evitando notificación duplicada");
+    return;
+  }
+
+  // Mostrar notificación si está permitido
+  if (Notification.permission === "granted") {
+    new Notification(`Mensaje de ${senderName}`, {
+      body: message.substring(0, 60) + (message.length > 60 ? "..." : ""),
+      icon: "/favicon.ico",
+    });
+  }
+  // Pedir permiso si no está decidido
+  else if (Notification.permission !== "denied") {
+    Notification.requestPermission().then((permission) => {
+      if (permission === "granted") {
+        new Notification(`Mensaje de ${senderName}`, {
+          body: message.substring(0, 60) + (message.length > 60 ? "..." : ""),
+          icon: "/favicon.ico",
+        });
+      }
+    });
+  }
+};
+
 // Función para manejar nuevos mensajes recibidos
 const handleNewMessage = (data) => {
   // console.log("Nueva notificación de mensaje recibida:", data);
@@ -886,7 +960,6 @@ const processNewMessage = (chat, messageInfo) => {
   if (otherUserId) {
     // Si el chat estaba eliminado para este usuario, restaurarlo
     if (deletedChats.value.has(chat._id)) {
-      // console.log(`Chat ${chat._id} restaurado por nuevo mensaje`);
       deletedChats.value.delete(chat._id);
       saveDeletedChats();
     }
@@ -900,24 +973,6 @@ const processNewMessage = (chat, messageInfo) => {
     // Verificar si el usuario está actualmente viendo este chat
     const isViewingThisChat = isUserViewingChat(chat._id);
 
-    // Agregar log de depuración
-    // console.log(`Procesando mensaje para chat ${chat._id}:`);
-    // console.log(
-    //   `- Usuario en chat detail: ${
-    //     route.name === "chat-detail" && route.params.chatId === chat._id
-    //   }`
-    // );
-    // console.log(
-    //   `- Chat en lista de activos: ${activeChats.value.has(chat._id)}`
-    // );
-    // console.log(
-    //   `- Resultado final: ${
-    //     isViewingThisChat
-    //       ? "Mensaje considerado leído"
-    //       : "Mensaje considerado no leído"
-    //   }`
-    // );
-
     if (!isViewingThisChat) {
       // Solo marcar como nuevo mensaje si el usuario no está viendo este chat
       hasNewMessages.value[otherUserId] = true;
@@ -927,26 +982,18 @@ const processNewMessage = (chat, messageInfo) => {
 
       // Trigger store update after marking new messages
       appStore.updateUnreadMessagesCount();
-      // console.log(
-      //   "Message marked as unread and store updated, current store count:",
-      //   appStore.getUnreadCount
-      // );
-    } else {
-      // console.log(
-      //   `No marcando mensaje como no leído porque el usuario está viendo el chat ${chat._id}`
-      // );
-    }
 
-    // Encontrar nombre del usuario que envió el mensaje
-    const sender = users.value.find(
-      (user) => user.id.toString() === otherUserId.toString()
-    );
-    const senderName = sender ? sender.name || sender.username : "Usuario";
+      // Encontrar nombre del usuario que envió el mensaje
+      const sender = users.value.find(
+        (user) => user.id.toString() === otherUserId.toString()
+      );
+      const senderName = sender ? sender.name || sender.username : "Usuario";
 
-    // Solo mostrar notificación si el documento está visible (usuario en la web)
-    // y el usuario no está viendo este chat
-    if (document.visibilityState === "visible" && !isViewingThisChat) {
-      showNotification(senderName, messageInfo.message);
+      // Solo mostrar notificación si el documento está visible (usuario en la web)
+      // y el usuario no está viendo este chat
+      if (document.visibilityState === "visible" && !isViewingThisChat) {
+        showNotification(senderName, messageInfo.message);
+      }
     }
   }
 };
@@ -978,34 +1025,6 @@ const setupChatViewListeners = () => {
       activeChats.value.delete(event.detail.chatId);
     }
   });
-};
-
-// Función para mostrar notificación
-const showNotification = (senderName, message) => {
-  // Comprobar si el navegador soporta notificaciones
-  if (!("Notification" in window)) {
-    // console.log("Este navegador no soporta notificaciones de escritorio");
-    return;
-  }
-
-  // Mostrar notificación si está permitido
-  if (Notification.permission === "granted") {
-    new Notification(`Mensaje de ${senderName}`, {
-      body: message.substring(0, 60) + (message.length > 60 ? "..." : ""),
-      icon: "/favicon.ico",
-    });
-  }
-  // Pedir permiso si no está decidido
-  else if (Notification.permission !== "denied") {
-    Notification.requestPermission().then((permission) => {
-      if (permission === "granted") {
-        new Notification(`Mensaje de ${senderName}`, {
-          body: message.substring(0, 60) + (message.length > 60 ? "..." : ""),
-          icon: "/favicon.ico",
-        });
-      }
-    });
-  }
 };
 
 // Función auxiliar para encontrar un chat con un usuario específico
