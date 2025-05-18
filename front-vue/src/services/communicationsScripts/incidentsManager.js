@@ -169,8 +169,11 @@ export const getNotFinishedReports = async () => {
     }
 };
 
+// Corregir la función assignReport
 export const assignReport = async (reportId, userId) => {
     try {
+        console.log(`API call: Asignando usuario ${userId} a reporte ${reportId}`);
+        
         const response = await fetch(`${API_URL}api/reports/${reportId}/assign`, {
             method: 'PUT',
             headers: {
@@ -179,7 +182,20 @@ export const assignReport = async (reportId, userId) => {
             },
             body: JSON.stringify({ user_assigned: userId }),
         });
-        return await handleResponse(response);
+        
+        // Verificar si la respuesta está vacía
+        const text = await response.text();
+        if (!text) {
+            return { success: true };
+        }
+        
+        try {
+            // Intentar parsear como JSON
+            return JSON.parse(text);
+        } catch (e) {
+            // Si no es JSON, devolver el texto
+            return { message: text, success: response.ok };
+        }
     }
     catch (error) {
         console.error(`Error assigning report ${reportId} to user ${userId}:`, error);
