@@ -90,7 +90,7 @@ if (process.env.NODE_ENV === 'development') {
     console.log('Iniciando servicios en modo producción...');
 }
 
-// startAllServices();
+startAllServices();
 
 // Rutas para gestionar los servicios
 app.get("/api/services", verifyTokenMiddleware, (req, res) => {

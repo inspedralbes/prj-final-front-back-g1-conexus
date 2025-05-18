@@ -724,3 +724,36 @@ export const getLatestActivities = async () => {
         return { error: "Error de conexión. Comprueba tu red." };
     }
 };
+
+// Añadir esta nova funció per verificar email
+export const checkEmailAndGetRoles = async (email) => {
+    if (!email) return { exists: false };
+
+    try {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/user/check-email`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+        });
+
+        if (!response.ok) {
+            console.error("Error al verificar email:", await response.text());
+            return { exists: false };
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error("Error de red al verificar email:", error);
+        return { exists: false };
+    }
+};
+
+// Funció auxiliar per filtrar rols (excloure Administrador i Cantina)
+export const getFilteredRoles = (roles) => {
+    if (!roles || !Array.isArray(roles)) return [];
+    
+    return roles.filter(role => 
+        role.name !== 'Administrador' && role.name !== 'Cantina'
+    );
+};

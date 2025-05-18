@@ -364,22 +364,8 @@ router.post("/check-email", async (req, res) => {
         // Verificar si el correo ya existe
         const existingUser = await User.findOne({ where: { email } });
         
-        // Obtener todos los roles disponibles
-        const allRoles = await TypeUser.findAll();
-        
-        // Filtrar roles según el dominio del correo
-        let allowedRoles = [...allRoles];
-        
-        if (email.toLowerCase().includes('@gmail.com')) {
-            // Si es gmail, excluir roles de Administrador (id=3) y Cantina (id=5)
-            allowedRoles = allRoles.filter(role => 
-                role.id !== 3 && role.id !== 5
-            );
-        }
-        
         return res.json({ 
-            exists: !!existingUser,
-            allowedRoles: allowedRoles
+            exists: !!existingUser
         });
     } catch (error) {
         res.status(500).json({ message: error.message });

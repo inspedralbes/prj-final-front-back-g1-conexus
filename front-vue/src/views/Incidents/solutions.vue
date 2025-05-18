@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-slate-900/10 backdrop-blur-sm rounded-xl p-6 shadow-2xl animate-fade-in border border-slate-700/30">
+    <div class="backdrop-blur-sm rounded-xl p-6 shadow-2xl animate-fade-in border border-slate-700/30 mt-9 mb-9">
         <!-- Capçalera -->
         <div class="flex justify-between items-center mb-8">
             <div>

@@ -90,7 +90,6 @@
                             <th class="pb-3 px-4">Descripció</th>
                             <th class="pb-3 px-4">Estat</th>
                             <th class="pb-3 px-4">Data</th>
-                            <th class="pb-3 px-4 text-right">Accions</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-700">
@@ -103,14 +102,7 @@
                                 </span>
                             </td>
                             <td class="py-4 px-4 text-gray-400">{{ incident.date }}</td>
-                            <td class="py-4 px-4 text-right">
-                                <button @click="viewIncident(incident.id)" class="text-blue-400 hover:text-blue-300 p-1">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                    </svg>
-                                </button>
-                            </td>
+                            
                         </tr>
                     </tbody>
                 </table>
@@ -122,7 +114,7 @@
             <!-- Assignacions Urgents -->
             <div class="bg-slate-800/50 rounded-xl p-6">
                 <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-lg font-semibold text-white">Assignacions Urgents</h3>
+                    <h3 class="text-lg font-semibold text-white">Les Meves Assignacions</h3>
                     <router-link to="/technicians/assignations" class="text-blue-400 hover:text-blue-300 text-sm flex items-center">
                         Veure totes
                         <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -229,8 +221,8 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                     </div>
-                    <span class="text-white font-medium">Nova Incidència</span>
-                    <span class="text-gray-400 text-xs mt-1">Registra un nou problema</span>
+                    <span class="text-white font-medium">Llistat Incidències</span>
+                    <span class="text-gray-400 text-xs mt-1">Arregla un nou problema</span>
                 </router-link>
 
                 <router-link to="/technicians/solutions" class="bg-green-500/10 hover:bg-green-500/20 border border-green-500/30 rounded-lg p-4 flex flex-col items-center text-center transition-colors">
@@ -239,7 +231,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                         </svg>
                     </div>
-                    <span class="text-white font-medium">Nova Solució</span>
+                    <span class="text-white font-medium">Llistat Solucions</span>
                     <span class="text-gray-400 text-xs mt-1">Comparteix una solució</span>
                 </router-link>
 
@@ -272,6 +264,29 @@ const urgentAssignments = ref([]);
 const allReports = ref([]);
 const loading = ref(true);
 const mySolutions = ref([]);
+
+// Función para formatear fechas uniformemente
+const formatDate = (dateString) => {
+    if (!dateString) return 'Sense data';
+    try {
+        const date = new Date(dateString);
+        
+        // Formato día/mes/año
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const year = date.getFullYear();
+        
+        // Formato hora:minutos
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        
+        // Combinar en formato DD/MM/YYYY HH:MM
+        return `${day}/${month}/${year} ${hours}:${minutes}`;
+    } catch (error) {
+        console.error('Error formatant la data:', error);
+        return 'Format de data invàlid';
+    }
+};
 
 // URL de la imagen de perfil del usuario
 const userProfileImage = computed(() => {
@@ -313,9 +328,11 @@ const fetchAssignments = async () => {
             id: report.id,
             title: `Incidència #${report.id}`,
             description: report.report || "Sense descripció",
-            deadline: report.created_at ? new Date(report.created_at).toLocaleDateString() : "Sense data",
+            deadline: formatDate(report.createdAt),
             room: report.Room?.room_name || "Desconeguda"
         }));
+
+        console.log("Urgent Assignments:", urgentAssignments.value);
         
         // Actualitzar les incidències recents
         recentIncidents.value = allReports.value
@@ -325,7 +342,7 @@ const fetchAssignments = async () => {
                 description: report.report || "Sense descripció",
                 status: report.status === 'pending' ? 'Pendent' : 
                        report.status === 'revising' ? 'En progrés' : 'Resolt',
-                date: report.created_at ? new Date(report.created_at).toLocaleDateString() : "Sense data"
+                date: formatDate(report.createdAt)
             }));
         
         // Afegir les incidències resoltes pel tècnic actual
@@ -337,7 +354,7 @@ const fetchAssignments = async () => {
             id: report.id,
             title: `Incidència #${report.id}`,
             description: report.note || report.report || "Sense descripció",
-            date: report.updated_at ? new Date(report.updated_at).toLocaleDateString() : "Sense data",
+            date: formatDate(report.updatedAt || report.createdAt),
             timeSpent: "Completat",
             room: report.Room?.room_name || "Desconeguda"
         }));
