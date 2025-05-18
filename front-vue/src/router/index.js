@@ -257,6 +257,11 @@ const router = createRouter({
       },
       children: [
         {
+          path: 'panel',
+          name: 'canteen-panel',
+          component: () => import('@/views/Canteen/panel.vue')
+        },
+        {
           path: 'chat',
           name: 'canteen-chat',
           component: () => import('@/views/Canteen/chat.vue')
@@ -277,6 +282,11 @@ const router = createRouter({
         allowedRoles: ['Cantina'],
       },
       children: [
+        {
+          path: 'panel',
+          name: 'canteen-panel',
+          component: () => import('@/views/Canteen/panel.vue')
+        },
         {
           path: 'chat',
           name: 'canteen-chat',

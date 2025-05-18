@@ -130,6 +130,47 @@ export const useAppStore = defineStore('appStore', {
 
     setOrderAsReady(chatId) {
       this.updateOrderStatus(chatId, 'ready');
+    },
+
+    // Reiniciar todos los estados de los pedidos - útil para debugging
+    resetAllOrderStatuses() {
+      this.canteenOrderStatus = {};
+      localStorage.setItem('canteenOrderStatus', JSON.stringify(this.canteenOrderStatus));
+      console.log("Todos los estados de pedidos han sido reiniciados");
+    },
+
+    // Verificar y corregir inconsistencias en los estados de pedidos
+    checkOrderStatusConsistency() {
+      // Si hay duplicados donde un chat aparece en múltiples estados, priorizar "new"
+      const chatsByStatus = {
+        new: this.getCanteenOrdersByStatus('new'),
+        preparing: this.getCanteenOrdersByStatus('preparing'),
+        ready: this.getCanteenOrdersByStatus('ready')
+      };
+
+      let fixedCount = 0;
+
+      // Si un chat está en 'ready' y 'new', prevalece 'new'
+      chatsByStatus.ready.forEach(chatId => {
+        if (chatsByStatus.new.includes(chatId)) {
+          this.setOrderAsNew(chatId);
+          fixedCount++;
+        }
+      });
+
+      // Si un chat está en 'preparing' y 'new', prevalece 'new'
+      chatsByStatus.preparing.forEach(chatId => {
+        if (chatsByStatus.new.includes(chatId)) {
+          this.setOrderAsNew(chatId);
+          fixedCount++;
+        }
+      });
+
+      if (fixedCount > 0) {
+        console.log(`Se corrigieron ${fixedCount} inconsistencias en estados de pedidos`);
+      }
+
+      return fixedCount;
     }
   },
 }); 
