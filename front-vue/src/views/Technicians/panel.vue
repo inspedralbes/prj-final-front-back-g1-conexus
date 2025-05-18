@@ -222,7 +222,7 @@
         <div class="mt-8 bg-slate-800/50 rounded-xl p-6">
             <h3 class="text-lg font-semibold text-white mb-6">Accions Ràpides</h3>
             
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <router-link to="/technicians/incidents" class="bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 rounded-lg p-4 flex flex-col items-center text-center transition-colors">
                     <div class="h-12 w-12 rounded-full bg-blue-500/20 flex items-center justify-center mb-3">
                         <svg class="h-6 w-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -241,16 +241,6 @@
                     </div>
                     <span class="text-white font-medium">Nova Solució</span>
                     <span class="text-gray-400 text-xs mt-1">Comparteix una solució</span>
-                </router-link>
-
-                <router-link to="/technicians/chats" class="bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 rounded-lg p-4 flex flex-col items-center text-center transition-colors">
-                    <div class="h-12 w-12 rounded-full bg-purple-500/20 flex items-center justify-center mb-3">
-                        <svg class="h-6 w-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                        </svg>
-                    </div>
-                    <span class="text-white font-medium">Xats Actius</span>
-                    <span class="text-gray-400 text-xs mt-1">Consulta els teus xats</span>
                 </router-link>
 
                 <router-link to="/technicians/lost-objects" class="bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 rounded-lg p-4 flex flex-col items-center text-center transition-colors">
@@ -359,7 +349,7 @@ const fetchAssignments = async () => {
     }
 };
 
-// Propiedades computadas per les estadístiques
+// Propiedades computades per les estadístiques
 const activeIncidents = computed(() => {
     return allReports.value.filter(report => report.status !== 'revised').length;
 });
