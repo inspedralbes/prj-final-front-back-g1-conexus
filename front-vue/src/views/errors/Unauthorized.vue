@@ -89,10 +89,10 @@ const goBack = () => {
       router.push("/teachers");
       break;
     case "Estudiant":
-      router.push("/students");
+      router.push("/students/panel");
       break;
     case "Tècnic":
-      router.push("/technicians");
+      router.push("/technicians/panel");
       break;
     case "Cantina":
       router.push("/canteen/panel"); // Añade la ruta para Cantina si existe

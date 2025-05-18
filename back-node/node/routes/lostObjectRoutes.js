@@ -44,35 +44,32 @@ router.get("/:id", verifyTokenMiddleware, async (req, res) => {
   }
 });
 // POST /lost-objects - Crear un nou objecte perdut
-router.post("/", verifyTokenMiddleware, upload.single('image'),async (req, res) => {
+router.post("/", verifyTokenMiddleware, upload.single('image'), async (req, res) => {
   try {
-
-    const lostObjectData = JSON.parse(req.body.data);
-    const { title, description, user_id, expired_at } = lostObjectData;
+    // Obtenim les dades del formulari directament del cos de la sol·licitud
+    const { title, description, location, foundDate, user_id } = req.body;
     const image = req.file ? req.file.path : null;
 
-    /**
-     * Crea un nou objecte perdut a la base de dades.
-     *
-     * @async
-     * @function
-     * @returns {Promise<Object>} Retorna una promesa que resol amb l'objecte perdut creat.
-     * @property {string} title - El títol del post de l'objecte perdut.
-     * @property {string} description - La descripció de l'objecte perdut.
-     * @property {string} image - La URL de la imatge de l'objecte perdut.
-     * @property {number} user_id - L'identificador de l'usuari que ha creat l'objecte perdut.
-     * @property {Date} expired_at - La data de caducitat de l'objecte perdut.
-     */
+    // Comprovem que totes les dades necessàries existeixen
+    if (!title || !description || !user_id) {
+      return res.status(400).json({ message: "Falten camps obligatoris" });
+    }
+
+    // Creem l'objecte perdut a la base de dades
     const newLostObject = await LostObjects.create({
       title,
       description,
+      location,
       image,
-      user_id,
-      expired_at,
+      user_id: Number(user_id) || 1,
+      // Si cal, pots afegir la data aquí
+      // created_at: foundDate || new Date()
     });
-    //return the new lostObject object
+
+    // Retornem l'objecte creat
     res.status(201).json(newLostObject);
   } catch (error) {
+    console.error("Error en crear objecte perdut:", error);
     res.status(500).json({ message: error.message });
   }
 });

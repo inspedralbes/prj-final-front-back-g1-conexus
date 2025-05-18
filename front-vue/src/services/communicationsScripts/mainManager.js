@@ -49,7 +49,7 @@ export const getUserByEmail = async (email) => {
 
 export const register = async (user) => {
     try {
-        const response = await fetch(`${BACK_URL}api/user/`, {
+        const response = await fetch(`${BACK_URL}api/user/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -223,7 +223,7 @@ export const getAlumns = async (courseId) => {
 
 export const getUser = async (userId) => {
     try {
-        const response = await fetch(`${BACK_URL}api/users/${userId}`, {
+        const response = await fetch(`${BACK_URL}api/user/${userId}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -696,7 +696,13 @@ export const countUsers = async () => {
 
 export const getLatestActivities = async () => {
     try {
-        const response = await fetch(`${BACK_URL}api/activities`);
+        const response = await fetch(`${BACK_URL}api/activities`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+        });
         
         // Verificar si la respuesta es exitosa
         if (!response.ok) {
@@ -717,4 +723,37 @@ export const getLatestActivities = async () => {
         console.error("Error de red:", error);
         return { error: "Error de conexión. Comprueba tu red." };
     }
+};
+
+// Añadir esta nova funció per verificar email
+export const checkEmailAndGetRoles = async (email) => {
+    if (!email) return { exists: false };
+
+    try {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/user/check-email`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+        });
+
+        if (!response.ok) {
+            console.error("Error al verificar email:", await response.text());
+            return { exists: false };
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error("Error de red al verificar email:", error);
+        return { exists: false };
+    }
+};
+
+// Funció auxiliar per filtrar rols (excloure Administrador i Cantina)
+export const getFilteredRoles = (roles) => {
+    if (!roles || !Array.isArray(roles)) return [];
+    
+    return roles.filter(role => 
+        role.name !== 'Administrador' && role.name !== 'Cantina'
+    );
 };

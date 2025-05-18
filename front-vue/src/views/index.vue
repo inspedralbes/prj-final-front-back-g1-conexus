@@ -13,21 +13,23 @@
                         </div>
 
                         <div class="space-y-3">
-                            <button
-                                v-for="role in availableRoles"
-                                :key="role.id"
-                                @click="completeRegistration(role.id)"
-                                class="w-full py-3 px-4 bg-slate-700/80 hover:bg-slate-600 rounded-lg text-white transition-colors duration-200 flex items-center justify-start border border-slate-600/60 hover:border-slate-500"
-                            >
+                            <button v-for="role in availableRoles" :key="role.id" @click="completeRegistration(role.id)"
+                                class="w-full py-3 px-4 bg-slate-700/80 hover:bg-slate-600 rounded-lg text-white transition-colors duration-200 flex items-center justify-start border border-slate-600/60 hover:border-slate-500">
                                 <!-- Icono según el tipo de usuario (puedes adaptar esto según tus necesidades) -->
-                                <svg v-if="role.name === 'Estudiant'" class="h-5 w-5 mr-3 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                <svg v-if="role.name === 'Estudiant'" class="h-5 w-5 mr-3 text-blue-400" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                 </svg>
-                                <svg v-else-if="role.name === 'Professor'" class="h-5 w-5 mr-3 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                <svg v-else-if="role.name === 'Professor'" class="h-5 w-5 mr-3 text-green-400"
+                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                                 </svg>
-                                <svg v-else class="h-5 w-5 mr-3 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                <svg v-else class="h-5 w-5 mr-3 text-indigo-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                                 </svg>
                                 {{ role.name }}
                             </button>
@@ -205,10 +207,11 @@ import { useRouter } from 'vue-router';
 import { initializeApp } from "firebase/app";
 import { useAppStore } from '@/stores/index.js';
 import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
-import { login, getTypeUsers, register } from '@/services/communicationsScripts/mainManager.js';
+import { login, getTypeUsers, register, checkEmailAndGetRoles, getFilteredRoles } from '@/services/communicationsScripts/mainManager.js';
 
-const router = useRouter(); 
+const router = useRouter();
 const availableRoles = ref([]);
+const allRoles = ref([]);
 const loadingRoles = ref(true);
 
 // Obtener los tipos de usuario al montar el componente
@@ -216,15 +219,17 @@ onMounted(async () => {
     try {
         const response = await getTypeUsers();
         if (response && Array.isArray(response)) {
-            availableRoles.value = response;
+            // Filtrar los roles para excluir Administrador y Cantina
+            availableRoles.value = getFilteredRoles(response);
+            allRoles.value = response; // Guardar todos los roles para futuras referencias
         } else {
             console.error("Formato de datos inesperado:", response);
-            message.value = "Error al cargar los tipos de usuario";
+            message.value = "Error al cargar els tipus d'usuari";
             messageType.value = "error";
         }
     } catch (error) {
         console.error("Error al obtener los tipos de usuario:", error);
-        message.value = "Error al cargar los tipos de usuario disponibles";
+        message.value = "Error al cargar els tipus d'usuari disponibles";
         messageType.value = "error";
     } finally {
         loadingRoles.value = false;
@@ -279,33 +284,22 @@ const retryAction = () => {
     }
 };
 
-const checkEmailAndGetRoles = async (email) => {
-  if (!email) return { exists: false, allowedRoles: availableRoles.value };
-  
-  try {
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/user/check-email`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email })
-    });
-    
-    if (response.ok) {
-      const data = await response.json();
-      return data;
-    } else {
-      console.error("Error al verificar email:", await response.text());
-      return { 
-        exists: false, 
-        allowedRoles: availableRoles.value 
-      };
+const checkEmailStatus = async (email) => {
+    if (!email) return { exists: false, allowedRoles: availableRoles.value };
+
+    try {
+        const result = await checkEmailAndGetRoles(email);
+        return {
+            exists: result.exists,
+            allowedRoles: availableRoles.value  // Siempre usamos los roles filtrados
+        };
+    } catch (error) {
+        console.error("Error al verificar email:", error);
+        return {
+            exists: false,
+            allowedRoles: availableRoles.value
+        };
     }
-  } catch (error) {
-    console.error("Error de red al verificar email:", error);
-    return { 
-      exists: false, 
-      allowedRoles: availableRoles.value 
-    };
-  }
 };
 
 const signInWithGoogle = async (action) => {
@@ -354,19 +348,19 @@ const signInWithGoogle = async (action) => {
             redirectUserBasedOnRole(user);
         } else {
             // Lógica para registro
-            const { exists, allowedRoles } = await checkEmailAndGetRoles(userAPIs.email);
-            
+            const { exists, allowedRoles } = await checkEmailStatus(userAPIs.email);
+
             if (exists) {
                 message.value = "Aquest correu ja està registrat. Si us plau, utilitza un altre o inicia sessió.";
                 messageType.value = "error";
                 return;
             }
-            
+
             // Guardar los roles permitidos para este usuario
             if (allowedRoles && allowedRoles.length > 0) {
                 availableRoles.value = allowedRoles;
             }
-            
+
             // Continuar amb el flux normal modificat per al domini del correu
             if (!checkEmailType(userAPIs.email)) {
                 pendingRegistration.value = { ...userAPIs };
@@ -418,12 +412,12 @@ const completeRegistration = async (roleId = null) => {
         // Comprobar si tenemos una respuesta con usuario y token de acceso
         if (response.userLogin && response.accessToken) {
             let user = response.userLogin;
-            
+
             // Procesar la URL del perfil si es necesario
             if (user.profile && user.profile.includes("/upload/", 0)) {
                 user.profile = `${import.meta.env.VITE_BACKEND_URL}${user.profile}`;
             }
-            
+
             // Guardar datos en el store
             useAppStore().setAccessToken(response.accessToken);
             useAppStore().setUser(user);
@@ -431,7 +425,7 @@ const completeRegistration = async (roleId = null) => {
             // Guardar en localStorage
             localStorage.setItem("user", JSON.stringify(user.email));
             localStorage.setItem("accessToken", response.accessToken);
-            
+
             // Redirigir al usuario
             redirectUserBasedOnRole(user);
         } else {
@@ -493,7 +487,7 @@ const signInWithApp = async () => {
 const redirectUserBasedOnRole = (user) => {
     // Intentar obtener el rol del usuario de diferentes formas
     let userRole = '';
-    
+
     // Si tenemos typeusers completo con nombre
     if (user?.typeusers?.name) {
         userRole = user.typeusers.name;
@@ -501,12 +495,12 @@ const redirectUserBasedOnRole = (user) => {
     // Si solo tenemos el ID del tipo de usuario
     else if (user?.typeUsers_id) {
         // Buscar en availableRoles el nombre que corresponde a este ID
-        const roleObj = availableRoles.value.find(role => role.id === user.typeUsers_id);
+        const roleObj = allRoles.value.find(role => role.id === user.typeUsers_id);
         if (roleObj) {
             userRole = roleObj.name;
         }
     }
-    
+
     console.log('Redirigiendo usuario con rol:', userRole);
 
     switch (userRole) {
@@ -520,7 +514,7 @@ const redirectUserBasedOnRole = (user) => {
             router.push('/students/panel');
             break;
         case 'Tècnic':
-            router.push('/technicians');
+            router.push('/technicians/panel');
             break;
         case 'Cantina':
             router.push('/canteen');

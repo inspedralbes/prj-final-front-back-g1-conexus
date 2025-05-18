@@ -101,7 +101,7 @@ const router = createRouter({
         {
           path: 'lost-objects/:id/responses',
           name: 'teacher-lost-object-responses',
-          component: () => import('@/views/Teachers/responses.vue')
+          component: () => import('@/views/LostObjects/responses.vue')
         },
         {
           path: 'assistence',
@@ -150,6 +150,11 @@ const router = createRouter({
       },
       children: [
         {
+          path: 'panel',
+          name: 'technicians-panel',
+          component: () => import('@/views/Technicians/panel.vue'),
+        },
+        {
           path: 'canteen',
           name: 'technician-canteen',
           component: () => import('@/views/Technicians/canteen.vue')
@@ -177,7 +182,7 @@ const router = createRouter({
         {
           path: 'lost-objects/:id/responses',
           name: 'technician-lost-object-responses',
-          component: () => import('@/views/Technicians/responses.vue')
+          component: () => import('@/views/LostObjects/responses.vue')
         },
         {
           path: 'assignations',
@@ -228,7 +233,7 @@ const router = createRouter({
         {
           path: 'config-lost-objects/:id/responses',
           name: 'admin-config-lost-object-responses',
-          component: () => import('@/views/Admin/responses.vue')
+          component: () => import('@/views/LostObjects/responses.vue')
         },
         {
           path: 'config-incidents',
@@ -269,33 +274,7 @@ const router = createRouter({
         {
           path: 'menu-admin',
           name: 'canteen-menu-admin',
-          component: () => import('@/views/Canteen/MenuAdmin.vue')
-        }
-      ]
-    },
-    {
-      path: '/canteen',
-      name: 'canteen',
-      component: () => import('@/views/Canteen/index.vue'),
-      meta: {
-        requiresAuth: true,
-        allowedRoles: ['Cantina'],
-      },
-      children: [
-        {
-          path: 'panel',
-          name: 'canteen-panel',
-          component: () => import('@/views/Canteen/panel.vue')
-        },
-        {
-          path: 'chat',
-          name: 'canteen-chat',
-          component: () => import('@/views/Canteen/chat.vue')
-        },
-        {
-          path: 'menu-admin',
-          name: 'canteen-menu-admin',
-          component: () => import('@/views/Canteen/MenuAdmin.vue')
+          component: () => import('@/views/Canteen/menuAdmin.vue')
         }
       ]
     },

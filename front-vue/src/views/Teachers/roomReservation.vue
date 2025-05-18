@@ -1,7 +1,7 @@
 <template>
     <div>
-        <h1>Rooms</h1>
-        <h2>RoomList</h2>
+        <h1 style="font-size: 2.5rem; font-weight: bold; margin-bottom: 0.5rem;">Rooms</h1>
+        <h2 style="font-size: 1.5rem; color: #555; margin-bottom: 1.5rem;">Room List</h2>
         <div v-for="room in rooms" :key="room.id">
             <roomCard :room="room" />
         </div>
