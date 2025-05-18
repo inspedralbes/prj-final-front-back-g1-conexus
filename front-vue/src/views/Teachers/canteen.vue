@@ -147,9 +147,26 @@
             </h3>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <!-- Loading state -->
+          <div v-if="loading" class="py-8 text-center">
             <div
-              v-for="(item, index) in sandwichItems"
+              class="w-10 h-10 border-4 border-slate-600 border-t-purple-500 rounded-full animate-spin mx-auto mb-3"
+            ></div>
+            <p class="text-gray-400">Carregant productes...</p>
+          </div>
+
+          <!-- Empty state -->
+          <div
+            v-else-if="sandwichItems.length === 0"
+            class="py-8 text-center text-gray-400"
+          >
+            No hi ha entrepans disponibles en aquest moment
+          </div>
+
+          <!-- Sandwich items -->
+          <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
+            <div
+              v-for="(item, index) in sandwichItems.slice(0, 6)"
               :key="`sandwich-${index}`"
               @click="addToCart(item)"
               class="flex justify-between items-center p-3 rounded-lg bg-slate-700/30 hover:bg-slate-700/50 transition-all duration-300 cursor-pointer border border-slate-600/20 hover:border-purple-500/20"
@@ -182,16 +199,17 @@
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- Begudes Card -->
-        <div
-          class="bg-slate-800/50 backdrop-blur-sm rounded-xl p-6 shadow-xl border border-slate-700/30 hover:shadow-lg hover:shadow-purple-500/5 transition-all duration-300"
-        >
-          <div class="flex justify-between items-center mb-4">
-            <h3 class="text-xl font-semibold text-white flex items-center">
+          <!-- Veure més link - Always visible now -->
+          <div class="my-8 text-center border-t border-slate-700/30 pt-6">
+            <a
+              href="#"
+              @click.prevent="openFullMenuModal"
+              class="px-6 py-3 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-lg hover:from-purple-600 hover:to-blue-600 transition-all duration-300 inline-flex items-center justify-center shadow-md hover:shadow-lg font-medium"
+            >
+              <span class="font-medium">Veure tots els entrepans</span>
               <svg
-                class="w-6 h-6 mr-2 text-blue-400"
+                class="w-5 h-5 ml-2"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -200,46 +218,15 @@
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   stroke-width="2"
-                  d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                  d="M9 5l7 7-7 7"
                 />
               </svg>
-              Begudes
-            </h3>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-            <div
-              v-for="(item, index) in drinkItems"
-              :key="`drink-${index}`"
-              @click="addToCart(item)"
-              class="p-3 rounded-lg bg-slate-700/30 hover:bg-slate-700/50 transition-all duration-300 cursor-pointer border border-slate-600/20 hover:border-purple-500/20 flex justify-between items-center"
-            >
-              <span class="text-white">{{ item.name }}</span>
-              <div class="flex items-center">
-                <span class="text-purple-400 font-bold mr-3"
-                  >{{ formatPrice(item.price) }} €</span
-                >
-                <button
-                  class="p-1.5 rounded-full bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 transition-colors border border-purple-500/10"
-                >
-                  <svg
-                    class="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M12 4v16m8-8H4"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </div>
+            </a>
           </div>
         </div>
+
+        <!-- Begudes Card -->
+        <!-- Begudes Card removed as requested -->
       </div>
 
       <!-- Carret de compra - Ocupa 1 columna -->
@@ -468,6 +455,106 @@
         Producte afegit al carret
       </div>
     </div>
+
+    <!-- Full Menu Modal -->
+    <transition name="fade">
+      <div
+        v-if="showFullMenuModal"
+        class="fixed inset-0 z-[9999] flex items-center justify-center p-4"
+      >
+        <div
+          class="fixed inset-0 bg-black/60 backdrop-blur-sm"
+          @click="showFullMenuModal = false"
+        ></div>
+        <div
+          class="relative bg-slate-800/90 rounded-2xl p-6 max-w-4xl w-full border border-slate-700/50 shadow-2xl max-h-[90vh] overflow-hidden flex flex-col"
+        >
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-bold text-white">Entrepans i Snacks</h2>
+            <button
+              @click="showFullMenuModal = false"
+              class="text-gray-400 hover:text-white transition-colors"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Loading state -->
+          <div
+            v-if="loadingModalItems"
+            class="flex-1 flex items-center justify-center py-12"
+          >
+            <div
+              class="w-10 h-10 border-4 border-slate-600 border-t-purple-500 rounded-full animate-spin"
+            ></div>
+          </div>
+
+          <!-- Empty state -->
+          <div
+            v-else-if="modalMenuItems.length === 0"
+            class="flex-1 flex items-center justify-center py-12 text-gray-400"
+          >
+            No hi ha productes disponibles en aquest moment
+          </div>
+
+          <!-- Menu items grid -->
+          <div v-else class="flex-1 overflow-y-auto pr-2 custom-scrollbar">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div
+                v-for="(item, index) in modalMenuItems"
+                :key="`modal-item-${index}`"
+                @click="
+                  addToCart(item);
+                  showFullMenuModal = false;
+                "
+                class="p-4 rounded-lg bg-slate-700/40 hover:bg-slate-700/60 transition-all duration-300 cursor-pointer border border-slate-600/30 hover:border-purple-500/30 hover:shadow-lg hover:shadow-purple-500/5"
+              >
+                <div class="flex justify-between mb-2">
+                  <h4 class="font-medium text-white">{{ item.name }}</h4>
+                  <span class="text-purple-400 font-bold"
+                    >{{ formatPrice(item.price) }} €</span
+                  >
+                </div>
+                <p v-if="item.description" class="text-xs text-gray-300 mb-3">
+                  {{ item.description }}
+                </p>
+                <button
+                  class="w-full py-2 px-4 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white rounded-lg shadow-md transition-all duration-300 flex items-center justify-center text-sm"
+                >
+                  <svg
+                    class="w-4 h-4 mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                    />
+                  </svg>
+                  Afegir al Carret
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -815,139 +902,8 @@ const loadMenuItems = async () => {
     const items = await getAllCanteenItems();
 
     if (!items || items.length === 0) {
-      // Si no hay productos, cargar datos de ejemplo
-      menuItems.value = [
-        // Menús
-        {
-          id: "menu1",
-          product_id: "menu1",
-          product_name: "Menú Complet #1",
-          product_description: "Primer, segon, postre i beguda",
-          product_price: 8.5,
-          product_category: "menu",
-        },
-        {
-          id: "menu2",
-          product_id: "menu2",
-          product_name: "Menú Complet #2",
-          product_description: "Primer, segon, postre i beguda",
-          product_price: 8.5,
-          product_category: "menu",
-        },
-        // Sandwiches
-        {
-          id: "sand1",
-          product_id: "sand1",
-          product_name: "Entrepà de Pernil",
-          product_description: "Pernil ibèric amb tomàquet",
-          product_price: 3.8,
-          product_category: "sandwich",
-        },
-        {
-          id: "sand2",
-          product_id: "sand2",
-          product_name: "Entrepà de Formatge",
-          product_description: "Formatge semi-curat amb tomàquet",
-          product_price: 3.5,
-          product_category: "sandwich",
-        },
-        {
-          id: "sand3",
-          product_id: "sand3",
-          product_name: "Entrepà Mixte",
-          product_description: "Pernil dolç i formatge fos",
-          product_price: 3.6,
-          product_category: "sandwich",
-        },
-        {
-          id: "sand4",
-          product_id: "sand4",
-          product_name: "Entrepà de Tonyina",
-          product_description: "Tonyina amb olivada i enciam",
-          product_price: 3.75,
-          product_category: "sandwich",
-        },
-        {
-          id: "sand5",
-          product_id: "sand5",
-          product_name: "Entrepà Vegetal",
-          product_description: "Enciam, tomàquet, pastanaga i formatge",
-          product_price: 3.5,
-          product_category: "sandwich",
-        },
-        {
-          id: "sand6",
-          product_id: "sand6",
-          product_name: "Croissant",
-          product_description: "Croissant de mantega",
-          product_price: 1.8,
-          product_category: "sandwich",
-        },
-        // Bebidas
-        {
-          id: "drink1",
-          product_id: "drink1",
-          product_name: "Aigua (50cl)",
-          product_price: 1.2,
-          product_category: "drink",
-        },
-        {
-          id: "drink2",
-          product_id: "drink2",
-          product_name: "Coca-Cola",
-          product_price: 1.8,
-          product_category: "drink",
-        },
-        {
-          id: "drink3",
-          product_id: "drink3",
-          product_name: "Coca-Cola Zero",
-          product_price: 1.8,
-          product_category: "drink",
-        },
-        {
-          id: "drink4",
-          product_id: "drink4",
-          product_name: "Fanta Taronja",
-          product_price: 1.8,
-          product_category: "drink",
-        },
-        {
-          id: "drink5",
-          product_id: "drink5",
-          product_name: "Fanta Llimona",
-          product_price: 1.8,
-          product_category: "drink",
-        },
-        {
-          id: "drink6",
-          product_id: "drink6",
-          product_name: "Nestea",
-          product_price: 1.8,
-          product_category: "drink",
-        },
-        {
-          id: "drink7",
-          product_id: "drink7",
-          product_name: "Aquarius",
-          product_price: 1.9,
-          product_category: "drink",
-        },
-        {
-          id: "drink8",
-          product_id: "drink8",
-          product_name: "Suc de Taronja",
-          product_price: 2.2,
-          product_category: "drink",
-        },
-        {
-          id: "drink9",
-          product_id: "drink9",
-          product_name: "Cafè amb llet",
-          product_price: 1.5,
-          product_category: "drink",
-        },
-      ];
+      // Si no hay productos, mostrar mensaje vacío
+      menuItems.value = [];
     } else {
       menuItems.value = items;
     }
@@ -956,10 +912,58 @@ const loadMenuItems = async () => {
     error.value =
       "No se pudieron cargar los productos del menú. Por favor, inténtalo de nuevo más tarde.";
 
-    // Cargar datos de ejemplo en caso de error
+    // En caso de error, dejar vacío
     menuItems.value = [];
   } finally {
     loading.value = false;
+  }
+};
+
+// Add new refs for the modal
+const showFullMenuModal = ref(false);
+const modalMenuItems = ref([]);
+const loadingModalItems = ref(false);
+
+// Function to open the full menu modal with all sandwiches
+const openFullMenuModal = async () => {
+  try {
+    loadingModalItems.value = true;
+    showFullMenuModal.value = true;
+
+    // Load ALL canteen items directly from the API
+    const allItems = await getAllCanteenItems();
+
+    if (allItems && allItems.length > 0) {
+      // Filter only sandwich items
+      modalMenuItems.value = allItems
+        .filter(
+          (item) =>
+            item.product_name?.toLowerCase().includes("entrepà") ||
+            item.product_category === "sandwich" ||
+            item.product_category === "snack" ||
+            (item.product_description &&
+              item.product_description.toLowerCase().includes("entrepà"))
+        )
+        .map((item) => ({
+          id: item.id || item.product_id,
+          name: item.product_name,
+          description: item.product_description || "Entrepà",
+          price: item.product_price,
+          type: "sandwich",
+        }));
+
+      console.log(
+        `Loaded ${modalMenuItems.value.length} sandwich items for modal`
+      );
+    } else {
+      modalMenuItems.value = [];
+      console.warn("No items found from getAllCanteenItems()");
+    }
+  } catch (err) {
+    console.error("Error al cargar el menú completo:", err);
+    modalMenuItems.value = [];
+  } finally {
+    loadingModalItems.value = false;
   }
 };
 
