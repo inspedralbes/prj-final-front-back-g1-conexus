@@ -1,191 +1,256 @@
 const API_URL = import.meta.env.VITE_LOST_OBJECT_URL;
 
-const handleResponse = async (response) => {
-    if (!response.ok) {
-        const error = await response.json().catch(() => ({}));
-        throw new Error(error.message || 'Error in request');
-    }
-    const text = await response.text();
-    return text ? JSON.parse(text) : {};
-};
-
+// Obtenir tots els objectes perduts
 export const getAllLostObjects = async () => {
     try {
         const response = await fetch(`${API_URL}api/lost-objects`, {
             method: 'GET',
             headers: {
-                "Content-Type": "application/json",
-                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-            },
-        }
-        );
-        const objects = await handleResponse(response);
-        
-        // Para cada objeto, carga sus respuestas
-        for (const object of objects) {
-            try {
-                const responsesData = await getLostObjectResponses(object.id);
-                object.responses = responsesData;
-                object.responses_count = responsesData.length;
-            } catch (error) {
-                console.warn(`Error loading responses for object ${object.id}`, error);
-                object.responses = [];
-                object.responses_count = 0;
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
             }
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.message || "Error obtenint objectes perduts");
         }
-        
-        return objects;
+
+        return await response.json();
     } catch (error) {
-        console.error('Error fetching lost objects:', error);
+        console.error("Error obtenint objectes perduts:", error);
         throw error;
     }
 };
 
-// Añadir esta función:
-export const getLostObjectsResponsesCount = async () => {
-    try {
-        const response = await fetch(`${API_URL}api/lost-objects/responses-count`, {
-            method: 'GET',
-            headers: {
-                "Content-Type": "application/json",
-                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-            },
-        }
-        );
-        return await handleResponse(response);
-    } catch (error) {
-        console.error('Error fetching response counts:', error);
-        throw error;
-    }
-};
-
+// Obtenir un objecte perdut per ID
 export const getLostObjectById = async (id) => {
     try {
         const response = await fetch(`${API_URL}api/lost-objects/${id}`, {
             method: 'GET',
             headers: {
-                "Content-Type": "application/json",
-                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-            },
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+            }
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.message || `Error obtenint l'objecte perdut amb ID ${id}`);
         }
-        );
-        return await handleResponse(response);
+
+        return await response.json();
     } catch (error) {
-        console.error(`Error fetching lost object ${id}:`, error);
+        console.error(`Error obtenint l'objecte perdut amb ID ${id}:`, error);
         throw error;
     }
 };
 
-export const createLostObject = async (lostObjectData, userId) => {
+// Crear un nou objecte perdut
+export const createLostObject = async (objectData) => {
     try {
+        // Crear FormData si hi ha una imatge
         const formData = new FormData();
         
-        // Create data object to serialize
-        const dataObj = {
-            title: lostObjectData.objectName,
-            description: lostObjectData.description,
-            user_id: userId, // Use the provided user ID
-            expired_at: lostObjectData.foundDate ? new Date(new Date(lostObjectData.foundDate).getTime() + 14*24*60*60*1000).toISOString() : null,
-            location: lostObjectData.location
-        };
+        // Afegim les propietats individualment
+        formData.append('title', objectData.title);
+        formData.append('description', objectData.description);
+        formData.append('location', objectData.location);
+        formData.append('foundDate', objectData.foundDate);
         
-        formData.append('data', JSON.stringify(dataObj));
+        // Afegim userid actual
+        formData.append('user_id', localStorage.getItem('userId') || '1');
         
-        if (lostObjectData.image) {
-            formData.append('image', lostObjectData.image);
+        // Afegim la imatge si existeix
+        if (objectData.image) {
+            formData.append('image', objectData.image);
         }
         
+        // No cal enviar les dades com a JSON
+        // No utilitzem JSON.stringify amb FormData
+
         const response = await fetch(`${API_URL}api/lost-objects`, {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                // No afegim Content-Type perquè FormData ho defineix automàticament
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
             },
-            body: formData,
+            body: formData // Enviem directament el FormData sense JSON.stringify
         });
-        return await handleResponse(response);
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            let errorMessage;
+            try {
+                const errorData = JSON.parse(errorText);
+                errorMessage = errorData.message || `Error al servidor: ${response.status}`;
+            } catch (e) {
+                errorMessage = errorText || `Error al servidor: ${response.status}`;
+            }
+            throw new Error(errorMessage);
+        }
+
+        const responseText = await response.text();
+        return responseText ? JSON.parse(responseText) : { success: true };
     } catch (error) {
-        console.error('Error creating lost object:', error);
+        console.error("Error creant l'objecte perdut:", error);
         throw error;
     }
 };
 
+// Actualitzar un objecte perdut existent
+export const updateLostObject = async (id, objectData) => {
+    try {
+        // Crear FormData si hi ha una imatge
+        const formData = new FormData();
+        formData.append('title', objectData.title);
+        formData.append('description', objectData.description);
+        formData.append('location', objectData.location);
+        formData.append('foundDate', objectData.foundDate);
+        
+        // Si la imatge és un File (nova imatge seleccionada), afegir-la al FormData
+        if (objectData.image && objectData.image instanceof File) {
+            formData.append('image', objectData.image);
+        } 
+        // Si la imatge és un string (URL existent) o null, passar-la com a string
+        else {
+            formData.append('currentImage', objectData.image || '');
+        }
+
+        const response = await fetch(`${API_URL}api/lost-objects/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+                // No es defineix 'Content-Type' perquè es configura automàticament amb FormData
+            },
+            body: formData
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.message || `Error actualitzant l'objecte perdut amb ID ${id}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error(`Error actualitzant l'objecte perdut amb ID ${id}:`, error);
+        throw error;
+    }
+};
+
+// Eliminar un objecte perdut
 export const deleteLostObject = async (id) => {
     try {
         const response = await fetch(`${API_URL}api/lost-objects/${id}`, {
             method: 'DELETE',
             headers: {
-                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-            },
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+            }
         });
-        
-        if (response.status === 204) {
-            return true;
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.message || `Error eliminant l'objecte perdut amb ID ${id}`);
         }
-        
-        return await handleResponse(response);
+
+        // Si la resposta és buida o només inclou un estat HTTP
+        const text = await response.text();
+        if (!text) {
+            return { success: true };
+        }
+
+        try {
+            // Intentar analitzar com a JSON
+            return JSON.parse(text);
+        } catch (e) {
+            // Si no és JSON, retornar el text
+            return { message: text, success: response.ok };
+        }
     } catch (error) {
-        console.error(`Error deleting lost object ${id}:`, error);
+        console.error(`Error eliminant l'objecte perdut amb ID ${id}:`, error);
         throw error;
     }
 };
 
-export const getLostObjectResponses = async (lostObjectId) => {
+// Obtenir comentaris d'un objecte perdut
+export const getLostObjectResponses = async (objectId) => {
     try {
-        const response = await fetch(`${API_URL}api/lost-objects/${lostObjectId}/responses`, {
+        const response = await fetch(`${API_URL}api/lost-objects/${objectId}/responses`, {
             method: 'GET',
             headers: {
-                "Content-Type": "application/json",
-                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-            },
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+            }
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.message || `Error obtenint comentaris de l'objecte ${objectId}`);
         }
-        );
-        return await handleResponse(response);
+
+        return await response.json();
     } catch (error) {
-        console.error(`Error fetching responses for lost object ${lostObjectId}:`, error);
+        console.error(`Error obtenint comentaris de l'objecte ${objectId}:`, error);
         throw error;
     }
 };
 
-export const createResponse = async (lostObjectId, responseData) => {
+// Afegir un comentari a un objecte perdut
+export const addLostObjectResponse = async (objectId, responseData) => {
     try {
-        // Asegúrate de que responseData contiene user_id y comment
-        console.log('Enviando respuesta:', responseData); // Añade este log para debug
-        
-        const response = await fetch(`${API_URL}api/lost-objects/${lostObjectId}/responses`, {
+        const response = await fetch(`${API_URL}api/lost-objects/${objectId}/responses`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
             },
-            body: JSON.stringify({
-                user_id: responseData.user_id,
-                lostAndFound_id: lostObjectId, // Añadir esto si es necesario
-                comment: responseData.comment
-            }),
+            body: JSON.stringify(responseData)
         });
-        return await handleResponse(response);
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.message || `Error afegint comentari a l'objecte ${objectId}`);
+        }
+
+        return await response.json();
     } catch (error) {
-        console.error(`Error creating response for lost object ${lostObjectId}:`, error);
+        console.error(`Error afegint comentari a l'objecte ${objectId}:`, error);
         throw error;
     }
 };
 
-export const deleteResponse = async (lostObjectId, responseId) => {
+// Eliminar un comentari d'un objecte perdut
+export const deleteLostObjectResponse = async (objectId, responseId) => {
     try {
-        const response = await fetch(`${API_URL}api/lost-objects/${lostObjectId}/responses/${responseId}`, {
+        const response = await fetch(`${API_URL}api/lost-objects/${objectId}/responses/${responseId}`, {
             method: 'DELETE',
             headers: {
-                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-            },
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+            }
         });
-        
-        if (response.status === 204) {
-            return true;
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.message || `Error eliminant comentari ${responseId}`);
         }
-        
-        return await handleResponse(response);
+
+        // Si la resposta és buida o només inclou un estat HTTP
+        const text = await response.text();
+        if (!text) {
+            return { success: true };
+        }
+
+        try {
+            // Intentar analitzar com a JSON
+            return JSON.parse(text);
+        } catch (e) {
+            // Si no és JSON, retornar el text
+            return { message: text, success: response.ok };
+        }
     } catch (error) {
-        console.error(`Error deleting response ${responseId} for lost object ${lostObjectId}:`, error);
+        console.error(`Error eliminant comentari ${responseId}:`, error);
         throw error;
     }
 };
