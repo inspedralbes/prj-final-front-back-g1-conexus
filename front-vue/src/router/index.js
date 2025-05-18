@@ -58,7 +58,6 @@ const router = createRouter({
         },
       ]
     },
-    
     {
       path: '/teachers',
       name: 'teacher',

@@ -24,7 +24,6 @@ export const getUserByEmail = async (email) => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
                 },
                 body: JSON.stringify({ email }),
             }
