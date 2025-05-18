@@ -1,7 +1,7 @@
 <template>
     <div class="card">
-        <h3>{{ props.room.room_name }}</h3>
-        <h4>{{ props.room.room_description }}</h4>
+        <h3 class="room-title">{{ props.room.room_name }}</h3>
+        <h4 class="room-desc">{{ props.room.room_description }}</h4>
         <div>
             <h5>Disponibilitat</h5>
             <ul>
@@ -19,9 +19,9 @@
                         </li>
                     </ul>
                 </li>
-                <li v-if="props.room.room_hours_available_wensday">
+                <li v-if="props.room.room_hours_available_wednesday">
                     Dimecres: <ul>
-                        <li v-for="hour in props.room.room_hours_available_wensday" :key="hour">
+                        <li v-for="hour in props.room.room_hours_available_wednesday" :key="hour">
                             {{ hour }}
                         </li>
                     </ul>
@@ -84,7 +84,7 @@ const allHours = computed(() => {
     return [
         ...(props.room.room_hours_available_monday || []),
         ...(props.room.room_hours_available_tuesday || []),
-        ...(props.room.room_hours_available_wensday || []),
+        ...(props.room.room_hours_available_wednesday || []),
         ...(props.room.room_hours_available_thursday || []),
         ...(props.room.room_hours_available_friday || [])
     ];
@@ -133,7 +133,7 @@ function filterHoursByDate() {
             });
             break;
         case 3:
-            filteredHours.value = (props.room.room_hours_available_wensday || []).filter(hour => {
+            filteredHours.value = (props.room.room_hours_available_wednesday || []).filter(hour => {
                 return !reservations.value.some(reservation => {
                     const reservedDate = new Date(reservation.start_time);
                     return reservedDate.toDateString() === new Date(selectedDate.value).toDateString() &&
@@ -166,53 +166,148 @@ function filterHoursByDate() {
 </script>
 
 <style scoped>
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+/* Fade-in animation */
+.animate-fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px);}
+    to { opacity: 1; transform: translateY(0);}
 }
 
-.modal-content {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    text-align: center;
-    color: black;
-}
-
+/* Card container */
 .card {
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: 20px;
-    margin: 10px;
-    background-color: #f9f9f9;
-    color:black;
+    max-width: 600px;
+    margin: 18px auto;
+    padding: 24px;
+    background: rgba(30, 41, 59, 0.85);
+    border-radius: 12px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.18);
+    color: #e2e8f0;
+    transition: box-shadow 0.2s;
+}
+.card:hover {
+    box-shadow: 0 4px 24px rgba(0,0,0,0.22);
 }
 .card h3 {
-    margin: 0;
+    margin: 0 0 8px 0;
     font-size: 1.5em;
+    color: #f1f5f9;
+    letter-spacing: 0.5px;
 }
 .card h4 {
-    margin: 0;
-    font-size: 1.2em;
-    color: #666;
+    margin: 0 0 16px 0;
+    font-size: 1.1em;
+    color: #94a3b8;
+    font-weight: 400;
+}
+.card h5 {
+    margin: 12px 0 6px 0;
+    color: #cbd5e1;
+    font-size: 1.08em;
+    font-weight: 500;
 }
 .card ul {
     list-style-type: none;
     padding: 0;
+    margin: 0 0 10px 0;
 }
-.card button {
-    background-color: #007bff;
-    color: white;
+.card ul > li {
+    margin-bottom: 6px;
+}
+.card ul ul {
+    margin-left: 16px;
+    margin-top: 2px;
+}
+.card ul ul li {
+    font-size: 0.98em;
+    color: #e2e8f0;
+    background: rgba(17,24,39,0.18);
+    border-radius: 4px;
+    padding: 2px 8px;
+    display: inline-block;
+    margin-right: 4px;
+    margin-bottom: 2px;
+}
+
+/* Button styles */
+button {
+    margin-right: 8px;
+    padding: 7px 18px;
     border: none;
-    padding: 10px 20px;
     border-radius: 5px;
+    background: #2563eb;
+    color: #f1f5f9;
     cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    font-weight: 500;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.10);
+}
+button:hover {
+    background: #1d4ed8;
+    color: #fff;
+    transform: translateY(-1px) scale(1.03);
+}
+
+/* Modal styles */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(15, 23, 42, 0.65);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 50;
+}
+.modal-content {
+    background: rgba(30,41,59,0.98);
+    padding: 32px 28px 24px 28px;
+    border-radius: 12px;
+    text-align: center;
+    color: #e2e8f0;
+    min-width: 320px;
+    box-shadow: 0 4px 32px rgba(0,0,0,0.22);
+    animation: fadeIn 0.5s;
+}
+.modal-content h3 {
+    color: #f1f5f9;
+    margin-bottom: 14px;
+    font-size: 1.18em;
+    font-weight: 600;
+}
+.modal-content select,
+.modal-content input[type="date"] {
+    margin-bottom: 18px;
+    margin-top: 6px;
+    width: 80%;
+    background: rgba(30,41,59,0.92);
+    color: #f1f5f9;
+    border: 1px solid #334155;
+    border-radius: 4px;
+    padding: 7px 12px;
+    font-size: 1rem;
+    transition: border 0.2s, box-shadow 0.2s;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+}
+.modal-content input[type="date"] {
+    color-scheme: dark;
+}
+.modal-content button {
+    margin-top: 10px;
+    margin-bottom: 0;
+}
+
+/* Placeholder color */
+::-webkit-input-placeholder { color: #64748b; }
+::-moz-placeholder { color: #64748b; }
+:-ms-input-placeholder { color: #64748b; }
+::placeholder { color: #64748b; }
+
+/* Font */
+*{
+    font-family: 'Arial', sans-serif;
 }
 </style>

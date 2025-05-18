@@ -9,7 +9,7 @@ router.get("/", verifyTokenMiddleware, async (req, res) => {
         const rooms = await Room.findAll();
         const processedRooms = rooms.map((room) => {
             const hoursAvailable = room.room_hours_available || {};
-            const days = ["monday", "tuesday", "wensday", "thursday", "friday"];
+            const days = ["monday", "tuesday", "wednesday", "thursday", "friday"];
             const processedRoom = { ...room.toJSON() };
 
             days.forEach((day) => {

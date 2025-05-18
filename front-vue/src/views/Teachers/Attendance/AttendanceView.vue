@@ -1,5 +1,5 @@
 <template>
-    <div class="attendance-view">
+    <div class="container animate-fade-in attendance-view">
         <button @click="goToMenu()">Tornar al menu</button>
         <h1 class="pageTitle">Asistencia al curs {{ hoursAvailable.course_name }} </h1>
         <div dayPicker class="day-picker">
@@ -9,7 +9,6 @@
             <select id="hour" v-model="selectedHour" v-if="thereIsClassThatDay()" @change="updateSelectedHour">
                 <option v-for="hour in hoursAvailable[selectedDate && new Date(selectedDate).toLocaleString('en-US', { weekday: 'long' }).toLowerCase()] || []" :key="hour">{{ hour }}</option>
             </select>
-
             <h1 v-else>No hi ha clase aquest dia</h1>
         </div>
         <div class="attendance-list">
@@ -19,7 +18,7 @@
                     <th>Nom</th>
                     <th>Status</th>
                 </tr>
-                <tr v-for="student in students" :key="index">
+                <tr v-for="student in students" :key="student.user_id">
                     <td>{{ student.user_id }}</td>
                     <td>{{ student.name }}</td>
                     <td>
@@ -33,10 +32,11 @@
                     </td>
                 </tr>
             </table>
-
         </div>
     </div>
 </template>
+
+
 <script setup>
 import { useRoute } from 'vue-router'
 import { useRouter } from 'vue-router'
@@ -95,8 +95,8 @@ function thereIsClassThatDay() {
             return hoursAvailable.value.monday!=null;
         case 'tuesday':
             return hoursAvailable.value.tuesday!=null;
-        case 'wensday':
-            return hoursAvailable.value.wensday!=null;
+        case 'wednesday':
+            return hoursAvailable.value.wednesday!=null;
         case 'thursday':
             return hoursAvailable.value.thursday!=null;
         case 'friday':
@@ -131,73 +131,150 @@ function sendUpdateAtendance(id, status) {
     })
 
 }
-</script>
+</script>   
+
 <style scoped>
+/* Fade-in animation */
+.animate-fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px);}
+    to { opacity: 1; transform: translateY(0);}
+}
+
+/* Container and dark theme */
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px;
+    background: rgba(30, 41, 59, 0.85);
+    border-radius: 12px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.18);
+    color: #e2e8f0;
+}
+
+/* Headings */
+h1, .pageTitle {
+    margin-bottom: 12px;
+    color: #f1f5f9;
+    letter-spacing: 1px;
+    font-size: 24px;
+}
+
+/* Button styles */
+button {
+    margin-right: 8px;
+    padding: 7px 18px;
+    border: none;
+    border-radius: 5px;
+    background: #2563eb;
+    color: #f1f5f9;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    font-weight: 500;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.10);
+}
+button:hover {
+    background: #1d4ed8;
+    color: #fff;
+    transform: translateY(-1px) scale(1.03);
+}
+
+/* Table styles */
 table {
     border-collapse: collapse;
     width: 100%;
     margin-top: 20px;
+    background: rgba(17, 24, 39, 0.7);
+    border-radius: 8px;
+    overflow: hidden;
+    color: #e2e8f0;
+    font-size: 1.08rem;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.10);
 }
 th, td {
-    border: 1px solid #ddd;
-    padding: 8px;
+    border: 1px solid #334155;
+    padding: 10px 12px;
+    color: #e2e8f0;
 }
 th {
-    background-color: #f2f2f2;
+    background-color: rgba(51, 65, 85, 0.92);
     text-align: left;
+    font-weight: 600;
+    letter-spacing: 0.5px;
 }
 td {
     text-align: left;
+    background: rgba(30, 41, 59, 0.65);
 }
-.pageTitle {
-    font-size: 24px;
-    margin-bottom: 20px;
+tr > td:last-child,
+tr > td:nth-last-child(2) {
+    white-space: nowrap;
 }
+.attendance-list tr:nth-child(even) {
+    background-color: rgba(30,41,59,0.35);
+}
+.attendance-list tr:hover {
+    background-color: #1e293b;
+}
+
+/* Day picker styles */
 .day-picker {
     display: flex;
     flex-direction: column;
     margin-bottom: 20px;
+    gap: 8px;
 }
+
+/* Label styles */
 label {
-    margin-bottom: 5px;
+    font-size: 1rem;
+    user-select: none;
+    color: #cbd5e1;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Input, select, textarea styles */
+input,
+textarea,
+select {
+    background: rgba(30,41,59,0.92);
+    color: #f1f5f9;
+    border: 1px solid #334155;
+    border-radius: 4px;
+    padding: 7px 12px;
+    font-size: 1rem;
+    transition: border 0.2s, box-shadow 0.2s;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+}
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #2563eb;
+    outline: none;
+    box-shadow: 0 0 0 2px #2563eb33;
 }
 select {
     margin-bottom: 10px;
-    padding: 5px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
 }
-.attendance-list {
-    margin-top: 20px;
+
+/* Date input dark style */
+input[type="date"] {
+    color-scheme: dark;
 }
-.attendance-list table {
-    width: 100%;
-    border-collapse: collapse;
-}
-.attendance-list th, .attendance-list td {
-    border: 1px solid #ddd;
-    padding: 8px;
-}
-.attendance-list th {
-    background-color: #f2f2f2;
-    text-align: left;
-}
-.attendance-list td {
-    text-align: left;
-}
-.attendance-list tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-.attendance-list tr:hover {
-    background-color: #f1f1f1;
-}
-.attendance-list select {
-    width: 100%;
-    padding: 5px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-}
+
+/* Placeholder color */
+::-webkit-input-placeholder { color: #64748b; }
+::-moz-placeholder { color: #64748b; }
+:-ms-input-placeholder { color: #64748b; }
+::placeholder { color: #64748b; }
+
+/* Font */
 *{
     font-family: 'Arial', sans-serif;
 }
 </style>
+

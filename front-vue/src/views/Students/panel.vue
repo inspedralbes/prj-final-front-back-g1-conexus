@@ -266,9 +266,9 @@ const processCourseHours = (courseDetails, scheduleTemplate, courseName) => {
     processDay('thursday', courseDetails.thursday, scheduleTemplate, courseName);
     processDay('friday', courseDetails.friday, scheduleTemplate, courseName);
 
-    // Tratar el caso especial de 'wensday' (error ortográfico en la BD)
-    if (courseDetails.wensday) {
-        processDay('wednesday', courseDetails.wensday, scheduleTemplate, courseName);
+    // Tratar el caso especial de 'wednesday' (error ortográfico en la BD)
+    if (courseDetails.wednesday) {
+        processDay('wednesday', courseDetails.wednesday, scheduleTemplate, courseName);
     }
 };
 

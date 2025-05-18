@@ -144,6 +144,11 @@ const router = createRouter({
       },
       children: [
         {
+          path: 'panel',
+          name: 'technicians-panel',
+          component: () => import('@/views/Technicians/panel.vue'),
+        },
+        {
           path: 'canteen',
           name: 'technician-canteen',
           component: () => import('@/views/Technicians/canteen.vue')
