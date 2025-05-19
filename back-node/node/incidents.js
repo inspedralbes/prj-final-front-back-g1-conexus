@@ -39,8 +39,8 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use('/uploads', express.static('uploads'));
 app.use("/api/reports", reportRoutes);
-app.use("/api/reports", reportRoutes);
-app.use("/incident/api/reports", reportRoutes);
+// app.use("/api/reports", reportRoutes);
+// app.use("/incident/api/reports", reportRoutes);
 
 sequelize.sync().then(() => {
     app.listen(PORT, () => {
