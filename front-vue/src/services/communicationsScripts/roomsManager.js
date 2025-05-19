@@ -1,4 +1,5 @@
 const API_URL = import.meta.env.VITE_BACKEND_URL;
+
 function handle401(response) {
     if (response.status === 401) {
         window.location.href = '/';
