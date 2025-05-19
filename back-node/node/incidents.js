@@ -17,9 +17,8 @@ dotenv.config();
 const app = express();
 const PORT = process.env.NODE_INCIDENT_PORT || 3004;
 const transporter = nodemailer.createTransport({
-    service: 'smtp.gmail.com',
     host: process.env.EMAIL_HOST,
-    port: 587,
+    port: process.env.EMAIL_PORT,
     secure: false,
     auth: {
         user: process.env.EMAIL_USER,

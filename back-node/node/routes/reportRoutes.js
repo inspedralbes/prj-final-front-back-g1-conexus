@@ -17,7 +17,6 @@ const user = process.env.EMAIL_USER;
 const pass = process.env.EMAIL_PASS;
 
 const transporter = nodemailer.createTransport({
-  service: "smtp.gmail.com",
   host: host,
   port: port,
   secure: false,
