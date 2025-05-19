@@ -165,6 +165,11 @@ const router = createRouter({
           component: () => import('@/views/Technicians/panel.vue'),
         },
         {
+          path: 'analysis',
+          name: 'technicians-analysis',
+          component: () => import('@/views/Technicians/analysis.vue')
+        },
+        {
           path: 'canteen',
           name: 'technician-canteen',
           component: () => import('@/views/Technicians/canteen.vue')
