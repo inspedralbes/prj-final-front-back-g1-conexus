@@ -177,6 +177,25 @@
           <span>Reserva d'Aules</span>
         </router-link>
         <router-link
+          to="/teachers/departments"
+          class="flex items-center p-2 text-gray-300 hover:bg-slate-800/50 rounded-lg transition-colors duration-300"
+        >
+          <svg
+            class="w-5 h-5 mr-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M3 7v4a1 1 0 001 1h3v2a1 1 0 001 1h4a1 1 0 001-1v-2h3a1 1 0 001-1V7a1 1 0 00-1-1H4a1 1 0 00-1 1zm0 10a1 1 0 001 1h16a1 1 0 001-1v-2a1 1 0 00-1-1H4a1 1 0 00-1 1v2z"
+            />
+          </svg>
+          <span>Departaments</span>
+        </router-link>
+        <router-link
           to="/teachers/inscription"
           class="flex items-center p-2 text-gray-300 hover:bg-slate-800/50 rounded-lg transition-colors duration-300"
         >
@@ -373,6 +392,25 @@
               />
             </svg>
             Reserva d'Aules
+          </router-link>
+          <router-link
+            to="/teachers/departments"
+            class="flex items-center text-white hover:text-gray-300 transition-colors duration-300"
+          >
+            <svg
+              class="w-5 h-5 mr-1"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3 7v4a1 1 0 001 1h3v2a1 1 0 001 1h4a1 1 0 001-1v-2h3a1 1 0 001-1V7a1 1 0 00-1-1H4a1 1 0 00-1 1zm0 10a1 1 0 001 1h16a1 1 0 001-1v-2a1 1 0 00-1-1H4a1 1 0 00-1 1v2z"
+              />
+            </svg>
+            Departaments
           </router-link>
           <router-link
             to="/teachers/inscription"

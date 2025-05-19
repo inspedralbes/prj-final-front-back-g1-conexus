@@ -46,7 +46,8 @@
                                 <div class="text-sm font-medium text-white">
                                     {{ new Date(hour.day).toLocaleDateString('ca-ES', {
                                         day: '2-digit', month:
-                                    '2-digit', year: 'numeric' }) }}
+                                            '2-digit', year: 'numeric'
+                                    }) }}
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
@@ -63,7 +64,7 @@
                                         hour.assisted === 'yes' ? 'Present' :
                                             hour.assisted === 'unjustified' ? 'Falta injustificada' :
                                                 hour.assisted === 'justified' ? 'Falta justificada' :
-                                    hour.assisted === 'late' ? 'Retard' : ''
+                                                    hour.assisted === 'late' ? 'Retard' : ''
                                     }}
                                 </span>
                             </td>
@@ -144,8 +145,14 @@
         <!-- Gràfic d'evolució (opcional) -->
         <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-slate-700">
             <h3 class="text-lg font-medium text-gray-300 mb-4">Evolució de l'assistència</h3>
-            <div class="h-64 flex items-center justify-center text-gray-400">
-                <p>Gràfic d'evolució (implementació pendent)</p>
+            <p class="text-sm text-gray-400 mb-4">Gràfic d'evolució de l'assistència al llarg del temps.</p>
+            
+            <div class="mx-auto max-w-md h-80">
+                <Pie 
+                    :data="pieData" 
+                    :options="pieOptions" 
+                    class="mx-auto chart-container"
+                />
             </div>
         </div>
     </div>
@@ -156,11 +163,16 @@ import { ref, onMounted, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useAppStore } from '@/stores/index.js';
 import { getAttendanceFromUserAndCourse } from '@/services/communicationsScripts/attendanceComManager.js';
+import { Pie } from 'vue-chartjs'
+import { Chart, ArcElement, Tooltip, Legend } from 'chart.js'
 
 const router = useRouter();
 const route = useRoute();
 const appStore = useAppStore();
 const assistance = ref([]);
+
+
+
 
 // Càrrega inicial de dades
 onMounted(async () => {
@@ -168,10 +180,61 @@ onMounted(async () => {
         const courseId = route.params.id;
         assistance.value = await getAttendanceFromUserAndCourse(appStore.user.id, courseId);
         console.log('Assistència carregada:', assistance.value);
+        assistance.value.sort((a, b) => {
+            const dateA = new Date(a.day);
+            const dateB = new Date(b.day);
+            if (dateA.getTime() !== dateB.getTime()) {
+                return dateA - dateB;
+            }
+            // Compare hour as "HH:mm"
+            const [hourA, minA] = a.hour.split(':').map(Number);
+            const [hourB, minB] = b.hour.split(':').map(Number);
+            if (hourA !== hourB) return hourA - hourB;
+            return minA - minB;
+        });
     } catch (error) {
         console.error('Error carregant assistència:', error);
     }
 });
+
+Chart.register(ArcElement, Tooltip, Legend)
+
+const pieData = computed(() => {
+    const total = assistance.value.length
+    const present = assistance.value.filter(h => h.assisted === 'yes').length
+    const unjustified = assistance.value.filter(h => h.assisted === 'unjustified').length
+    const justified = assistance.value.filter(h => h.assisted === 'justified').length
+    const late = assistance.value.filter(h => h.assisted === 'late').length
+    return {
+        labels: ['Present', 'Falta injustificada', 'Falta justificada', 'Retard'],
+        datasets: [
+            {
+                data: [present, unjustified, justified, late],
+                backgroundColor: [
+                    'rgba(34,197,94,0.7)',      // green
+                    'rgba(239,68,68,0.7)',      // red
+                    'rgba(253,224,71,0.7)',     // yellow
+                    'rgba(251,146,60,0.7)'      // orange
+                ],
+                borderColor: [
+                    'rgba(34,197,94,1)',
+                    'rgba(239,68,68,1)',
+                    'rgba(253,224,71,1)',
+                    'rgba(251,146,60,1)'
+                ],
+                borderWidth: 1
+            }
+        ]
+    }
+})
+const pieOptions = {
+    responsive: true,
+    plugins: {
+        legend: {
+            labels: { color: '#fff' }
+        }
+    }
+}
 
 // Funcions de càlcul
 function calculateHoursAssisted() {

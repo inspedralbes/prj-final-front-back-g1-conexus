@@ -57,8 +57,8 @@ Assistance.belongsTo(User, { foreignKey: 'user_id' });
 User.hasMany(Assistance, { foreignKey: 'user_id' });
 
 // Assistance - Course relationship (Many-to-One)
-Assistance.belongsTo(Course, { foreignKey: 'course_id' });
-Course.hasMany(Assistance, { foreignKey: 'course_id' });
+Assistance.belongsTo(Course, { foreignKey: 'course_id', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+Course.hasMany(Assistance, { foreignKey: 'course_id', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
 
 // LostObject - User relationship (Many-to-One)
 LostObject.belongsTo(User, { foreignKey: 'user_id' });

@@ -43,7 +43,9 @@ export const useAppStore = defineStore('appStore', {
       this.user = {};
       this.accessToken = '';
     },
-    // Methods for handling unread messages
+    setUserDepartment(department) {
+      this.user.department_id = department;
+    },    // Methods for handling unread messages
     setUnreadCount(count) {
       this.unreadMessagesCount = count;
     },
