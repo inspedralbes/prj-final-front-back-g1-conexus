@@ -27,5 +27,7 @@ COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
 # Exponer puertos
 EXPOSE 80 443
 
+ENV NODE_ENV=production
+
 # Comando para iniciar Nginx
 CMD ["nginx", "-g", "daemon off;"]
