@@ -40,7 +40,8 @@ function getServiceDescription(serviceName) {
         'grades': { name: 'Sistema de Notes', tech: 'Node.js 18.x' },
         'rooms': { name: 'Gestió d\'Aules', tech: 'Node.js 18.x' },
         'lostObjects': { name: 'Objectes Perduts', tech: 'Node.js 18.x' },
-        'canteen': { name: 'Servei de Menjador', tech: 'Node.js 18.x' }
+        'canteen': { name: 'Servei de Menjador', tech: 'Node.js 18.x' },
+        'chat': { name: 'Xat', tech: 'Node.js 18.x' },
     };
     
     return serviceDescriptions[serviceName] || { name: `Servei ${serviceName}`, tech: 'Node.js 18.x' };

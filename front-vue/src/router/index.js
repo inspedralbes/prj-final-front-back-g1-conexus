@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAppStore } from '@/stores/index.js'
+import { getServiceStatus } from '@/services/communicationsScripts/servicesManager';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -79,8 +80,8 @@ const router = createRouter({
           component: () => import('@/views/Teachers/courses.vue')
         },
         {
-          path:'departments',
-          name:'teacher-departments',
+          path: 'departments',
+          name: 'teacher-departments',
           component: () => import('@/views/Teachers/departments.vue')
         },
         {
@@ -309,7 +310,15 @@ const router = createRouter({
       name: 'NotFound',
       component: () => import('@/views/errors/NotFound.vue'),
       meta: { requiresAuth: false }
-    }
+    },
+    {
+      path: '/maintenance',
+      name: 'Maintenance',
+      component: () => import('@/views/errors/Maintenance.vue'),
+      meta: {
+        requiresAuth: false
+      }
+    },
   ],
 })
 
@@ -364,6 +373,58 @@ router.beforeEach((to, from, next) => {
     }
   }
   next();
+});
+
+// Añadir este interceptor después del interceptor de autenticación existente
+router.beforeEach(async (to, from, next) => {
+  // Ignorar verificación para página de mantenimiento y login
+  if (to.name === 'Maintenance' || to.name === 'home' || to.path === '/') {
+    return next();
+  }
+
+  try {
+    let serviceToCheck = null;
+
+    if (to.path.includes('/canteen') || to.path.includes('/menu-admin')) {
+      serviceToCheck = 'canteen';
+    } else if (to.path.includes('/chats') || to.path.includes('/chat')) {
+      serviceToCheck = 'chat';
+    } else if (to.path.includes('/lost-objects') || to.path.includes('/config-lost-objects')) {
+      serviceToCheck = 'lostObjects';
+    } else if (to.path.includes('/incidents') || to.path.includes('/assignations') ||
+      to.path.includes('/solutions') || to.path.includes('/config-incidents')) {
+      serviceToCheck = 'incidents';
+    } else if (to.path.includes('/assistence')) {
+      serviceToCheck = 'assistances';
+    } else if (to.path.includes('/grades')) {
+      serviceToCheck = 'grades';
+    } else if (to.path.includes('/roomReservation') || to.path.includes('/config-rooms') ||
+      to.path.includes('/new-room')) {
+      serviceToCheck = 'rooms';
+    }
+
+    // Si no hay servicio específico que verificar para esta ruta, continuar
+    if (!serviceToCheck) {
+      return next();
+    }
+
+    // Verificar estado del servicio
+    const serviceStatus = await getServiceStatus(serviceToCheck);
+
+    if (!serviceStatus || serviceStatus.state !== 'running') {
+      // Redireccionar a página de mantenimiento con información sobre el servicio
+      return next({
+        name: 'Maintenance',
+        params: { service: serviceToCheck }
+      });
+    }
+
+    next();
+  } catch (error) {
+    console.error('Error verificando estado del servicio:', error);
+    // En caso de error de conexión, también redirigir a mantenimiento
+    next({ name: 'Maintenance' });
+  }
 });
 
 export default router
