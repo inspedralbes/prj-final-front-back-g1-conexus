@@ -12,6 +12,165 @@
       </p>
     </div>
 
+    <!-- Barra de búsqueda con filtros -->
+    <div class="mb-8 bg-slate-800/50 backdrop-blur-sm rounded-xl p-6 shadow-lg">
+      <div class="flex flex-col gap-4">
+        <!-- Input de búsqueda -->
+        <div class="relative">
+          <div
+            class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
+          >
+            <svg
+              class="w-5 h-5 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              ></path>
+            </svg>
+          </div>
+          <input
+            type="text"
+            class="block w-full pl-10 pr-3 py-2.5 border border-gray-600 rounded-lg bg-slate-700/50 text-white placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Buscar professors..."
+            v-model="searchQuery"
+            @keydown.enter="searchTeachers"
+          />
+        </div>
+
+        <!-- Filtros desplegables -->
+        <div class="flex flex-wrap gap-4">
+          <!-- Filtro por departamento -->
+          <div class="relative">
+            <select
+              v-model="selectedDepartment"
+              class="block w-full px-4 py-2.5 pr-12 border border-gray-600 rounded-lg bg-slate-700/50 text-white focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option value="">Tots els departaments</option>
+              <option v-for="dep in departments" :key="dep.id" :value="dep.id">
+                {{ dep.name }}
+              </option>
+            </select>
+            <button
+              @click="filterByDepartment"
+              class="ml-2 px-2 py-1 bg-blue-500/20 text-blue-400 rounded hover:bg-blue-500/30 absolute right-10 top-1/2 transform -translate-y-1/2"
+            >
+              +
+            </button>
+          </div>
+
+          <!-- Filtro por curso -->
+          <div class="relative">
+            <select
+              v-model="selectedCourse"
+              class="block w-full px-4 py-2.5 pr-12 border border-gray-600 rounded-lg bg-slate-700/50 text-white focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option value="">Tots els cursos</option>
+              <option
+                v-for="course in courses"
+                :key="course.id"
+                :value="course.id"
+              >
+                {{ course.course_name }}
+              </option>
+            </select>
+            <button
+              @click="filterByCourse"
+              class="ml-2 px-2 py-1 bg-blue-500/20 text-blue-400 rounded hover:bg-blue-500/30 absolute right-10 top-1/2 transform -translate-y-1/2"
+            >
+              +
+            </button>
+          </div>
+        </div>
+
+        <!-- Tags de filtros activos -->
+        <div v-if="filterTags.length > 0" class="flex flex-wrap gap-2 mt-2">
+          <div
+            v-for="(tag, index) in filterTags"
+            :key="index"
+            class="flex items-center gap-1 px-3 py-1 rounded-full text-sm"
+            :class="getTagClass(tag.type)"
+          >
+            <span>{{ tag.label }}</span>
+            <button @click="removeTag(index)" class="ml-1 focus:outline-none">
+              <svg
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                ></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resultados de la búsqueda -->
+      <div
+        v-if="searchResults.length > 0"
+        class="mt-6 border-t border-slate-700 pt-4"
+      >
+        <h3 class="text-lg font-semibold text-gray-300 mb-3">
+          Resultats de la cerca
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div
+            v-for="teacher in searchResults"
+            :key="teacher.id"
+            class="bg-slate-700/30 rounded-lg p-4 hover:bg-slate-700/50 transition-colors cursor-pointer"
+          >
+            <div class="flex items-center gap-3">
+              <div
+                class="w-12 h-12 rounded-full overflow-hidden bg-blue-500/20 flex items-center justify-center"
+              >
+                <img
+                  v-if="teacher.profile"
+                  :src="`${getImageUrl(teacher.profile)}`"
+                  alt="Profile"
+                  class="w-full h-full object-cover"
+                />
+                <span v-else class="text-xl text-blue-300">{{
+                  getInitials(teacher.name)
+                }}</span>
+              </div>
+              <div>
+                <h4 class="font-medium text-white">{{ teacher.name }}</h4>
+                <p class="text-sm text-gray-400">{{ teacher.email }}</p>
+                <p
+                  v-if="teacher.department_name"
+                  class="text-xs text-blue-300 mt-1"
+                >
+                  Departament: {{ teacher.department_name }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Estado de carga o mensaje de no resultados -->
+      <div v-else-if="isSearching" class="mt-6 text-center py-4">
+        <div
+          class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-400 mx-auto"
+        ></div>
+        <p class="text-gray-400 mt-2">Buscant professors...</p>
+      </div>
+      <div v-else-if="hasSearched" class="mt-6 text-center py-4 text-gray-400">
+        No s'han trobat professors amb els criteris de cerca especificats
+      </div>
+    </div>
+
     <!-- Targetes de Resum -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
       <!-- Els meus cursos -->
@@ -560,12 +719,15 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useAppStore } from "@/stores";
 import {
   getAllCourses,
   getAlumns,
   getCoursesFromUser,
+  getAllDepartments,
+  getAllUsers,
+  getAllTeachersFromDepartment,
 } from "@/services/communicationsScripts/mainManager";
 import { getReportStats } from "@/services/communicationsScripts/incidentsManager";
 import {
@@ -589,6 +751,245 @@ const teacherStats = ref({
   lostObjects: 0,
   newLostObjects: 0,
 });
+
+// Variables para la búsqueda y filtrado
+const searchQuery = ref("");
+const selectedDepartment = ref("");
+const selectedCourse = ref("");
+const filterTags = ref([]);
+const departments = ref([]);
+const courses = ref([]);
+const searchResults = ref([]);
+const isSearching = ref(false);
+const hasSearched = ref(false);
+const allTeachers = ref([]);
+
+// Cargar departamentos y cursos para los filtros
+const loadFiltersData = async () => {
+  try {
+    // Cargar departamentos
+    const departmentsData = await getAllDepartments();
+    if (Array.isArray(departmentsData)) {
+      departments.value = departmentsData;
+    }
+
+    // Cargar todos los cursos
+    const coursesData = await getAllCourses();
+    if (Array.isArray(coursesData)) {
+      courses.value = coursesData;
+    }
+
+    // Cargar todos los profesores (usuarios con typeUsers_id = 1)
+    const users = await getAllUsers();
+    if (Array.isArray(users)) {
+      allTeachers.value = users.filter((user) => user.typeUsers_id === 1);
+    }
+  } catch (error) {
+    console.error("Error al cargar datos para filtros:", error);
+  }
+};
+
+// Función para buscar profesores basado en todos los filtros activos
+const applyAllFilters = async () => {
+  isSearching.value = true;
+  hasSearched.value = true;
+  searchResults.value = [];
+
+  try {
+    // Obtener la lista base de profesores
+    let filteredTeachers = [];
+
+    // Si hay un filtro de departamento, usar ese como base
+    const departmentTag = filterTags.value.find(
+      (tag) => tag.type === "department"
+    );
+    if (departmentTag) {
+      const depTeachers = await getAllTeachersFromDepartment(
+        departmentTag.value
+      );
+      filteredTeachers = Array.isArray(depTeachers) ? depTeachers : [];
+    } else {
+      // Si no hay filtro de departamento, usar todos los profesores
+      filteredTeachers = [...allTeachers.value];
+    }
+
+    // Aplicar filtro de búsqueda por nombre si existe
+    const searchTag = filterTags.value.find((tag) => tag.type === "search");
+    if (searchTag && searchTag.value) {
+      const searchTerm = searchTag.value.toLowerCase();
+      filteredTeachers = filteredTeachers.filter((teacher) =>
+        teacher.name?.toLowerCase().includes(searchTerm)
+      );
+    }
+
+    // Aplicar filtro de curso si existe
+    const courseTag = filterTags.value.find((tag) => tag.type === "course");
+    if (courseTag) {
+      // Obtener el curso seleccionado
+      const selectedCourse = courses.value.find(
+        (c) => c.id === courseTag.value || c.course_id === courseTag.value
+      );
+      if (selectedCourse) {
+        // Filtrar profesores que tienen este curso asignado
+        filteredTeachers = filteredTeachers.filter(
+          (teacher) => teacher.id === selectedCourse.course_teacher_id
+        );
+      }
+    }
+
+    // Enriquecer los resultados con nombres de departamento
+    searchResults.value = await Promise.all(
+      filteredTeachers.map(async (teacher) => {
+        if (teacher.department_id) {
+          const department = departments.value.find(
+            (d) => d.id === teacher.department_id
+          );
+          return {
+            ...teacher,
+            department_name: department ? department.name : "Desconocido",
+          };
+        }
+        return teacher;
+      })
+    );
+  } catch (error) {
+    console.error("Error al aplicar filtros:", error);
+  } finally {
+    isSearching.value = false;
+  }
+};
+
+// Función para buscar profesores por nombre
+const searchTeachers = async () => {
+  if (!searchQuery.value.trim()) return;
+
+  // Actualizar o añadir el tag de búsqueda
+  const existingTagIndex = filterTags.value.findIndex(
+    (tag) => tag.type === "search"
+  );
+  if (existingTagIndex !== -1) {
+    filterTags.value[existingTagIndex].value = searchQuery.value;
+    filterTags.value[existingTagIndex].label = `Nom: ${searchQuery.value}`;
+  } else {
+    filterTags.value.push({
+      type: "search",
+      value: searchQuery.value,
+      label: `Nom: ${searchQuery.value}`,
+    });
+  }
+
+  searchQuery.value = "";
+
+  // Aplicar todos los filtros
+  await applyAllFilters();
+};
+
+// Función para filtrar por departamento
+const filterByDepartment = async () => {
+  if (!selectedDepartment.value) return;
+
+  const department = departments.value.find(
+    (dep) => dep.id === selectedDepartment.value
+  );
+  if (!department) return;
+
+  // Actualizar o añadir el tag de departamento
+  const existingTagIndex = filterTags.value.findIndex(
+    (tag) => tag.type === "department"
+  );
+  if (existingTagIndex !== -1) {
+    filterTags.value[existingTagIndex].value = selectedDepartment.value;
+    filterTags.value[
+      existingTagIndex
+    ].label = `Departament: ${department.name}`;
+  } else {
+    filterTags.value.push({
+      type: "department",
+      value: selectedDepartment.value,
+      label: `Departament: ${department.name}`,
+    });
+  }
+
+  selectedDepartment.value = "";
+
+  // Aplicar todos los filtros
+  await applyAllFilters();
+};
+
+// Función para filtrar por curso
+const filterByCourse = async () => {
+  if (!selectedCourse.value) return;
+
+  const course = courses.value.find(
+    (c) => c.id === selectedCourse.value || c.course_id === selectedCourse.value
+  );
+  if (!course) return;
+
+  // Actualizar o añadir el tag de curso
+  const existingTagIndex = filterTags.value.findIndex(
+    (tag) => tag.type === "course"
+  );
+  if (existingTagIndex !== -1) {
+    filterTags.value[existingTagIndex].value = selectedCourse.value;
+    filterTags.value[existingTagIndex].label = `Curs: ${course.course_name}`;
+  } else {
+    filterTags.value.push({
+      type: "course",
+      value: selectedCourse.value,
+      label: `Curs: ${course.course_name}`,
+    });
+  }
+
+  selectedCourse.value = "";
+
+  // Aplicar todos los filtros
+  await applyAllFilters();
+};
+
+// Eliminar tag de filtro y actualizar resultados
+const removeTag = async (index) => {
+  filterTags.value.splice(index, 1);
+
+  // Si no quedan filtros, limpiar resultados
+  if (filterTags.value.length === 0) {
+    searchResults.value = [];
+    hasSearched.value = false;
+  } else {
+    // Aplicar los filtros restantes
+    await applyAllFilters();
+  }
+};
+
+// Obtener clase CSS según tipo de tag
+const getTagClass = (type) => {
+  switch (type) {
+    case "search":
+      return "bg-indigo-500/20 text-indigo-300";
+    case "department":
+      return "bg-green-500/20 text-green-300";
+    case "course":
+      return "bg-blue-500/20 text-blue-300";
+    default:
+      return "bg-gray-500/20 text-gray-300";
+  }
+};
+
+// Función para obtener iniciales del nombre para el avatar
+const getInitials = (name) => {
+  if (!name) return "?";
+  return name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase();
+};
+
+// Función para obtener la URL completa de la imagen de perfil
+const getImageUrl = (profilePath) => {
+  if (!profilePath) return "";
+  if (profilePath.startsWith("http")) return profilePath;
+  return `${import.meta.env.VITE_BACKEND_URL}${profilePath}`;
+};
 
 const recentActivity = ref([]);
 const isLoadingActivity = ref(false);
@@ -832,7 +1233,7 @@ const loadRecentActivity = async () => {
         type: "assignment",
         title: "Nova tasca creada",
         description:
-          'Has creat "Pràctica de programació" per al curs Desenvolupament Web',
+          'Has creat "Pràctica de programació" per al curs desenvolupament Web',
         date: new Date(Date.now() - 3600000), // 1 hora atrás
       },
       {
@@ -1035,6 +1436,7 @@ onMounted(async () => {
   await loadTeacherStats();
   await loadRecentActivity();
   await loadTodayClasses();
+  await loadFiltersData();
 });
 </script>
 
