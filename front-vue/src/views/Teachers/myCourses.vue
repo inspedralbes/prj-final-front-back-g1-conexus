@@ -51,11 +51,11 @@
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                                        <button @click="goToAssistance(course.id)"
+                                        <button @click="goToAssistance(course.id)" v-if="actualRoute === 'teacher-assistence'"
                                             class="px-3 py-1 bg-blue-500/10 text-blue-400 hover:text-blue-300 rounded-md transition-colors">
                                             Asistencia
                                         </button>
-                                        <button @click="goToGrades(course.id)"
+                                        <button @click="goToGrades(course.id)" v-if="actualRoute === 'teacher-grades'"
                                             class="px-3 py-1 bg-purple-500/10 text-purple-400 hover:text-purple-300 rounded-md transition-colors">
                                             Avaluació
                                         </button>
@@ -79,6 +79,9 @@ import { useRouter } from 'vue-router'
 const store = useAppStore()
 const courses = ref([])
 const route = useRouter()
+import { computed } from 'vue'
+
+const actualRoute = computed(() => route.currentRoute.value.name)
 onMounted(async () => {
     courses.value = await getCoursesFromUser(store.getUserId())
 })
