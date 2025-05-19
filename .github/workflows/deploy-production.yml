@@ -92,7 +92,7 @@ jobs:
           echo "NGINX_DB_PASSWORD=${{ secrets.NGINX_DB_PASSWORD }}" >> /opt/conexus/.env
           echo "VITE_FIREBASE_API_KEY=${{ secrets.VITE_FIREBASE_API_KEY }}" >> /opt/conexus/.env
           
-          # Añadir variables de MongoDB
+          # Añadir variables de MongoDB y mongo-express
           echo "MONGO_ROOT_USERNAME=${{ secrets.MONGO_ROOT_USERNAME }}" >> /opt/conexus/.env
           echo "MONGO_ROOT_PASSWORD=${{ secrets.MONGO_ROOT_PASSWORD }}" >> /opt/conexus/.env
           echo "MONGO_ROOT_URL=${{ secrets.MONGO_ROOT_URL }}" >> /opt/conexus/.env
