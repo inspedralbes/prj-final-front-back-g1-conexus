@@ -5,8 +5,6 @@ import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { sequelize } from './models/index.js';
-
-import assistenceRoutes from './routes/assistenceRoutes.js';
 import reportRoutes from "./routes/reportRoutes.js";
 import nodemailer from 'nodemailer';
 
@@ -39,8 +37,6 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use('/uploads', express.static('uploads'));
 app.use("/api/reports", reportRoutes);
-// app.use("/api/reports", reportRoutes);
-// app.use("/incident/api/reports", reportRoutes);
 
 sequelize.sync().then(() => {
     app.listen(PORT, () => {

@@ -395,7 +395,7 @@ router.beforeEach(async (to, from, next) => {
       to.path.includes('/solutions') || to.path.includes('/config-incidents')) {
       serviceToCheck = 'incidents';
     } else if (to.path.includes('/assistence')) {
-      serviceToCheck = 'assistances';
+      serviceToCheck = 'assistences';
     } else if (to.path.includes('/grades')) {
       serviceToCheck = 'grades';
     } else if (to.path.includes('/roomReservation') || to.path.includes('/config-rooms') ||
