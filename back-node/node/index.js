@@ -137,7 +137,7 @@ app.post("/api/services/start-all", verifyTokenMiddleware, (req, res) => {
     res.json({ message: "Iniciando todos los servicios", results });
 });
 
-app.post("/api/services/stop-all",verifyTokenMiddleware, (req, res) => {
+app.post("/api/services/stop-all", verifyTokenMiddleware, (req, res) => {
     const results = stopAllServices();
     res.json({ message: "Deteniendo todos los servicios", results });
 });
@@ -168,7 +168,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 app.use("/api/chat", chatRoutes);
 
-// // startAllServices();
+startAllServices();
 
 // Rutas para gestionar los servicios
 app.get("/api/services", (req, res) => {
