@@ -459,7 +459,8 @@ import {
     startAllServices as startAll,
     stopAllServices as stopAll,
     createService,
-    uploadServiceFile
+    uploadServiceFile,
+    deleteService as deleteServiceApi,
 } from '@/services/communicationsScripts/servicesManager';
 
 const showAddModal = ref(false);
@@ -736,11 +737,9 @@ const deleteService = async () => {
         }
 
         // Llamada a la API para eliminar el servicio
-        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/services/${serviceToDelete.value}`, {
-            method: 'DELETE',
-        });
+        const response=await deleteServiceApi(serviceToDelete.value);
 
-        if (!response.ok) {
+        if (!response.success) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
