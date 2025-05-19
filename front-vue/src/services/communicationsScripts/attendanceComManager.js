@@ -1,18 +1,22 @@
 const BACK_URL = import.meta.env.VITE_ASSISTENCE_URL;
 
+function handle401(response) {
+    if (response.status === 401) {
+        window.location.href = '/';
+        return true;
+    }
+    return false;
+}
+
 export const updateAttendance = async (courseId, userId, hour, assisted, day) => {
     try {
-        console.log("course_id", courseId);
-        console.log("user_id", userId);
-        console.log("hour", hour);
-        console.log("assisted", assisted);
-        console.log("day", day);
-        const dataToSend = {};
-        dataToSend.course_id = courseId;
-        dataToSend.user_id = userId;
-        dataToSend.hour = hour;
-        dataToSend.assisted = assisted;
-        dataToSend.day = day;
+        const dataToSend = {
+            course_id: courseId,
+            user_id: userId,
+            hour,
+            assisted,
+            day,
+        };
         const response = await fetch(`${BACK_URL}api/assistences`, {
             method: 'POST',
             headers: {
@@ -21,6 +25,7 @@ export const updateAttendance = async (courseId, userId, hour, assisted, day) =>
             },
             body: JSON.stringify(dataToSend),
         });
+        if (handle401(response)) return;
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -29,7 +34,8 @@ export const updateAttendance = async (courseId, userId, hour, assisted, day) =>
     } catch (error) {
         console.error('Error fetching courses:', error);
     }
-}
+};
+
 export const getAttendanceFromCourse = async (courseId) => {
     try {
         const response = await fetch(`${BACK_URL}api/assistences/course/${courseId}`, {
@@ -39,6 +45,7 @@ export const getAttendanceFromCourse = async (courseId) => {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
+        if (handle401(response)) return;
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -47,7 +54,7 @@ export const getAttendanceFromCourse = async (courseId) => {
     } catch (error) {
         console.error('Error fetching courses:', error);
     }
-}
+};
 
 export const getAlumns = async (courseId) => {
     try {
@@ -58,6 +65,7 @@ export const getAlumns = async (courseId) => {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
+        if (handle401(response)) return;
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -66,7 +74,7 @@ export const getAlumns = async (courseId) => {
     } catch (error) {
         console.error('Error fetching courses:', error);
     }
-}
+};
 
 export const getAttendanceFromDay = async (courseId, day) => {
     try {
@@ -77,6 +85,7 @@ export const getAttendanceFromDay = async (courseId, day) => {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
+        if (handle401(response)) return;
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -85,7 +94,8 @@ export const getAttendanceFromDay = async (courseId, day) => {
     } catch (error) {
         console.error('Error fetching courses:', error);
     }
-}
+};
+
 export const getAttendanceFromUserAndCourse = async (userId, courseId) => {
     try {
         const response = await fetch(`${BACK_URL}api/assistences/user/${userId}/course/${courseId}`, {
@@ -95,6 +105,7 @@ export const getAttendanceFromUserAndCourse = async (userId, courseId) => {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
+        if (handle401(response)) return;
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -103,4 +114,4 @@ export const getAttendanceFromUserAndCourse = async (userId, courseId) => {
     } catch (error) {
         console.error('Error fetching courses:', error);
     }
-}
+};

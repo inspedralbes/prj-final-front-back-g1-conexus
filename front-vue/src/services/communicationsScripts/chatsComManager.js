@@ -6,6 +6,14 @@
 // URL base del servicio de chat
 const API_URL_CHAT = import.meta.env.VITE_CHAT_URL;
 
+function handle401(response) {
+    if (response.status === 401) {
+        window.location.href = '/';
+        return true;
+    }
+    return false;
+}
+
 /**
  * Obtiene todos los chats disponibles
  * @returns {Promise<Array>} Lista de chats
@@ -13,6 +21,7 @@ const API_URL_CHAT = import.meta.env.VITE_CHAT_URL;
 export const getAllChats = async () => {
     try {
         const response = await fetch(`${API_URL_CHAT}api/chat`);
+        if (handle401(response)) return;
         if (!response.ok) {
             throw new Error(`Error al obtener chats: ${response.statusText}`);
         }
@@ -31,6 +40,7 @@ export const getAllChats = async () => {
 export const getChatById = async (chatId) => {
     try {
         const response = await fetch(`${API_URL_CHAT}api/chat/${chatId}`);
+        if (handle401(response)) return;
         if (!response.ok) {
             throw new Error(`Error al obtener chat: ${response.statusText}`);
         }
@@ -49,6 +59,7 @@ export const getChatById = async (chatId) => {
 export const getChatByName = async (chatName) => {
     try {
         const response = await fetch(`${API_URL_CHAT}api/chat/name/${encodeURIComponent(chatName)}`);
+        if (handle401(response)) return;
         if (!response.ok) {
             throw new Error(`Error al obtener chat por nombre: ${response.statusText}`);
         }
@@ -76,11 +87,10 @@ export const createChat = async (chatData) => {
             },
             body: JSON.stringify(chatData)
         });
-
+        if (handle401(response)) return;
         if (!response.ok) {
             throw new Error(`Error al crear chat: ${response.statusText}`);
         }
-
         return await response.json();
     } catch (error) {
         console.error('Error en createChat:', error);
@@ -116,7 +126,7 @@ export const sendMessage = async (chatId, teacherId, message) => {
                 links
             })
         });
-
+        if (handle401(response)) return;
         if (!response.ok) {
             throw new Error(`Error al enviar mensaje: ${response.statusText}`);
         }
@@ -161,6 +171,7 @@ export const deleteMessage = async (chatId, messageId) => {
         const response = await fetch(`${API_URL_CHAT}api/chat/${chatId}/message/${messageId}`, {
             method: 'DELETE'
         });
+        if (handle401(response)) return;
 
         // Si el mensaje no se encuentra, manejarlo de forma especial
         if (response.status === 404) {
@@ -196,7 +207,7 @@ export const deleteChat = async (chatId) => {
         const response = await fetch(`${API_URL_CHAT}api/chat/${chatId}`, {
             method: 'DELETE'
         });
-
+        if (handle401(response)) return;
         if (!response.ok) {
             throw new Error(`Error al eliminar el chat: ${response.statusText}`);
         }
@@ -216,6 +227,7 @@ export const deleteChat = async (chatId) => {
 export const getChatsByUser = async (teacherId) => {
     try {
         const response = await fetch(`${API_URL_CHAT}api/chat/user/${teacherId}`);
+        if (handle401(response)) return;
         if (!response.ok) {
             throw new Error(`Error al obtener chats del usuario: ${response.statusText}`);
         }

@@ -8,7 +8,7 @@ const SECRET_KEY = process.env.NODE_SECRET_KEY_TOKEN;
 export function generateToken(email) {
     const payload = { email };
     const secret = SECRET_KEY;
-    const options = { expiresIn: '1h' };
+    const options = { expiresIn: '30s' };
     const token = jwt.sign(payload, secret, options);
     return token;
 }

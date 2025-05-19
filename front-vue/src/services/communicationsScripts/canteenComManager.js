@@ -1,5 +1,14 @@
 const BACK_URL = import.meta.env.VITE_CANTEEN_URL;
-export const getAllCanteenItems=async () => {
+
+function handle401(response) {
+    if (response.status === 401) {
+        window.location.href = '/';
+        return true;
+    }
+    return false;
+}
+
+export const getAllCanteenItems = async () => {
     try {
         const response = await fetch(`${BACK_URL}api/canteen`, {
             method: 'GET',
@@ -8,6 +17,7 @@ export const getAllCanteenItems=async () => {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
+        if (handle401(response)) return;
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -17,9 +27,9 @@ export const getAllCanteenItems=async () => {
     } catch (error) {
         console.error('Error fetching courses:', error);
     }
-
 }
-export const getCanteenItemById=async (id) => {
+
+export const getCanteenItemById = async (id) => {
     try {
         const response = await fetch(`${BACK_URL}api/canteen/${id}`, {
             method: 'GET',
@@ -28,6 +38,7 @@ export const getCanteenItemById=async (id) => {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
+        if (handle401(response)) return;
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -36,9 +47,9 @@ export const getCanteenItemById=async (id) => {
     } catch (error) {
         console.error('Error fetching courses:', error);
     }
-
 }
-export const createItem=async (canteenItem) => {
+
+export const createItem = async (canteenItem) => {
     try {
         const response = await fetch(`${BACK_URL}api/canteen`, {
             method: 'POST',
@@ -48,6 +59,7 @@ export const createItem=async (canteenItem) => {
             },
             body: JSON.stringify(canteenItem),
         });
+        if (handle401(response)) return;
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -57,7 +69,8 @@ export const createItem=async (canteenItem) => {
         console.error('Error creating course:', error);
     }
 }
-export const updateItem=async (canteenItem) => {
+
+export const updateItem = async (canteenItem) => {
     try {
         const response = await fetch(`${BACK_URL}api/canteen/${canteenItem.id}`, {
             method: 'PUT',
@@ -67,6 +80,7 @@ export const updateItem=async (canteenItem) => {
             },
             body: JSON.stringify(canteenItem),
         });
+        if (handle401(response)) return;
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -76,7 +90,8 @@ export const updateItem=async (canteenItem) => {
         console.error('Error updating course:', error);
     }
 }
-export const deleteItem=async (id) => {
+
+export const deleteItem = async (id) => {
     try {
         const response = await fetch(`${BACK_URL}api/canteen/${id}`, {
             method: 'DELETE',
@@ -85,6 +100,7 @@ export const deleteItem=async (id) => {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
+        if (handle401(response)) return;
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -94,7 +110,8 @@ export const deleteItem=async (id) => {
         console.error('Error deleting course:', error);
     }
 }
-export const getAllEnabledCanteenItems=async () => {
+
+export const getAllEnabledCanteenItems = async () => {
     try {
         const response = await fetch(`${BACK_URL}api/canteen/allItems/enabled`, {
             method: 'GET',
@@ -103,6 +120,7 @@ export const getAllEnabledCanteenItems=async () => {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
+        if (handle401(response)) return;
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -111,5 +129,4 @@ export const getAllEnabledCanteenItems=async () => {
     } catch (error) {
         console.error('Error fetching courses:', error);
     }
-
 }

@@ -1,5 +1,13 @@
 const API_URL = import.meta.env.VITE_LOST_OBJECT_URL;
 
+function handle401(response) {
+    if (response.status === 401) {
+        window.location.href = '/';
+        return true;
+    }
+    return false;
+}
+
 const handleResponse = async (response) => {
     if (!response.ok) {
         const error = await response.json().catch(() => ({}));
@@ -17,11 +25,10 @@ export const getAllLostObjects = async () => {
                 "Content-Type": "application/json",
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
-        }
-        );
+        });
+        if (handle401(response)) return;
         const objects = await handleResponse(response);
 
-        // Para cada objeto, carga sus respuestas
         for (const object of objects) {
             try {
                 const responsesData = await getLostObjectResponses(object.id);
@@ -41,7 +48,6 @@ export const getAllLostObjects = async () => {
     }
 };
 
-// Añadir esta función:
 export const getLostObjectsResponsesCount = async () => {
     try {
         const response = await fetch(`${API_URL}api/lost-objects/responses-count`, {
@@ -50,8 +56,8 @@ export const getLostObjectsResponsesCount = async () => {
                 "Content-Type": "application/json",
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
-        }
-        );
+        });
+        if (handle401(response)) return;
         return await handleResponse(response);
     } catch (error) {
         console.error('Error fetching response counts:', error);
@@ -67,8 +73,8 @@ export const getLostObjectById = async (id) => {
                 "Content-Type": "application/json",
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
-        }
-        );
+        });
+        if (handle401(response)) return;
         return await handleResponse(response);
     } catch (error) {
         console.error(`Error fetching lost object ${id}:`, error);
@@ -79,13 +85,9 @@ export const getLostObjectById = async (id) => {
 export const createLostObject = async (lostObjectData, userId) => {
     try {
         const formData = new FormData();
-        
-        // Añadir los campos directamente en el FormData (no dentro de un objeto serializado)
         formData.append('title', lostObjectData.objectName);
         formData.append('description', lostObjectData.description);
         formData.append('user_id', userId);
-        
-        // Añadir la imagen si existe
         if (lostObjectData.image) {
             formData.append('image', lostObjectData.image);
         }
@@ -97,7 +99,7 @@ export const createLostObject = async (lostObjectData, userId) => {
             },
             body: formData,
         });
-
+        if (handle401(response)) return;
         return await handleResponse(response);
     } catch (error) {
         console.error('Error creating lost object:', error);
@@ -113,11 +115,10 @@ export const deleteLostObject = async (id) => {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
-
+        if (handle401(response)) return;
         if (response.status === 204) {
             return true;
         }
-
         return await handleResponse(response);
     } catch (error) {
         console.error(`Error deleting lost object ${id}:`, error);
@@ -133,8 +134,8 @@ export const getLostObjectResponses = async (lostObjectId) => {
                 "Content-Type": "application/json",
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
-        }
-        );
+        });
+        if (handle401(response)) return;
         return await handleResponse(response);
     } catch (error) {
         console.error(`Error fetching responses for lost object ${lostObjectId}:`, error);
@@ -144,9 +145,6 @@ export const getLostObjectResponses = async (lostObjectId) => {
 
 export const createResponse = async (lostObjectId, responseData) => {
     try {
-        // Asegúrate de que responseData contiene user_id y comment
-        console.log('Enviando respuesta:', responseData); // Añade este log para debug
-
         const response = await fetch(`${API_URL}api/lost-objects/${lostObjectId}/responses`, {
             method: 'POST',
             headers: {
@@ -155,10 +153,11 @@ export const createResponse = async (lostObjectId, responseData) => {
             },
             body: JSON.stringify({
                 user_id: responseData.user_id,
-                lostAndFound_id: lostObjectId, // Añadir esto si es necesario
+                lostAndFound_id: lostObjectId,
                 comment: responseData.comment
             }),
         });
+        if (handle401(response)) return;
         return await handleResponse(response);
     } catch (error) {
         console.error(`Error creating response for lost object ${lostObjectId}:`, error);
@@ -174,11 +173,10 @@ export const deleteResponse = async (lostObjectId, responseId) => {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
-
+        if (handle401(response)) return;
         if (response.status === 204) {
             return true;
         }
-
         return await handleResponse(response);
     } catch (error) {
         console.error(`Error deleting response ${responseId} for lost object ${lostObjectId}:`, error);

@@ -1,6 +1,14 @@
 const BACK_URL = import.meta.env.VITE_GRADE_URL;
 import { getAlumns } from "./mainManager.js";
 
+function handle401(response) {
+    if (response.status === 401) {
+        window.location.href = '/';
+        return true;
+    }
+    return false;
+}
+
 export const getGradesFromUserAndCourse = async (userId, courseId) => {
     try {
         const response = await fetch(`${BACK_URL}api/grades/getAllGradesFromUserAndCourse/${userId}/${courseId}`, {
@@ -10,6 +18,7 @@ export const getGradesFromUserAndCourse = async (userId, courseId) => {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
+        if (handle401(response)) return;
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -19,6 +28,7 @@ export const getGradesFromUserAndCourse = async (userId, courseId) => {
         console.error('Error fetching grades:', error);
     }
 }
+
 export const getTasksFromCourse = async (courseId) => {
     try {
         const response = await fetch(`${BACK_URL}api/tasks/getAllTasksFromCourse/${courseId}`, {
@@ -28,6 +38,7 @@ export const getTasksFromCourse = async (courseId) => {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
+        if (handle401(response)) return;
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -37,10 +48,9 @@ export const getTasksFromCourse = async (courseId) => {
         console.error('Error fetching tasks:', error);
     }
 }
+
 export const createTask = async (task) => {
     try {
-
-
         const response = await fetch(`${BACK_URL}api/tasks`, {
             method: 'POST',
             headers: {
@@ -49,6 +59,7 @@ export const createTask = async (task) => {
             },
             body: JSON.stringify(task),
         });
+        if (handle401(response)) return;
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -58,6 +69,7 @@ export const createTask = async (task) => {
         console.error('Error creating task:', error);
     }
 }
+
 export const getTask = async (taskId, courseId) => {
     try {
         const alumns = await getAlumns(courseId);
@@ -71,6 +83,7 @@ export const getTask = async (taskId, courseId) => {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
+        if (handle401(response)) return;
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -90,7 +103,6 @@ export const getTask = async (taskId, courseId) => {
     }
 }
 
-
 export const updateGrade = async (user_id, grade, task_id) => {
     try {
         if (grade < 0 || grade > 10) {
@@ -109,6 +121,7 @@ export const updateGrade = async (user_id, grade, task_id) => {
             },
             body: JSON.stringify(gradeData),
         });
+        if (handle401(response)) return;
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -128,6 +141,7 @@ export const getCourseStats = async () => {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
+        if (handle401(response)) return { total: 0, createdThisMonth: 0 };
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -148,6 +162,7 @@ export const updateTask = async (task, taskId) => {
             },
             body: JSON.stringify(task),
         });
+        if (handle401(response)) return;
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
