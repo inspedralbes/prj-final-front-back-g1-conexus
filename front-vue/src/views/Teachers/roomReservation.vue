@@ -17,6 +17,7 @@ const rooms = ref([]);
 
 onMounted(async () => {
     rooms.value = await getAllRooms();
+    rooms.value = rooms.value.filter((room) => room.available==true);
 });
 </script>
 

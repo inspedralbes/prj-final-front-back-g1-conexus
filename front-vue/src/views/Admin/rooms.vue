@@ -29,7 +29,18 @@
                 </svg>
                 Llistat de Sales
             </h2>
-
+            <!-- Selector para mostrar/ocultar sales no disponibles -->
+            <div class="mb-4 flex items-center gap-2">
+                <input
+                    type="checkbox"
+                    id="showUnavailable"
+                    v-model="showUnavailable"
+                    class="accent-blue-500 w-4 h-4"
+                />
+                <label for="showUnavailable" class="text-gray-300 cursor-pointer select-none">
+                    Mostrar sales no disponibles
+                </label>
+            </div>
             <div v-if="rooms.length === 0" class="text-center py-8 text-gray-400">
                 <svg class="w-12 h-12 mx-auto mb-4 text-slate-600" fill="none" stroke="currentColor"
                     viewBox="0 0 24 24">
@@ -57,7 +68,14 @@
                                 <p class="text-sm text-gray-400 truncate max-w-md">{{ room.room_description }}</p>
                             </div>
                         </div>
-
+                        <div class="flex flex-col items-center justify-center w-40">
+                            <h5 v-if="room.available" class="text-green-500 font-semibold mb-2 text-center">
+                                Sala disponible
+                            </h5>
+                            <h5 v-else class="text-red-500 font-semibold mb-2 text-center">
+                                La sala no està disponible
+                            </h5>
+                        </div>
                         <div class="flex items-center">
                             <!-- Contador de horarios disponibles -->
                             <span class="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-full text-xs mr-4">
@@ -247,10 +265,16 @@ const animationInterval = ref(null);
 const expandedRooms = ref([]);
 const roomToDelete = ref(null);
 const roomToEdit = ref(null);
+const showUnavailable = ref(false);
+
 
 // Mostrar las tarjetas progresivamente
 const visibleRooms = computed(() => {
-    return rooms.value.slice(0, visibleCount.value);
+    let filtered = rooms.value;
+    if (!showUnavailable.value) {
+        filtered = filtered.filter(room => room.available);
+    }
+    return filtered.slice(0, visibleCount.value);
 });
 
 onMounted(async () => {

@@ -27,6 +27,13 @@
                             class="w-full bg-slate-700/50 border border-slate-600/50 rounded-lg px-4 py-3 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent min-h-[100px]"></textarea>
                     </div>
                 </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2 flex items-center">
+                        <input type="checkbox" v-model="roomAvailable"
+                            class="mr-2 rounded bg-slate-600 border-slate-500 text-blue-500 focus:ring-blue-500" />
+                        Disponible
+                    </label>
+                </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-300 mb-4">Configuració d'horari</label>
@@ -129,7 +136,7 @@ const emit = defineEmits(['close', 'room-updated']);
 const activeDay = ref('monday');
 const roomName = ref('');
 const roomDescription = ref('');
-
+const roomAvailable = ref(false);
 function parseTimeRanges(hours) {
     if (!hours || !Array.isArray(hours)) return [];
     return hours.map(range => {
@@ -160,7 +167,7 @@ onMounted(() => {
     // Inicialitzar amb les dades de la sala
     roomName.value = props.room.room_name;
     roomDescription.value = props.room.room_description;
-    
+    roomAvailable.value = props.room.available;
     roomHours.value = {
         monday: parseTimeRanges(props.room.room_hours_available_monday),
         tuesday: parseTimeRanges(props.room.room_hours_available_tuesday),
@@ -226,6 +233,7 @@ async function sendUpdateRoom() {
         room_name: roomName.value,
         room_description: roomDescription.value,
         room_hours_available: formatRoomHours(roomHours.value, dayEnabled.value),
+        available: roomAvailable.value,
     };
     
     try {
@@ -242,6 +250,7 @@ async function sendUpdateRoom() {
             room_hours_available_wensday: dayEnabled.value.wensday ? formatRoomHours(roomHours.value, dayEnabled.value).wensday : [],
             room_hours_available_thursday: dayEnabled.value.thursday ? formatRoomHours(roomHours.value, dayEnabled.value).thursday : [],
             room_hours_available_friday: dayEnabled.value.friday ? formatRoomHours(roomHours.value, dayEnabled.value).friday : [],
+            available: roomAvailable.value,
         };
         
         emit('room-updated', updatedRoom);

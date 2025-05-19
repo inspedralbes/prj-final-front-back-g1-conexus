@@ -2,6 +2,7 @@
     <div class="card">
         <h3 class="room-title">{{ props.room.room_name }}</h3>
         <h4 class="room-desc">{{ props.room.room_description }}</h4>
+        
         <div>
             <h5>Disponibilitat</h5>
             <ul>
