@@ -1,4 +1,4 @@
-const BACK_URL=import.meta.env.VITE_ROOM_URL;
+const BACK_URL = import.meta.env.VITE_ROOM_URL;
 export const getAllRooms = async () => {
     try {
         const response = await fetch(`${BACK_URL}api/rooms`, {
@@ -17,9 +17,28 @@ export const getAllRooms = async () => {
         return { error: "Network error. Please try again later." };
     }
 };
-export const getReservationsFormRoom = async (id) => {
+export const getReservationsFromRoom = async (id) => {
     try {
         const response = await fetch(`${BACK_URL}api/roomReservations/room/${id}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+        });
+        if (!response.ok) {
+            return { error: `HTTP error! status: ${response.status}` };
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("Network error:", error);
+        return { error: "Network error. Please try again later." };
+    }
+}
+
+export const getReservationsFromUser = async (userId) => {
+    try {
+        const response = await fetch(`${BACK_URL}api/roomReservations/user/${userId}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",

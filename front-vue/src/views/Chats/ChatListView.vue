@@ -8,11 +8,11 @@
         <span
           class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400"
         >
-          Conversaciones
+          Conversacions
         </span>
       </h2>
       <p class="text-gray-400 text-sm">
-        Gestiona tus conversaciones con otros usuarios
+        Gestiona les teves conversacione amb professors i cantina
       </p>
     </div>
 
@@ -24,7 +24,7 @@
             type="text"
             v-model="searchTerm"
             @input="filterUsers"
-            placeholder="Buscar usuario..."
+            placeholder="Buscar usuari..."
             class="w-full px-4 py-3 pl-10 bg-slate-800/50 border border-slate-700/30 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all hover:border-purple-500/50"
           />
           <svg
@@ -111,7 +111,7 @@
           :class="{ 'text-purple-400 font-medium': activeTab === 'existing' }"
           @click="activeTab = 'existing'"
         >
-          Existentes
+          Existents
           <span
             v-if="activeTab === 'existing'"
             class="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-purple-500 to-blue-500"
@@ -122,7 +122,7 @@
           :class="{ 'text-purple-400 font-medium': activeTab === 'unread' }"
           @click="activeTab = 'unread'"
         >
-          No leídos
+          No llegits
           <span
             v-if="unreadChatsCount > 0"
             class="ml-1.5 flex items-center justify-center min-w-[18px] h-5 px-1 text-xs font-semibold rounded-full bg-gradient-to-r from-purple-500 to-blue-500 text-white"
@@ -200,11 +200,11 @@
         :key="user.id"
         class="flex items-center p-3 bg-slate-800/50 rounded-xl border border-slate-700/30 hover:border-slate-600 transition-all duration-300 cursor-pointer"
       >
+        <!-- Avatar section commented out
         <div class="relative" @click="selectUser(user)">
           <img
-            :src="user.profile || '/img/default-avatar.png'"
+            :src="user.profile || defaultAvatar"
             :alt="user.name || user.username"
-            onerror="this.src='/img/default-avatar.png'"
             class="w-12 h-12 rounded-full object-cover border-2 border-slate-700"
           />
           <div
@@ -212,6 +212,7 @@
             class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-slate-800 animate-pulse"
           ></div>
         </div>
+        -->
         <div class="flex-1 ml-4 overflow-hidden" @click="selectUser(user)">
           <h3 class="font-medium text-white">
             {{ user.name || user.username }}
@@ -298,6 +299,10 @@ const activeChats = ref(new Set());
 const typingUsers = ref({}); // Para almacenar qué usuarios están escribiendo
 const showFilterMenu = ref(false);
 const filterRef = ref(null); // Referencia al contenedor del filtro
+
+// Imagen por defecto como data URL
+const defaultAvatar =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236B7280'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E";
 
 // Obtener el store de la aplicación
 const appStore = useAppStore();

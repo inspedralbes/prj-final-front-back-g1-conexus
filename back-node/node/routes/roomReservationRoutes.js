@@ -41,20 +41,20 @@ router.get("/user/:user_id", verifyTokenMiddleware, async (req, res) => {
 });
 
 router.get("/reserved", verifyTokenMiddleware, async (req, res) => {
-    try {
-        const reservations = await RoomReservation.findAll({
-        where: {
-            start_time: { [Op.gte]: new Date() },
-        },
-        });
-        if (!reservations) {
-        return res.status(404).json({ message: "No hi ha reserves d'habitació" });
-        }
-        //retornar l'array de reserves d'habitacions
-        res.json(reservations);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
+  try {
+    const reservations = await RoomReservation.findAll({
+      where: {
+        start_time: { [Op.gte]: new Date() },
+      },
+    });
+    if (!reservations) {
+      return res.status(404).json({ message: "No hi ha reserves d'habitació" });
     }
+    //retornar l'array de reserves d'habitacions
+    res.json(reservations);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 });
 // GET /room-reservations/:id - Obtenir una reserva d'habitació per ID
 router.get("/:id", verifyTokenMiddleware, async (req, res) => {
@@ -73,6 +73,22 @@ router.get("/:id", verifyTokenMiddleware, async (req, res) => {
   }
 });
 
+// GET /room-reservations/user/:user_id - Obtenir totes les reserves d'habitacions d'un usuari
+router.get("/user/:user_id", verifyTokenMiddleware, async (req, res) => {
+  const { user_id } = req.params;
+  try {
+    const reservations = await RoomReservation.findAll({
+      where: { user_id },
+    });
+    if (!reservations) {
+      return res.status(404).json({ message: "No s'han trobat reserves d'habitació per a aquest usuari" });
+    }
+    res.json(reservations);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // POST /room-reservations - Crear una nova reserva d'habitació
 router.post("/", verifyTokenMiddleware, async (req, res) => {
   try {
@@ -85,10 +101,10 @@ router.post("/", verifyTokenMiddleware, async (req, res) => {
           message: "user_id, room_id, start_time i end_time són obligatoris",
         });
     }
-    if( new Date(start_time) >= new Date(end_time) ) {
+    if (new Date(start_time) >= new Date(end_time)) {
       return res.status(400).json({ message: "La data d'inici ha de ser anterior a la data de finalització" });
     }
-    if( new Date(start_time) < new Date() ) {
+    if (new Date(start_time) < new Date()) {
       return res.status(400).json({ message: "La data d'inici no pot ser anterior a la data actual" });
     }
     // Comprovar si la sala ja està reservada en el rang de dates especificat
@@ -165,45 +181,45 @@ router.delete("/:id", verifyTokenMiddleware, async (req, res) => {
 });
 //Get reservations from a room
 router.get("/room/:id", verifyTokenMiddleware, async (req, res) => {
-    try {
-        const { id } = req.params;
-        const reservations = await RoomReservation.findAll({
-            where: {
-                room_id: id,
-            },
-        });
-        if (!reservations) {
-            return res.status(404).json({ message: "No s'han trobat reserves d'habitació per a aquesta sala" });
-        }
-        //retornar l'array de reserves d'habitacions
-        res.json(reservations);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
+  try {
+    const { id } = req.params;
+    const reservations = await RoomReservation.findAll({
+      where: {
+        room_id: id,
+      },
+    });
+    if (!reservations) {
+      return res.status(404).json({ message: "No s'han trobat reserves d'habitació per a aquesta sala" });
     }
+    //retornar l'array de reserves d'habitacions
+    res.json(reservations);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 });
 
 // Funció per obtenir la última reserva
 export async function getLatestRoomReservation() {
-    try {
-        const latestReservation = await RoomReservation.findOne({
-            order: [['createdAt', 'DESC']],
-            include: [
-                {
-                    model: Room,
-                    attributes: ['room_name']
-                },
-                {
-                    model: User,
-                    attributes: ['name']
-                }
-            ]
-        });
-        
-        return latestReservation;
-    } catch (error) {
-        console.error("Error al obtener reserva reciente:", error);
-        throw error;
-    }
+  try {
+    const latestReservation = await RoomReservation.findOne({
+      order: [['createdAt', 'DESC']],
+      include: [
+        {
+          model: Room,
+          attributes: ['room_name']
+        },
+        {
+          model: User,
+          attributes: ['name']
+        }
+      ]
+    });
+
+    return latestReservation;
+  } catch (error) {
+    console.error("Error al obtener reserva reciente:", error);
+    throw error;
+  }
 }
 
 export default router;

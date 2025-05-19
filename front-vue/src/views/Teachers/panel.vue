@@ -45,7 +45,7 @@
           </div>
         </div>
         <router-link
-          to="/teachers/courses"
+          to="/teachers/assistence"
           class="mt-4 inline-flex items-center text-sm text-indigo-400 hover:text-indigo-300 transition-colors"
         >
           Gestionar cursos
@@ -122,7 +122,7 @@
       >
         <div class="flex items-center justify-between">
           <div>
-            <h3 class="text-lg font-semibold text-gray-300">Horari</h3>
+            <h3 class="text-lg font-semibold text-gray-300">Horari setmana</h3>
             <p class="text-3xl font-bold mt-2">
               {{ teacherStats.hoursWeek || 0 }}h
             </p>
@@ -200,7 +200,7 @@
           </div>
         </div>
         <router-link
-          to="/teachers/room-reservations"
+          to="/teachers/roomReservation"
           class="mt-4 inline-flex items-center text-sm text-purple-400 hover:text-purple-300 transition-colors"
         >
           Gestionar reserves
@@ -562,12 +562,17 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useAppStore } from "@/stores";
-import { getAllCourses } from "@/services/communicationsScripts/mainManager";
+import {
+  getAllCourses,
+  getAlumns,
+  getCoursesFromUser,
+} from "@/services/communicationsScripts/mainManager";
 import { getReportStats } from "@/services/communicationsScripts/incidentsManager";
 import {
   getAllLostObjects,
   getLostObjectsResponsesCount,
 } from "@/services/communicationsScripts/lostObjectManager";
+import { getReservationsFromUser } from "@/services/communicationsScripts/roomReservationsComManager";
 
 const appStore = useAppStore();
 const teacherStats = ref({
@@ -594,47 +599,202 @@ const isLoadingClasses = ref(false);
 const loadTeacherStats = async () => {
   try {
     const teacherId = appStore.getUserId();
+    console.log("ID del profesor:", teacherId);
 
-    // Cargar cursos asignados al profesor
-    const allCourses = await getAllCourses();
-    const myCourses = allCourses.filter(
-      (course) => course.course_teacher_id === teacherId
+    // Obtener los cursos del profesor directamente con la API específica
+    const myCourses = await getCoursesFromUser(teacherId);
+    console.log("Cursos del profesor:", myCourses);
+
+    // Filtrar los cursos para asegurarse que el profesor es el asignado
+    const filteredCourses = Array.isArray(myCourses)
+      ? myCourses.filter(
+          (course) =>
+            course.course_teacher_id === teacherId ||
+            course.course_teacher_id === Number(teacherId)
+        )
+      : [];
+
+    console.log(
+      "Cursos filtrados donde este profesor es el asignado:",
+      filteredCourses
     );
-    teacherStats.value.courses = myCourses.length;
+    teacherStats.value.courses = filteredCourses.length;
 
-    // Obtener estudiantes de los cursos (simulado)
+    // Obtener estudiantes de cada curso
     const uniqueStudentIds = new Set();
-    myCourses.forEach((course) => {
-      // Suponemos que cada curso tiene entre 10-25 estudiantes
-      const studentCount = 10 + Math.floor(Math.random() * 15);
 
-      // Para estadísticas simuladas
-      for (let i = 0; i < studentCount; i++) {
-        uniqueStudentIds.add(`student_${course.id}_${i}`);
+    // Para cada curso del profesor, obtener sus alumnos
+    if (filteredCourses.length > 0) {
+      for (const course of filteredCourses) {
+        try {
+          // Verificar que el curso tiene ID
+          const courseId = course.id || course.course_id;
+          if (!courseId) {
+            console.warn("Curso sin ID:", course);
+            continue;
+          }
+
+          console.log(`Obteniendo alumnos del curso ID: ${courseId}`);
+
+          // Llamada directa a la API
+          const response = await fetch(
+            `${
+              import.meta.env.VITE_BACKEND_URL
+            }api/user-courses/course/${courseId}`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              },
+            }
+          );
+
+          if (!response.ok) {
+            console.error(
+              `Error en la respuesta API para el curso ${courseId}:`,
+              response.status
+            );
+            continue;
+          }
+
+          const studentsData = await response.json();
+          console.log(`Estudiantes en curso ${courseId}:`, studentsData);
+
+          if (Array.isArray(studentsData) && studentsData.length > 0) {
+            // Ver la estructura del primer estudiante para depuración
+            console.log("Estructura del primer estudiante:", studentsData[0]);
+
+            studentsData.forEach((student) => {
+              // Intentar diferentes propiedades donde podría estar el ID
+              const studentId =
+                student.user_id ||
+                student.userId ||
+                (student.user && student.user.id) ||
+                student.id;
+
+              if (studentId) {
+                console.log(`Añadiendo estudiante con ID: ${studentId}`);
+                uniqueStudentIds.add(studentId);
+              } else {
+                console.warn(
+                  "No se pudo encontrar el ID del estudiante:",
+                  student
+                );
+              }
+            });
+          } else {
+            console.log(
+              `No se encontraron estudiantes en el curso ${courseId}`
+            );
+          }
+        } catch (error) {
+          console.error(`Error obteniendo alumnos del curso:`, error);
+        }
       }
-    });
+    } else {
+      console.warn("No se encontraron cursos asignados a este profesor");
+    }
+
+    console.log("Total estudiantes únicos encontrados:", uniqueStudentIds.size);
+    console.log("IDs de estudiantes:", [...uniqueStudentIds]);
+
     teacherStats.value.students = uniqueStudentIds.size;
-    teacherStats.value.activeStudents = Math.floor(uniqueStudentIds.size * 0.8); // 80% activos
+    teacherStats.value.activeStudents = Math.floor(uniqueStudentIds.size * 0.8); // Estimación: 80% activos
 
     // Datos simulados para tareas
     teacherStats.value.pendingAssignments = Math.floor(Math.random() * 10);
 
-    // Datos simulados para horario
-    teacherStats.value.hoursWeek = 20 + Math.floor(Math.random() * 10);
-    teacherStats.value.classesToday = 1 + Math.floor(Math.random() * 3);
+    // Contar clases para hoy basado en el horario real
+    const today = new Date().getDay();
+    const weekdays = [
+      "sunday",
+      "monday",
+      "tuesday",
+      "wednesday",
+      "thursday",
+      "friday",
+      "saturday",
+    ];
+    const todayName = weekdays[today];
 
-    // Datos simulados para reservas
-    teacherStats.value.roomReservations = 3 + Math.floor(Math.random() * 5);
-    teacherStats.value.upcomingReservations = 1 + Math.floor(Math.random() * 3);
+    let todayClassesCount = 0;
+    let totalHoursWeek = 0;
+
+    if (Array.isArray(filteredCourses)) {
+      for (const course of filteredCourses) {
+        if (course.course_hours_available) {
+          try {
+            const hoursData =
+              typeof course.course_hours_available === "string"
+                ? JSON.parse(course.course_hours_available)
+                : course.course_hours_available;
+
+            // Contar clases de hoy
+            if (hoursData[todayName] && hoursData[todayName].length > 0) {
+              todayClassesCount += hoursData[todayName].length;
+            }
+
+            // Sumar todas las horas de la semana
+            Object.values(hoursData).forEach((dayHours) => {
+              if (Array.isArray(dayHours)) {
+                totalHoursWeek += dayHours.length;
+              }
+            });
+          } catch (e) {
+            console.warn("Error procesando horario del curso", e);
+          }
+        }
+      }
+    }
+
+    teacherStats.value.classesToday = todayClassesCount;
+    teacherStats.value.hoursWeek = totalHoursWeek;
+
+    // Obtener reservas de aulas del profesor
+    try {
+      const roomReservations = await getReservationsFromUser(teacherId);
+      console.log("Reservas de aulas del profesor:", roomReservations);
+
+      // Comprobar si hay reservas y si la respuesta es un array
+      if (Array.isArray(roomReservations)) {
+        teacherStats.value.roomReservations = roomReservations.length;
+
+        // Calcular reservas activas (entre start_time y end_time actual)
+        const now = new Date();
+        const activeReservations = roomReservations.filter((reservation) => {
+          const startTime = new Date(reservation.start_time);
+          const endTime = new Date(reservation.end_time);
+          return startTime <= now && now <= endTime;
+        });
+
+        // Calcular reservas próximas (start_time es en el futuro)
+        const upcomingReservations = roomReservations.filter((reservation) => {
+          const startTime = new Date(reservation.start_time);
+          return startTime > now;
+        });
+
+        teacherStats.value.upcomingReservations = upcomingReservations.length;
+        console.log(
+          `Reservas totales: ${roomReservations.length}, Próximas: ${upcomingReservations.length}`
+        );
+      } else {
+        teacherStats.value.roomReservations = 0;
+        teacherStats.value.upcomingReservations = 0;
+      }
+    } catch (error) {
+      console.error("Error al cargar reservas de aulas:", error);
+      teacherStats.value.roomReservations = 0;
+      teacherStats.value.upcomingReservations = 0;
+    }
 
     // Cargar estadísticas de incidencias
     const reportStats = await getReportStats();
     teacherStats.value.incidents = reportStats.total || 0;
     teacherStats.value.pendingIncidents = reportStats.pending || 0;
 
-    // Cargar estadísticas de objetos perdidos usando las funciones disponibles
+    // Cargar estadísticas de objetos perdidos
     try {
-      // Obtener todos los objetos perdidos
       const lostObjects = await getAllLostObjects();
       teacherStats.value.lostObjects = lostObjects.length || 0;
 
@@ -723,87 +883,66 @@ const loadTodayClasses = async () => {
     // Obtener el día actual (0 = domingo, 1 = lunes, etc.)
     const today = new Date().getDay();
     const weekdays = [
-      "domingo",
-      "lunes",
-      "martes",
-      "miércoles",
-      "jueves",
-      "viernes",
-      "sábado",
+      "sunday",
+      "monday",
+      "tuesday",
+      "wednesday",
+      "thursday",
+      "friday",
+      "saturday",
     ];
     const todayName = weekdays[today];
 
     // Solo mostrar clases si es día laboral (lunes a viernes)
     if (today >= 1 && today <= 5) {
-      // Transformar los cursos en clases para hoy basado en course_hours_available
+      // Transformar los cursos en clases para hoy
       todayClasses.value = myCourses
         .filter((course) => {
-          // Verificar si hay horas disponibles para hoy
-          if (course.course_hours_available) {
-            try {
-              // Intentar parsear course_hours_available si es un string
-              const hoursData =
-                typeof course.course_hours_available === "string"
-                  ? JSON.parse(course.course_hours_available)
-                  : course.course_hours_available;
+          if (!course.course_hours_available) return false;
 
-              // Comprobar si hay horario para hoy
-              return (
-                hoursData &&
-                hoursData[todayName] &&
-                hoursData[todayName].length > 0
-              );
-            } catch (e) {
-              console.warn(
-                "Error parsing course hours for",
-                course.course_name,
-                e
-              );
-              return false;
-            }
-          }
-          return false;
-        })
-        .flatMap((course) => {
-          // Obtener las horas para hoy
-          let hoursData;
           try {
-            hoursData =
+            // Parsear el JSON de course_hours_available
+            const hoursData =
               typeof course.course_hours_available === "string"
                 ? JSON.parse(course.course_hours_available)
                 : course.course_hours_available;
-          } catch (e) {
-            console.warn("Error parsing course hours", e);
-            return [];
-          }
 
-          // Convertir cada hora en una entrada de clase
-          if (hoursData && hoursData[todayName]) {
+            // Verificar si hay clases para hoy
+            return hoursData[todayName] && hoursData[todayName].length > 0;
+          } catch (e) {
+            console.warn(
+              "Error parsing course hours for",
+              course.course_name,
+              e
+            );
+            return false;
+          }
+        })
+        .flatMap((course) => {
+          try {
+            const hoursData =
+              typeof course.course_hours_available === "string"
+                ? JSON.parse(course.course_hours_available)
+                : course.course_hours_available;
+
+            // Convertir cada hora en una entrada de clase
             return hoursData[todayName].map((timeSlot) => {
+              // Formatear la hora para mostrarla mejor
+              const [startTime, endTime] = timeSlot.split("-");
+              const formattedTime = `${startTime} - ${endTime}`;
+
               return {
                 course: course.course_name,
-                time: timeSlot.time || timeSlot,
-                room: timeSlot.room || `Aula ${course.course_id || "A-101"}`,
+                time: formattedTime,
                 description: course.course_description,
+                room: course.course_room || "Aula por determinar",
               };
             });
+          } catch (e) {
+            console.warn("Error processing course hours", e);
+            return [];
           }
-          return [];
         });
-
-      // Si no hay datos estructurados, crear una entrada predeterminada para cada curso
-      if (todayClasses.value.length === 0 && myCourses.length > 0) {
-        // Datos de ejemplo basados en cursos reales
-        todayClasses.value = myCourses.slice(0, 3).map((course, index) => {
-          const hours = ["09:00 - 10:30", "11:00 - 12:30", "15:30 - 17:00"];
-          return {
-            course: course.course_name,
-            time: hours[index % hours.length],
-            room: `Aula ${course.course_id || "A-10" + (index + 1)}`,
-            description: course.course_description,
-          };
-        });
-      }
 
       // Ordenar las clases por hora
       todayClasses.value.sort((a, b) => {
@@ -817,6 +956,7 @@ const loadTodayClasses = async () => {
     }
   } catch (error) {
     console.error("Error al cargar clases de hoy:", error);
+    todayClasses.value = [];
   } finally {
     isLoadingClasses.value = false;
   }
