@@ -1,4 +1,4 @@
-const BACK_URL=import.meta.env.VITE_ASSISTENCE_URL;
+const BACK_URL = import.meta.env.VITE_ASSISTENCE_URL;
 
 export const updateAttendance = async (courseId, userId, hour, assisted, day) => {
     try {
@@ -7,16 +7,17 @@ export const updateAttendance = async (courseId, userId, hour, assisted, day) =>
         console.log("hour", hour);
         console.log("assisted", assisted);
         console.log("day", day);
-        const dataToSend={};
-        dataToSend.course_id=courseId;
-        dataToSend.user_id=userId;
-        dataToSend.hour=hour;
-        dataToSend.assisted=assisted;
-        dataToSend.day=day;
+        const dataToSend = {};
+        dataToSend.course_id = courseId;
+        dataToSend.user_id = userId;
+        dataToSend.hour = hour;
+        dataToSend.assisted = assisted;
+        dataToSend.day = day;
         const response = await fetch(`${BACK_URL}api/assistences`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
             body: JSON.stringify(dataToSend),
         });
@@ -35,6 +36,7 @@ export const getAttendanceFromCourse = async (courseId) => {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
         if (!response.ok) {
@@ -47,12 +49,13 @@ export const getAttendanceFromCourse = async (courseId) => {
     }
 }
 
-export const getAlumns=async (courseId) => {
+export const getAlumns = async (courseId) => {
     try {
         const response = await fetch(`${BACK_URL}api/user-courses/${courseId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
         if (!response.ok) {
@@ -71,6 +74,7 @@ export const getAttendanceFromDay = async (courseId, day) => {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
         if (!response.ok) {
@@ -88,6 +92,7 @@ export const getAttendanceFromUserAndCourse = async (userId, courseId) => {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
         if (!response.ok) {

@@ -12,12 +12,13 @@ import Report from "./Reports.js";
 import Course from "./Course.js";
 import UserCourse from "./UserCourse.js";
 import Task from "./Task.js";
+import CateenItem from "./CanteenItem.js";
 
 // Define relationships
 
 // User - TypeUser relationship (Many-to-One)
-User.belongsTo(TypeUser, { foreignKey: 'typeUsers_id' });
-TypeUser.hasMany(User, { foreignKey: 'typeUsers_id' });
+User.belongsTo(TypeUser, { as: 'typeusers', foreignKey: 'typeUsers_id' });
+TypeUser.hasMany(User, { as: 'typeusers', foreignKey: 'typeUsers_id' });
 
 // User - Department relationship (Many-to-One)
 User.belongsTo(Department, { foreignKey: 'department_id' });
@@ -56,8 +57,8 @@ Assistance.belongsTo(User, { foreignKey: 'user_id' });
 User.hasMany(Assistance, { foreignKey: 'user_id' });
 
 // Assistance - Course relationship (Many-to-One)
-Assistance.belongsTo(Course, { foreignKey: 'course_id' });
-Course.hasMany(Assistance, { foreignKey: 'course_id' });
+Assistance.belongsTo(Course, { foreignKey: 'course_id', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+Course.hasMany(Assistance, { foreignKey: 'course_id', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
 
 // LostObject - User relationship (Many-to-One)
 LostObject.belongsTo(User, { foreignKey: 'user_id' });
@@ -87,6 +88,8 @@ User.hasMany(Report, { foreignKey: 'user_id' });
 Report.belongsTo(Room, { foreignKey: 'room_id' });
 Room.hasMany(Report, { foreignKey: 'room_id' });
 
+// Report - LostObject relationship (Many-to-One)
+
 await sequelize.sync();
 
 export {
@@ -102,5 +105,6 @@ export {
     Department,
     Report,
     Course,
-    UserCourse
+    UserCourse,
+    CateenItem
 };

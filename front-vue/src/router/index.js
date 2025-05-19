@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAppStore } from '@/stores/index.js'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -6,19 +7,36 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => import('@/views/index.vue')
+      component: () => import('@/views/index.vue'),
+      meta: {
+        requiresAuth: false,
+      },
     },
     {
       path: '/students',
       name: 'student',
       component: () => import('@/views/Students/index.vue'),
+      meta: {
+        requiresAuth: true,
+        allowedRoles: ['Estudiant'],
+      },
       children: [
+        {
+          path: 'panel',
+          name: 'student-panel',
+          component: () => import('@/views/Students/panel.vue')
+        },
+        {
+          path: 'inscriptions',
+          name: 'student-inscriptions',
+          component: () => import('@/views/Students/courses.vue')
+        },
         {
           path: 'incidents',
           name: 'student-incidents',
           component: () => import('@/views/Incidents/index.vue')
         },
-        { 
+        {
           path: 'assistence',
           name: 'student-assistence',
           component: () => import('@/views/Students/courseSelectorAttendance.vue')
@@ -40,21 +58,45 @@ const router = createRouter({
         },
       ]
     },
-    
+
     {
       path: '/teachers',
       name: 'teacher',
       component: () => import('@/views/Teachers/index.vue'),
+      meta: {
+        requiresAuth: true,
+        allowedRoles: ['Professor'],
+      },
       children: [
+        {
+          path: 'panel',
+          name: 'teacher-panel',
+          component: () => import('@/views/Teachers/panel.vue')
+        },
+        {
+          path: 'inscription',
+          name: 'teacher-inscriptions',
+          component: () => import('@/views/Teachers/courses.vue')
+        },
+        {
+          path:'departments',
+          name:'teacher-departments',
+          component: () => import('@/views/Teachers/departments.vue')
+        },
         {
           path: 'canteen',
           name: 'teacher-canteen',
-          component: () => import('@/views/Canteen/index.vue')
+          component: () => import('@/views/Teachers/canteen.vue')
         },
         {
           path: 'chats',
-          name: 'teacher-chats',
-          component: () => import('@/views/Chats/index.vue')
+          name: 'chats-list',
+          component: () => import('@/views/Chats/ChatListView.vue')
+        },
+        {
+          path: 'chats/:chatId',
+          name: 'chat-detail',
+          component: () => import('@/views/Chats/ChatDetailView.vue')
         },
         {
           path: 'incidents',
@@ -66,7 +108,12 @@ const router = createRouter({
           name: 'teacher-lost-objects',
           component: () => import('@/views/Teachers/lost-objects.vue')
         },
-        { 
+        {
+          path: 'lost-objects/:id/responses',
+          name: 'teacher-lost-object-responses',
+          component: () => import('@/views/LostObjects/responses.vue')
+        },
+        {
           path: 'assistence',
           name: 'teacher-assistence',
           component: () => import('@/views/Teachers/myCourses.vue')
@@ -107,16 +154,30 @@ const router = createRouter({
       path: '/technicians',
       name: 'technicians',
       component: () => import('@/views/Technicians/index.vue'),
+      meta: {
+        requiresAuth: true,
+        allowedRoles: ['Tècnic'],
+      },
       children: [
+        {
+          path: 'panel',
+          name: 'technicians-panel',
+          component: () => import('@/views/Technicians/panel.vue'),
+        },
         {
           path: 'canteen',
           name: 'technician-canteen',
-          component: () => import('@/views/Canteen/index.vue')
+          component: () => import('@/views/Technicians/canteen.vue')
         },
         {
           path: 'chats',
-          name: 'technician-chats',
-          component: () => import('@/views/Chats/index.vue')
+          name: 'technician-chats-list',
+          component: () => import('@/views/Chats/ChatListView.vue')
+        },
+        {
+          path: 'chats/:chatId',
+          name: 'technician-chat-detail',
+          component: () => import('@/views/Chats/ChatDetailView.vue')
         },
         {
           path: 'incidents',
@@ -127,6 +188,11 @@ const router = createRouter({
           path: 'lost-objects',
           name: 'technician-lost-objects',
           component: () => import('@/views/Technicians/lost-objects.vue')
+        },
+        {
+          path: 'lost-objects/:id/responses',
+          name: 'technician-lost-object-responses',
+          component: () => import('@/views/LostObjects/responses.vue')
         },
         {
           path: 'assignations',
@@ -144,11 +210,25 @@ const router = createRouter({
       path: '/admin',
       name: 'admin',
       component: () => import('@/views/Admin/index.vue'),
+      meta: {
+        requiresAuth: true,
+        allowedRoles: ['Administrador'],
+      },
       children: [
+        {
+          path: 'panel',
+          name: 'admin-panel',
+          component: () => import('@/views/Admin/panel.vue')
+        },
         {
           path: 'config-users',
           name: 'admin-config-users',
           component: () => import('@/views/Admin/users.vue')
+        },
+        {
+          path: 'config-departments',
+          name: 'admin-config-departments',
+          component: () => import('@/views/Admin/departments.vue')
         },
         {
           path: 'config-rooms',
@@ -158,7 +238,7 @@ const router = createRouter({
         {
           path: 'config-servers',
           name: 'admin-config-servers',
-          // component: () => import('@/views/Admin/servers.vue')
+          component: () => import('@/views/Admin/servers.vue')
         },
         {
           path: 'config-lost-objects',
@@ -166,14 +246,119 @@ const router = createRouter({
           component: () => import('@/views/Admin/lost-objects.vue')
         },
         {
+          path: 'config-lost-objects/:id/responses',
+          name: 'admin-config-lost-object-responses',
+          component: () => import('@/views/LostObjects/responses.vue')
+        },
+        {
           path: 'config-incidents',
           name: 'admin-config-incidents',
           component: () => import('@/views/Admin/incidents.vue')
         },
+        {
+          name: "new-room",
+          path: 'new-room',
+          component: () => import('@/views/Admin/newRoom.vue')
+        },
+        {
+          name: "config-courses",
+          path: "config-courses",
+          component: () => import('@/views/Admin/courses.vue')
+        }
       ]
-
+    },
+    {
+      path: '/canteen',
+      name: 'canteen',
+      component: () => import('@/views/Canteen/index.vue'),
+      meta: {
+        requiresAuth: true,
+        allowedRoles: ['Cantina'],
+      },
+      children: [
+        {
+          path: 'panel',
+          name: 'canteen-panel',
+          component: () => import('@/views/Canteen/panel.vue')
+        },
+        {
+          path: 'chat',
+          name: 'canteen-chat',
+          component: () => import('@/views/Canteen/chat.vue')
+        },
+        {
+          path: 'menu-admin',
+          name: 'canteen-menu-admin',
+          component: () => import('@/views/Canteen/menuAdmin.vue')
+        }
+      ]
+    },
+    {
+      path: '/unauthorized',
+      name: 'Unauthorized',
+      component: () => import('@/views/errors/Unauthorized.vue'),
+      meta: { requiresAuth: false }
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'NotFound',
+      component: () => import('@/views/errors/NotFound.vue'),
+      meta: { requiresAuth: false }
     }
   ],
 })
+
+router.beforeEach((to, from, next) => {
+  const store = useAppStore();
+  const isAuthenticated = !!store.getAccessToken();
+
+  console.log('Navegando a:', to.path);
+  console.log('¿Usuario autenticado?:', isAuthenticated);
+
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    console.log('Usuario no autenticado, redirigiendo a login');
+    next({ name: 'home' });
+    return;
+  }
+
+  if (isAuthenticated && to.meta.allowedRoles && to.meta.allowedRoles.length > 0) {
+    const user = store.getUser();
+    console.log('Datos de usuario:', user);
+
+    let userRole = '';
+
+    if (!user || Object.keys(user).length === 0) {
+      console.log('Usuario autenticado pero sin datos de rol. Redirigiendo a home para re-autenticación');
+      store.clearAuthData();
+      next({ name: 'home' });
+      return;
+    }
+
+    if (user?.typeusers?.name) {
+      userRole = user.typeusers.name;
+    } else if (user?.typeUsers_id) {
+      switch (Number(user.typeUsers_id)) {
+        case 1: userRole = 'Professor'; break;
+        case 2: userRole = 'Estudiant'; break;
+        case 3: userRole = 'Administrador'; break;
+        case 4: userRole = 'Tècnic'; break;
+        case 5: userRole = 'Cantina'; break;
+      }
+    }
+
+    console.log('Rol del usuario:', userRole);
+    console.log('Roles permitidos para esta ruta:', to.meta.allowedRoles);
+
+    const hasPermission = to.meta.allowedRoles.includes(userRole);
+    console.log('¿Tiene permiso?:', hasPermission);
+
+    if (!hasPermission) {
+      console.log('Usuario no autorizado, redirigiendo a página de unauthorized');
+      next({ name: 'Unauthorized' });
+      return;
+    }
+  }
+  next();
+});
 
 export default router

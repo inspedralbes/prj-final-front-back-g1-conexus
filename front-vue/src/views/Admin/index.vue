@@ -12,10 +12,10 @@
         <aside
             :class="['w-64 bg-slate-900/80 backdrop-blur-sm fixed h-screen p-4 shadow-lg transform transition-transform duration-300 z-40 lg:hidden', isSidebarOpen ? 'translate-x-0' : '-translate-x-full']">
             <div class="text-center mb-8">
-                <h2
+                <router-link to="/admin/panel"                    
                     class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
                     Administració
-                </h2>
+                </router-link> 
             </div>
             <nav class="space-y-2">
                 <router-link to="/admin/config-users"
@@ -53,6 +53,20 @@
                     </svg>
                     <span>Serveis</span>
                 </router-link>
+                <router-link to="/admin/config-departments"
+                    class="flex items-center p-2 text-gray-300 hover:bg-slate-800/50 rounded-lg transition-colors duration-300">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V7M16 3v4M8 3v4" />
+                    </svg>
+                    <span>Departaments</span>
+                </router-link>
+                <router-link to="/admin/config-courses"
+                    class="flex items-center p-2 text-gray-300 hover:bg-slate-800/50 rounded-lg transition-colors duration-300">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V7m-6 4h4m-4 4h4m-4 4h4m-8-8h4m-4 4h4m-4 4h4" />
+                    </svg>
+                    <span>Cursos</span>
+                </router-link>
             </nav>
             <!-- Botó de Tancar Sessió -->
             <div class="mt-4 pt-4 border-t border-gray-700">
@@ -71,7 +85,7 @@
         <nav class="lg:block hidden bg-slate-800/80 backdrop-blur-sm py-4 fixed w-full z-30 shadow-lg">
             <div class="container mx-auto flex justify-between items-center px-4">
                 <!-- Nom de la Marca -->
-                <router-link to="/admin"
+                <router-link to="/admin/panel"
                     class="text-white text-2xl font-bold hover:text-gray-300 transition-colors duration-300">
                     Administració
                 </router-link>
@@ -102,11 +116,23 @@
                         </svg>
                         Objectes Perduts
                     </router-link>
+                    <router-link to="/admin/config-departments" class="flex items-center text-white hover:text-gray-300 transition-colors duration-300">
+                        <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V7M16 3v4M8 3v4" />
+                        </svg>
+                        Departaments
+                    </router-link>
                     <router-link to="/admin/config-servers" class="flex items-center text-white hover:text-gray-300 transition-colors duration-300">
                         <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                         </svg>
                         Serveis
+                    </router-link>
+                    <router-link to="/admin/config-courses" class="flex items-center text-white hover:text-gray-300 transition-colors duration-300">
+                        <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V7m-6 4h4m-4 4h4m-4 4h4m-8-8h4m-4 4h4m-4 4h4" />
+                        </svg>
+                        Cursos
                     </router-link>
                     <button @click="logout" class="flex items-center text-white hover:text-red-300 transition-colors duration-300">
                         <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -123,9 +149,9 @@
             <div class="container mx-auto flex justify-between items-center px-4">
                 <!-- Menú Hamburguesa i Títol -->
                 <div class="flex items-center ml-12 p-2">
-                    <h1 class="text-xl font-bold text-gray-300">
+                    <router-link to="/admin/panel" class="text-xl font-bold text-gray-300">
                         {{ currentPageTitle }}
-                    </h1>
+                    </router-link>
                 </div>
             </div>
         </nav>
@@ -142,12 +168,13 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useAppStore } from '@/stores/index.js';
 
+const store = useAppStore();
 const router = useRouter();
 const route = useRoute();
 const isSidebarOpen = ref(false);
 
-// Obtenir el títol de la pàgina actual basat en la ruta
 const currentPageTitle = computed(() => {
     switch (route.path) {
         case '/admin/config-users':
@@ -160,6 +187,8 @@ const currentPageTitle = computed(() => {
             return 'Objectes Perduts';
         case '/admin/config-servers':
             return 'Gestió de Serveis';
+        case '/admin/config-courses':
+            return 'Gestió de Cursos';
         default:
             return 'Administració';
     }
@@ -170,13 +199,15 @@ const toggleSidebar = () => {
 };
 
 const logout = () => {
-    localStorage.removeItem('token');
+    store.setAccessToken('');
+    store.setUser({});
+    localStorage.removeItem('user');
+    localStorage.removeItem('accessToken');
     router.push('/');
 };
 </script>
 
 <style scoped>
-/* Animació d'aparició */
 .animate-fade-in {
     animation: fadeIn 1.5s ease-in-out;
 }
@@ -193,7 +224,6 @@ const logout = () => {
     }
 }
 
-/* Transicions suaus per als enllaços de la barra lateral */
 aside a {
     transition: background-color 0.3s ease, color 0.3s ease;
 }

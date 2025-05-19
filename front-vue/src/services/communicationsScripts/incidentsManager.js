@@ -15,7 +15,14 @@ const handleResponse = async (response) => {
 // Get all reports
 export const getAllReports = async () => {
     try {
-        const response = await fetch(`${API_URL}api/reports`);
+        const response = await fetch(`${API_URL}api/reports`, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+        }
+        );
         return await handleResponse(response);
     } catch (error) {
         console.error('Error fetching reports:', error);
@@ -26,7 +33,14 @@ export const getAllReports = async () => {
 // Get a single report by ID
 export const getReportById = async (id) => {
     try {
-        const response = await fetch(`${API_URL}api/reports/${id}`);
+        const response = await fetch(`${API_URL}api/reports/${id}`, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+        }
+        );
         return await handleResponse(response);
     } catch (error) {
         console.error(`Error fetching report ${id}:`, error);
@@ -40,9 +54,9 @@ export const createReport = async (reportData) => {
         const response = await fetch(`${API_URL}api/reports`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
-            body: JSON.stringify(reportData),
+            body: reportData,
         });
         return await handleResponse(response);
     } catch (error) {
@@ -58,6 +72,7 @@ export const updateReport = async (id, reportData) => {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
             body: JSON.stringify(reportData),
         });
@@ -73,11 +88,23 @@ export const deleteReport = async (id) => {
     try {
         const response = await fetch(`${API_URL}api/reports/${id}`, {
             method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            },
         });
-        await handleResponse(response);
-        return true;
+
+        // Si l'eliminació és exitosa, retornarà una resposta satisfactòria
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.message || `Error eliminant l'informe ${id}`);
+        }
+
+        // Intenta extreure el cos de la resposta si hi ha un
+        const text = await response.text();
+        return text ? JSON.parse(text) : { success: true };
     } catch (error) {
-        console.error(`Error deleting report ${id}:`, error);
+        console.error(`Error eliminant l'informe ${id}:`, error);
         throw error;
     }
 };
@@ -85,7 +112,14 @@ export const deleteReport = async (id) => {
 // Get reports by user ID
 export const getReportsByUserId = async (userId) => {
     try {
-        const response = await fetch(`${API_URL}api/reports/user/${userId}`);
+        const response = await fetch(`${API_URL}api/reports/user/${userId}`, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+        }
+        );
         return await handleResponse(response);
     } catch (error) {
         console.error(`Error fetching reports for user ${userId}:`, error);
@@ -96,7 +130,14 @@ export const getReportsByUserId = async (userId) => {
 // Get reports by room ID
 export const getReportsByRoomId = async (roomId) => {
     try {
-        const response = await fetch(`${API_URL}api/reports/room/${roomId}`);
+        const response = await fetch(`${API_URL}api/reports/room/${roomId}`, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+        }
+        );
         return await handleResponse(response);
     } catch (error) {
         console.error(`Error fetching reports for room ${roomId}:`, error);
@@ -107,7 +148,13 @@ export const getReportsByRoomId = async (roomId) => {
 // Get finished reports
 export const getFinishedReports = async () => {
     try {
-        const response = await fetch(`${API_URL}api/reports/finished`);
+        const response = await fetch(`${API_URL}api/reports/finished`, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+        });
         return await handleResponse(response);
     } catch (error) {
         console.error('Error fetching finished reports:', error);
@@ -118,10 +165,67 @@ export const getFinishedReports = async () => {
 // Get not finished reports
 export const getNotFinishedReports = async () => {
     try {
-        const response = await fetch(`${API_URL}api/reports/not-finished`);
+        const response = await fetch(`${API_URL}api/reports/not-finished`, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+        });
         return await handleResponse(response);
     } catch (error) {
         console.error('Error fetching not finished reports:', error);
         throw error;
+    }
+};
+
+// Corregir la función assignReport
+export const assignReport = async (reportId, userId) => {
+    try {
+        console.log(`API call: Asignando usuario ${userId} a reporte ${reportId}`);
+
+        const response = await fetch(`${API_URL}api/reports/${reportId}/assign`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+            body: JSON.stringify({ user_assigned: userId }),
+        });
+
+        // Verificar si la respuesta está vacía
+        const text = await response.text();
+        if (!text) {
+            return { success: true };
+        }
+
+        try {
+            // Intentar parsear como JSON
+            return JSON.parse(text);
+        } catch (e) {
+            // Si no es JSON, devolver el texto
+            return { message: text, success: response.ok };
+        }
+    }
+    catch (error) {
+        console.error(`Error assigning report ${reportId} to user ${userId}:`, error);
+        throw error;
+    }
+};
+
+// Get report statistics
+export const getReportStats = async () => {
+    try {
+        const response = await fetch(`${API_URL}api/reports/stats/count`, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+        });
+        return await handleResponse(response);
+    } catch (error) {
+        console.error('Error fetching report stats:', error);
+        return { total: 0, pending: 0, resolved: 0 };
     }
 };

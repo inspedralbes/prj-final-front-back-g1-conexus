@@ -31,6 +31,7 @@ services:
       - "3004:3004"
       - "3005:3005"
       - "3006:3006"
+      - "3007:3007"
     volumes:
       - ./back-node/node:/app
       - /app/node_modules
@@ -42,7 +43,6 @@ services:
     depends_on:
       conexus-hub-mysql:
         condition: service_healthy
-    # Comando personalizado para esperar a MySQL antes de iniciar
     command: >
       sh -c "
         echo 'Esperando a que MySQL esté disponible...'
@@ -50,14 +50,21 @@ services:
           sleep 1
         done
         echo 'MySQL está disponible, iniciando la aplicación...'
-        npm start
+        npm run dev 
       "
+    # command: npm run dev # para desarrollo
+    # command: npm run start # para producción
     restart: unless-stopped
     networks:
       - conexus-hub-network
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "conexus-hub-mysql" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   conexus-hub-mysql:
-    image: mysql:5.7
+    image: mysql:8.0
     ports:
       - "3306:3306"
     environment:
@@ -65,19 +72,21 @@ services:
       - MYSQL_DATABASE=conexushub
       - MYSQL_USER=user
       - MYSQL_PASSWORD=password
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     volumes:
       - conexus-hub-mysql-data:/var/lib/mysql
-      - ./back-node/data/create_db.sql:/docker-entrypoint-initdb.d/create.sql
-      - ./back-node/data/insert_db.sql:/docker-entrypoint-initdb.d/inserts.sql
+      - ./back-node/data/00-charset.sql:/docker-entrypoint-initdb.d/00-charset.sql
+      - ./back-node/data/create_db.sql:/docker-entrypoint-initdb.d/01-create.sql
+      - ./back-node/data/insert_db.sql:/docker-entrypoint-initdb.d/02-inserts.sql
     restart: unless-stopped
     networks:
       - conexus-hub-network
     healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "user", "-ppassword" ]
-      interval: 5s
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
       timeout: 5s
-      retries: 10
-      start_period: 60s
+      retries: 5
+      start_period: 30s
 
   conexus-hub-adminer:
     image: adminer
@@ -87,8 +96,44 @@ services:
     networks:
       - conexus-hub-network
 
+  conexus-hub-mongodb:
+    image: mongo
+    restart: always
+    container_name: conexus-hub-mongodb
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - mongo-db:/data/db
+    networks:
+      - conexus-hub-network
+    # healthcheck:
+    #   test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+    #   interval: 10s
+    #   timeout: 10s
+    #   retries: 5
+    #   start_period: 40s
+
+  conexus-hub-mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: password
+      ME_CONFIG_MONGODB_URL: mongodb://root:password@conexus-hub-mongodb:27017/
+      ME_CONFIG_BASICAUTH: false
+    depends_on:
+      - conexus-hub-mongodb
+    networks:
+      - conexus-hub-network
+
 volumes:
   conexus-hub-mysql-data:
+  mongo-db:
 
 
 networks:

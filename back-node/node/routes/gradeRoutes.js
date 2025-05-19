@@ -1,10 +1,11 @@
 import express from "express";
 import Grade from "../models/Grade.js";
 import Task from "../models/Task.js";
+import { verifyTokenMiddleware } from "../token.js";
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.get("/", verifyTokenMiddleware, async (req, res) => {
   try {
     const grades = await Grade.findAll();
     res.json(grades);
@@ -13,7 +14,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", verifyTokenMiddleware, async (req, res) => {
   try {
     const grade = await Grade.findByPk(req.params.id);
     res.json(grade);
@@ -23,7 +24,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // Get all grades from a specific task
-router.get("/getAllGradesFromTask/:id", async (req, res) => {
+router.get("/getAllGradesFromTask/:id", verifyTokenMiddleware, async (req, res) => {
   try {
     let grades = [];
     grades = await Grade.findAll({
@@ -36,7 +37,7 @@ router.get("/getAllGradesFromTask/:id", async (req, res) => {
 });
 
 // Get all grades from a specific user
-router.get("/getAllGradesFromUser/:id", async (req, res) => {
+router.get("/getAllGradesFromUser/:id", verifyTokenMiddleware, async (req, res) => {
   try {
     const user = await Grade.findByPk(req.params.id, {
       include: [
@@ -63,7 +64,7 @@ router.get("/getAllGradesFromUser/:id", async (req, res) => {
 });
 
 // Create a new grade
-router.post("/", async (req, res) => {
+router.post("/", verifyTokenMiddleware, async (req, res) => {
   try {
     if (req.body.grade < 0 || req.body.grade > 10) {
       return res
@@ -89,7 +90,7 @@ router.post("/", async (req, res) => {
 
 // Get all grades from a specific task
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", verifyTokenMiddleware, async (req, res) => {
   try {
     if (req.body.grade < 0 || req.body.grade > 10) {
       return res
@@ -114,7 +115,7 @@ router.put("/:id", async (req, res) => {
 
 // GET all grades from a specific user and course
 router.get(
-  "/getAllGradesFromUserAndCourse/:userId/:courseId",
+  "/getAllGradesFromUserAndCourse/:userId/:courseId", verifyTokenMiddleware,
   async (req, res) => {
     try {
       const { userId, courseId } = req.params;
@@ -145,13 +146,13 @@ router.get(
     } catch (error) {
       res
         .status(500)
-        .json({ message: error.message, text: "Error hasta los huevos" });
+        .json({ message: error.message });
     }
   }
 );
 
 // Delete a grade
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", verifyTokenMiddleware, async (req, res) => {
   try {
     const grade = await Grade.findByPk(req.params.id);
     if (!grade) {
@@ -165,6 +166,7 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+
 async function checkIfGradeAlreadyExists(user_id, task_id) {
   let auxGrade = await Grade.findOne({
     where: { user_id: user_id, task_id: task_id },
@@ -176,4 +178,5 @@ async function checkIfGradeAlreadyExists(user_id, task_id) {
     return false;
   }
 }
+
 export default router;

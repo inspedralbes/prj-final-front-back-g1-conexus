@@ -3,14 +3,15 @@ import Assistence from "../models/Assistence.js";
 import User from "../models/User.js";
 import UserCourse from "../models/UserCourse.js";
 import Course from "../models/Course.js";
+import { verifyTokenMiddleware } from "../token.js";
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.get("/", verifyTokenMiddleware, async (req, res) => {
     const assistance = await Assistence.findAll();
     res.json(assistance);
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", verifyTokenMiddleware, async (req, res) => {
     try {
         const assistance = await Assistence.findByPk(req.params.id);
         res.json(assistance);
@@ -19,7 +20,7 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", verifyTokenMiddleware, async (req, res) => {
     try {
         console.log("req.body", req.body);
         console.log("user_id", req.body.user_id);
@@ -27,15 +28,15 @@ router.post("/", async (req, res) => {
         console.log("hour", req.body.hour);
         console.log("assisted", req.body.assisted);
         console.log("day", req.body.day);
-        let { user_id, course_id, hour,day, assisted } = req.body;
+        let { user_id, course_id, hour, day, assisted } = req.body;
         if (!user_id || !course_id || !hour || !assisted) {
             return res.status(400).json({ message: "user_id, course_id, hour i assisted són obligatoris" });
         }
         course_id = parseInt(course_id);
         user_id = parseInt(user_id);
         //check if the user_id and course_id exist in the database
-        const user = await User.findOne({ where: { id:user_id } });
-        const course = await Course.findOne({ where: { id:course_id } });
+        const user = await User.findOne({ where: { id: user_id } });
+        const course = await Course.findOne({ where: { id: course_id } });
         if (!user) {
             return res.status(404).json({ message: "user_id no trobat" });
         }
@@ -48,13 +49,14 @@ router.post("/", async (req, res) => {
             return res.status(404).json({ message: "user_id no està inscrit al course_id" });
         }
         //check if the hour and user is already in the database
-        const hourExists = await Assistence.findOne({ where: { hour, user_id,day } });
+        const hourExists = await Assistence.findOne({ where: { hour, user_id, day } });
+        let assistance;
         if (hourExists) {
-            Assistence.update({ assisted }, { where: {  hour, user_id,day } });  
+            assistance=Assistence.update({ assisted }, { where: { hour, user_id, day } });
         }
-        else{
+        else {
 
-            const assistance = await Assistence.create({ user_id, course_id, hour, assisted,day });
+           assistance = await Assistence.create({ user_id, course_id, hour, assisted, day });
         }
         res.json(assistance);
     }
@@ -63,7 +65,7 @@ router.post("/", async (req, res) => {
     }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", verifyTokenMiddleware, async (req, res) => {
     try {
         const { assisted } = req.body;
         const assistance = await Assistence.update({ assisted }, { where: { id: req.params.id } });
@@ -73,7 +75,7 @@ router.put("/:id", async (req, res) => {
     }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", verifyTokenMiddleware, async (req, res) => {
     const assistance = await Assistence.findByPk(req.params.id);
     if (!assistance) {
         return res.status(404).json({ message: "Assistance not found" });
@@ -88,7 +90,7 @@ router.delete("/:id", async (req, res) => {
 });
 
 // Get all assistance from a course
-router.get("/course/:id", async (req, res) => {
+router.get("/course/:id", verifyTokenMiddleware, async (req, res) => {
     try {
         const assistance = await Assistence.findAll({ where: { course_id: req.params.id } });
         res.json(assistance);
@@ -98,8 +100,8 @@ router.get("/course/:id", async (req, res) => {
 });
 
 // Get all assistance from a day
-router.get("/course/:courseId/day/:day", async (req, res) => {
-   try {
+router.get("/course/:courseId/day/:day", verifyTokenMiddleware, async (req, res) => {
+    try {
         const { courseId, day } = req.params;
         const assistance = await Assistence.findAll({ where: { course_id: courseId, day } });
         res.json(assistance);
@@ -110,13 +112,13 @@ router.get("/course/:courseId/day/:day", async (req, res) => {
 });
 
 //Get all assistance from a user and a course
-router.get("/user/:userId/course/:courseId", async (req, res) => {
+router.get("/user/:userId/course/:courseId", verifyTokenMiddleware, async (req, res) => {
     try {
         const { userId, courseId } = req.params;
         const assistance = await Assistence.findAll({ where: { user_id: userId, course_id: courseId } });
-        let auxAssistance=[];
+        let auxAssistance = [];
         assistance.forEach((assistance) => {
-            if(assistance.assisted!="not selected"){
+            if (assistance.assisted != "not selected") {
                 auxAssistance.push(assistance);
             }
         });
@@ -127,4 +129,3 @@ router.get("/user/:userId/course/:courseId", async (req, res) => {
 });
 
 export default router;
-

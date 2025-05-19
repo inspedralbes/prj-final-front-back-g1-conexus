@@ -28,38 +28,52 @@
                 v-for="role in availableRoles"
                 :key="role.id"
                 @click="completeRegistration(role.id)"
-                class="w-full flex items-center justify-between px-4 py-3 bg-slate-700 hover:bg-slate-600 rounded-lg text-white transition-all hover:scale-[1.02]"
+                class="w-full py-3 px-4 bg-slate-700/80 hover:bg-slate-600 rounded-lg text-white transition-colors duration-200 flex items-center justify-start border border-slate-600/60 hover:border-slate-500"
               >
-                <span>{{ role.name }}</span>
+                <!-- Icono según el tipo de usuario (puedes adaptar esto según tus necesidades) -->
                 <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5"
+                  v-if="role.name === 'Estudiant'"
+                  class="h-5 w-5 mr-3 text-blue-400"
                   fill="none"
-                  viewBox="0 0 24 24"
                   stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
                   <path
-                    v-if="role.name === 'Estudiant'"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                  />
+                </svg>
+                <svg
+                  v-else-if="role.name === 'Professor'"
+                  class="h-5 w-5 mr-3 text-green-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
                     d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
                   />
+                </svg>
+                <svg
+                  v-else
+                  class="h-5 w-5 mr-3 text-indigo-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <path
-                    v-else-if="role.name === 'Professor'"
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
-                    d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
-                  />
-                  <path
-                    v-else
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
                   />
                 </svg>
+                {{ role.name }}
               </button>
             </div>
 
@@ -327,6 +341,7 @@
 
 <script setup>
 import { ref, reactive, onMounted } from "vue";
+import { useRouter } from "vue-router";
 import { initializeApp } from "firebase/app";
 import { useAppStore } from "@/stores/index.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
@@ -334,10 +349,13 @@ import {
   login,
   getTypeUsers,
   register,
+  checkEmailAndGetRoles,
+  getFilteredRoles,
 } from "@/services/communicationsScripts/mainManager.js";
 
-// Estado para los roles disponibles
+const router = useRouter();
 const availableRoles = ref([]);
+const allRoles = ref([]);
 const loadingRoles = ref(true);
 
 // Obtener los tipos de usuario al montar el componente
@@ -345,15 +363,17 @@ onMounted(async () => {
   try {
     const response = await getTypeUsers();
     if (response && Array.isArray(response)) {
-      availableRoles.value = response;
+      // Filtrar los roles para excluir Administrador y Cantina
+      availableRoles.value = getFilteredRoles(response);
+      allRoles.value = response; // Guardar todos los roles para futuras referencias
     } else {
       console.error("Formato de datos inesperado:", response);
-      message.value = "Error al cargar los tipos de usuario";
+      message.value = "Error al cargar els tipus d'usuari";
       messageType.value = "error";
     }
   } catch (error) {
     console.error("Error al obtener los tipos de usuario:", error);
-    message.value = "Error al cargar los tipos de usuario disponibles";
+    message.value = "Error al cargar els tipus d'usuari disponibles";
     messageType.value = "error";
   } finally {
     loadingRoles.value = false;
@@ -408,6 +428,24 @@ const retryAction = () => {
   }
 };
 
+const checkEmailStatus = async (email) => {
+  if (!email) return { exists: false, allowedRoles: availableRoles.value };
+
+  try {
+    const result = await checkEmailAndGetRoles(email);
+    return {
+      exists: result.exists,
+      allowedRoles: availableRoles.value, // Siempre usamos los roles filtrados
+    };
+  } catch (error) {
+    console.error("Error al verificar email:", error);
+    return {
+      exists: false,
+      allowedRoles: availableRoles.value,
+    };
+  }
+};
+
 const signInWithGoogle = async (action) => {
   lastAction.value = `google-${action}`;
   const provider = new GoogleAuthProvider();
@@ -450,14 +488,30 @@ const signInWithGoogle = async (action) => {
 
       localStorage.setItem("user", JSON.stringify(user.email));
       localStorage.setItem("accessToken", response.accessToken);
+
+      redirectUserBasedOnRole(user);
     } else {
       // Lógica para registro
+      const { exists, allowedRoles } = await checkEmailStatus(userAPIs.email);
+
+      if (exists) {
+        message.value =
+          "Aquest correu ja està registrat. Si us plau, utilitza un altre o inicia sessió.";
+        messageType.value = "error";
+        return;
+      }
+
+      // Guardar los roles permitidos para este usuario
+      if (allowedRoles && allowedRoles.length > 0) {
+        availableRoles.value = allowedRoles;
+      }
+
+      // Continuar amb el flux normal modificat per al domini del correu
       if (!checkEmailType(userAPIs.email)) {
-        console.log("No es estudiant");
         pendingRegistration.value = { ...userAPIs };
         showRoleModal.value = true;
       } else {
-        // Buscar el rol de Estudiante en los roles disponibles
+        // Lógica per a estudiants
         const estudiantRole = availableRoles.value.find(
           (role) => role.name === "Estudiant"
         );
@@ -505,6 +559,31 @@ const completeRegistration = async (roleId = null) => {
     messageType.value = "success";
 
     pendingRegistration.value = null;
+
+    // Comprobar si tenemos una respuesta con usuario y token de acceso
+    if (response.userLogin && response.accessToken) {
+      let user = response.userLogin;
+
+      // Procesar la URL del perfil si es necesario
+      if (user.profile && user.profile.includes("/upload/", 0)) {
+        user.profile = `${import.meta.env.VITE_BACKEND_URL}${user.profile}`;
+      }
+
+      // Guardar datos en el store
+      useAppStore().setAccessToken(response.accessToken);
+      useAppStore().setUser(user);
+
+      // Guardar en localStorage
+      localStorage.setItem("user", JSON.stringify(user.email));
+      localStorage.setItem("accessToken", response.accessToken);
+
+      // Redirigir al usuario
+      redirectUserBasedOnRole(user);
+    } else {
+      // Si no hay datos de usuario y token, simplemente mostrar mensaje de éxito
+      // El usuario tendrá que iniciar sesión manualmente
+      console.log("Registro exitoso, pero sin inicio de sesión automático");
+    }
   } catch (error) {
     message.value = "Error en completar el registre: " + error.message;
     messageType.value = "error";
@@ -549,10 +628,59 @@ const signInWithApp = async () => {
 
     localStorage.setItem("user", JSON.stringify(user.email));
     localStorage.setItem("accessToken", response.accessToken);
+
+    redirectUserBasedOnRole(user);
   } catch (error) {
     message.value =
       "S'ha produït un error en connectar amb el servidor. Torna a intentar-ho més tard.";
     messageType.value = "error";
+  }
+};
+
+const redirectUserBasedOnRole = (user) => {
+  // Intentar obtener el rol del usuario de diferentes formas
+  let userRole = "";
+
+  // Si tenemos typeusers completo con nombre
+  if (user?.typeusers?.name) {
+    userRole = user.typeusers.name;
+  }
+  // Si solo tenemos el ID del tipo de usuario
+  else if (user?.typeUsers_id) {
+    // Buscar en availableRoles el nombre que corresponde a este ID
+    const roleObj = allRoles.value.find(
+      (role) => role.id === user.typeUsers_id
+    );
+    if (roleObj) {
+      userRole = roleObj.name;
+    }
+  }
+
+  console.log("Redirigiendo usuario con rol:", userRole);
+
+  switch (userRole) {
+    case "Administrador":
+      router.push("/admin/panel");
+      break;
+    case "Professor":
+      router.push("/teachers");
+      break;
+    case "Estudiant":
+      router.push("/students/panel");
+      break;
+    case "Tècnic":
+      router.push("/technicians/panel");
+      break;
+    case "Cantina":
+      router.push("/canteen");
+      break;
+    default:
+      console.error(
+        "No se pudo determinar un rol válido para el usuario:",
+        user
+      );
+      router.push("/");
+      break;
   }
 };
 
@@ -579,7 +707,6 @@ const checkEmailType = (email) => {
   }
 }
 
-/* Animaciones para el diálogo */
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.3s ease;
@@ -601,19 +728,16 @@ const checkEmailType = (email) => {
   transform: scale(0.9) translateY(10px);
 }
 
-/* Transicions suaus */
 button,
 input,
 a {
   transition: all 0.2s ease;
 }
 
-/* Efecte hover per als botons */
 button:hover {
   transform: translateY(-1px);
 }
 
-/* Estilo para el checkbox personalizado */
 input[type="checkbox"] {
   appearance: none;
   -webkit-appearance: none;
