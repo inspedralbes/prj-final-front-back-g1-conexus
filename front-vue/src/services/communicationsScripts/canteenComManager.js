@@ -96,7 +96,7 @@ export const deleteItem=async (id) => {
 }
 export const getAllEnabledCanteenItems=async () => {
     try {
-        const response = await fetch(`${BACK_URL}api/canteen/enabled`, {
+        const response = await fetch(`${BACK_URL}api/canteen/allItems/enabled`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

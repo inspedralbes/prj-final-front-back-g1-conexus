@@ -137,7 +137,7 @@ import { ref, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
 import { getAllUsers } from "@/services/communicationsScripts/mainManager";
 import chatManager from "@/services/communicationsScripts/chatsComManager";
-import { getAllCanteenItems } from "@/services/communicationsScripts/canteenComManager";
+import { getAllEnabledCanteenItems } from "@/services/communicationsScripts/canteenComManager";
 import { useAppStore } from "@/stores";
 
 // Estado
@@ -255,7 +255,7 @@ const loadMenuItems = async () => {
     loading.value = true;
     error.value = null;
 
-    const items = await getAllCanteenItems();
+    const items = await getAllEnabledCanteenItems();
 
     if (!items) {
       throw new Error("No se pudieron cargar los productos del menú");
