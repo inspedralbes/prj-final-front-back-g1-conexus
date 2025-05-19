@@ -75,7 +75,7 @@ router.delete("/:id", verifyTokenMiddleware, async (req, res) => {
 );
 
 // Get all enabled canteen items
-router.get("/enabled", verifyTokenMiddleware, async (req, res) => {
+router.get("/allItems/enabled", verifyTokenMiddleware, async (req, res) => {
     try {
         const canteenItems = await CanteenItem.findAll({ where: { product_enabled: true } });
         res.json(canteenItems);
@@ -86,7 +86,7 @@ router.get("/enabled", verifyTokenMiddleware, async (req, res) => {
 );
 
 // Get all disabled canteen items
-router.get("/disabled", verifyTokenMiddleware, async (req, res) => {
+router.get("/allItems/disabled", verifyTokenMiddleware, async (req, res) => {
     try {
         const canteenItems = await CanteenItem.findAll({ where: { product_enabled: false } });
         res.json(canteenItems);

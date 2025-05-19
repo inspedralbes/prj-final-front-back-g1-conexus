@@ -564,7 +564,7 @@ import { useRouter } from "vue-router";
 import { useAppStore } from "@/stores";
 import { getAllUsers } from "@/services/communicationsScripts/mainManager";
 import chatManager from "@/services/communicationsScripts/chatsComManager";
-import { getAllCanteenItems } from "@/services/communicationsScripts/canteenComManager";
+import { getAllEnabledCanteenItems } from "@/services/communicationsScripts/canteenComManager";
 
 const router = useRouter();
 const appStore = useAppStore();
@@ -899,7 +899,7 @@ const loadMenuItems = async () => {
     loading.value = true;
     error.value = null;
 
-    const items = await getAllCanteenItems();
+    const items = await getAllEnabledCanteenItems();
 
     if (!items || items.length === 0) {
       // Si no hay productos, mostrar mensaje vacío
@@ -931,7 +931,7 @@ const openFullMenuModal = async () => {
     showFullMenuModal.value = true;
 
     // Load ALL canteen items directly from the API
-    const allItems = await getAllCanteenItems();
+    const allItems = await getAllEnabledCanteenItems();
 
     if (allItems && allItems.length > 0) {
       // Filter only sandwich items
@@ -957,7 +957,7 @@ const openFullMenuModal = async () => {
       );
     } else {
       modalMenuItems.value = [];
-      console.warn("No items found from getAllCanteenItems()");
+      console.warn("No items found from getAllEnabledCanteenItems()");
     }
   } catch (err) {
     console.error("Error al cargar el menú completo:", err);

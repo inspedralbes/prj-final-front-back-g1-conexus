@@ -1,7 +1,15 @@
 const API_URL = import.meta.env.VITE_BACKEND_URL;
+function handle401(response) {
+    if (response.status === 401) {
+        window.location.href = '/';
+        return true;
+    }
+    return false;
+}
 
 // Helper function to handle fetch responses
 const handleResponse = async (response) => {
+    if (handle401(response)) return;
     if (!response.ok) {
         const error = await response.json().catch(() => ({}));
         throw new Error(error.message || 'Error en la solicitud');
@@ -20,6 +28,7 @@ export const getRoomsStats = async () => {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
+        if (handle401(response)) return { total: 0, available: 0, maintenance: 0 };
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -41,6 +50,7 @@ export const getAllRooms = async () => {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
+        if (handle401(response)) return [];
         return await handleResponse(response);
     } catch (error) {
         console.error('Error fetching rooms:', error);
@@ -58,10 +68,10 @@ export const getRoomById = async (id) => {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
+        if (handle401(response)) return null;
         return await handleResponse(response);
     } catch (error) {
         console.error(`Error fetching room ${id}:`, error);
         throw error;
     }
 };
-

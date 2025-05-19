@@ -1,5 +1,13 @@
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
+function handle401(response) {
+    if (response.status === 401) {
+        window.location.href = '/';
+        return true;
+    }
+    return false;
+}
+
 /**
  * Fetch all services status
  */
@@ -13,6 +21,7 @@ export const getAllServices = async () => {
             },
         });
 
+        if (handle401(response)) return;
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -38,6 +47,7 @@ export const getServiceStatus = async (serviceName) => {
             },
         });
 
+        if (handle401(response)) return;
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -63,6 +73,7 @@ export const startService = async (serviceName) => {
             },
         });
 
+        if (handle401(response)) return;
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -88,6 +99,7 @@ export const stopService = async (serviceName) => {
             },
         });
 
+        if (handle401(response)) return;
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -113,6 +125,7 @@ export const startAllServices = async () => {
             },
         });
 
+        if (handle401(response)) return;
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -138,6 +151,7 @@ export const stopAllServices = async () => {
             },
         });
 
+        if (handle401(response)) return;
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -164,6 +178,7 @@ export const createService = async (serviceData) => {
             body: JSON.stringify(serviceData)
         });
 
+        if (handle401(response)) return;
         if (!response.ok) {
             const errorData = await response.json();
             throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
@@ -185,12 +200,13 @@ export const uploadServiceFile = async (formData) => {
         const response = await fetch(`${BACKEND_URL}api/services/upload`, {
             method: 'POST',
             headers: {
-                "Content-Type": "application/json",
+                // Do not set Content-Type for FormData, browser will set it including boundary
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
             body: formData,
         });
 
+        if (handle401(response)) return;
         if (!response.ok) {
             const errorData = await response.json();
             throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
@@ -209,6 +225,7 @@ export const uploadServiceFile = async (formData) => {
  */
 export const deleteService = async (serviceName) => {
     try {
+        console.log('Deleting service:', localStorage.getItem('accessToken'));
         const response = await fetch(`${BACKEND_URL}api/services/${serviceName}`, {
             method: 'DELETE',
             headers: {
@@ -217,6 +234,7 @@ export const deleteService = async (serviceName) => {
             },
         });
 
+        if (handle401(response)) return;
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }

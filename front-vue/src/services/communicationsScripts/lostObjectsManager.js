@@ -1,5 +1,13 @@
 const BACK_URL = import.meta.env.VITE_LOST_OBJECT_URL;
 
+function handle401(response) {
+    if (response.status === 401) {
+        window.location.href = '/';
+        return true;
+    }
+    return false;
+}
+
 // Obtener estadísticas de objetos perdidos
 export const getLostObjectStats = async () => {
     try {
@@ -9,8 +17,8 @@ export const getLostObjectStats = async () => {
                 "Content-Type": "application/json",
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
-        }
-        );
+        });
+        if (handle401(response)) return;
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -32,6 +40,7 @@ export const getAllLostObjects = async () => {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
+        if (handle401(response)) return;
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }

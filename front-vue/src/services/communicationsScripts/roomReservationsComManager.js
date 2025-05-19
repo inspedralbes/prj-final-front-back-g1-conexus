@@ -1,4 +1,13 @@
 const BACK_URL = import.meta.env.VITE_ROOM_URL;
+
+function handle401(response) {
+    if (response.status === 401) {
+        window.location.href = '/';
+        return true;
+    }
+    return false;
+}
+
 export const getAllRooms = async () => {
     try {
         const response = await fetch(`${BACK_URL}api/rooms`, {
@@ -8,6 +17,7 @@ export const getAllRooms = async () => {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
+        if (handle401(response)) return;
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
         }
@@ -17,6 +27,7 @@ export const getAllRooms = async () => {
         return { error: "Network error. Please try again later." };
     }
 };
+
 export const getReservationsFromRoom = async (id) => {
     try {
         const response = await fetch(`${BACK_URL}api/roomReservations/room/${id}`, {
@@ -26,6 +37,7 @@ export const getReservationsFromRoom = async (id) => {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
+        if (handle401(response)) return;
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
         }
@@ -45,6 +57,7 @@ export const getReservationsFromUser = async (userId) => {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
+        if (handle401(response)) return;
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
         }
@@ -65,6 +78,7 @@ export const createNewReservation = async (reservation) => {
             },
             body: JSON.stringify(reservation),
         });
+        if (handle401(response)) return;
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
         }
@@ -85,6 +99,7 @@ export const createNewRoom = async (room) => {
             },
             body: JSON.stringify(room),
         });
+        if (handle401(response)) return;
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
         }
@@ -103,6 +118,7 @@ export const deleteRoom = async (id) => {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
+        if (handle401(response)) return;
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
         }
@@ -122,6 +138,7 @@ export const updateRoom = async (id, room) => {
             },
             body: JSON.stringify(room),
         });
+        if (handle401(response)) return;
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
         }

@@ -2,9 +2,18 @@ import { useAppStore } from "@/stores/index";
 
 const BACK_URL = import.meta.env.VITE_BACKEND_URL;
 
+function handle401(response) {
+    if (response.status === 401) {
+        window.location.href = '/';
+        return true;
+    }
+    return false;
+}
+
 export const getTypeUsers = async () => {
     try {
         const response = await fetch(`${BACK_URL}api/type-users/`);
+        if (handle401(response)) return;
         if (!response.ok) {
             throw new Error("Error fetching type users");
         }
@@ -29,7 +38,7 @@ export const getUserByEmail = async (email) => {
                 body: JSON.stringify({ email }),
             }
         );
-        
+        if (handle401(response)) return;
         if (!response.ok) {
             if (response.status === 404) {
                 return { error: "Correu electrònic no trobat." };
@@ -56,7 +65,7 @@ export const register = async (user) => {
             },
             body: JSON.stringify(user),
         });
-
+        if (handle401(response)) return;
         if (!response.ok) {
             if (response.status === 400) {
                 return { error: 'Correu electrònic ja registrat. Proba a iniciar sessio.' };
@@ -84,7 +93,7 @@ export const login = async (user) => {
             },
             body: JSON.stringify(user),
         });
-
+        if (handle401(response)) return;
         if (!response.ok) {
             if (response.status === 404) {
                 return { error: 'Correu electrònic o contrasenya incorrectes. Verifica les teves credencials.' };
@@ -126,7 +135,7 @@ export const getCoursesWithUser = async (userId) => {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
-
+        if (handle401(response)) return;
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
         }
@@ -147,6 +156,7 @@ export const getCoursesFromUser = async (userId) => {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
+        if (handle401(response)) return;
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -166,6 +176,7 @@ export const getHoursOfCourse = async (courseId) => {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
+        if (handle401(response)) return;
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -210,15 +221,19 @@ export const getHoursOfCourse = async (courseId) => {
 };
 
 export const getAlumns = async (courseId) => {
-    return fetch(`${BACK_URL}api/user-courses/course/${courseId}`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-        },
-    })
-        .then(response => response.json())
-        .catch(error => console.error('Error fetching courses:', error));
+    try {
+        const response = await fetch(`${BACK_URL}api/user-courses/course/${courseId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+        });
+        if (handle401(response)) return;
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching courses:', error);
+    }
 };
 
 export const getUser = async (userId) => {
@@ -230,7 +245,7 @@ export const getUser = async (userId) => {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
-
+        if (handle401(response)) return;
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
         }
@@ -251,7 +266,7 @@ export const getAllUsers = async () => {
                 "Authorization": `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
-
+        if (handle401(response)) return;
         // Verificar primero el tipo de contenido
         const contentType = response.headers.get("content-type");
         if (!contentType || !contentType.includes("application/json")) {
@@ -283,7 +298,7 @@ export const updateUser = async (userId, user) => {
             },
             body: JSON.stringify(user),
         });
-
+        if (handle401(response)) return;
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
         }
@@ -304,7 +319,7 @@ export const deleteUser = async (userId) => {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
-
+        if (handle401(response)) return;
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
         }
@@ -325,7 +340,7 @@ export const createUser = async (formData) => {
             },
             body: formData,
         });
-
+        if (handle401(response)) return;
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
         }
@@ -347,7 +362,7 @@ export const updateUserRole = async (userId, typesUsersId) => {
             },
             body: JSON.stringify({ typeUsers_id: typesUsersId }),
         });
-
+        if (handle401(response)) return;
         // Verificar primero el tipo de contenido
         const contentType = response.headers.get("content-type");
         if (!contentType || !contentType.includes("application/json")) {
@@ -376,7 +391,7 @@ export const getAllTypeUsers = async () => {
                 "Content-Type": "application/json",
             },
         });
-
+        if (handle401(response)) return;
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
         }
@@ -397,7 +412,7 @@ export const getAllCourses = async () => {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
-
+        if (handle401(response)) return;
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
         }
@@ -415,6 +430,7 @@ export const getAllCourses = async () => {
                             'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
                         },
                     });
+                    if (handle401(teacherResponse)) return;
                     console.log(teacherResponse);
 
                     if (teacherResponse.ok) {
@@ -447,7 +463,7 @@ export const deleteCourse = async (courseId) => {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
-
+        if (handle401(response)) return;
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
         }
@@ -471,7 +487,7 @@ export const createCourse = async (course) => {
             },
             body: JSON.stringify(course),
         });
-
+        if (handle401(response)) return;
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
         }
@@ -493,7 +509,7 @@ export const updateCourse = async (courseId, course) => {
             },
             body: JSON.stringify(course),
         });
-
+        if (handle401(response)) return;
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
         }
@@ -514,7 +530,7 @@ export const getAllDepartments = async () => {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
-
+        if (handle401(response)) return;
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
         }
@@ -537,6 +553,7 @@ export const createDepartment = async (department) => {
             },
             body: JSON.stringify({ name: department }),
         });
+        if (handle401(response)) return;
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
         }
@@ -557,6 +574,7 @@ export const updateDepartment = async (departmentId, department) => {
             },
             body: JSON.stringify({ name: department }),
         });
+        if (handle401(response)) return;
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
         }
@@ -575,6 +593,7 @@ export const deleteDepartment = async (departmentId) => {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
             },
         });
+        if (handle401(response)) return;
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
         }
@@ -594,7 +613,7 @@ export const getAllTeachersFromDepartment = async (departmentId) => {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
-
+        if (handle401(response)) return;
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
         }
@@ -614,7 +633,7 @@ export const getCoursesWithoutUser = async (userId) => {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
-
+        if (handle401(response)) return;
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
         }
@@ -636,7 +655,7 @@ export const inscribeUser= async (courseId, userId) => {
             },
             body: JSON.stringify({ user_id: userId, course_id: courseId }),
         });
-
+        if (handle401(response)) return;
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
         }
@@ -656,7 +675,7 @@ export const getCoursesWithoutTeacher = async () => {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
-
+        if (handle401(response)) return;
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
         }
@@ -676,7 +695,7 @@ export const deleteUserFromCourse = async (userId, courseId) => {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
-
+        if (handle401(response)) return;
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
         }
@@ -697,7 +716,7 @@ export const desassignTeacher = async (courseId) => {
             },
             body: JSON.stringify({ course_teacher_id: null }),
         });
-
+        if (handle401(response)) return;
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
         }
@@ -719,7 +738,7 @@ export const assignTeacher = async (courseId, teacherId) => {
             },
             body: JSON.stringify({ course_id: courseId, teacher_id: teacherId }),
         });
-
+        if (handle401(response)) return;
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
         }
@@ -741,6 +760,7 @@ export const countUsers = async () => {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
+        if (handle401(response)) return;
         if (!response.ok) {
             throw new Error("Error fetching user count");
         }
@@ -762,7 +782,7 @@ export const getLatestActivities = async () => {
                 "Authorization": `Bearer ${localStorage.getItem('accessToken')}`,
             },
         });
-        
+        if (handle401(response)) return;
         // Verificar si la respuesta es exitosa
         if (!response.ok) {
             const errorText = await response.text();
@@ -794,7 +814,7 @@ export const checkEmailAndGetRoles = async (email) => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email })
         });
-
+        if (handle401(response)) return;
         if (!response.ok) {
             console.error("Error al verificar email:", await response.text());
             return { exists: false };
@@ -818,7 +838,7 @@ export const updateUserDepartment = async (userId, departmentId) => {
             },
             body: JSON.stringify({ department_id: departmentId }),
         });
-
+        if (handle401(response)) return;
         if (!response.ok) {
             return { error: `HTTP error! status: ${response.status}` };
         }
@@ -838,3 +858,11 @@ export const getFilteredRoles = (roles) => {
         role.name !== 'Administrador' && role.name !== 'Cantina'
     );
 };
+
+// function handle401(response) {
+//     if (response.status === 401) {
+//         window.location.href = '/';
+//         return true;
+//     }
+//     return false;
+// }

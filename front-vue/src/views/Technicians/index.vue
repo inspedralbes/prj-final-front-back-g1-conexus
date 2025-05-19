@@ -125,6 +125,25 @@
           </svg>
           <span>Objectes Perduts</span>
         </router-link>
+        <router-link
+          to="/technicians/analysis"
+          class="flex items-center p-2 text-gray-300 hover:text-blue-300 rounded-lg transition-colors duration-300"
+        >
+          <svg
+            class="w-5 h-5 mr-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M11 17a2 2 0 104 0m-4 0a2 2 0 01-4 0m8 0a2 2 0 01-4 0m8 0a2 2 0 01-4 0M5 10h14M5 6h14M5 14h14"
+            />
+          </svg>
+          <span>Anàlisi</span>
+        </router-link>
       </nav>
       <!-- Botó de Tancar Sessió -->
       <div class="mt-4 pt-4 border-t border-gray-700">
@@ -253,6 +272,26 @@
             </svg>
             Objectes Perduts
           </router-link>
+          <router-link
+            to="/technicians/analysis"
+            class="flex items-center text-white hover:text-blue-300 transition-colors duration-300"
+          >
+            <svg
+              class="w-5 h-5 mr-1"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M11 17a2 2 0 104 0m-4 0a2 2 0 01-4 0m8 0a2 2 0 01-4 0m8 0a2 2 0 01-4 0M5 10h14M5 6h14M5 14h14"
+              />
+            </svg>
+            Anàlisi
+          </router-link>
+          
           <button
             @click="logout"
             class="flex items-center text-white hover:text-red-300 transition-colors duration-300"

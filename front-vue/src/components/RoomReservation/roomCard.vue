@@ -1,232 +1,223 @@
 <template>
-  <div class="card">
-    <h3 class="room-title">{{ props.room.room_name }}</h3>
-    <h4 class="room-desc">{{ props.room.room_description }}</h4>
-
-    <div>
-      <h5>Disponibilitat</h5>
-      <ul>
-        <li v-if="props.room.room_hours_available_monday">
-          Dilluns:
-          <ul>
-            <li
-              v-for="hour in props.room.room_hours_available_monday"
-              :key="hour"
-            >
-              {{ hour }}
-            </li>
-          </ul>
-        </li>
-        <li v-if="props.room.room_hours_available_tuesday">
-          Dimarts:
-          <ul>
-            <li
-              v-for="hour in props.room.room_hours_available_tuesday"
-              :key="hour"
-            >
-              {{ hour }}
-            </li>
-          </ul>
-        </li>
-        <li v-if="props.room.room_hours_available_wednesday">
-          Dimecres:
-          <ul>
-            <li
-              v-for="hour in props.room.room_hours_available_wednesday"
-              :key="hour"
-            >
-              {{ hour }}
-            </li>
-          </ul>
-        </li>
-        <li v-if="props.room.room_hours_available_thursday">
-          Dijous:
-          <ul>
-            <li
-              v-for="hour in props.room.room_hours_available_thursday"
-              :key="hour"
-            >
-              {{ hour }}
-            </li>
-          </ul>
-        </li>
-        <li v-if="props.room.room_hours_available_friday">
-          Divendres:
-          <ul>
-            <li
-              v-for="hour in props.room.room_hours_available_friday"
-              :key="hour"
-            >
-              {{ hour }}
-            </li>
-          </ul>
-        </li>
-      </ul>
-      <button @click="showModal = true">Reservar</button>
+  <div class="card animate-fade-in">
+    <div class="card-header">
+      <div class="room-icon">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+        </svg>
+      </div>
+      <div class="room-info">
+        <h3 class="room-title">{{ props.room.room_name }}</h3>
+        <p class="room-desc">{{ props.room.room_description }}</p>
+      </div>
     </div>
 
-    <!-- Modal -->
-    <div v-if="showModal" class="modal">
-      <div class="modal-content">
-        <h3>Selecciona una data</h3>
-        <input type="date" v-model="selectedDate" @change="filterHoursByDate" />
-        <h3>Selecciona una hora</h3>
-        <select v-model="selectedHour">
-          <option v-for="hour in filteredHours" :key="hour" :value="hour">
-            {{ hour }}
-          </option>
-        </select>
+    <div class="availability-section">
+      <h4 class="section-title">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        Disponibilitat
+      </h4>
 
-        <div>
-          <button @click="reserveRoom" v-if="selectedDate && selectedHour">
-            Confirmar Reserva
-          </button>
-          <button @click="showModal = false">Cancel·lar</button>
+      <div class="schedule-grid">
+        <div v-if="props.room.room_hours_available_monday?.length" class="day-schedule">
+          <h5 class="day-title">Dilluns</h5>
+          <div class="hours-list">
+            <span v-for="hour in props.room.room_hours_available_monday" :key="hour" class="hour-tag">
+              {{ hour }}
+            </span>
+          </div>
+        </div>
+
+        <div v-if="props.room.room_hours_available_tuesday?.length" class="day-schedule">
+          <h5 class="day-title">Dimarts</h5>
+          <div class="hours-list">
+            <span v-for="hour in props.room.room_hours_available_tuesday" :key="hour" class="hour-tag">
+              {{ hour }}
+            </span>
+          </div>
+        </div>
+
+        <div v-if="props.room.room_hours_available_wednesday?.length" class="day-schedule">
+          <h5 class="day-title">Dimecres</h5>
+          <div class="hours-list">
+            <span v-for="hour in props.room.room_hours_available_wednesday" :key="hour" class="hour-tag">
+              {{ hour }}
+            </span>
+          </div>
+        </div>
+
+        <div v-if="props.room.room_hours_available_thursday?.length" class="day-schedule">
+          <h5 class="day-title">Dijous</h5>
+          <div class="hours-list">
+            <span v-for="hour in props.room.room_hours_available_thursday" :key="hour" class="hour-tag">
+              {{ hour }}
+            </span>
+          </div>
+        </div>
+
+        <div v-if="props.room.room_hours_available_friday?.length" class="day-schedule">
+          <h5 class="day-title">Divendres</h5>
+          <div class="hours-list">
+            <span v-for="hour in props.room.room_hours_available_friday" :key="hour" class="hour-tag">
+              {{ hour }}
+            </span>
+          </div>
         </div>
       </div>
+
+      <button @click="openReservationModal" class="reserve-button">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+        Reservar
+      </button>
     </div>
   </div>
 </template>
 
 <script setup>
-import { defineProps, ref, computed, onMounted } from "vue";
-import {
-  getReservationsFromRoom,
-  createNewReservation,
-} from "@/services/communicationsScripts/roomReservationsComManager";
+import { defineProps, defineEmits } from "vue";
+
 const props = defineProps({
   room: {
     type: Object,
     required: true,
   },
 });
-const filteredHours = ref([]);
-const showModal = ref(false);
-const selectedDate = ref("");
-const reservations = ref([]);
-const selectedHour = ref(""); // Selected hour for reservation
-// Combine all hours into a single array
-const allHours = computed(() => {
-  return [
-    ...(props.room.room_hours_available_monday || []),
-    ...(props.room.room_hours_available_tuesday || []),
-    ...(props.room.room_hours_available_wednesday || []),
-    ...(props.room.room_hours_available_thursday || []),
-    ...(props.room.room_hours_available_friday || []),
-  ];
-});
 
-onMounted(async () => {
-  // Fetch reservations for the room
-  reservations.value = await getReservationsFromRoom(props.room.id);
-  console.log(reservations.value);
-});
-function reserveRoom() {
-  const newReservation = {
-    room_id: props.room.id,
-    start_time: new Date(
-      `${selectedDate.value}T${selectedHour.value.split("-")[0]}`
-    ),
-    end_time: new Date(
-      `${selectedDate.value}T${selectedHour.value.split("-")[1]}`
-    ),
-    user_id: 1,
-  };
-  createNewReservation(newReservation)
-    .then((response) => {
-      console.log("Reserva creada:", response);
-    })
-    .catch((error) => {
-      console.error("Error al crear la reserva:", error);
-    });
-  showModal.value = false; // Close the modal after reservation
-}
-function filterHoursByDate() {
-  const day = new Date(selectedDate.value).getDay();
-  selectedHour.value = ""; // Reset selected hour when date changes
-  console.log(day);
-  switch (day) {
-    case 1:
-      filteredHours.value = (
-        props.room.room_hours_available_monday || []
-      ).filter((hour) => {
-        return !reservations.value.some((reservation) => {
-          const reservedDate = new Date(reservation.start_time);
-          return (
-            reservedDate.toDateString() ===
-              new Date(selectedDate.value).toDateString() &&
-            reservedDate.getHours() === parseInt(hour.split(":")[0])
-          );
-        });
-      });
-      break;
-    case 2:
-      filteredHours.value = (
-        props.room.room_hours_available_tuesday || []
-      ).filter((hour) => {
-        return !reservations.value.some((reservation) => {
-          const reservedDate = new Date(reservation.start_time);
-          return (
-            reservedDate.toDateString() ===
-              new Date(selectedDate.value).toDateString() &&
-            reservedDate.getHours() === parseInt(hour.split(":")[0])
-          );
-        });
-      });
-      break;
-    case 3:
-      filteredHours.value = (
-        props.room.room_hours_available_wednesday || []
-      ).filter((hour) => {
-        return !reservations.value.some((reservation) => {
-          const reservedDate = new Date(reservation.start_time);
-          return (
-            reservedDate.toDateString() ===
-              new Date(selectedDate.value).toDateString() &&
-            reservedDate.getHours() === parseInt(hour.split(":")[0])
-          );
-        });
-      });
-      break;
-    case 4:
-      filteredHours.value = (
-        props.room.room_hours_available_thursday || []
-      ).filter((hour) => {
-        return !reservations.value.some((reservation) => {
-          const reservedDate = new Date(reservation.start_time);
-          return (
-            reservedDate.toDateString() ===
-              new Date(selectedDate.value).toDateString() &&
-            reservedDate.getHours() === parseInt(hour.split(":")[0])
-          );
-        });
-      });
-      break;
-    case 5:
-      filteredHours.value = (
-        props.room.room_hours_available_friday || []
-      ).filter((hour) => {
-        return !reservations.value.some((reservation) => {
-          const reservedDate = new Date(reservation.start_time);
-          return (
-            reservedDate.toDateString() ===
-              new Date(selectedDate.value).toDateString() &&
-            reservedDate.getHours() === parseInt(hour.split(":")[0])
-          );
-        });
-      });
-      break;
-    default:
-      filteredHours.value = []; // No hours available for weekends
-  }
+const emit = defineEmits(['open-reservation']);
+
+function openReservationModal() {
+  emit('open-reservation', props.room);
 }
 </script>
 
 <style scoped>
-/* Fade-in animation */
-.animate-fade-in {
-  animation: fadeIn 0.6s ease-out forwards;
+.card {
+  background: rgba(30, 41, 59, 0.85);
+  border-radius: 1rem;
+  border: 1px solid rgba(148, 163, 184, 0.1);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  width: 100%;
 }
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.card-header {
+  padding: 1.5rem;
+  background: rgba(51, 65, 85, 0.5);
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.room-icon {
+  background: rgba(59, 130, 246, 0.1);
+  padding: 1rem;
+  border-radius: 0.75rem;
+  color: #60A5FA;
+  flex-shrink: 0;
+}
+
+.room-info {
+  flex: 1;
+}
+
+.room-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #F1F5F9;
+  margin-bottom: 0.5rem;
+}
+
+.room-desc {
+  color: #94A3B8;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.availability-section {
+  padding: 1.5rem;
+  background: rgba(51, 65, 85, 0.3);
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  color: #E2E8F0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+}
+
+.schedule-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.day-schedule {
+  background: rgba(51, 65, 85, 0.3);
+  padding: 1.25rem;
+  border-radius: 0.75rem;
+}
+
+.day-title {
+  color: #94A3B8;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+}
+
+.hours-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.hour-tag {
+  background: rgba(59, 130, 246, 0.1);
+  color: #60A5FA;
+  padding: 0.35rem 0.85rem;
+  border-radius: 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.reserve-button {
+  width: 100%;
+  background: linear-gradient(to right, #3B82F6, #2563EB);
+  color: white;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  font-weight: 500;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.reserve-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+/* Animations */
+.animate-fade-in {
+  animation: fadeIn 0.5s ease forwards;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -236,149 +227,5 @@ function filterHoursByDate() {
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-/* Card container */
-.card {
-  max-width: 600px;
-  margin: 18px auto;
-  padding: 24px;
-  background: rgba(30, 41, 59, 0.85);
-  border-radius: 12px;
-  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.18);
-  color: #e2e8f0;
-  transition: box-shadow 0.2s;
-}
-.card:hover {
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.22);
-}
-.card h3 {
-  margin: 0 0 8px 0;
-  font-size: 1.5em;
-  color: #f1f5f9;
-  letter-spacing: 0.5px;
-}
-.card h4 {
-  margin: 0 0 16px 0;
-  font-size: 1.1em;
-  color: #94a3b8;
-  font-weight: 400;
-}
-.card h5 {
-  margin: 12px 0 6px 0;
-  color: #cbd5e1;
-  font-size: 1.08em;
-  font-weight: 500;
-}
-.card ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 0 0 10px 0;
-}
-.card ul > li {
-  margin-bottom: 6px;
-}
-.card ul ul {
-  margin-left: 16px;
-  margin-top: 2px;
-}
-.card ul ul li {
-  font-size: 0.98em;
-  color: #e2e8f0;
-  background: rgba(17, 24, 39, 0.18);
-  border-radius: 4px;
-  padding: 2px 8px;
-  display: inline-block;
-  margin-right: 4px;
-  margin-bottom: 2px;
-}
-
-/* Button styles */
-button {
-  margin-right: 8px;
-  padding: 7px 18px;
-  border: none;
-  border-radius: 5px;
-  background: #2563eb;
-  color: #f1f5f9;
-  cursor: pointer;
-  transition: background 0.2s, transform 0.2s;
-  font-weight: 500;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-}
-button:hover {
-  background: #1d4ed8;
-  color: #fff;
-  transform: translateY(-1px) scale(1.03);
-}
-
-/* Modal styles */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(15, 23, 42, 0.65);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 50;
-}
-.modal-content {
-  background: rgba(30, 41, 59, 0.98);
-  padding: 32px 28px 24px 28px;
-  border-radius: 12px;
-  text-align: center;
-  color: #e2e8f0;
-  min-width: 320px;
-  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.22);
-  animation: fadeIn 0.5s;
-}
-.modal-content h3 {
-  color: #f1f5f9;
-  margin-bottom: 14px;
-  font-size: 1.18em;
-  font-weight: 600;
-}
-.modal-content select,
-.modal-content input[type="date"] {
-  margin-bottom: 18px;
-  margin-top: 6px;
-  width: 80%;
-  background: rgba(30, 41, 59, 0.92);
-  color: #f1f5f9;
-  border: 1px solid #334155;
-  border-radius: 4px;
-  padding: 7px 12px;
-  font-size: 1rem;
-  transition: border 0.2s, box-shadow 0.2s;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
-}
-.modal-content input[type="date"] {
-  color-scheme: dark;
-}
-.modal-content button {
-  margin-top: 10px;
-  margin-bottom: 0;
-}
-
-/* Placeholder color */
-::-webkit-input-placeholder {
-  color: #64748b;
-}
-::-moz-placeholder {
-  color: #64748b;
-}
-:-ms-input-placeholder {
-  color: #64748b;
-}
-::placeholder {
-  color: #64748b;
-}
-
-/* Font */
-* {
-  font-family: "Arial", sans-serif;
 }
 </style>

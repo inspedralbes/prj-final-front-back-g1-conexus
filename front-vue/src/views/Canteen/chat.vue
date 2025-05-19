@@ -328,7 +328,7 @@ import {
 import chatManager from "@/services/communicationsScripts/chatsComManager";
 import { useAppStore } from "@/stores";
 import io from "socket.io-client";
-import { getAllCanteenItems } from "@/services/communicationsScripts/canteenComManager";
+import { getAllEnabledCanteenItems } from "@/services/communicationsScripts/canteenComManager";
 
 // Estado
 const loading = ref(true);
@@ -711,7 +711,7 @@ const sendMenuResponse = async () => {
 
     // Si ya tenemos el menú cargado, lo usamos, sino lo cargamos
     if (menuItems.value.length === 0) {
-      const items = await getAllCanteenItems();
+      const items = await getAllEnabledCanteenItems();
       menuItems.value = items || [];
     }
 
