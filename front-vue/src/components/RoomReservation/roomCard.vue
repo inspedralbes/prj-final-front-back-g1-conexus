@@ -94,6 +94,9 @@ import {
   getReservationsFromRoom,
   createNewReservation,
 } from "@/services/communicationsScripts/roomReservationsComManager";
+import { useAppStore } from '@/stores/index.js';
+
+const appStore = useAppStore();
 const props = defineProps({
   room: {
     type: Object,
@@ -130,7 +133,7 @@ function reserveRoom() {
     end_time: new Date(
       `${selectedDate.value}T${selectedHour.value.split("-")[1]}`
     ),
-    user_id: 1,
+    user_id:appStore.user.id, 
   };
   createNewReservation(newReservation)
     .then((response) => {
