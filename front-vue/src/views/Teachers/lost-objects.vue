@@ -447,6 +447,7 @@ const submitLostObject = async () => {
       return;
     }
 
+    console.log("values", lostObject.value, currentUser.id);
     await createLostObject(lostObject.value, currentUser.id);
 
     lostObjects.value = await getAllLostObjects();

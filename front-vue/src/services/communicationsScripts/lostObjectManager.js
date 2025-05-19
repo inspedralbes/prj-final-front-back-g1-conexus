@@ -79,18 +79,13 @@ export const getLostObjectById = async (id) => {
 export const createLostObject = async (lostObjectData, userId) => {
     try {
         const formData = new FormData();
-
-        // Create data object to serialize
-        const dataObj = {
-            title: lostObjectData.objectName,
-            description: lostObjectData.description,
-            user_id: userId, // Use the provided user ID
-            expired_at: lostObjectData.foundDate ? new Date(new Date(lostObjectData.foundDate).getTime() + 14 * 24 * 60 * 60 * 1000).toISOString() : null,
-            location: lostObjectData.location
-        };
-
-        formData.append('data', JSON.stringify(dataObj));
-
+        
+        // Añadir los campos directamente en el FormData (no dentro de un objeto serializado)
+        formData.append('title', lostObjectData.objectName);
+        formData.append('description', lostObjectData.description);
+        formData.append('user_id', userId);
+        
+        // Añadir la imagen si existe
         if (lostObjectData.image) {
             formData.append('image', lostObjectData.image);
         }
@@ -102,6 +97,7 @@ export const createLostObject = async (lostObjectData, userId) => {
             },
             body: formData,
         });
+
         return await handleResponse(response);
     } catch (error) {
         console.error('Error creating lost object:', error);

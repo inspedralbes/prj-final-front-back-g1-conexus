@@ -47,7 +47,7 @@ router.get("/:id", verifyTokenMiddleware, async (req, res) => {
 router.post("/", verifyTokenMiddleware, upload.single('image'), async (req, res) => {
   try {
     // Obtenim les dades del formulari directament del cos de la sol·licitud
-    const { title, description, location, foundDate, user_id } = req.body;
+    const { title, description, user_id } = req.body;
     const image = req.file ? req.file.path : null;
 
     // Comprovem que totes les dades necessàries existeixen
@@ -59,7 +59,6 @@ router.post("/", verifyTokenMiddleware, upload.single('image'), async (req, res)
     const newLostObject = await LostObjects.create({
       title,
       description,
-      location,
       image,
       user_id: Number(user_id) || 1,
       // Si cal, pots afegir la data aquí
@@ -73,6 +72,7 @@ router.post("/", verifyTokenMiddleware, upload.single('image'), async (req, res)
     res.status(500).json({ message: error.message });
   }
 });
+
 // PUT /lost-objects/:id - Actualitzar un objecte perdut per ID
 router.put("/:id", verifyTokenMiddleware, async (req, res) => {
   const { id } = req.params;
