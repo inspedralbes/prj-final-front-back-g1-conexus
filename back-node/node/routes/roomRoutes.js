@@ -20,7 +20,7 @@ router.get("/", verifyTokenMiddleware, async (req, res) => {
                         const endTime = new Date(`1970-01-01T${end}:00Z`);
                         const times = [];
                         while (startTime < endTime) {
-                            const nextTime = new Date(startTime.getTime() + 60 * 60 * 1000); // Add 1 hour
+                            const nextTime = new Date(startTime.getTime() + 60 * 60 * 1000);
                             times.push(
                                 `${startTime.toISOString().substr(11, 5)}-${nextTime.toISOString().substr(11, 5)}`
                             );
@@ -46,7 +46,7 @@ router.get("/:id", verifyTokenMiddleware, async (req, res) => {
     try {
         const room = await Room.findByPk(req.params.id);
         if (!room) {
-            return res.status(404).json({ message: "Room not found" });
+            return res.status(404).json({ message: "Aula no trobada" });
         }
         res.json(room);
     } catch (error) {
@@ -54,17 +54,15 @@ router.get("/:id", verifyTokenMiddleware, async (req, res) => {
     }
 });
 
-// Para POST - creación de aulas, asegúrate de incluir el campo available
 router.post("/", verifyTokenMiddleware, async (req, res) => {
     try {
         const { room_name, room_hours_available, room_description, available } = req.body;
         if (!room_name || !room_hours_available || !room_description) {
             return res.status(400).json({ message: "room_name, room_hours_available i room_description són obligatoris" });
         }
-        //check if the room_name already exists in the database
         const roomExists = await Room.findOne({ where: { room_name } });
         if (roomExists) {
-            return res.status(400).json({ message: "Ja hi ha una sala amb aquest nom" });
+            return res.status(400).json({ message: "Ja hi ha una aula amb aquest nom" });
         }
         const room = await Room.create({ room_name, room_hours_available, room_description, available: available !== undefined ? available : true });
         res.status(201).json(room);
@@ -73,7 +71,6 @@ router.post("/", verifyTokenMiddleware, async (req, res) => {
     }
 });
 
-// Para PUT - actualización de aulas, incluir el campo available
 router.put("/:id", verifyTokenMiddleware, async (req, res) => {
     try {
         const { room_name, room_hours_available, room_description, available } = req.body;
@@ -91,28 +88,24 @@ router.put("/:id", verifyTokenMiddleware, async (req, res) => {
 router.delete("/:id", verifyTokenMiddleware, async (req, res) => {
     const room = await Room.findByPk(req.params.id);
     if (!room) {
-        return res.status(404).json({ message: "Room not found" });
+        return res.status(404).json({ message: "Aula no trobada" });
     }
     try {
         await room.destroy();
-        res.json({ message: "Room deleted successfully" });
+        res.json({ message: "Aula eliminada correctament" });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 });
 
-// Obtener estadísticas de aulas (total y disponibles/mantenimiento)
 router.get("/stats/count", verifyTokenMiddleware, async (req, res) => {
     try {
-        // Contar todas las aulas
         const totalRooms = await Room.count();
         
-        // Contar aulas disponibles
         const availableRooms = await Room.count({
             where: { available: true }
         });
         
-        // Contar aulas en mantenimiento
         const maintenanceRooms = await Room.count({
             where: { available: false }
         });
@@ -123,12 +116,11 @@ router.get("/stats/count", verifyTokenMiddleware, async (req, res) => {
             maintenance: maintenanceRooms
         });
     } catch (error) {
-        console.error("Error al obtener estadísticas de aulas:", error);
+        console.error("Error en obtenir estadístiques d'aules:", error);
         res.status(500).json({ message: error.message });
     }
 });
 
-// Actualizar disponibilidad de un aula
 router.put("/:id/availability",verifyTokenMiddleware, async (req, res) => {
     try {
         const { id } = req.params;
@@ -136,7 +128,7 @@ router.put("/:id/availability",verifyTokenMiddleware, async (req, res) => {
         
         const room = await Room.findByPk(id);
         if (!room) {
-            return res.status(404).json({ message: "Aula no encontrada" });
+            return res.status(404).json({ message: "Aula no trobada" });
         }
         
         await room.update({ available });

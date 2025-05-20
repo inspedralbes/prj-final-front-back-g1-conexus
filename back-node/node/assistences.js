@@ -2,7 +2,6 @@ import express from 'express';
 import cors from 'cors';
 import { sequelize } from "./models/index.js";
 import dotenv from 'dotenv';
-import path from 'path';
 import bodyParser from 'body-parser';
 import assistenceRoutes from './routes/assistenceRoutes.js';
 import courseRoutes from './routes/courseRoutes.js';
@@ -21,8 +20,8 @@ app.use("/api/courses", courseRoutes);
 app.use("/api/departments", departmentRoutes);
 
 sequelize.sync().then(() => {
-    console.log("Database synced");
+    console.log("Base de dades sincronitzada");
     app.listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`);
+        console.log(`Servidor executant-se al port ${PORT}`);
     });
 });

@@ -52,11 +52,10 @@ router.post("/", verifyTokenMiddleware, async (req, res) => {
         const hourExists = await Assistence.findOne({ where: { hour, user_id, day } });
         let assistance;
         if (hourExists) {
-            assistance=Assistence.update({ assisted }, { where: { hour, user_id, day } });
+            assistance = Assistence.update({ assisted }, { where: { hour, user_id, day } });
         }
         else {
-
-           assistance = await Assistence.create({ user_id, course_id, hour, assisted, day });
+            assistance = await Assistence.create({ user_id, course_id, hour, assisted, day });
         }
         res.json(assistance);
     }

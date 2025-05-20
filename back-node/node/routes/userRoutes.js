@@ -5,9 +5,9 @@ import multer from "multer";
 import path from "path";
 import { generateToken, verifyTokenMiddleware } from "../token.js";
 import TypeUser from "../models/TypeUser.js";
-import { Op } from "sequelize"; // Añade esta importación
-import fetch from 'node-fetch';  // Añade esta importación al inicio del archivo
-import fs from 'fs';             // Añade esta importación para el sistema de archivos
+import { Op } from "sequelize";
+import fetch from 'node-fetch';
+import fs from 'fs';
 
 const router = express.Router();
 
@@ -52,7 +52,7 @@ router.post("/", upload.single('profile'), verifyTokenMiddleware, async (req, re
         
         if (existingUser) {
             return res.status(400).json({ 
-                message: "Ya existe un usuario con este correo electrónico" 
+                message: "Ja existeix un usuari amb aquest correu electrònic" 
             });
         }
 
@@ -69,7 +69,7 @@ router.post("/", upload.single('profile'), verifyTokenMiddleware, async (req, re
         
         res.json(user);
     } catch (error) {
-        console.error("Error creating user:", error);
+        console.error("Error en crear usuari:", error);
         res.status(500).json({ message: error.message });
     }
 });
@@ -78,7 +78,7 @@ router.post("/", upload.single('profile'), verifyTokenMiddleware, async (req, re
 async function downloadImage(url, filename) {
     const response = await fetch(url);
     if (!response.ok) {
-        throw new Error(`Error al descargar la imagen: ${response.statusText}`);
+        throw new Error(`Error en descarregar la imatge: ${response.statusText}`);
     }
     
     // Crear directorio 'uploads' si no existe
@@ -108,7 +108,7 @@ router.post("/register", upload.single('profile'), async (req, res) => {
         
         if (existingUser) {
             return res.status(400).json({ 
-                message: "Ya existe un usuario con este correo electrónico" 
+                message: "Ja existeix un usuari amb aquest correu electrònic" 
             });
         }
         
@@ -127,9 +127,9 @@ router.post("/register", upload.single('profile'), async (req, res) => {
                 
                 // Descargar la imagen y obtener la ruta donde se guardó
                 profilePath = await downloadImage(profile, uniqueFilename);
-                console.log(`Imagen descargada y guardada en: ${profilePath}`);
+                console.log(`Imatge descarregada i desada a: ${profilePath}`);
             } catch (downloadError) {
-                console.error("Error al descargar la imagen:", downloadError);
+                console.error("Error en descarregar la imatge:", downloadError);
                 // Continuar sin imagen si hay error en la descarga
             }
         }
@@ -149,7 +149,7 @@ router.post("/register", upload.single('profile'), async (req, res) => {
         
         res.json(user);
     } catch (error) {
-        console.error("Error registering user:", error);
+        console.error("Error en registrar usuari:", error);
         res.status(500).json({ message: error.message });
     }
 });
@@ -161,7 +161,7 @@ router.get("/:id", verifyTokenMiddleware, async (req, res) => {
         const user = await User.findByPk(id);
 
         if (!user) {
-            return res.status(404).json({ message: "Usuario no encontrado" });
+            return res.status(404).json({ message: "Usuari no trobat" });
         }
 
         res.json(user);
@@ -191,7 +191,7 @@ router.post("/email", verifyTokenMiddleware, async (req, res) => {
         console.log(user);
 
         if (!user) {
-            return res.status(404).json({ message: "Usuario no encontrado" });
+            return res.status(404).json({ message: "Usuari no trobat" });
         }
 
         res.json(user);
@@ -209,7 +209,7 @@ router.put("/personalData/:id", verifyTokenMiddleware, async (req, res) => {
         const user = await User.findByPk(id);
 
         if (!user) {
-            return res.status(404).json({ message: "Usuario no encontrado" });
+            return res.status(404).json({ message: "Usuari no trobat" });
         }
 
         await user.update({ name, password, profile, department_id, description });
@@ -228,7 +228,7 @@ router.put("/updateRole/:id", verifyTokenMiddleware, async (req, res) => {
         const user = await User.findByPk(id);
 
         if (!user) {
-            return res.status(404).json({ message: "Usuario no encontrado" });
+            return res.status(404).json({ message: "Usuari no trobat" });
         }
 
         await user.update({ typeUsers_id });
@@ -245,7 +245,7 @@ router.delete("/:id", verifyTokenMiddleware, async (req, res) => {
         const user = await User.findByPk(id);
 
         if (!user) {
-            return res.status(404).json({ message: "Usuario no encontrado" });
+            return res.status(404).json({ message: "Usuari no trobat" });
         }
 
         // Eliminar la imagen si existe
@@ -257,19 +257,19 @@ router.delete("/:id", verifyTokenMiddleware, async (req, res) => {
                 // Verificar que el archivo existe antes de intentar eliminarlo
                 if (fs.existsSync(imagePath)) {
                     fs.unlinkSync(imagePath);
-                    console.log(`Imagen eliminada: ${imagePath}`);
+                    console.log(`Imatge eliminada: ${imagePath}`);
                 }
             } catch (imageError) {
-                console.error("Error al eliminar la imagen:", imageError);
+                console.error("Error en eliminar la imatge:", imageError);
                 // Continuamos con la eliminación del usuario incluso si hay error con la imagen
             }
         }
 
         // Eliminar el usuario
         await user.destroy();
-        res.json({ message: "Usuario eliminado correctamente" });
+        res.json({ message: "Usuari eliminat correctament" });
     } catch (error) {
-        console.error("Error al eliminar usuario:", error);
+        console.error("Error en eliminar usuari:", error);
         res.status(500).json({ message: error.message });
     }
 });
@@ -281,28 +281,28 @@ router.post('/login', async (req, res) => {
     try {
         const existingUser = await User.findOne({ where: { email } });
 
-        console.log('Existing user:', existingUser);
+        console.log('Usuari existent:', existingUser);
 
         if (!existingUser) {
-            return res.status(404).json({ error: 'User not found' });
+            return res.status(404).json({ error: 'Usuari no trobat' });
         }
 
         // Verify password
         const match = await bcrypt.compare(password, existingUser.password);
 
         if (!match) {
-            return res.status(404).json({ error: 'Invalid password' });
+            return res.status(404).json({ error: 'Contrasenya invàlida' });
         }
 
         const tokens = generateToken(existingUser);
         return res.status(200).json({
-            message: 'Login successful',
+            message: 'Inici de sessió correcte',
             accessToken: tokens,
             userLogin: existingUser
         });
     } catch (error) {
-        console.error('Login error:', error);
-        res.status(500).json({ error: 'Server error during login' });
+        console.error('Error d\'inici de sessió:', error);
+        res.status(500).json({ error: 'Error del servidor durant l\'inici de sessió' });
     }
 });
 
@@ -347,7 +347,7 @@ router.get("/stats/count", async (req, res) => {
             registeredToday: todayUsers
         });
     } catch (error) {
-        console.error("Error getting user stats:", error);
+        console.error("Error en obtenir estadístiques d'usuaris:", error);
         res.status(500).json({ message: error.message });
     }
 });
@@ -358,7 +358,7 @@ router.post("/check-email", async (req, res) => {
         const { email } = req.body;
         
         if (!email) {
-            return res.status(400).json({ message: "El correo es requerido" });
+            return res.status(400).json({ message: "El correu és obligatori" });
         }
         
         // Verificar si el correo ya existe
@@ -380,7 +380,7 @@ router.put("/updateDepartment/:id", verifyTokenMiddleware, async (req, res) => {
         const user = await User.findByPk(id);
 
         if (!user) {
-            return res.status(404).json({ message: "Usuario no encontrado" });
+            return res.status(404).json({ message: "Usuari no trobat" });
         }
 
         await user.update({ department_id });
@@ -409,7 +409,7 @@ export async function getLatestUser() {
         
         return latestUser;
     } catch (error) {
-        console.error("Error al obtener usuario reciente:", error);
+        console.error("Error en obtenir usuari recent:", error);
         throw error;
     }
 }

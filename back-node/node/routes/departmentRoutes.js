@@ -4,7 +4,6 @@ import { verifyTokenMiddleware } from "../token.js";
 
 const router = express.Router();
 
-
 router.get("/", verifyTokenMiddleware, async (req, res) => {
     try {
         const departments = await Department.findAll();

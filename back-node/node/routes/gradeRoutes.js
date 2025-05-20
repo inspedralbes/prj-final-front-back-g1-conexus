@@ -23,7 +23,6 @@ router.get("/:id", verifyTokenMiddleware, async (req, res) => {
   }
 });
 
-// Get all grades from a specific task
 router.get("/getAllGradesFromTask/:id", verifyTokenMiddleware, async (req, res) => {
   try {
     let grades = [];
@@ -36,7 +35,6 @@ router.get("/getAllGradesFromTask/:id", verifyTokenMiddleware, async (req, res) 
   }
 });
 
-// Get all grades from a specific user
 router.get("/getAllGradesFromUser/:id", verifyTokenMiddleware, async (req, res) => {
   try {
     const user = await Grade.findByPk(req.params.id, {
@@ -49,7 +47,7 @@ router.get("/getAllGradesFromUser/:id", verifyTokenMiddleware, async (req, res) 
       ],
     });
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "Usuari no trobat" });
     }
     const grades = user.grades.map((grade) => {
       return {
@@ -63,22 +61,21 @@ router.get("/getAllGradesFromUser/:id", verifyTokenMiddleware, async (req, res) 
   }
 });
 
-// Create a new grade
 router.post("/", verifyTokenMiddleware, async (req, res) => {
   try {
     if (req.body.grade < 0 || req.body.grade > 10) {
       return res
         .status(400)
-        .json({ message: "Grade must be between 0 and 10" });
+        .json({ message: "La nota ha d'estar entre 0 i 10" });
     } else {
       let grade = {};
       if (await checkIfGradeAlreadyExists(req.body.user_id, req.body.task_id)) {
-        console.log("Grade already exists, updating it instead.");
+        console.log("La nota ja existeix, actualitzant-la.");
         grade = await Grade.update(req.body, {
           where: { user_id: req.body.user_id, task_id: req.body.task_id },
         });
       } else {
-        console.log("Grade does not exist, creating a new one.");
+        console.log("La nota no existeix, creant-ne una de nova.");
         grade = await Grade.create(req.body);
       }
       res.json(grade);
@@ -88,24 +85,22 @@ router.post("/", verifyTokenMiddleware, async (req, res) => {
   }
 });
 
-// Get all grades from a specific task
-
 router.put("/:id", verifyTokenMiddleware, async (req, res) => {
   try {
     if (req.body.grade < 0 || req.body.grade > 10) {
       return res
         .status(400)
-        .json({ message: "Grade must be between 0 and 10" });
+        .json({ message: "La nota ha d'estar entre 0 i 10" });
     }
     const grade = await Grade.update(req.body, {
       where: { id: req.params.id },
     });
     if (!grade) {
-      return res.status(404).json({ message: "Grade not found" });
+      return res.status(404).json({ message: "Nota no trobada" });
     }
     const updatedGrade = await Grade.findByPk(req.params.id);
     if (!updatedGrade) {
-      return res.status(404).json({ message: "Grade not found" });
+      return res.status(404).json({ message: "Nota no trobada" });
     }
     res.json(updatedGrade);
   } catch (error) {
@@ -113,7 +108,6 @@ router.put("/:id", verifyTokenMiddleware, async (req, res) => {
   }
 });
 
-// GET all grades from a specific user and course
 router.get(
   "/getAllGradesFromUserAndCourse/:userId/:courseId", verifyTokenMiddleware,
   async (req, res) => {
@@ -151,21 +145,19 @@ router.get(
   }
 );
 
-// Delete a grade
 router.delete("/:id", verifyTokenMiddleware, async (req, res) => {
   try {
     const grade = await Grade.findByPk(req.params.id);
     if (!grade) {
-      return res.status(404).json({ message: "Grade not found" });
+      return res.status(404).json({ message: "Nota no trobada" });
     } else {
       await Grade.destroy({ where: { id: req.params.id } });
-      res.json({ message: "Grade deleted successfully" });
+      res.json({ message: "Nota eliminada correctament" });
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
-
 
 async function checkIfGradeAlreadyExists(user_id, task_id) {
   let auxGrade = await Grade.findOne({

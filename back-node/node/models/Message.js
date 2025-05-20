@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 
-// Creamos primero un esquema para la interacción
 const interactionSchema = new mongoose.Schema({
     teacherId: {
         type: String,
@@ -34,7 +33,6 @@ const interactionSchema = new mongoose.Schema({
     }
 });
 
-// Esquema principal del mensaje
 const messageSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -50,15 +48,14 @@ const messageSchema = new mongoose.Schema({
         default: []
     },
     deletedFor: {
-        type: [Number], // IDs de usuarios que han eliminado el chat
+        type: [Number], 
         default: []
     }
 }, {
-    timestamps: true, // Añade createdAt y updatedAt
-    collection: 'messages' // Fuerza el nombre de la colección
+    timestamps: true, 
+    collection: 'messages' 
 });
 
-// Crear el modelo y exportarlo
 const Message = mongoose.model("Message", messageSchema);
 
 export default Message; 

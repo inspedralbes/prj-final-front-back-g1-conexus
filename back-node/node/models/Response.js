@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize';
-import sequelize from '../config/database.js'; // Asegúrate de que este archivo apunta a tu configuración de Sequelize
+import sequelize from '../config/database.js'; 
 
 const Response = sequelize.define('Response', {
     id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true, },
