@@ -72,10 +72,10 @@ jobs:
           echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > ~/prod_key.pem
           chmod 600 ~/prod_key.pem
 
-          echo "" >> .env.prod
+          echo "" >> .env.production
 
-          # Copiar .env.prod al servidor y renombrarlo .env
-          scp -o StrictHostKeyChecking=no -i ~/prod_key.pem .env.prod ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/.env
+          # Copiar .env.production al servidor y renombrarlo .env
+          scp -o StrictHostKeyChecking=no -i ~/prod_key.pem .env.production ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/.env.production
           
           # Conectarse por SSH y añadir las variables sensibles
           ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} <<EOF
@@ -121,7 +121,7 @@ jobs:
 
           rsync -avz --exclude=node_modules --exclude=dist -e "ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem" front-vue/ ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/front-vue/
           
-          scp -o StrictHostKeyChecking=no -i ~/prod_key.pem .env.prod ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/front-vue/.env.prod
+          scp -o StrictHostKeyChecking=no -i ~/prod_key.pem .env.production ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/front-vue/.env.production
 
           # Copiar el prod.Dockerfile al servidor en la carpeta front
           scp -o StrictHostKeyChecking=no -i ~/prod_key.pem front-vue/prod.Dockerfile ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/front-vue/
