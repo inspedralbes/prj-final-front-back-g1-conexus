@@ -5,9 +5,9 @@
       <h1
         class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400"
       >
-        Pedidos Activos
+        Comandes Actives
       </h1>
-      <p class="text-gray-300 mt-2">Gestiona los pedidos de la cantina</p>
+      <p class="text-gray-300 mt-2">Gestiona les comandes de la cantina</p>
     </div>
 
     <div
@@ -15,7 +15,7 @@
       class="text-center py-8 bg-slate-800/50 backdrop-blur-sm rounded-xl shadow-lg border border-slate-700"
     >
       <div class="spinner mx-auto mb-4 h-8 w-8 text-blue-400"></div>
-      <p class="text-gray-300">Cargando pedidos...</p>
+      <p class="text-gray-300">Carregant comandes...</p>
     </div>
 
     <div
@@ -41,18 +41,18 @@
     <div v-else-if="activeChat" class="chat-detail">
       <div class="chat-header">
         <button class="back-button" @click="goBack">
-          <i class="fas fa-arrow-left"></i> Volver
+          <i class="fas fa-arrow-left"></i> Tornar
         </button>
         <h3>{{ chatName }}</h3>
       </div>
 
       <div class="chat-messages" ref="messagesContainer">
         <div v-if="chatLoading" class="loading-spinner">
-          <p>Cargando mensajes...</p>
+          <p>Carregant missatges...</p>
         </div>
 
         <div v-else-if="messages.length === 0" class="empty-chat-message">
-          <p>No hay mensajes en este chat.</p>
+          <p>No hi ha missatges en aquest xat.</p>
         </div>
 
         <div
@@ -75,7 +75,7 @@
       </div>
 
       <div class="quick-responses">
-        <h4>Respuestas rápidas</h4>
+        <h4>Respostes ràpides</h4>
         <div class="response-buttons">
           <span
             class="response-btn"
@@ -85,9 +85,9 @@
           <span
             class="response-btn"
             @click="
-              sendQuickResponse('🚚 La teva comanda esta llesta per a recollir')
+              sendQuickResponse('🚚 La teva comanda està llesta per a recollir')
             "
-            >🚚 La teva comanda esta llesta per a recollir</span
+            >🚚 La teva comanda està llesta per a recollir</span
           >
           <span
             class="response-btn"
@@ -122,13 +122,13 @@
           d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
         />
       </svg>
-      <p class="mt-1 text-gray-400">Actualmente no hay pedidos en la cantina</p>
+      <p class="mt-1 text-gray-400">Actualment no hi ha comandes a la cantina</p>
     </div>
 
     <div v-else class="orders-container">
-      <!-- Panel de Pedidos -->
+      <!-- Panel de Comandes -->
       <div class="orders-panel">
-        <!-- NUEVOS PEDIDOS -->
+        <!-- NOVES COMANDES -->
         <div class="order-section">
           <div
             class="order-section-header"
@@ -137,7 +137,7 @@
           >
             <h3>
               <span class="category-icon">🛒</span>
-              Nuevos Pedidos
+              Noves Comandes
               <span v-if="newOrders.length > 0" class="category-count">{{
                 newOrders.length
               }}</span>
@@ -176,7 +176,7 @@
                 </div>
                 <div class="order-actions">
                   <button class="view-chat-btn" @click="openChat(order.chat)">
-                    Ver Chat
+                    Veure Xat
                   </button>
                   <button
                     class="mark-preparing-btn"
@@ -187,11 +187,11 @@
                 </div>
               </div>
             </div>
-            <p v-else class="empty-category">No hay pedidos nuevos</p>
+            <p v-else class="empty-category">No hi ha comandes noves</p>
           </div>
         </div>
 
-        <!-- EN PREPARACIÓN -->
+        <!-- EN PREPARACIÓ -->
         <div class="order-section">
           <div
             class="order-section-header"
@@ -200,7 +200,7 @@
           >
             <h3>
               <span class="category-icon">👨‍🍳</span>
-              En Preparación
+              En Preparació
               <span v-if="preparingOrders.length > 0" class="category-count">{{
                 preparingOrders.length
               }}</span>
@@ -239,19 +239,19 @@
                 </div>
                 <div class="order-actions">
                   <button class="view-chat-btn" @click="openChat(order.chat)">
-                    Ver Chat
+                    Veure Xat
                   </button>
                   <button class="mark-ready-btn" @click="markAsReady(order.id)">
-                    Listo para recoger
+                    Llesta per a recollir
                   </button>
                 </div>
               </div>
             </div>
-            <p v-else class="empty-category">No hay pedidos en preparación</p>
+            <p v-else class="empty-category">No hi ha comandes en preparació</p>
           </div>
         </div>
 
-        <!-- LISTOS PARA RECOGER -->
+        <!-- LLESTES PER A RECOLLIR -->
         <div class="order-section">
           <div
             class="order-section-header"
@@ -260,7 +260,7 @@
           >
             <h3>
               <span class="category-icon">✅</span>
-              Listos para Recoger
+              Llestes per a recollir
               <span v-if="readyOrders.length > 0" class="category-count">{{
                 readyOrders.length
               }}</span>
@@ -290,7 +290,7 @@
                         {{ formatTimeAgo(order.timestamp) }}
                       </p>
                       <p class="removal-timer" v-if="order.removalTime">
-                        Se eliminará en
+                        S'eliminarà en
                         {{ formatRemovalTime(order.removalTime) }}
                       </p>
                     </div>
@@ -303,13 +303,13 @@
                 </div>
                 <div class="order-actions">
                   <button class="view-chat-btn" @click="openChat(order.chat)">
-                    Ver Chat
+                    Veure Xat
                   </button>
                 </div>
               </div>
             </div>
             <p v-else class="empty-category">
-              No hay pedidos listos para recoger
+              No hi ha comandes llestes per a recollir
             </p>
           </div>
         </div>
