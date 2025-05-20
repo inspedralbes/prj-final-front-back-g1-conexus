@@ -12,8 +12,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 dotenv.config();
+
 const app = express();
 const PORT = process.env.NODE_INCIDENT_PORT || 3004;
+
 const transporter = nodemailer.createTransport({
     service: 'smtp.gmail.com',
     host: process.env.EMAIL_HOST,
@@ -35,8 +37,9 @@ transporter.verify((error, success) => {
 
 app.use(bodyParser.json());
 app.use(cors());
+
 app.use('/uploads', express.static('uploads'));
-app.use("/api/reports", reportRoutes);
+app.use('/api/reports', reportRoutes);
 
 sequelize.sync().then(() => {
     app.listen(PORT, () => {

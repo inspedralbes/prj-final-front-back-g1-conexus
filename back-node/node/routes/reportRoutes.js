@@ -171,18 +171,6 @@ router.post("/", verifyTokenMiddleware, upload.single("image"), async (req, res)
         .json({ message: "user_id, report i room_id són obligatoris" });
     }
 
-    /**
-     * Crea un nou informe a la base de dades.
-     *
-     * @async
-     * @function
-     * @param {Object} reportData - Les dades per al nou informe.
-     * @param {number} reportData.user_id - L'ID de l'usuari que crea l'informe.
-     * @param {string} reportData.report - El contingut de l'informe.
-     * @param {string} reportData.image - L'URL o ruta de la imatge associada amb l'informe.
-     * @param {number} reportData.room_id - L'ID de l'habitació associada amb l'informe.
-     * @returns {Promise<Object>} L'objecte del nou informe creat.
-     */
     const newReport = await Reports.create({
       user_id,
       report,
@@ -196,6 +184,7 @@ router.post("/", verifyTokenMiddleware, upload.single("image"), async (req, res)
     res.status(500).json({ message: error.message });
   }
 });
+
 // PUT /reports/:id - Actualitzar un informe per ID
 router.put("/:id", verifyTokenMiddleware, async (req, res) => {
   const { id } = req.params;
