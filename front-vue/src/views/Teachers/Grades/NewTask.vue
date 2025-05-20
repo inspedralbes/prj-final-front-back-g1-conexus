@@ -7,17 +7,17 @@
       <div>
         <h2 class="text-2xl font-bold text-white mb-2">
           <span
-            class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400"
+            class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-green-400"
           >
             Nova Tasca
           </span>
         </h2>
         <p class="text-gray-400 text-sm">Crea una nova tasca d'avaluació</p>
       </div>
-      <div class="bg-purple-500/10 p-3 rounded-lg border border-purple-500/20">
+      <div class="bg-green-500/10 p-3 rounded-lg border border-green-500/20">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="h-8 w-8 text-purple-400"
+          class="h-8 w-8 text-green-400"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -26,9 +26,39 @@
             stroke-linecap="round"
             stroke-linejoin="round"
             stroke-width="2"
-            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
           />
         </svg>
+      </div>
+    </div>
+
+    <!-- Descripción de la sección -->
+    <div class="mb-8 bg-slate-800/50 rounded-xl p-6 border border-slate-700/30">
+      <div class="flex items-start">
+        <div class="bg-green-500/20 p-3 rounded-lg mr-4">
+          <svg
+            class="w-6 h-6 text-green-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+            />
+          </svg>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold text-white mb-2">
+            Creació de Nova Tasca
+          </h3>
+          <p class="text-gray-300">
+            En aquest formulari pots crear una nova tasca d'avaluació.
+            Introdueix el nom i una descripció opcional per a la tasca.
+          </p>
+        </div>
       </div>
     </div>
 
@@ -47,7 +77,7 @@
           type="text"
           id="task_name"
           v-model="task_name"
-          class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
+          class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500 transition-all"
           placeholder="Introdueix el nom de la tasca"
           :class="{ 'border-red-500 focus:ring-red-500': nameError }"
         />
@@ -66,7 +96,7 @@
         <textarea
           id="taskDescription"
           v-model="task_description"
-          class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
+          class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500 transition-all"
           rows="4"
           placeholder="Introdueix una descripció"
         ></textarea>
@@ -97,7 +127,7 @@
 
       <button
         @click="sendCreateTask"
-        class="px-6 py-2 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-lg shadow hover:from-purple-600 hover:to-blue-600 transition-all duration-300 flex items-center font-medium"
+        class="px-6 py-2 bg-gradient-to-r from-blue-500 to-green-500 text-white rounded-lg shadow hover:from-blue-600 hover:to-green-600 transition-all duration-300 flex items-center font-medium"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
