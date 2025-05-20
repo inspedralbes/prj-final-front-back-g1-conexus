@@ -1,6 +1,4 @@
-// const API_URL = import.meta.env.VITE_INCIDENT_URL;
-
-const API_URL = "https://www.conexushub.cat/incident/";
+const API_URL = import.meta.env.VITE_INCIDENT_URL;
 
 function handle401(response) {
     if (response.status === 401) {
