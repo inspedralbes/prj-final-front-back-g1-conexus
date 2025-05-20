@@ -75,6 +75,7 @@ jobs:
           echo "" >> .env.production
 
           # Copiar .env.production al servidor y renombrarlo .env
+          scp -o StrictHostKeyChecking=no -i ~/prod_key.pem .env.production ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/.env.production
 
           # Conectarse por SSH y añadir las variables sensibles
           ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} <<EOF
