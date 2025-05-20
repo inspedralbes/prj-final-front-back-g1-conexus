@@ -1,16 +1,119 @@
 <template>
-  <div class="container animate-fade-in">
-    <h1>Nova Tasca</h1>
-    <button class="back-btn" @click="goBack()">Tornar</button>
-    <div class="form-group">
-      <label for="taskName">Nom de la tasca:</label>
-      <input type="text" id="task_name" v-model="task_name" />
+  <div
+    class="bg-slate-900/10 backdrop-blur-sm rounded-xl p-6 shadow-2xl animate-fade-in border border-slate-700/30 mt-9 mb-9"
+  >
+    <!-- Capçalera -->
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <h2 class="text-2xl font-bold text-white mb-2">
+          <span
+            class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400"
+          >
+            Nova Tasca
+          </span>
+        </h2>
+        <p class="text-gray-400 text-sm">Crea una nova tasca d'avaluació</p>
+      </div>
+      <div class="bg-purple-500/10 p-3 rounded-lg border border-purple-500/20">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-8 w-8 text-purple-400"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+          />
+        </svg>
+      </div>
     </div>
-    <div class="form-group">
-      <label for="taskDescription">Descripció:</label>
-      <textarea id="taskDescription" v-model="task_description"></textarea>
+
+    <!-- Formulario -->
+    <div
+      class="bg-slate-800/50 rounded-xl p-6 border border-slate-700/30 mb-6 space-y-6"
+    >
+      <div>
+        <label
+          for="task_name"
+          class="block text-sm font-medium text-gray-300 mb-2"
+        >
+          Nom de la tasca: <span class="text-red-400">*</span>
+        </label>
+        <input
+          type="text"
+          id="task_name"
+          v-model="task_name"
+          class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
+          placeholder="Introdueix el nom de la tasca"
+          :class="{ 'border-red-500 focus:ring-red-500': nameError }"
+        />
+        <p v-if="nameError" class="mt-2 text-sm text-red-400">
+          {{ nameError }}
+        </p>
+      </div>
+
+      <div>
+        <label
+          for="taskDescription"
+          class="block text-sm font-medium text-gray-300 mb-2"
+        >
+          Descripció:
+        </label>
+        <textarea
+          id="taskDescription"
+          v-model="task_description"
+          class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
+          rows="4"
+          placeholder="Introdueix una descripció"
+        ></textarea>
+      </div>
     </div>
-    <button class="create-btn" @click="sendCreateTask">Crear Tasca</button>
+
+    <!-- Botones -->
+    <div class="flex justify-between items-center">
+      <button
+        @click="goBack()"
+        class="px-4 py-2 bg-slate-700/50 text-gray-300 rounded-lg hover:bg-slate-600/50 transition-all duration-300 flex items-center"
+      >
+        <svg
+          class="w-5 h-5 mr-2"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M10 19l-7-7m0 0l7-7m-7 7h18"
+          />
+        </svg>
+        Tornar
+      </button>
+
+      <button
+        @click="sendCreateTask"
+        class="px-6 py-2 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-lg shadow hover:from-purple-600 hover:to-blue-600 transition-all duration-300 flex items-center font-medium"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5 mr-2"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+            clip-rule="evenodd"
+          />
+        </svg>
+        Crear Tasca
+      </button>
+    </div>
   </div>
 </template>
 <script setup>
@@ -21,13 +124,32 @@ import { useRouter } from "vue-router";
 const task_name = ref("");
 const task_description = ref("");
 const courseId = ref(null);
+const nameError = ref("");
 const router = useRouter();
 onMounted(() => {
   const route = useRoute();
   courseId.value = route.params.courseId;
 });
 
+function validateForm() {
+  // Resetear errores
+  nameError.value = "";
+
+  // Validar nombre de la tarea
+  if (!task_name.value.trim()) {
+    nameError.value = "El nom de la tasca és obligatori";
+    return false;
+  }
+
+  return true;
+}
+
 function sendCreateTask() {
+  // Validar formulario
+  if (!validateForm()) {
+    return;
+  }
+
   const task = {
     task_name: task_name.value,
     task_description: task_description.value,
@@ -56,152 +178,5 @@ function goBack() {
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-/* Semitransparent background and dark theme styles */
-.container {
-  max-width: 900px;
-  margin: 40px auto;
-  padding: 32px 24px;
-  background: rgba(30, 41, 59, 0.85); /* dark blue-gray, semitransparent */
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-  color: #e2e8f0; /* light text */
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-h1 {
-  text-align: center;
-  color: #f1f5f9;
-  margin-bottom: 12px;
-  font-weight: 700;
-  letter-spacing: 1px;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-label {
-  font-size: 1rem;
-  font-weight: 500;
-  color: #cbd5e1;
-  user-select: none;
-}
-
-input[type="text"],
-textarea {
-  padding: 10px 12px;
-  border: 1px solid #334155;
-  border-radius: 6px;
-  font-size: 1rem;
-  background: #1e293b;
-  color: #e2e8f0;
-  transition: border 0.2s, box-shadow 0.2s;
-}
-
-input[type="text"]:focus,
-textarea:focus {
-  border-color: #2563eb;
-  outline: none;
-  background: #0f172a;
-  box-shadow: 0 0 0 2px #2563eb33;
-}
-
-textarea {
-  min-height: 80px;
-  resize: vertical;
-}
-
-.back-btn {
-  align-self: flex-start;
-  background: #334155;
-  color: #60a5fa;
-  border: none;
-  padding: 6px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-bottom: 8px;
-  font-weight: 500;
-  transition: background 0.2s, color 0.2s, transform 0.2s;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.08);
-}
-
-.back-btn:hover {
-  background: #1e293b;
-  color: #93c5fd;
-  transform: translateY(-1px);
-}
-
-.create-btn {
-  background: #2563eb;
-  color: #f1f5f9;
-  border: none;
-  padding: 10px 0;
-  border-radius: 4px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  margin-top: 12px;
-  transition: background 0.2s, transform 0.2s;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.08);
-}
-
-.create-btn:hover {
-  background: #1d4ed8;
-  color: #fff;
-  transform: translateY(-1px);
-}
-
-/* Table styles for consistency if used */
-table {
-  border-collapse: collapse;
-  width: 100%;
-  margin-top: 20px;
-  background: rgba(17, 24, 39, 0.7);
-  border-radius: 6px;
-  overflow: hidden;
-  color: #e2e8f0;
-}
-
-th,
-td {
-  border: 1px solid #334155;
-  padding: 8px;
-  color: #e2e8f0;
-}
-
-th {
-  background-color: rgba(51, 65, 85, 0.85);
-  text-align: left;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-}
-
-td {
-  text-align: left;
-  background: rgba(30, 41, 59, 0.6);
-}
-
-tr > td:last-child,
-tr > td:nth-last-child(2) {
-  white-space: nowrap;
-}
-
-/* Smooth transitions for form elements */
-input,
-textarea,
-select,
-button {
-  transition: all 0.2s ease;
-}
-
-/* Efectes hover */
-button:hover {
-  transform: translateY(-1px);
 }
 </style>

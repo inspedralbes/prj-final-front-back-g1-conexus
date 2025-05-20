@@ -254,7 +254,7 @@
             </svg>
           </div>
         </div>
-        <router-link
+        <!-- <router-link
           to="/teachers/students"
           class="mt-4 inline-flex items-center text-sm text-blue-400 hover:text-blue-300 transition-colors"
         >
@@ -272,7 +272,7 @@
               d="M9 5l7 7-7 7"
             />
           </svg>
-        </router-link>
+        </router-link> -->
       </div>
 
       <!-- Horari -->
@@ -590,7 +590,7 @@
               >
             </div>
             <div class="flex items-center mt-2 text-sm text-gray-400">
-              <svg
+              <!-- <svg
                 class="w-4 h-4 mr-1 flex-shrink-0"
                 fill="none"
                 stroke="currentColor"
@@ -602,7 +602,7 @@
                   stroke-width="2"
                   d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
                 />
-              </svg>
+              </svg> -->
               <span class="truncate">{{ classItem.room }}</span>
             </div>
           </div>
@@ -627,6 +627,159 @@
             />
           </svg>
         </router-link>
+      </div>
+    </div>
+
+    <!-- Horario Semanal -->
+    <div
+      class="mt-8 mb-8 bg-slate-800/50 backdrop-blur-sm rounded-xl p-6 shadow-lg"
+    >
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-semibold text-gray-300">Horari Setmanal</h2>
+        <button
+          @click="toggleWeeklySchedule"
+          class="text-sm text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-1"
+        >
+          <span v-if="showWeeklySchedule">Ocultar</span>
+          <span v-else>Mostrar</span>
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              v-if="showWeeklySchedule"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 15l7-7 7 7"
+            />
+            <path
+              v-else
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </button>
+      </div>
+
+      <div v-if="isLoadingWeeklySchedule" class="flex justify-center py-4">
+        <div
+          class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-green-400"
+        ></div>
+      </div>
+
+      <div v-else-if="!hasAnyClasses" class="text-center py-4 text-gray-400">
+        No tens classes assignades per aquesta setmana
+      </div>
+
+      <div v-else-if="showWeeklySchedule" class="overflow-x-auto">
+        <!-- Indicador del día actual -->
+
+        <!-- Tabla de horario -->
+        <table class="w-full text-sm text-left text-gray-400">
+          <thead class="text-xs text-gray-300 border-b border-slate-700">
+            <tr>
+              <th class="px-4 py-3">Hora</th>
+              <th class="px-4 py-3">Dilluns</th>
+              <th class="px-4 py-3">Dimarts</th>
+              <th class="px-4 py-3">Dimecres</th>
+              <th class="px-4 py-3">Dijous</th>
+              <th class="px-4 py-3">Divendres</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="timeSlot in formattedSchedule"
+              :key="timeSlot.time"
+              class="border-b border-slate-700 hover:bg-slate-700/30"
+            >
+              <td class="px-4 py-3 font-medium">{{ timeSlot.time }}</td>
+              <td
+                v-for="day in [
+                  'monday',
+                  'tuesday',
+                  'wednesday',
+                  'thursday',
+                  'friday',
+                ]"
+                :key="day"
+                class="px-4 py-3"
+                :class="{ 'bg-slate-700/20': isCurrentDay(day) }"
+              >
+                <div v-if="timeSlot[day]" class="flex items-center">
+                  <span class="w-2 h-2 rounded-full mr-2 bg-blue-400"></span>
+                  <span class="font-medium">{{ timeSlot[day].course }}</span>
+                </div>
+                <div v-else class="text-gray-500 text-xs italic">--</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div v-else class="text-center py-2">
+        <div v-if="hasAnyClasses" class="mb-4">
+          <p class="text-gray-300 mb-3">
+            <span class="font-medium">{{ getTotalClasses() }} classes</span>
+            aquesta setmana
+          </p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-5 gap-3">
+            <div
+              v-for="(day, index) in weeklySchedule"
+              :key="index"
+              class="p-3 rounded-lg border border-slate-700"
+              :class="
+                day.classes.length > 0
+                  ? 'border-blue-500/30 bg-blue-500/5'
+                  : 'border-slate-700/50'
+              "
+            >
+              <div class="mb-1">
+                <span
+                  class="font-medium"
+                  :class="
+                    isCurrentDay(day.dayKey) ? 'text-blue-400' : 'text-gray-300'
+                  "
+                >
+                  {{ day.dayName }}
+                </span>
+                <span
+                  v-if="isCurrentDay(day.dayKey)"
+                  class="ml-2 text-xs bg-blue-500/30 text-blue-300 px-1.5 py-0.5 rounded-full"
+                >
+                  Avui
+                </span>
+              </div>
+
+              <div
+                v-if="day.classes.length === 0"
+                class="text-gray-500 text-sm"
+              >
+                No tens classes
+              </div>
+
+              <div v-else class="text-gray-400 text-sm">
+                {{ day.classes.length }}
+                {{ day.classes.length === 1 ? "classe" : "classes" }}
+                <div class="mt-1 text-xs text-gray-500">
+                  {{ getFirstAndLastClass(day.classes) }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button
+          @click="toggleWeeklySchedule"
+          class="mt-3 px-4 py-2 text-sm bg-blue-500/20 text-blue-300 rounded-md hover:bg-blue-500/30 transition-colors"
+        >
+          Mostrar horari detallat
+        </button>
       </div>
     </div>
 
@@ -995,6 +1148,77 @@ const recentActivity = ref([]);
 const isLoadingActivity = ref(false);
 const todayClasses = ref([]);
 const isLoadingClasses = ref(false);
+const weeklySchedule = ref([]);
+const isLoadingWeeklySchedule = ref(false);
+const hasAnyClasses = ref(false);
+const showWeeklySchedule = ref(true);
+
+// Propiedad computada para transformar el horario a formato tabla
+const formattedSchedule = computed(() => {
+  // Definir los slots de tiempo para el horario (de 8:00 a 20:00)
+  const timeSlots = [
+    "08:00 - 09:00",
+    "09:00 - 10:00",
+    "10:00 - 11:00",
+    "11:00 - 12:00",
+    "12:00 - 13:00",
+    "13:00 - 14:00",
+    "14:00 - 15:00",
+    "15:00 - 16:00",
+    "16:00 - 17:00",
+    "17:00 - 18:00",
+    "18:00 - 19:00",
+    "19:00 - 20:00",
+  ];
+
+  // Inicializar la estructura base del horario
+  const formattedHorario = timeSlots.map((time) => ({
+    time,
+    monday: null,
+    tuesday: null,
+    wednesday: null,
+    thursday: null,
+    friday: null,
+  }));
+
+  // Si no hay información de horario, devolver la estructura vacía
+  if (!weeklySchedule.value || weeklySchedule.value.length === 0) {
+    return formattedHorario;
+  }
+
+  // Llenar la tabla con las clases de cada día
+  weeklySchedule.value.forEach((day) => {
+    const dayKey = day.dayKey; // ej: 'monday', 'tuesday', etc.
+
+    day.classes.forEach((classInfo) => {
+      // Extraer la hora de inicio del tiempo de la clase
+      const [startTime] = classInfo.time.split(" - ");
+
+      // Buscar el slot de tiempo correspondiente
+      const timeSlotIndex = timeSlots.findIndex((timeSlot) =>
+        timeSlot.startsWith(startTime)
+      );
+
+      if (timeSlotIndex !== -1) {
+        // Agregar la clase al día y hora correspondiente
+        formattedHorario[timeSlotIndex][dayKey] = {
+          course: classInfo.course,
+          description: classInfo.description,
+        };
+      }
+    });
+  });
+
+  // Filtrar para mostrar solo las horas que tienen al menos una clase asignada
+  return formattedHorario.filter(
+    (slot) =>
+      slot.monday ||
+      slot.tuesday ||
+      slot.wednesday ||
+      slot.thursday ||
+      slot.friday
+  );
+});
 
 // Función para cargar estadísticas del profesor
 const loadTeacherStats = async () => {
@@ -1011,7 +1235,7 @@ const loadTeacherStats = async () => {
       ? myCourses.filter(
           (course) =>
             course.course_teacher_id === teacherId ||
-            course.course_teacher_id === Number(teacherId)
+            parseInt(course.course_teacher_id) === parseInt(teacherId)
         )
       : [];
 
@@ -1336,7 +1560,6 @@ const loadTodayClasses = async () => {
                 course: course.course_name,
                 time: formattedTime,
                 description: course.course_description,
-                room: course.course_room || "Aula por determinar",
               };
             });
           } catch (e) {
@@ -1431,13 +1654,175 @@ const formatTimeAgo = (date) => {
   return `Fa ${diffDays} dia${diffDays > 1 ? "s" : ""}`;
 };
 
+// Cargar el horario semanal completo
+const loadWeeklySchedule = async () => {
+  isLoadingWeeklySchedule.value = true;
+  hasAnyClasses.value = false;
+
+  try {
+    const teacherId = appStore.getUserId();
+
+    // Obtener cursos asignados al profesor - Datos reales
+    const allCourses = await getAllCourses();
+    const myCourses = allCourses.filter(
+      (course) =>
+        course.course_teacher_id === teacherId ||
+        parseInt(course.course_teacher_id) === parseInt(teacherId)
+    );
+
+    console.log(`Cursos del profesor (ID: ${teacherId}):`, myCourses);
+
+    // Definir los días laborables de la semana (lunes a viernes)
+    const weekdays = [
+      { key: "monday", name: "Dilluns" },
+      { key: "tuesday", name: "Dimarts" },
+      { key: "wednesday", name: "Dimecres" },
+      { key: "thursday", name: "Dijous" },
+      { key: "friday", name: "Divendres" },
+    ];
+
+    // Inicializar el horario semanal con días vacíos
+    weeklySchedule.value = weekdays.map((day) => ({
+      dayKey: day.key,
+      dayName: day.name,
+      classes: [],
+    }));
+
+    // Procesar cada curso y extraer sus horarios - Datos reales
+    let totalClasses = 0;
+
+    for (const course of myCourses) {
+      if (!course.course_hours_available) {
+        console.log(`Curso sin horario disponible: ${course.course_name}`);
+        continue;
+      }
+
+      try {
+        // Parsear el JSON de course_hours_available
+        const hoursData =
+          typeof course.course_hours_available === "string"
+            ? JSON.parse(course.course_hours_available)
+            : course.course_hours_available;
+
+        console.log(`Horario del curso ${course.course_name}:`, hoursData);
+
+        // Procesar cada día de la semana
+        weekdays.forEach((day, dayIndex) => {
+          if (!hoursData[day.key] || !Array.isArray(hoursData[day.key])) {
+            return; // Sin clases para este día
+          }
+
+          const dayClasses = hoursData[day.key];
+
+          if (dayClasses.length > 0) {
+            totalClasses += dayClasses.length;
+            console.log(`Clases en ${day.name}:`, dayClasses);
+
+            // Añadir cada hora de clase al día correspondiente
+            dayClasses.forEach((timeSlot) => {
+              // Formatear la hora
+              const [startTime, endTime] = timeSlot.split("-");
+              const formattedTime = `${startTime} - ${endTime}`;
+
+              weeklySchedule.value[dayIndex].classes.push({
+                course: course.course_name,
+                time: formattedTime,
+                description: course.course_description || "",
+              });
+            });
+          }
+        });
+      } catch (e) {
+        console.error(
+          "Error processant horari del curs",
+          course.course_name,
+          e
+        );
+      }
+    }
+
+    // Ordenar las clases de cada día por hora
+    weeklySchedule.value.forEach((day) => {
+      day.classes.sort((a, b) => {
+        const timeA = a.time.split(" - ")[0];
+        const timeB = b.time.split(" - ")[0];
+        return timeA.localeCompare(timeB);
+      });
+    });
+
+    // Verificar si hay clases en algún día
+    hasAnyClasses.value = totalClasses > 0;
+    console.log("Horario semanal cargado:", weeklySchedule.value);
+  } catch (error) {
+    console.error("Error al carregar l'horari setmanal:", error);
+  } finally {
+    isLoadingWeeklySchedule.value = false;
+  }
+};
+
 // Cargar datos al montar el componente
 onMounted(async () => {
   await loadTeacherStats();
   await loadRecentActivity();
   await loadTodayClasses();
   await loadFiltersData();
+  await loadWeeklySchedule();
 });
+
+// Función para obtener el nombre del día actual
+const getCurrentDayName = () => {
+  const today = new Date().getDay();
+  const weekdays = [
+    "Diumenge",
+    "Dilluns",
+    "Dimarts",
+    "Dimecres",
+    "Dijous",
+    "Divendres",
+    "Dissabte",
+  ];
+  return weekdays[today];
+};
+
+// Función para verificar si el día actual coincide con el día de la semana
+const isCurrentDay = (dayKey) => {
+  const today = new Date().getDay();
+  // Convertir el día de la semana a la clave correspondiente (1=lunes, 2=martes, etc.)
+  if (today >= 1 && today <= 5) {
+    // Solo días laborables (lunes a viernes)
+    const weekdayKeys = [
+      "",
+      "monday",
+      "tuesday",
+      "wednesday",
+      "thursday",
+      "friday",
+    ];
+    return weekdayKeys[today] === dayKey;
+  }
+  return false; // Fin de semana
+};
+
+// Función para alternar la visibilidad del horario semanal
+const toggleWeeklySchedule = () => {
+  showWeeklySchedule.value = !showWeeklySchedule.value;
+};
+
+// Función para obtener el total de clases en el horario semanal
+const getTotalClasses = () => {
+  let totalClasses = 0;
+  weeklySchedule.value.forEach((day) => {
+    totalClasses += day.classes.length;
+  });
+  return totalClasses;
+};
+
+// Función para obtener la primera y la última clase de un día
+const getFirstAndLastClass = (classes) => {
+  if (classes.length === 0) return "No hay clases";
+  if (classes.length === 1) return classes[0].course;
+  return `${classes[0].course} - ${classes[classes.length - 1].course}`;
+};
 </script>
 
 <style scoped>

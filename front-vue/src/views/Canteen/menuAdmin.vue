@@ -35,15 +35,67 @@
         </button>
       </div>
 
+      <!-- Barra de búsqueda y filtros -->
+      <div class="mb-6 flex flex-col md:flex-row gap-4">
+        <div class="relative flex-grow">
+          <div
+            class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+          >
+            <svg
+              class="w-5 h-5 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+          </div>
+          <input
+            type="text"
+            placeholder="Buscar productes..."
+            class="block w-full pl-10 pr-3 py-2 border border-slate-700 rounded-md bg-slate-800/50 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            v-model="searchTerm"
+          />
+        </div>
+        <div class="w-full md:w-64">
+          <select
+            v-model="statusFilter"
+            class="block w-full px-3 py-2 border border-slate-700 rounded-md bg-slate-800/50 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option value="all">Tots els productes</option>
+            <option value="enabled">Disponibles</option>
+            <option value="disabled">No disponibles</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Contador de resultados -->
+      <div v-if="canteenItems.length > 0" class="mb-4 text-sm text-gray-400">
+        Mostrant {{ filteredItems.length }} de
+        {{ canteenItems.length }} productes
+        <button
+          v-if="searchTerm || statusFilter !== 'all'"
+          @click="resetFilters"
+          class="ml-2 text-blue-400 hover:text-blue-300 transition-colors"
+        >
+          Netejar filtres
+        </button>
+      </div>
+
       <!-- List view for canteen items -->
       <div
-        v-if="canteenItems.length > 0"
+        v-if="filteredItems.length > 0"
         class="bg-slate-800/50 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden border border-slate-700"
       >
         <div class="overflow-hidden">
           <ul class="divide-y divide-slate-700">
             <li
-              v-for="item in canteenItems"
+              v-for="item in filteredItems"
               :key="item.id"
               class="p-4 hover:bg-slate-700/50 transition-colors duration-200"
             >
@@ -174,7 +226,7 @@
 
       <!-- Sin productos mensaje -->
       <div
-        v-if="canteenItems.length === 0"
+        v-if="filteredItems.length === 0"
         class="text-center py-12 bg-slate-800/50 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden border border-slate-700"
       >
         <svg
@@ -190,10 +242,24 @@
             d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
           />
         </svg>
-        <h3 class="mt-2 text-lg font-medium text-white">No hay productos</h3>
-        <p class="mt-1 text-gray-400">Añade productos al menú de la cantina</p>
+        <h3 class="mt-2 text-lg font-medium text-white">
+          {{
+            canteenItems.length === 0
+              ? "No hi ha productes"
+              : "No s'han trobat productes"
+          }}
+        </h3>
+        <p class="mt-1 text-gray-400">
+          {{
+            canteenItems.length === 0
+              ? "Afegeix productes al menú de la cantina"
+              : searchTerm
+              ? `No hi ha coincidències amb "${searchTerm}"`
+              : "Intenta amb altres filtres"
+          }}
+        </p>
 
-        <div class="mt-6">
+        <div class="mt-6" v-if="canteenItems.length === 0">
           <button
             @click="toggleShowModal()"
             class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
@@ -211,7 +277,29 @@
                 d="M12 4v16m8-8H4"
               ></path>
             </svg>
-            Añadir primer producto
+            Afegir primer producte
+          </button>
+        </div>
+
+        <div class="mt-6" v-else>
+          <button
+            @click="resetFilters"
+            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            <svg
+              class="w-5 h-5 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+              ></path>
+            </svg>
+            Netejar filtres
           </button>
         </div>
       </div>
@@ -430,6 +518,80 @@
         </form>
       </div>
     </div>
+
+    <!-- Modal de confirmación de eliminación -->
+    <div
+      v-if="showDeleteModal"
+      class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 px-4 animate-fade-in"
+    >
+      <div
+        class="bg-slate-800/90 rounded-xl shadow-xl border border-slate-700 max-w-md w-full p-6 transform transition-all"
+        @click.stop
+      >
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-xl font-semibold text-white">Eliminar producte</h2>
+          <button
+            @click="showDeleteModal = false"
+            class="text-gray-400 hover:text-white focus:outline-none"
+          >
+            <svg
+              class="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <p class="text-gray-300">
+          Estàs segur que vols eliminar el producte
+          <span class="font-semibold text-white">{{ productToDeleteName }}</span
+          >?
+        </p>
+        <p class="text-gray-400 mt-2 text-sm">
+          Aquesta acció no es pot desfer.
+        </p>
+
+        <div
+          class="flex justify-end space-x-3 pt-5 mt-4 border-t border-slate-700"
+        >
+          <button
+            type="button"
+            @click="showDeleteModal = false"
+            class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500"
+          >
+            Cancel·lar
+          </button>
+          <button
+            type="button"
+            @click="confirmDelete()"
+            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200"
+          >
+            <svg
+              class="w-5 h-5 mr-1.5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+              ></path>
+            </svg>
+            Eliminar
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script setup>
@@ -440,14 +602,39 @@ import {
   deleteItem as removeItem,
   updateItem,
 } from "@/services/communicationsScripts/canteenComManager";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 
 const canteenItems = ref([]);
 const showModal = ref(false);
 const showEditModal = ref(false);
+const showDeleteModal = ref(false);
 const currentEditItem = ref(null);
+const itemToDelete = ref(null);
+const productToDeleteName = ref("");
 const newProductName = ref("");
 const newProductPrice = ref(0);
+const searchTerm = ref("");
+const statusFilter = ref("all");
+
+// Productos filtrados según búsqueda y estado
+const filteredItems = computed(() => {
+  return canteenItems.value.filter((item) => {
+    // Filtro por texto de búsqueda (case insensitive)
+    const matchesSearch = item.product_name
+      .toLowerCase()
+      .includes(searchTerm.value.toLowerCase());
+
+    // Filtro por estado
+    let matchesStatus = true;
+    if (statusFilter.value === "enabled") {
+      matchesStatus = item.product_enabled === true;
+    } else if (statusFilter.value === "disabled") {
+      matchesStatus = item.product_enabled === false;
+    }
+
+    return matchesSearch && matchesStatus;
+  });
+});
 
 const toggleShowModal = () => {
   showModal.value = !showModal.value;
@@ -517,9 +704,34 @@ function disableItem(item) {
     });
 }
 
-async function deleteItem(id) {
-  await removeItem(id);
-  canteenItems.value = await getAllCanteenItems();
+function deleteItem(id) {
+  // Encontrar el producto por ID para obtener su nombre
+  const productToDelete = canteenItems.value.find((item) => item.id === id);
+
+  if (productToDelete) {
+    itemToDelete.value = id;
+    productToDeleteName.value = productToDelete.product_name;
+    showDeleteModal.value = true;
+  } else {
+    console.error("Producte no trobat amb ID:", id);
+  }
+}
+
+async function confirmDelete() {
+  try {
+    await removeItem(itemToDelete.value);
+    canteenItems.value = await getAllCanteenItems();
+    showDeleteModal.value = false;
+    itemToDelete.value = null;
+    productToDeleteName.value = "";
+  } catch (error) {
+    console.error("Error eliminant el producte:", error);
+  }
+}
+
+function resetFilters() {
+  searchTerm.value = "";
+  statusFilter.value = "all";
 }
 
 onMounted(async () => {
@@ -529,5 +741,19 @@ onMounted(async () => {
 });
 </script>
 <style scoped>
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 /* All styles have been replaced with Tailwind classes */
 </style>

@@ -9,7 +9,7 @@
                 </h1>
                 <p class="text-gray-300 mt-2">Visualitza el resum de les incidències per sala, mes i estat</p>
             </div>
-            <router-link to="/"
+            <router-link to="/technicians/panel"
                 class="flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-slate-700 hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
                 <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

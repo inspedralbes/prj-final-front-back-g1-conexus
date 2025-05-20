@@ -280,8 +280,13 @@
 
     <!-- Acciones Rápidas -->
     <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl p-6 shadow-lg">
-      <h2 class="text-xl font-semibold text-gray-300 mb-4">Accions ràpides</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <h2 class="text-xl font-semibold text-gray-300 mb-4">
+        Gestió de la Cantina
+      </h2>
+      <p class="text-sm text-gray-400 mb-5">
+        Accedeix ràpidament a les eines de gestió de la cantina
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
         <router-link
           to="/canteen/menu-admin"
           class="flex items-center justify-center p-4 bg-blue-500/10 hover:bg-blue-500/20 rounded-lg transition-colors"
@@ -322,9 +327,28 @@
           <span>Veure missatges</span>
         </router-link>
 
-        <a
-          href="#"
-          @click.prevent="exportOrderData"
+        <!-- <router-link
+          to="/canteen"
+          class="flex items-center justify-center p-4 bg-amber-500/10 hover:bg-amber-500/20 rounded-lg transition-colors"
+        >
+          <svg
+            class="w-5 h-5 mr-2 text-amber-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+            />
+          </svg>
+          <span>Historial Comandes</span>
+        </router-link>
+
+        <router-link
+          to="/canteen"
           class="flex items-center justify-center p-4 bg-green-500/10 hover:bg-green-500/20 rounded-lg transition-colors"
         >
           <svg
@@ -337,11 +361,11 @@
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
-              d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
-          <span>Exportar informes</span>
-        </a>
+          <span>Horaris Cantina</span>
+        </router-link> -->
       </div>
     </div>
   </div>
@@ -734,3 +758,20 @@ onUnmounted(() => {
   }
 });
 </script>
+
+<style scoped>
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style>

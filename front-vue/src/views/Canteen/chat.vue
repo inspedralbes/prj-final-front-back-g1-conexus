@@ -122,7 +122,9 @@
           d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
         />
       </svg>
-      <p class="mt-1 text-gray-400">Actualment no hi ha comandes a la cantina</p>
+      <p class="mt-1 text-gray-400">
+        Actualment no hi ha comandes a la cantina
+      </p>
     </div>
 
     <div v-else class="orders-container">
@@ -403,6 +405,8 @@ const loadChats = async () => {
     try {
       // Intentar obtener los chats específicos del usuario cantina
       chatsList = await chatManager.getChatsByUser(currentUserId.value);
+      console.log("chatsList", chatsList);
+      console.log("currentUserId.value", currentUserId.value);
     } catch (err) {
       console.error(
         "Error al obtener chats por usuario, usando getAllChats:",
@@ -2378,6 +2382,21 @@ h3 {
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 </style><!-- The empty-list class has been replaced with Tailwind classes for the "no orders" display -->

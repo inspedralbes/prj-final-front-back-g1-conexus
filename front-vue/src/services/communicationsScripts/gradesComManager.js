@@ -159,6 +159,7 @@ export const updateTask = async (task, taskId) => {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
             body: JSON.stringify(task),
         });
