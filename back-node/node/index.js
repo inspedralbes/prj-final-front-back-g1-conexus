@@ -98,7 +98,7 @@ app.use(cors({
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
 }));
-app.use('/uploads', express.static('uploads'));
+app.use('/api/uploads', express.static('uploads'));
 app.use("/api/assistences", assistenceRoutes);
 app.use("/api/courses", courseRoutes);
 app.use("/api/departments", departmentRoutes);

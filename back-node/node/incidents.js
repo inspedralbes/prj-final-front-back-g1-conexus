@@ -38,7 +38,7 @@ transporter.verify((error, success) => {
 app.use(bodyParser.json());
 app.use(cors());
 
-app.use('/uploads', express.static('uploads'));
+app.use('/api/uploads', express.static('uploads'));
 app.use('/api/reports', reportRoutes);
 
 sequelize.sync().then(() => {

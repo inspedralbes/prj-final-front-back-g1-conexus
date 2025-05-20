@@ -1,10 +1,10 @@
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
-import dotenv from "dotenv"; 
+import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
-import {sequelize} from "./models/index.js";
+import { sequelize } from "./models/index.js";
 
 import lostObjectRoutes from "./routes/lostObjectRoutes.js";
 
@@ -17,7 +17,7 @@ const PORT = process.env.NODE_LOST_OBJECT_PORT || 3005;
 
 app.use(bodyParser.json());
 app.use(cors());
-app.use('/uploads', express.static('uploads'));
+app.use('/api/uploads', express.static('uploads'));
 app.use("/api/lost-objects", lostObjectRoutes);
 
 sequelize.sync().then(() => {
