@@ -5,10 +5,10 @@
       <h1
         class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400"
       >
-        Panel de Cantina
+        Panell de Cantina
       </h1>
       <p class="text-gray-300 mt-2">
-        Gestión de pedidos y menú del servicio de cantina
+        Gestió de comandes i menú del servei de cantina
       </p>
     </div>
 
@@ -20,9 +20,9 @@
       >
         <div class="flex items-center justify-between">
           <div>
-            <h3 class="text-lg font-semibold text-gray-300">Nuevos Pedidos</h3>
+            <h3 class="text-lg font-semibold text-gray-300">Comandes noves</h3>
             <p class="text-3xl font-bold mt-2">{{ orderStats.new || 0 }}</p>
-            <p class="text-sm text-gray-400 mt-1">Pendientes de preparar</p>
+            <p class="text-sm text-gray-400 mt-1">Pendents de preparar</p>
           </div>
           <div class="p-3 rounded-full bg-blue-500/20">
             <svg
@@ -44,7 +44,7 @@
           to="/canteen/chat"
           class="mt-4 inline-flex items-center text-sm text-blue-400 hover:text-blue-300 transition-colors"
         >
-          Atender pedidos
+          Atendre comandes
           <svg
             class="w-4 h-4 ml-1"
             fill="none"
@@ -67,11 +67,11 @@
       >
         <div class="flex items-center justify-between">
           <div>
-            <h3 class="text-lg font-semibold text-gray-300">En Preparación</h3>
+            <h3 class="text-lg font-semibold text-gray-300">En preparació</h3>
             <p class="text-3xl font-bold mt-2">
               {{ orderStats.active - orderStats.new || 0 }}
             </p>
-            <p class="text-sm text-gray-400 mt-1">Pedidos en proceso</p>
+            <p class="text-sm text-gray-400 mt-1">Comandes en procés</p>
           </div>
           <div class="p-3 rounded-full bg-yellow-500/20">
             <svg
@@ -93,7 +93,7 @@
           to="/canteen/chat"
           class="mt-4 inline-flex items-center text-sm text-yellow-400 hover:text-yellow-300 transition-colors"
         >
-          Ver preparando
+          Veure en preparació
           <svg
             class="w-4 h-4 ml-1"
             fill="none"
@@ -117,12 +117,12 @@
         <div class="flex items-center justify-between">
           <div>
             <h3 class="text-lg font-semibold text-gray-300">
-              Listos para Recoger
+              Llestes per recollir
             </h3>
             <p class="text-3xl font-bold mt-2">
               {{ orderStats.completed || 0 }}
             </p>
-            <p class="text-sm text-gray-400 mt-1">Esperando recogida</p>
+            <p class="text-sm text-gray-400 mt-1">Esperant recollida</p>
           </div>
           <div class="p-3 rounded-full bg-green-500/20">
             <svg
@@ -144,7 +144,7 @@
           to="/canteen/chat"
           class="mt-4 inline-flex items-center text-sm text-green-400 hover:text-green-300 transition-colors"
         >
-          Ver listos
+          Veure llestes
           <svg
             class="w-4 h-4 ml-1"
             fill="none"
@@ -168,7 +168,7 @@
         <div class="flex items-center justify-between">
           <div>
             <h3 class="text-lg font-semibold text-gray-300">
-              Productos Disponibles
+              Productes disponibles
             </h3>
             <p class="text-3xl font-bold mt-2">
               {{ menuStats.available || 0 }}
@@ -218,12 +218,12 @@
     <!-- Sección de Pedidos Recientes -->
     <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl p-6 shadow-lg mb-8">
       <div class="flex justify-between items-center mb-4">
-        <h2 class="text-xl font-semibold text-gray-300">Pedidos Recientes</h2>
+        <h2 class="text-xl font-semibold text-gray-300">Comandes recents</h2>
         <button
           @click="loadRecentOrders"
           class="text-sm text-blue-400 hover:text-blue-300 transition-colors"
         >
-          Actualizar
+          Actualitzar
         </button>
       </div>
 
@@ -237,7 +237,7 @@
         v-else-if="recentOrders.length === 0"
         class="text-center py-4 text-gray-400"
       >
-        No hay pedidos recientes
+        No hi ha comandes recents
       </div>
 
       <div v-else class="space-y-4">
@@ -268,7 +268,7 @@
             </svg>
           </div>
           <div class="flex-1">
-            <p class="font-medium">Pedido de {{ order.userName }}</p>
+            <p class="font-medium">Comanda de {{ order.userName }}</p>
             <p class="text-sm text-gray-400">{{ getOrderSummary(order) }}</p>
           </div>
           <span class="text-xs text-gray-500">{{
@@ -280,7 +280,7 @@
 
     <!-- Acciones Rápidas -->
     <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl p-6 shadow-lg">
-      <h2 class="text-xl font-semibold text-gray-300 mb-4">Acciones Rápidas</h2>
+      <h2 class="text-xl font-semibold text-gray-300 mb-4">Accions ràpides</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <router-link
           to="/canteen/menu-admin"
@@ -299,7 +299,7 @@
               d="M12 4v16m8-8H4"
             />
           </svg>
-          <span>Nuevo Producto</span>
+          <span>Nou producte</span>
         </router-link>
 
         <router-link
@@ -319,7 +319,7 @@
               d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
             />
           </svg>
-          <span>Ver Mensajes</span>
+          <span>Veure missatges</span>
         </router-link>
 
         <a
@@ -340,7 +340,7 @@
               d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
             />
           </svg>
-          <span>Exportar Informes</span>
+          <span>Exportar informes</span>
         </a>
       </div>
     </div>
