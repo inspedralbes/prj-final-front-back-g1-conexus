@@ -7,7 +7,7 @@
   - [Interrelació entre els diversos components](#interrelació-entre-els-diversos-components)
 - ![Com crear l'entorn de desenvolupament]()
 - ![Com desplegar l'aplicació a producció](https://github.com/inspedralbes/prj-final-front-back-g1-conexus/blob/develop/doc/producci%C3%B3/README.md)
-- [Llistat d'endpoints de l'API de backend]()
+- [Llistat d'endpoints de l'API de backend](https://github.com/inspedralbes/prj-final-front-back-g1-conexus/tree/develop/doc/endpoints)
 - [Altres elements importants](#altres-elements-importants)
 
 ## Objectius
