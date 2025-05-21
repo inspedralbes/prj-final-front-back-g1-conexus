@@ -5,10 +5,9 @@
 - [Arquitectura bàsica](#arquitectura-bàsica)
   - [Tecnologies utilitzades](#tecnologies-utilitzades)
   - [Interrelació entre els diversos components](#interrelació-entre-els-diversos-components)
-- [Com crear l'entorn de desenvolupament](#com-crear-lentorn-de-desenvolupament)
-- [Com desplegar l'aplicació a producció](#com-desplegar-laplicació-a-producció)
+- ![Com crear l'entorn de desenvolupament]()
+- ![Com desplegar l'aplicació a producció]()
 - [Llistat d'endpoints de l'API de backend](#llistat-dendpoints-de-lapi-de-backend)
-- [Aplicació Android](#aplicació-android)
 - [Altres elements importants](#altres-elements-importants)
 
 ## Objectius
