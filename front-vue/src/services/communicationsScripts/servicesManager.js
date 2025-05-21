@@ -8,9 +8,6 @@ function handle401(response) {
     return false;
 }
 
-/**
- * Fetch all services status
- */
 export const getAllServices = async () => {
     try {
         const response = await fetch(`${BACKEND_URL}api/services`, {
@@ -34,9 +31,6 @@ export const getAllServices = async () => {
     }
 };
 
-/**
- * Get status of a single service
- */
 export const getServiceStatus = async (serviceName) => {
     try {
         const response = await fetch(`${BACKEND_URL}api/services/${serviceName}`, {
@@ -60,9 +54,6 @@ export const getServiceStatus = async (serviceName) => {
     }
 };
 
-/**
- * Start a specific service
- */
 export const startService = async (serviceName) => {
     try {
         const response = await fetch(`${BACKEND_URL}api/services/${serviceName}/start`, {
@@ -86,9 +77,6 @@ export const startService = async (serviceName) => {
     }
 };
 
-/**
- * Stop a specific service
- */
 export const stopService = async (serviceName) => {
     try {
         const response = await fetch(`${BACKEND_URL}api/services/${serviceName}/stop`, {
@@ -112,9 +100,6 @@ export const stopService = async (serviceName) => {
     }
 };
 
-/**
- * Start all services
- */
 export const startAllServices = async () => {
     try {
         const response = await fetch(`${BACKEND_URL}api/services/start-all`, {
@@ -138,9 +123,6 @@ export const startAllServices = async () => {
     }
 };
 
-/**
- * Stop all services
- */
 export const stopAllServices = async () => {
     try {
         const response = await fetch(`${BACKEND_URL}api/services/stop-all`, {
@@ -164,9 +146,6 @@ export const stopAllServices = async () => {
     }
 };
 
-/**
- * Create a new service
- */
 export const createService = async (serviceData) => {
     try {
         const response = await fetch(`${BACKEND_URL}api/services`, {
@@ -192,15 +171,11 @@ export const createService = async (serviceData) => {
     }
 };
 
-/**
- * Create a new service by uploading a file
- */
 export const uploadServiceFile = async (formData) => {
     try {
         const response = await fetch(`${BACKEND_URL}api/services/upload`, {
             method: 'POST',
             headers: {
-                // Do not set Content-Type for FormData, browser will set it including boundary
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
             body: formData,
@@ -220,9 +195,6 @@ export const uploadServiceFile = async (formData) => {
     }
 };
 
-/**
- * Delete a service
- */
 export const deleteService = async (serviceName) => {
     try {
         console.log('Deleting service:', localStorage.getItem('accessToken'));

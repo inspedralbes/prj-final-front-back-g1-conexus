@@ -119,7 +119,6 @@ router.post("/register", upload.single('profile'), async (req, res) => {
                 console.error("Error en descarregar la imatge:", downloadError);
             }
         }
-        // Caso 3: Si ya es una ruta local (empieza con 'uploads/')
         else if (profile && profile.startsWith('api/uploads/')) {
             profilePath = profile;
         }
