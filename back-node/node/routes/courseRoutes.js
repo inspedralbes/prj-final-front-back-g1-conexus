@@ -46,7 +46,7 @@ router.post("/", verifyTokenMiddleware, async (req, res) => {
     if (course_teacher_id) {
       const isTeacher = await checkIfUserIsTeacher(course_teacher_id);
       if (!isTeacher) {
-        return res.status(400).json({ message: "L'usuari no és un professor" });
+        return res.status(400).json({ message: "L'usuari"+course_teacher_id +"no és un professor" });
       }
     }
 
@@ -69,7 +69,8 @@ router.put("/:id", verifyTokenMiddleware, async (req, res) => {
       course_name,
       course_hours_available,
       course_description,
-      teacher_id
+      course_department_id,
+      course_teacher_id
     } = req.body;
 
     const course = await Course.findByPk(req.params.id);
@@ -77,8 +78,8 @@ router.put("/:id", verifyTokenMiddleware, async (req, res) => {
       return res.status(404).json({ message: "Curs no trobat" });
     }
 
-    if (teacher_id && teacher_id !== course.teacher_id) {
-      const isTeacher = await checkIfUserIsTeacher(teacher_id);
+    if (course_teacher_id && course_teacher_id !== course.course_teacher_id) {
+      const isTeacher = await checkIfUserIsTeacher(course_teacher_id);
       if (!isTeacher) {
         return res.status(400).json({ message: "L'usuari no és un professor" });
       }
@@ -88,7 +89,8 @@ router.put("/:id", verifyTokenMiddleware, async (req, res) => {
       course_name,
       course_hours_available,
       course_description,
-      teacher_id
+      course_department_id,
+      course_teacher_id
     });
     res.json(course);
   } catch (error) {
