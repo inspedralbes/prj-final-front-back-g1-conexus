@@ -6,7 +6,7 @@
   - [Tecnologies utilitzades](#tecnologies-utilitzades)
   - [Interrelació entre els diversos components](#interrelació-entre-els-diversos-components)
 - ![Com crear l'entorn de desenvolupament]()
-- ![Com desplegar l'aplicació a producció]()
+- ![Com desplegar l'aplicació a producció](https://github.com/inspedralbes/prj-final-front-back-g1-conexus/tree/develop/doc/producci%C3%B3)
 - [Llistat d'endpoints de l'API de backend](#llistat-dendpoints-de-lapi-de-backend)
 - [Altres elements importants](#altres-elements-importants)
 
