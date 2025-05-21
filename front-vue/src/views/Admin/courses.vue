@@ -784,7 +784,23 @@ async function callCreateCourse() {
         newCourse.value.course_hours_available = formattedHours;
 
         await createCourse(newCourse.value);
-        courses.value = await getAllCourses();
+        const rawCourses = await getAllCourses() || [];
+        departments.value = await getAllDepartments() || [];
+        
+        // Transformar datos para adaparlos al formato esperado
+        courses.value = rawCourses.map(course => {
+            // Si ya tiene el formato esperado, mantenerlo
+            if (course && course.course) {
+                return course;
+            }
+            // Si no, transformarlo al formato esperado
+            return {
+                course: course
+            };
+        });
+        
+        // Filtrar cualquier elemento nulo o indefinido
+        courses.value = courses.value.filter(item => item && item.course);
         
         toggleCreateCourse();
         resetForm();
@@ -841,7 +857,23 @@ async function confirmDeleteCourse() {
         showDeleteConfirm.value = false;
         selectedCourse.value = null;
         courseToDelete.value = null;
-        courses.value = await getAllCourses();
+        const rawCourses = await getAllCourses() || [];
+        departments.value = await getAllDepartments() || [];
+        
+        // Transformar datos para adaparlos al formato esperado
+        courses.value = rawCourses.map(course => {
+            // Si ya tiene el formato esperado, mantenerlo
+            if (course && course.course) {
+                return course;
+            }
+            // Si no, transformarlo al formato esperado
+            return {
+                course: course
+            };
+        });
+        
+        // Filtrar cualquier elemento nulo o indefinido
+        courses.value = courses.value.filter(item => item && item.course);
     } catch (error) {
         console.error('Error en eliminar el curs:', error);
     }
