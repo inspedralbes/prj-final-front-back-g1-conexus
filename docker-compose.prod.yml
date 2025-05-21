@@ -120,6 +120,7 @@ services:
       # - ME_CONFIG_BASICAUTH="true"
       # - ME_CONFIG_BASICAUTH_USERNAME=${MONGO_EXPRESS_USERNAME}
       # - ME_CONFIG_BASICAUTH_PASSWORD=${MONGO_EXPRESS_PASSWORD}
+      - ME_CONFIG_BASICAUTH: "false"
     depends_on:
       - conexus-hub-mongodb
     networks:
