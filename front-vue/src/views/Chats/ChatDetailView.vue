@@ -685,6 +685,8 @@ import { useAppStore } from "@/stores";
 import { getAllUsers } from "@/services/communicationsScripts/mainManager";
 
 const API_URL = import.meta.env.VITE_CHAT_URL;
+const SOCKET_URL =
+  import.meta.env.VITE_SOCKET_URL || "https://www.conexushub.cat";
 // Obtener el store de la aplicación
 const appStore = useAppStore();
 const route = useRoute();
@@ -1426,13 +1428,16 @@ const connectSocket = () => {
     }
 
     // Iniciar conexión con socket.io
-    socket.value = io(API_URL, {
+    socket.value = io(SOCKET_URL, {
       transports: ["websocket", "polling"],
       withCredentials: true,
       reconnection: true,
       reconnectionAttempts: 5,
       reconnectionDelay: 1000,
     });
+
+    // Log para debugging
+    console.log("Intentando conectar al socket en:", SOCKET_URL);
 
     // Evento de conexión establecida
     socket.value.on("connect", () => {

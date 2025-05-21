@@ -474,8 +474,8 @@ export const createCourse = async (course) => {
         const response = await fetch(`${BACK_URL}api/courses`, {
             method: "POST",
             headers: {
-            "Content-Type": "application/json",
-            'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
             body: JSON.stringify(course),
         });
@@ -493,7 +493,7 @@ export const createCourse = async (course) => {
 
 export const updateCourse = async (courseId, course) => {
     try {
-        const response = await fetch(`${BACK_URL}api/courses/updateCourse/${courseId}`, {
+        const response = await fetch(`${BACK_URL}api/courses/${courseId}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -635,7 +635,7 @@ export const getCoursesWithoutUser = async (userId) => {
         return { error: "Network error. Please try again later." };
     }
 }
-export const inscribeUser= async (courseId, userId) => {
+export const inscribeUser = async (courseId, userId) => {
     try {
         const response = await fetch(`${BACK_URL}api/user-courses`, {
             method: "POST",
@@ -777,7 +777,7 @@ export const getLatestActivities = async () => {
             console.error(`Error ${response.status}: ${errorText}`);
             return { error: `Error del servidor: ${response.status}` };
         }
-        
+
         // Intentar parsear la respuesta como JSON
         try {
             const data = await response.json();
@@ -841,8 +841,8 @@ export const updateUserDepartment = async (userId, departmentId) => {
 // Funció auxiliar per filtrar rols (excloure Administrador i Cantina)
 export const getFilteredRoles = (roles) => {
     if (!roles || !Array.isArray(roles)) return [];
-    
-    return roles.filter(role => 
+
+    return roles.filter(role =>
         role.name !== 'Administrador' && role.name !== 'Cantina'
     );
 };

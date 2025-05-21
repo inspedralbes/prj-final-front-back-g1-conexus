@@ -66,6 +66,7 @@ const appStore = useAppStore();
 
 // Variables del chat
 const API_URL = import.meta.env.VITE_CHAT_URL;
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL;
 const socket = ref(null);
 const messages = ref([]);
 const newMessage = ref("");
@@ -229,8 +230,8 @@ const connectSocket = () => {
     }
 
     // Iniciar conexión con socket.io
-    socket.value = io(API_URL, {
-      transports: ["websocket"],
+    socket.value = io(SOCKET_URL, {
+      transports: ["websocket", "polling"],
       withCredentials: true,
       reconnection: true,
       reconnectionAttempts: 5,
@@ -239,7 +240,7 @@ const connectSocket = () => {
 
     // Evento de conexión establecida
     socket.value.on("connect", () => {
-      // console.log("Conectado al servidor de chat");
+      console.log("Conectado al servidor de chat");
 
       // Registrar el usuario
       socket.value.emit("register_user", {
@@ -249,9 +250,9 @@ const connectSocket = () => {
 
       // Unirse al chat actual (solo si tenemos un chatId)
       if (chatId.value) {
-        // console.log(
-        //   `Uniendo al usuario ${currentUserId.value} al chat ${chatId.value}`
-        // );
+        console.log(
+          `Uniendo al usuario ${currentUserId.value} al chat ${chatId.value}`
+        );
         socket.value.emit("join_chat", {
           chatId: chatId.value,
           userId: currentUserId.value,

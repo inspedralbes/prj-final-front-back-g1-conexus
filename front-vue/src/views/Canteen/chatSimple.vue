@@ -405,6 +405,8 @@ import { getAllEnabledCanteenItems } from "@/services/communicationsScripts/cant
 
 // Variables del estado
 const API_URL = import.meta.env.VITE_CHAT_URL;
+const SOCKET_URL =
+  import.meta.env.VITE_SOCKET_URL || "https://www.conexushub.cat";
 const loading = ref(true);
 const error = ref(null);
 const chats = ref([]);
@@ -844,7 +846,7 @@ const sendMenuResponse = async () => {
 const connectSocket = () => {
   try {
     // Iniciar connexió amb socket.io
-    socket.value = io(API_URL, {
+    socket.value = io(SOCKET_URL, {
       transports: ["websocket", "polling"], // Permitir polling como fallback
       withCredentials: true,
       reconnection: true,
@@ -853,7 +855,7 @@ const connectSocket = () => {
     });
 
     // Log para debugging
-    console.log("Intentando conectar al socket en:", API_URL);
+    console.log("Intentando conectar al socket en:", SOCKET_URL);
 
     // Esdeveniment de connexió establerta
     socket.value.on("connect", () => {

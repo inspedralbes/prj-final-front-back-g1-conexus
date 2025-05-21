@@ -339,6 +339,8 @@ import io from "socket.io-client";
 
 // Estado
 const API_URL = import.meta.env.VITE_CHAT_URL;
+const SOCKET_URL =
+  import.meta.env.VITE_SOCKET_URL || "https://www.conexushub.cat";
 const users = ref([]);
 const userTypes = ref([]);
 const loading = ref(true);
@@ -713,7 +715,7 @@ const confirmDeleteChat = async () => {
 const connectToSocket = () => {
   try {
     // Iniciar conexión con socket.io
-    socket.value = io(API_URL, {
+    socket.value = io(SOCKET_URL, {
       transports: ["websocket", "polling"], // Permitir polling como fallback
       withCredentials: true,
       reconnection: true,
@@ -722,7 +724,7 @@ const connectToSocket = () => {
     });
 
     // Log para debugging
-    console.log("Intentando conectar al socket en:", API_URL);
+    console.log("Intentando conectar al socket en:", SOCKET_URL);
 
     // Evento de conexión establecida
     socket.value.on("connect", () => {
