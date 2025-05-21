@@ -48,12 +48,12 @@ const messageSchema = new mongoose.Schema({
         default: []
     },
     deletedFor: {
-        type: [Number], 
+        type: [Number],
         default: []
     }
 }, {
-    timestamps: true, 
-    collection: 'messages' 
+    timestamps: true,
+    collection: 'messages'
 });
 
 const Message = mongoose.model("Message", messageSchema);

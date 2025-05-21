@@ -66,7 +66,7 @@ const upload = multer({
 
 const app = express();
 const PORT = process.env.NODE_PORT || 3000;
-const MONGODB_URI = process.env.NODE_MONGODB_URI || 'mongodb://root:password@conexus-hub-mongodb:27017/chat';
+const MONGODB_URI = process.env.MONGO_ROOT_URL;
 
 console.log("Intentant connectar a MongoDB a:", MONGODB_URI);
 mongoose.connect(MONGODB_URI, {
@@ -124,7 +124,6 @@ app.post("/api/services/start-all", verifyTokenMiddleware, (req, res) => {
     res.json({ message: "Iniciant tots els serveis", results });
 });
 
-app.post("/api/services/stop-all", verifyTokenMiddleware, (req, res) => {
 app.post("/api/services/stop-all", verifyTokenMiddleware, (req, res) => {
     const results = stopAllServices();
     res.json({ message: "Aturant tots els serveis", results });

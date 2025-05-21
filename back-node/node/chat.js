@@ -6,7 +6,7 @@ import bodyParser from 'body-parser';
 import { Server } from 'socket.io';
 import http from 'http';
 import chatRoutes from './routes/chatRoutes.js';
-import './models/Message.js';  
+import './models/Message.js';
 
 dotenv.config();
 
@@ -14,20 +14,20 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "*", 
+        origin: "*",
         methods: ["GET", "POST", "DELETE"]
     }
 });
 const PORT = process.env.NODE_CHAT_PORT || 3007;
-const MONGODB_URI = process.env.NODE_MONGODB_URI || 'mongodb://root:password@conexus-hub-mongodb:27017/chat';
+const MONGODB_URI = process.env.MONGO_ROOT_URL;
 const API_URL = process.env.VITE_CHAT_URL;
 
 app.use(bodyParser.json());
 app.use(cors());
 
-const connectedUsers = new Map(); 
-const userSockets = new Map(); 
-const activeRooms = new Map(); 
+const connectedUsers = new Map();
+const userSockets = new Map();
+const activeRooms = new Map();
 
 io.on("connection", (socket) => {
     console.log("Nou client connectat:", socket.id);
