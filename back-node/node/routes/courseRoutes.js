@@ -167,7 +167,7 @@ router.put("/assignTeacher", verifyTokenMiddleware, async (req, res)=>{
       return res.status(400).json({ message: "Falten camps obligatoris" });
     }
 
-    const course = await Course.findOne({ where: { id: course_id } });
+    const course = await Course.findByPk(course_id);
     if (!course) {
       return res.status(404).json({ message: "Curs no trobat" });
     }
