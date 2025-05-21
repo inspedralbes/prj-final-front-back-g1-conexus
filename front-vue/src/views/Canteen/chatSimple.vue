@@ -1,10 +1,14 @@
 <template>
-  <div class="container mx-auto px-5 py-6 min-h-screen flex flex-col items-center animate-fade-in"
-    style="max-width: 900px; margin-top: 2rem; padding-top: 2rem">
+  <div
+    class="container mx-auto px-5 py-6 min-h-screen flex flex-col items-center animate-fade-in"
+    style="max-width: 900px; margin-top: 2rem; padding-top: 2rem"
+  >
     <!-- Capçalera -->
     <div class="mb-12 mt-6 text-center w-full">
       <h2 class="text-2xl font-bold text-white mb-2">
-        <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
+        <span
+          class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400"
+        >
           Xats de Cantina
         </span>
       </h2>
@@ -14,62 +18,113 @@
     </div>
 
     <!-- Estados de carga y vacíos -->
-    <div v-if="loading" class="flex-1 flex items-center justify-center bg-slate-800/30 rounded-xl p-8 w-full">
+    <div
+      v-if="loading"
+      class="flex-1 flex items-center justify-center bg-slate-800/30 rounded-xl p-8 w-full"
+    >
       <div class="flex flex-col items-center">
-        <div class="w-10 h-10 border-4 border-slate-600 border-t-purple-500 rounded-full animate-spin mb-4"></div>
+        <div
+          class="w-10 h-10 border-4 border-slate-600 border-t-purple-500 rounded-full animate-spin mb-4"
+        ></div>
         <p class="text-gray-400">Carregant xats...</p>
       </div>
     </div>
 
-    <div v-else-if="error"
-      class="flex-1 flex items-center justify-center bg-slate-800/30 rounded-xl p-8 border border-red-500/20 w-full">
+    <div
+      v-else-if="error"
+      class="flex-1 flex items-center justify-center bg-slate-800/30 rounded-xl p-8 border border-red-500/20 w-full"
+    >
       <p class="text-red-400">{{ error }}</p>
     </div>
 
-    <div v-else-if="activeChat"
+    <div
+      v-else-if="activeChat"
       class="chat-detail bg-slate-800/30 rounded-xl border border-slate-700/30 flex flex-col h-full flex-1 overflow-hidden w-full"
-      style="max-height: calc(100vh - 180px); height: 600px">
-      <div class="chat-header bg-slate-800/50 border-b border-slate-700/50 p-4 flex items-center">
-        <button class="back-button p-2 text-gray-400 hover:text-purple-400 mr-2" @click="goBack">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-            stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+      style="max-height: calc(100vh - 180px); height: 600px"
+    >
+      <div
+        class="chat-header bg-slate-800/50 border-b border-slate-700/50 p-4 flex items-center"
+      >
+        <button
+          class="back-button p-2 text-gray-400 hover:text-purple-400 mr-2"
+          @click="goBack"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-5 h-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M10 19l-7-7m0 0l7-7m-7 7h18"
+            />
           </svg>
         </button>
         <h3 class="text-white font-medium">Xat amb {{ chatName }}</h3>
       </div>
 
-      <div class="chat-messages flex-1 overflow-y-auto p-4 space-y-4" ref="messagesContainer"
-        style="height: 100%; overflow-y: auto; scroll-behavior: smooth">
+      <div
+        class="chat-messages flex-1 overflow-y-auto p-4 space-y-4"
+        ref="messagesContainer"
+        style="height: 100%; overflow-y: auto; scroll-behavior: smooth"
+      >
         <div v-if="chatLoading" class="flex justify-center items-center h-full">
           <div class="spinner h-8 w-8"></div>
         </div>
 
-        <div v-else-if="messages.length === 0" class="flex justify-center items-center h-full">
-          <div class="text-center p-6 bg-slate-700/30 rounded-xl max-w-md mx-auto">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-gray-500 mx-auto mb-4" fill="none"
-              viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+        <div
+          v-else-if="messages.length === 0"
+          class="flex justify-center items-center h-full"
+        >
+          <div
+            class="text-center p-6 bg-slate-700/30 rounded-xl max-w-md mx-auto"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-12 h-12 text-gray-500 mx-auto mb-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+              />
             </svg>
             <p class="text-gray-400">No hi ha missatges en aquest xat</p>
           </div>
         </div>
 
         <template v-else>
-          <div v-for="(message, index) in messages" :key="index" class="message max-w-3/4" :class="{
-            'ml-auto bg-blue-600/20 border border-blue-500/30 text-white':
-              message.userId.toString() === currentUserId.toString(),
-            'mr-auto bg-slate-700/50 text-white':
-              message.userId.toString() !== currentUserId.toString(),
-            'order-message border-green-500/30 bg-green-900/20':
-              isOrderMessage(message.message),
-          }">
-            <div class="message-header flex justify-between text-xs opacity-70 mb-1">
+          <div
+            v-for="(message, index) in messages"
+            :key="index"
+            class="message max-w-3/4"
+            :class="{
+              'ml-auto bg-blue-600/20 border border-blue-500/30 text-white':
+                message.userId.toString() === currentUserId.toString(),
+              'mr-auto bg-slate-700/50 text-white':
+                message.userId.toString() !== currentUserId.toString(),
+              'order-message border-green-500/30 bg-green-900/20':
+                isOrderMessage(message.message),
+            }"
+          >
+            <div
+              class="message-header flex justify-between text-xs opacity-70 mb-1"
+            >
               <span>{{ message.userName }}</span>
               <span>{{ formatDate(message.timestamp) }}</span>
             </div>
-            <div class="message-content" v-html="formatMessage(message.message)"></div>
+            <div
+              class="message-content"
+              v-html="formatMessage(message.message)"
+            ></div>
           </div>
           <!-- Elemento invisible para hacer scroll automático -->
           <div ref="endOfMessages"></div>
@@ -78,12 +133,17 @@
 
       <div class="chat-input p-4 bg-slate-800/50 border-t border-slate-700/50">
         <div class="flex items-end gap-2">
-          <textarea v-model="newMessage" placeholder="Utilitzeu només respostes ràpides..."
+          <textarea
+            v-model="newMessage"
+            placeholder="Utilitzeu només respostes ràpides..."
             class="flex-1 bg-slate-700/20 border border-slate-600/30 rounded-lg p-3 text-gray-500 resize-none focus:outline-none min-h-[40px] max-h-[120px]"
-            rows="1" disabled></textarea>
+            rows="1"
+            disabled
+          ></textarea>
           <button
             class="bg-gradient-to-r from-blue-400/50 to-purple-400/50 text-white/70 px-4 py-3 rounded-lg font-medium cursor-not-allowed"
-            disabled>
+            disabled
+          >
             Enviar
           </button>
         </div>
@@ -94,21 +154,34 @@
             <span class="text-blue-400 font-medium">(només disponibles)</span>
           </h4>
           <div class="flex flex-wrap gap-2">
-            <button class="response-btn" @click="sendQuickResponse('✅ Comanda rebuda')">
+            <button
+              class="response-btn"
+              @click="sendQuickResponse('✅ Comanda rebuda')"
+            >
               ✅ Comanda rebuda
             </button>
-            <button class="response-btn" @click="
-              sendQuickResponse(
-                '🚚 La teva comanda està llesta per a recollir'
-              )
-              ">
+            <button
+              class="response-btn"
+              @click="
+                sendQuickResponse(
+                  '🚚 La teva comanda està llesta per a recollir'
+                )
+              "
+            >
               🚚 Llesta per a recollir
             </button>
-            <button class="response-btn" @click="sendQuickResponse('❌ No està disponible')">
+            <button
+              class="response-btn"
+              @click="sendQuickResponse('❌ No està disponible')"
+            >
               ❌ No disponible
             </button>
-            <button class="response-btn menu-btn" @click="sendMenuResponse" :class="{ 'opacity-50': menuLoading }"
-              :disabled="menuLoading">
+            <button
+              class="response-btn menu-btn"
+              @click="sendMenuResponse"
+              :class="{ 'opacity-50': menuLoading }"
+              :disabled="menuLoading"
+            >
               🍽️ Enviar menú disponible
             </button>
           </div>
@@ -116,40 +189,81 @@
       </div>
     </div>
 
-    <div v-else-if="chats.length === 0" class="flex-1 flex items-center justify-center bg-slate-800/30 rounded-xl p-8">
+    <div
+      v-else-if="chats.length === 0"
+      class="flex-1 flex items-center justify-center bg-slate-800/30 rounded-xl p-8"
+    >
       <div class="text-center">
-        <svg class="w-16 h-16 mx-auto text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+        <svg
+          class="w-16 h-16 mx-auto text-gray-600 mb-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+          />
         </svg>
         <p class="text-gray-400">No hi ha xats actius</p>
       </div>
     </div>
 
     <!-- Lista de chats organizada con filtros y búsqueda -->
-    <div v-if="!activeChat && !loading && !error && chats.length > 0" class="flex-1 flex flex-col w-full">
+    <div
+      v-if="!activeChat && !loading && !error && chats.length > 0"
+      class="flex-1 flex flex-col w-full"
+    >
       <!-- Filtros y búsqueda -->
-      <div class="mb-4 bg-slate-800/50 rounded-xl p-4 border border-slate-700/30">
+      <div
+        class="mb-4 bg-slate-800/50 rounded-xl p-4 border border-slate-700/30"
+      >
         <div class="flex flex-col md:flex-row gap-3">
           <!-- Barra de búsqueda -->
           <div class="relative flex-1">
-            <input v-model="searchQuery" type="text" placeholder="Cerca per nom o contingut..."
-              class="w-full bg-slate-700/30 border border-slate-600/50 rounded-lg px-4 py-2 pl-10 text-white placeholder-gray-400" />
-            <svg class="absolute left-3 top-2.5 w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
-              viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            <input
+              v-model="searchQuery"
+              type="text"
+              placeholder="Cerca per nom o contingut..."
+              class="w-full bg-slate-700/30 border border-slate-600/50 rounded-lg px-4 py-2 pl-10 text-white placeholder-gray-400"
+            />
+            <svg
+              class="absolute left-3 top-2.5 w-5 h-5 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
             </svg>
           </div>
 
           <!-- Botón de actualización -->
-          <button @click="refreshChats"
+          <button
+            @click="refreshChats"
             class="flex items-center gap-2 px-4 py-2 rounded-md bg-blue-500/20 text-blue-300 hover:bg-blue-500/30 transition-colors text-sm"
-            :class="{ 'opacity-50 cursor-wait': refreshing }" :disabled="refreshing">
-            <svg class="w-4 h-4" :class="{ 'animate-spin': refreshing }" fill="none" stroke="currentColor"
-              viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            :class="{ 'opacity-50 cursor-wait': refreshing }"
+            :disabled="refreshing"
+          >
+            <svg
+              class="w-4 h-4"
+              :class="{ 'animate-spin': refreshing }"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+              />
             </svg>
             {{ refreshing ? "Actualitzant..." : "Actualitzar" }}
           </button>
@@ -157,38 +271,54 @@
 
         <!-- Filtros de estado -->
         <div class="flex flex-wrap justify-center gap-2 mt-3">
-          <button @click="currentFilter = 'all'" class="px-3 py-2 rounded-md text-sm font-medium transition-colors"
-            :class="currentFilter === 'all'
+          <button
+            @click="currentFilter = 'all'"
+            class="px-3 py-2 rounded-md text-sm font-medium transition-colors"
+            :class="
+              currentFilter === 'all'
                 ? 'bg-blue-500 text-white'
                 : 'bg-slate-700/30 text-gray-300 hover:bg-slate-700/50'
-              ">
+            "
+          >
             Tots ({{ filteredChats.length }})
           </button>
-          <button @click="currentFilter = 'new'" class="px-3 py-2 rounded-md text-sm font-medium transition-colors"
-            :class="currentFilter === 'new'
+          <button
+            @click="currentFilter = 'new'"
+            class="px-3 py-2 rounded-md text-sm font-medium transition-colors"
+            :class="
+              currentFilter === 'new'
                 ? 'bg-blue-500 text-white'
                 : 'bg-slate-700/30 text-gray-300 hover:bg-slate-700/50'
-              ">
+            "
+          >
             <span class="flex items-center">
               <span class="w-2 h-2 bg-blue-400 rounded-full mr-2"></span>
               Nous ({{ getFilteredChatsByStatus("new").length }})
             </span>
           </button>
-          <button @click="currentFilter = 'preparing'"
-            class="px-3 py-2 rounded-md text-sm font-medium transition-colors" :class="currentFilter === 'preparing'
+          <button
+            @click="currentFilter = 'preparing'"
+            class="px-3 py-2 rounded-md text-sm font-medium transition-colors"
+            :class="
+              currentFilter === 'preparing'
                 ? 'bg-blue-500 text-white'
                 : 'bg-slate-700/30 text-gray-300 hover:bg-slate-700/50'
-              ">
+            "
+          >
             <span class="flex items-center">
               <span class="w-2 h-2 bg-yellow-400 rounded-full mr-2"></span>
               En preparació ({{ getFilteredChatsByStatus("preparing").length }})
             </span>
           </button>
-          <button @click="currentFilter = 'ready'" class="px-3 py-2 rounded-md text-sm font-medium transition-colors"
-            :class="currentFilter === 'ready'
+          <button
+            @click="currentFilter = 'ready'"
+            class="px-3 py-2 rounded-md text-sm font-medium transition-colors"
+            :class="
+              currentFilter === 'ready'
                 ? 'bg-blue-500 text-white'
                 : 'bg-slate-700/30 text-gray-300 hover:bg-slate-700/50'
-              ">
+            "
+          >
             <span class="flex items-center">
               <span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
               Llestes ({{ getFilteredChatsByStatus("ready").length }})
@@ -198,23 +328,39 @@
       </div>
 
       <!-- Lista de chats con indicador de estado -->
-      <ul class="flex-1 overflow-y-auto space-y-2 custom-scrollbar mx-auto w-full" style="max-height: 500px">
-        <div v-if="filteredChats.length === 0" class="text-center p-4 text-gray-400">
+      <ul
+        class="flex-1 overflow-y-auto space-y-2 custom-scrollbar mx-auto w-full"
+        style="max-height: 500px"
+      >
+        <div
+          v-if="filteredChats.length === 0"
+          class="text-center p-4 text-gray-400"
+        >
           No s'han trobat xats amb els filtres actuals
         </div>
 
-        <li v-for="chat in filteredChats" :key="chat._id"
+        <li
+          v-for="chat in filteredChats"
+          :key="chat._id"
           class="flex items-center p-4 rounded-xl border hover:border-slate-600 transition-all duration-300 cursor-pointer"
-          :class="getChatStatusClass(chat)" @click="openChat(chat)">
+          :class="getChatStatusClass(chat)"
+          @click="openChat(chat)"
+        >
           <!-- Indicador de estado -->
-          <div class="w-3 h-3 rounded-full mr-3" :class="getChatStatusDot(chat)"></div>
+          <div
+            class="w-3 h-3 rounded-full mr-3"
+            :class="getChatStatusDot(chat)"
+          ></div>
 
           <div class="flex-1 overflow-hidden">
             <div class="flex justify-between items-center">
               <h3 class="font-medium text-white flex items-center">
                 {{ getUserName(chat) }}
-                <span v-if="getChatStatusText(chat)" class="ml-2 text-xs px-2 py-0.5 rounded-full"
-                  :class="getChatStatusBadge(chat)">
+                <span
+                  v-if="getChatStatusText(chat)"
+                  class="ml-2 text-xs px-2 py-0.5 rounded-full"
+                  :class="getChatStatusBadge(chat)"
+                >
                   {{ getChatStatusText(chat) }}
                 </span>
               </h3>
@@ -225,14 +371,20 @@
             <p class="text-sm text-gray-400">
               {{ getUserType(chat) }}
             </p>
-            <p class="text-xs truncate mt-1" :class="{
-              'text-white font-medium': hasNewMessages[chat._id],
-              'text-gray-400': !hasNewMessages[chat._id],
-            }">
+            <p
+              class="text-xs truncate mt-1"
+              :class="{
+                'text-white font-medium': hasNewMessages[chat._id],
+                'text-gray-400': !hasNewMessages[chat._id],
+              }"
+            >
               {{ getLastMessage(chat) }}
             </p>
           </div>
-          <div v-if="hasNewMessages[chat._id]" class="w-3 h-3 bg-purple-500 rounded-full animate-pulse ml-2"></div>
+          <div
+            v-if="hasNewMessages[chat._id]"
+            class="w-3 h-3 bg-purple-500 rounded-full animate-pulse ml-2"
+          ></div>
         </li>
       </ul>
     </div>
@@ -374,9 +526,10 @@ const loadChats = async () => {
     // }
 
     const allChats = await chatManager.getAllChats();
-    
+
     chatsList = allChats.filter(
-      (chat) => chat.teachers && chat.teachers.includes(parseInt(currentUserId.value))
+      (chat) =>
+        chat.teachers && chat.teachers.includes(parseInt(currentUserId.value))
     );
 
     // Filtrar solo chats que tienen al menos un mensaje
@@ -692,6 +845,8 @@ const connectSocket = () => {
   try {
     // Iniciar connexió amb socket.io
     socket.value = io(API_URL, {
+      transports: ["websocket"],
+      withCredentials: true,
       reconnection: true,
       reconnectionAttempts: 5,
       reconnectionDelay: 1000,

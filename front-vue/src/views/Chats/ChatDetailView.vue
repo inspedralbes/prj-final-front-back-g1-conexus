@@ -1427,6 +1427,8 @@ const connectSocket = () => {
 
     // Iniciar conexión con socket.io
     socket.value = io(API_URL, {
+      transports: ["websocket"],
+      withCredentials: true,
       reconnection: true,
       reconnectionAttempts: 5,
       reconnectionDelay: 1000,
