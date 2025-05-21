@@ -689,7 +689,7 @@ const scrollToBottom = () => {
     if (endOfMessages.value) {
       endOfMessages.value.scrollIntoView({ behavior: "smooth" });
     }
-    // Mètode alternatiu utilitzant el contenidor de missatges
+    // Mètode alternatiu utilizando el contenidor de missatges
     else if (messagesContainer.value) {
       messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
     }
@@ -845,12 +845,15 @@ const connectSocket = () => {
   try {
     // Iniciar connexió amb socket.io
     socket.value = io(API_URL, {
-      transports: ["websocket"],
+      transports: ["websocket", "polling"], // Permitir polling como fallback
       withCredentials: true,
       reconnection: true,
       reconnectionAttempts: 5,
       reconnectionDelay: 1000,
     });
+
+    // Log para debugging
+    console.log("Intentando conectar al socket en:", API_URL);
 
     // Esdeveniment de connexió establerta
     socket.value.on("connect", () => {

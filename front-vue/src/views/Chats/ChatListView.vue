@@ -714,18 +714,21 @@ const connectToSocket = () => {
   try {
     // Iniciar conexión con socket.io
     socket.value = io(API_URL, {
-      transports: ["websocket"],
+      transports: ["websocket", "polling"], // Permitir polling como fallback
       withCredentials: true,
       reconnection: true,
       reconnectionAttempts: 5,
       reconnectionDelay: 1000,
     });
 
+    // Log para debugging
+    console.log("Intentando conectar al socket en:", API_URL);
+
     // Evento de conexión establecida
     socket.value.on("connect", () => {
-      // console.log(
-      //   "Conectado al servidor de chat para actualizaciones en tiempo real"
-      // );
+      console.log(
+        "Conectado al servidor de chat para actualizaciones en tiempo real"
+      );
 
       // Registrar el usuario para recibir notificaciones
       socket.value.emit("register_user", {

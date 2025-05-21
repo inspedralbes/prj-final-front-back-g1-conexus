@@ -15,8 +15,13 @@ const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
         origin: "https://www.conexushub.cat",
-        methods: ["GET", "POST", "DELETE"]
-    }
+        methods: ["GET", "POST", "DELETE", "OPTIONS"],
+        credentials: true
+    },
+    transports: ['websocket', 'polling'],
+    allowEIO3: true,
+    pingTimeout: 60000,
+    pingInterval: 25000
 });
 const PORT = process.env.NODE_CHAT_PORT || 3007;
 const MONGODB_URI = process.env.MONGO_ROOT_URL;
@@ -30,7 +35,11 @@ const userSockets = new Map();
 const activeRooms = new Map();
 
 io.on("connection", (socket) => {
-    console.log("Nou client connectat:", socket.id);
+    console.log("Nou client connectat:", socket.id, "Transport:", socket.conn.transport.name);
+
+    // Log del handshake para debugging
+    console.log("Handshake headers:", socket.handshake.headers);
+    console.log("Handshake address:", socket.handshake.address);
 
     socket.on("register_user", (userData) => {
         const { userId, userName } = userData;
