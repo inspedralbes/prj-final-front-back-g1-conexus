@@ -79,7 +79,7 @@ jobs:
 
           # Conectarse por SSH y añadir las variables sensibles
           ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} <<EOF
-          echo "🔐 Afegint secrets al fitxer .env..."
+          echo "🔐 Afegint secrets al fitxer .env" 
 
           echo "NODE_DB_USER=${{ secrets.NODE_DB_USER }}" >> /opt/conexus/.env.production
           echo "NODE_DB_PASSWORD=${{ secrets.NODE_DB_PASSWORD }}" >> /opt/conexus/.env.production
