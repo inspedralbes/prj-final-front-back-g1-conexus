@@ -177,7 +177,7 @@ async function checkIfUserIsTeacher(teacher_id) {
   if (!user) {
     return false;
   }
-  return user.user_type == 1;
+  return user.typeUsers_id == 1;
 }
 
 export default router;
