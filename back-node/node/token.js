@@ -16,18 +16,18 @@ export function generateToken(email) {
 export function verifyToken(token) {
     const extractedToken = token?.split(' ')[1];
     if (!extractedToken) {
-        return { message: "Token is required", login: false, user: null, status: 401 };
+        return { message: "Es requereix un token", login: false, user: null, status: 401 };
     }
 
     try {
         const decoded = jwt.verify(extractedToken, SECRET_KEY);
-        return { message: "Valid token", login: false, user: decoded, status: 200 };
+        return { message: "Token vàlid", login: false, user: decoded, status: 200 };
     } catch (err) {
-        console.log(err)
+        console.log(err);
         if (err.name === "TokenExpiredError") {
-            return { message: "Token has expired. Please log in again.", login: true, user: null, status: 401 };
+            return { message: "El token ha expirat. Inicieu sessió de nou.", login: true, user: null, status: 401 };
         }
-        return { message: "Invalid token", login: false, user: null, status: 401 };
+        return { message: "Token invàlid", login: false, user: null, status: 401 };
     }
 }
 
@@ -35,7 +35,7 @@ export function verifyTokenMiddleware(req, res, next) {
     const verificacio = verifyToken(req.headers.authorization);
 
     if (verificacio.status === 401) {
-        console.log('Token inválido o expirado.');
+        console.log('Token invàlid o expirat.');
         return res.status(401).json(verificacio);
     }
 

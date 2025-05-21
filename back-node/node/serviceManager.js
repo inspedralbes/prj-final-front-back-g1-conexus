@@ -2,23 +2,19 @@ import { spawn } from 'node:child_process';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import pidusage from 'pidusage'; // Necesitarás instalar este paquete: npm install pidusage
+import pidusage from 'pidusage';
 
-// Configuración del entorno
 const isDevelopment = process.env.NODE_ENV === 'development';
 const executor = isDevelopment ? 'nodemon' : 'node';
 
-// Get current directory
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-console.log(`Ejecutando en modo ${isDevelopment ? 'desarrollo' : 'producción'}`);
+console.log(`Executant en mode ${isDevelopment ? 'desenvolupament' : 'producció'}`);
 
-// Discover service files dynamically (exclude certain files)
 const excludedFiles = ['index.js', 'serviceManager.js', 'token.js', 'Dockerfile', 'prod.Dockerfile'];
 const services = {};
 
-// Read directory and identify service files
 fs.readdirSync(__dirname)
     .filter(file => file.endsWith('.js') && !excludedFiles.includes(file))
     .forEach(file => {
@@ -32,7 +28,6 @@ fs.readdirSync(__dirname)
         };
     });
 
-// Helper function to get service description
 function getServiceDescription(serviceName) {
     const serviceDescriptions = {
         'assistences': { name: 'Servei d\'Assistència', tech: 'Node.js 18.x' },
@@ -47,35 +42,29 @@ function getServiceDescription(serviceName) {
     return serviceDescriptions[serviceName] || { name: `Servei ${serviceName}`, tech: 'Node.js 18.x' };
 }
 
-// Function to update service resource usage (mock values for demonstration)
 async function updateServiceUsage() {
     for (const [name, service] of Object.entries(services)) {
         if (service.state === "running" && service.process && service.process.pid) {
             try {
-                // Obtener estadísticas reales del proceso
                 const stats = await pidusage(service.process.pid);
                 
-                // Actualizar el uso de la CPU (como porcentaje)
                 service.usage = Math.round(stats.cpu);
                 
-                // Guardar estadísticas detalladas
                 service.stats = {
-                    memory: Math.round(stats.memory / 1024 / 1024), // MB
+                    memory: Math.round(stats.memory / 1024 / 1024),
                     cpu: Math.round(stats.cpu),
                     elapsed: stats.elapsed,
                     timestamp: Date.now()
                 };
             } catch (error) {
-                console.error(`Error obteniendo estadísticas para ${name}:`, error);
+                console.error(`Error obtenint estadístiques per ${name}:`, error);
                 service.usage = 0;
                 service.stats = null;
                 
-                // Verificar si el proceso sigue en ejecución
                 if (service.process) {
                     try {
-                        process.kill(service.process.pid, 0); // Solo verificar, no matar
+                        process.kill(service.process.pid, 0);
                     } catch (e) {
-                        // El proceso ya no se está ejecutando
                         service.state = "stopped";
                         service.process = null;
                     }
@@ -88,23 +77,21 @@ async function updateServiceUsage() {
     }
 }
 
-// Update resource usage every 5 seconds
 setInterval(updateServiceUsage, 5000);
 
-// Iniciar un servicio específico
 export function startService(serviceName) {
     const service = services[serviceName];
     
     if (!service) {
-        return { success: false, message: `Servicio ${serviceName} no encontrado` };
+        return { success: false, message: `Servei ${serviceName} no trobat` };
     }
     
     if (service.state === "running") {
-        return { success: true, message: `Servicio ${serviceName} ya está ejecutándose` };
+        return { success: true, message: `Servei ${serviceName} ja s'està executant` };
     }
     
     try {
-        console.log(`Iniciando servicio ${serviceName} con ${executor}...`);
+        console.log(`Iniciant servei ${serviceName} amb ${executor}...`);
         const process = spawn(executor, [service.script, '-L']);
         
         service.process = process;
@@ -119,48 +106,44 @@ export function startService(serviceName) {
         });
         
         process.on('close', code => {
-            // Si estamos en modo desarrollo y el código es 0 (salida limpia), 
-            // probablemente nodemon esté reiniciando, así que no cambiamos el estado
             if (!(isDevelopment && code === 0)) {
-                console.log(`Servicio ${serviceName} cerrado con código ${code}`);
+                console.log(`Servei ${serviceName} tancat amb codi ${code}`);
                 service.state = 'stopped';
                 service.process = null;
             }
         });
         
-        return { success: true, message: `Servicio ${serviceName} iniciado correctamente con ${executor}` };
+        return { success: true, message: `Servei ${serviceName} iniciat correctament amb ${executor}` };
     } catch (error) {
-        console.error(`Error al iniciar ${serviceName}:`, error);
-        return { success: false, message: `Error al iniciar servicio ${serviceName}` };
+        console.error(`Error en iniciar ${serviceName}:`, error);
+        return { success: false, message: `Error en iniciar servei ${serviceName}` };
     }
 };
 
-// Detener un servicio específico
 export function stopService(serviceName) {
     const service = services[serviceName];
     
     if (!service) {
-        return { success: false, message: `Servicio ${serviceName} no encontrado` };
+        return { success: false, message: `Servei ${serviceName} no trobat` };
     }
     
     if (service.state === "stopped") {
-        return { success: true, message: `Servicio ${serviceName} ya está detenido` };
+        return { success: true, message: `Servei ${serviceName} ja està aturat` };
     }
     
     try {
-        console.log(`Deteniendo servicio ${serviceName}...`);
+        console.log(`Aturant servei ${serviceName}...`);
         service.process.kill();
         service.process = null;
         service.state = "stopped";
         service.usage = 0;
-        return { success: true, message: `Servicio ${serviceName} detenido correctamente` };
+        return { success: true, message: `Servei ${serviceName} aturat correctament` };
     } catch (error) {
-        console.error(`Error al detener ${serviceName}:`, error);
-        return { success: false, message: `Error al detener servicio ${serviceName}` };
+        console.error(`Error en aturar ${serviceName}:`, error);
+        return { success: false, message: `Error en aturar servei ${serviceName}` };
     }
 };
 
-// Iniciar todos los servicios
 export function startAllServices() {
     const results = {};
     
@@ -171,7 +154,6 @@ export function startAllServices() {
     return results;
 };
 
-// Detener todos los servicios
 export function stopAllServices() {
     const results = {};
     
@@ -184,7 +166,6 @@ export function stopAllServices() {
     return results;
 };
 
-// Obtener el estado de un servicio específico
 export function getServiceStatus(serviceName) {
     if (serviceName && services[serviceName]) {
         return { 
@@ -200,7 +181,6 @@ export function getServiceStatus(serviceName) {
     return null;
 };
 
-// Obtener el estado de todos los servicios
 export function getAllServicesStatus() {
     const status = {};
     
@@ -218,16 +198,14 @@ export function getAllServicesStatus() {
     return status;
 };
 
-// Añadir un nuevo servicio
 export function addService(serviceName, scriptName, description = {}) {
     if (services[serviceName]) {
-        return { success: false, message: `El servicio ${serviceName} ya existe` };
+        return { success: false, message: `El servei ${serviceName} ja existeix` };
     }
     
     try {
         const scriptPath = path.join(__dirname, scriptName);
         
-        // Si el script no existe, crear uno básico
         if (!fs.existsSync(scriptPath)) {
             const port = description.port || Math.floor(3100 + Math.random() * 900);
             const basicScript = `
@@ -249,30 +227,27 @@ app.get('/', (req, res) => {
   });
 });
 
-// Ruta para monitoreo
 app.get('/health', (req, res) => {
   const memoryUsage = process.memoryUsage();
   res.json({
     status: 'ok',
     pid: process.pid,
     memory: {
-      rss: Math.round(memoryUsage.rss / 1024 / 1024), // MB
-      heapTotal: Math.round(memoryUsage.heapTotal / 1024 / 1024), // MB
-      heapUsed: Math.round(memoryUsage.heapUsed / 1024 / 1024), // MB
+      rss: Math.round(memoryUsage.rss / 1024 / 1024),
+      heapTotal: Math.round(memoryUsage.heapTotal / 1024 / 1024),
+      heapUsed: Math.round(memoryUsage.heapUsed / 1024 / 1024),
     },
     uptime: process.uptime()
   });
 });
 
-// Iniciar servidor
 app.listen(PORT, () => {
-  console.log(\`Servicio ${serviceName} ejecutándose en el puerto \${PORT}\`);
+  console.log(\`Servei ${serviceName} executant-se al port \${PORT}\`);
 });
 `;
             fs.writeFileSync(scriptPath, basicScript, 'utf8');
         }
         
-        // Registrar el servicio
         services[serviceName] = {
             state: "stopped",
             process: null,
@@ -286,41 +261,37 @@ app.listen(PORT, () => {
             }
         };
         
-        console.log(`Servicio ${serviceName} creado correctamente`);
-        return { success: true, message: `Servicio ${serviceName} creado correctamente` };
+        console.log(`Servei ${serviceName} creat correctament`);
+        return { success: true, message: `Servei ${serviceName} creat correctament` };
     } catch (error) {
-        console.error(`Error al crear servicio ${serviceName}:`, error);
-        return { success: false, message: `Error al crear servicio: ${error.message}` };
+        console.error(`Error en crear servei ${serviceName}:`, error);
+        return { success: false, message: `Error en crear servei: ${error.message}` };
     }
 }
 
-// Eliminar un servicio
 export function deleteService(serviceName) {
     const service = services[serviceName];
     
     if (!service) {
-        return { success: false, message: `Servicio ${serviceName} no encontrado` };
+        return { success: false, message: `Servei ${serviceName} no trobat` };
     }
     
     try {
-        // Si el servicio está en ejecución, detenerlo primero
         if (service.state === "running") {
             stopService(serviceName);
         }
         
-        // Eliminar el archivo si existe
         const scriptPath = path.join(__dirname, service.script);
         if (fs.existsSync(scriptPath)) {
             fs.unlinkSync(scriptPath);
         }
         
-        // Eliminar el servicio del registro
         delete services[serviceName];
         
-        console.log(`Servicio ${serviceName} eliminado correctamente`);
-        return { success: true, message: `Servicio ${serviceName} eliminado correctamente` };
+        console.log(`Servei ${serviceName} eliminat correctament`);
+        return { success: true, message: `Servei ${serviceName} eliminat correctament` };
     } catch (error) {
-        console.error(`Error al eliminar servicio ${serviceName}:`, error);
-        return { success: false, message: `Error al eliminar servicio: ${error.message}` };
+        console.error(`Error en eliminar servei ${serviceName}:`, error);
+        return { success: false, message: `Error en eliminar servei: ${error.message}` };
     }
 }

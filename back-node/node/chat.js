@@ -6,75 +6,54 @@ import bodyParser from 'body-parser';
 import { Server } from 'socket.io';
 import http from 'http';
 import chatRoutes from './routes/chatRoutes.js';
-import './models/Message.js';  // Just import to register the model
-
-// Obtener el directorio actual con ESM
-
+import './models/Message.js';  
 
 dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
-// Configurar CORS para Socket.io
 const io = new Server(server, {
     cors: {
-        origin: "*", // En producción, limitar a orígenes específicos
+        origin: "*", 
         methods: ["GET", "POST", "DELETE"]
     }
 });
 const PORT = process.env.NODE_CHAT_PORT || 3007;
-
-
-// Configuración de MongoDB - URL correcta según el compose.yaml
 const MONGODB_URI = process.env.NODE_MONGODB_URI || 'mongodb://root:password@conexus-hub-mongodb:27017/chat';
+const API_URL = process.env.VITE_CHAT_URL;
 
 app.use(bodyParser.json());
 app.use(cors());
 
-// Almacenar conexiones de usuarios
-const connectedUsers = new Map(); // userId -> socketId
-const userSockets = new Map(); // socketId -> userId
-const activeRooms = new Map(); // chatId -> Set of socketIds
+const connectedUsers = new Map(); 
+const userSockets = new Map(); 
+const activeRooms = new Map(); 
 
-// Socket.io connection handling
 io.on("connection", (socket) => {
-    console.log("Nuevo cliente conectado:", socket.id);
+    console.log("Nou client connectat:", socket.id);
 
-    // Usuario se registra
     socket.on("register_user", (userData) => {
         const { userId, userName } = userData;
-        console.log(`Usuario ${userName} (${userId}) se ha registrado`);
-
-        // Registrar al usuario
+        console.log(`Usuari ${userName} (${userId}) s'ha registrat`);
         connectedUsers.set(userId, socket.id);
         userSockets.set(socket.id, userId);
-
-        // Crear una sala específica para este usuario para notificaciones directas
         socket.join(`user:${userId}`);
-        console.log(`Usuario ${userName} (${userId}) unido a sala personal user:${userId}`);
-
+        console.log(`Usuari ${userName} (${userId}) unit a sala personal user:${userId}`);
         socket.emit("registered", {
             success: true,
             userId,
-            message: "Conectado correctamente"
+            message: "Connectat correctament"
         });
     });
 
-    // Usuario se une a un chat existente
     socket.on("join_chat", (data) => {
         const { chatId, userId, userName } = data;
-        console.log(`Usuario ${userName} (${userId}) se une al chat ${chatId}`);
-
-        // Unir al usuario a la sala
+        console.log(`Usuari ${userName} (${userId}) s'uneix al xat ${chatId}`);
         socket.join(chatId);
-
-        // Registrar la room como activa
         if (!activeRooms.has(chatId)) {
             activeRooms.set(chatId, new Set());
         }
         activeRooms.get(chatId).add(socket.id);
-
-        // Notificar a los demás usuarios en la sala
         socket.to(chatId).emit("user_joined", {
             userId,
             userName,
@@ -83,15 +62,11 @@ io.on("connection", (socket) => {
         });
     });
 
-    // Usuario envía un mensaje
     socket.on("send_message", async (data) => {
         const { chatId, message, userId, userName } = data;
-        console.log(`Mensaje de ${userName} en chat ${chatId}: ${message}`);
-
+        console.log(`Missatge de ${userName} al xat ${chatId}: ${message}`);
         try {
-            // Hacer una petición al API para guardar el mensaje
-            // Esto usa las rutas existentes en lugar de duplicar la lógica
-            const response = await fetch(`http://localhost:${PORT}/api/chat/${chatId}/message`, {
+            const response = await fetch(`${API_URL}api/chat/${chatId}/message`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -103,16 +78,14 @@ io.on("connection", (socket) => {
             });
 
             if (!response.ok) {
-                throw new Error(`Error al guardar mensaje: ${response.statusText}`);
+                throw new Error(`Error en desar missatge: ${response.statusText}`);
             }
 
             const savedMessage = await response.json();
-            // Obtener el último mensaje añadido de forma segura
             const lastInteractionIndex = savedMessage.interaction.length - 1;
             const newMessageData = lastInteractionIndex >= 0 ? savedMessage.interaction[lastInteractionIndex] : null;
 
             if (newMessageData) {
-                // Enviar a todos en la sala (incluido el remitente para confirmar)
                 io.to(chatId).emit("new_message", {
                     id: newMessageData._id,
                     chatId,
@@ -122,26 +95,23 @@ io.on("connection", (socket) => {
                     timestamp: new Date()
                 });
             } else {
-                console.error("No se pudo obtener el último mensaje guardado");
+                console.error("No s'ha pogut obtenir l'últim missatge desat");
                 socket.emit("error", {
                     type: "message_error",
-                    message: "Error al procesar el mensaje guardado"
+                    message: "Error en processar el missatge desat"
                 });
             }
         } catch (error) {
-            console.error("Error al guardar mensaje:", error);
+            console.error("Error en desar missatge:", error);
             socket.emit("error", {
                 type: "message_error",
-                message: "No se pudo guardar el mensaje"
+                message: "No s'ha pogut desar el missatge"
             });
         }
     });
 
-    // Usuario está escribiendo
     socket.on("typing", (data) => {
         const { chatId, userId, userName, isTyping } = data;
-
-        // Emitir a todos menos al remitente
         socket.to(chatId).emit("user_typing", {
             userId,
             userName,
@@ -150,26 +120,21 @@ io.on("connection", (socket) => {
         });
     });
 
-    // Manejo del primer mensaje en un chat
     socket.on("first_message_sent", async (data) => {
         const { chatId, userId, userName, message } = data;
-        console.log(`Primer mensaje en chat ${chatId} de ${userName} (${userId}): ${message}`);
-
+        console.log(`Primer missatge al xat ${chatId} de ${userName} (${userId}): ${message}`);
         try {
-            // Obtener información completa del chat
-            const chatDataResponse = await fetch(`http://localhost:${PORT}/api/chat/${chatId}`);
+            const chatDataResponse = await fetch(`${API_URL}api/chat/${chatId}`);
 
             if (!chatDataResponse.ok) {
-                throw new Error(`Error al obtener datos del chat: ${chatDataResponse.statusText}`);
+                throw new Error(`Error en obtenir dades del xat: ${chatDataResponse.statusText}`);
             }
 
             const chatData = await chatDataResponse.json();
 
-            // Notificar a todos los participantes del chat (excepto al remitente)
             if (chatData && chatData.teachers && Array.isArray(chatData.teachers)) {
                 chatData.teachers.forEach(teacherId => {
                     if (teacherId.toString() !== userId.toString()) {
-                        // Notificar a cada profesor mediante su sala personal
                         io.to(`user:${teacherId}`).emit('chat_first_message', {
                             chatId,
                             userId,
@@ -178,12 +143,11 @@ io.on("connection", (socket) => {
                             timestamp: new Date(),
                             chatData: chatData
                         });
-                        console.log(`Notificación de primer mensaje enviada al profesor ${teacherId}`);
+                        console.log(`Notificació de primer missatge enviada al professor ${teacherId}`);
                     }
                 });
             }
 
-            // También notificar a todos en la sala del chat
             socket.to(chatId).emit('chat_first_message', {
                 chatId,
                 userId,
@@ -193,27 +157,23 @@ io.on("connection", (socket) => {
                 chatData: chatData
             });
         } catch (error) {
-            console.error("Error al procesar primer mensaje:", error);
+            console.error("Error en processar primer missatge:", error);
             socket.emit("error", {
                 type: "first_message_error",
-                message: "Error al procesar la notificación del primer mensaje"
+                message: "Error en processar la notificació del primer missatge"
             });
         }
     });
 
-    // Usuario elimina un mensaje
     socket.on("delete_message", async (data) => {
         const { chatId, messageId, userId } = data;
-
         try {
-            // Primero obtener el mensaje para tener su contenido
             let messageContent = null;
             let messageDate = null;
             let teacherId = null;
 
             try {
-                // Intentar obtener el contenido del mensaje antes de borrarlo
-                const chatResponse = await fetch(`http://localhost:${PORT}/api/chat/${chatId}`);
+                const chatResponse = await fetch(`${API_URL}api/chat/${chatId}`);
                 if (chatResponse.ok) {
                     const chatData = await chatResponse.json();
                     if (chatData && chatData.interaction) {
@@ -228,23 +188,19 @@ io.on("connection", (socket) => {
                     }
                 }
             } catch (fetchError) {
-                console.log("Error al obtener contenido del mensaje:", fetchError);
-                // Continuar con el borrado aunque no tengamos el contenido
+                console.log("Error en obtenir contingut del missatge:", fetchError);
             }
 
-            // Hacer una petición al API para eliminar el mensaje
-            const response = await fetch(`http://localhost:${PORT}/api/chat/${chatId}/message/${messageId}`, {
+            const response = await fetch(`${API_URL}api/chat/${chatId}/message/${messageId}`, {
                 method: 'DELETE'
             });
 
             if (!response.ok) {
-                throw new Error(`Error al eliminar mensaje: ${response.statusText}`);
+                throw new Error(`Error en eliminar missatge: ${response.statusText}`);
             }
 
-            // Obtener la respuesta JSON
             const deletedData = await response.json();
 
-            // Notificar a todos en la sala con información adicional
             io.to(chatId).emit("message_deleted", {
                 chatId,
                 messageId,
@@ -256,101 +212,83 @@ io.on("connection", (socket) => {
                 deleted: true
             });
 
-            console.log(`Mensaje ${messageId} eliminado y notificado a todos los usuarios en la sala ${chatId}`);
+            console.log(`Missatge ${messageId} eliminat i notificat a tots els usuaris a la sala ${chatId}`);
         } catch (error) {
-            console.error("Error al eliminar mensaje:", error);
+            console.error("Error en eliminar missatge:", error);
             socket.emit("error", {
                 type: "delete_error",
-                message: "Error al eliminar el mensaje"
+                message: "Error en eliminar el missatge"
             });
         }
     });
 
-    // Usuario elimina un chat completo
     socket.on("delete_chat", async (data) => {
         const { chatId, userId } = data;
-
         try {
-            // Hacer una petición al API para eliminar el chat
-            const response = await fetch(`http://localhost:${PORT}/api/chat/${chatId}`, {
+            const response = await fetch(`${API_URL}api/chat/${chatId}`, {
                 method: 'DELETE'
             });
 
             if (!response.ok) {
-                throw new Error(`Error al eliminar chat: ${response.statusText}`);
+                throw new Error(`Error en eliminar xat: ${response.statusText}`);
             }
 
-            // Notificar a todos en la sala
             io.to(chatId).emit("chat_deleted", {
                 chatId,
                 deletedBy: userId,
                 timestamp: new Date()
             });
 
-            // Cerrar la sala
             const socketsInRoom = await io.in(chatId).fetchSockets();
             socketsInRoom.forEach(s => s.leave(chatId));
 
-            // Eliminar la sala de las salas activas
             if (activeRooms.has(chatId)) {
                 activeRooms.delete(chatId);
             }
         } catch (error) {
-            console.error("Error al eliminar chat:", error);
+            console.error("Error en eliminar xat:", error);
             socket.emit("error", {
                 type: "delete_error",
-                message: "Error al eliminar el chat"
+                message: "Error en eliminar el xat"
             });
         }
     });
 
-    // Usuario sale de un chat
     socket.on("leave_chat", (data) => {
         const { chatId, userId, userName } = data;
         handleUserLeavingChat(socket, chatId, userId, userName);
     });
 
-    // Usuario se desconecta
     socket.on("disconnect", () => {
         const userId = userSockets.get(socket.id);
-        console.log(`Cliente desconectado: ${socket.id}, Usuario: ${userId || 'desconocido'}`);
+        console.log(`Client desconnectat: ${socket.id}, Usuari: ${userId || 'desconegut'}`);
 
         if (userId) {
-            // Limpiar registros de usuario
             connectedUsers.delete(userId);
             userSockets.delete(socket.id);
-
-            // Salir de la sala personal
             socket.leave(`user:${userId}`);
 
-            // Hacer que el usuario salga de todas las salas activas
             for (const [chatId, socketIds] of activeRooms.entries()) {
                 if (socketIds.has(socket.id)) {
-                    handleUserLeavingChat(socket, chatId, userId, "Usuario");
+                    handleUserLeavingChat(socket, chatId, userId, "Usuari");
                 }
             }
         }
     });
 });
 
-// Función para manejar cuando un usuario sale de un chat
 function handleUserLeavingChat(socket, chatId, userId, userName) {
-    console.log(`Usuario ${userName} (${userId}) sale del chat ${chatId}`);
-
-    // Salir de la sala
+    console.log(`Usuari ${userName} (${userId}) surt del xat ${chatId}`);
     socket.leave(chatId);
 
-    // Actualizar registro de salas activas
     if (activeRooms.has(chatId)) {
         const socketIds = activeRooms.get(chatId);
         socketIds.delete(socket.id);
 
-        // Si no quedan usuarios, eliminar la sala
         if (socketIds.size === 0) {
             activeRooms.delete(chatId);
-            console.log(`Room ${chatId} destruida - no quedan usuarios`);
+            console.log(`Sala ${chatId} destruïda - no queden usuaris`);
         } else {
-            // Notificar a los demás usuarios que alguien salió
             socket.to(chatId).emit("user_left", {
                 userId,
                 userName,
@@ -361,74 +299,66 @@ function handleUserLeavingChat(socket, chatId, userId, userName) {
     }
 }
 
-// Compartir la instancia de io con las rutas
 app.set('socketio', io);
 app.use("/api/chat", chatRoutes);
 
 async function createSampleChat() {
     try {
-        console.log("Intentando conectar a MongoDB en:", MONGODB_URI);
+        console.log("Intentant connectar a MongoDB a:", MONGODB_URI);
 
-        // Incrementar el timeout y usar opciones más robustas
         await mongoose.connect(MONGODB_URI, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
-            serverSelectionTimeoutMS: 30000, // Aumentar timeout a 30 segundos
-            socketTimeoutMS: 45000, // Aumentar socket timeout a 45 segundos
+            serverSelectionTimeoutMS: 30000,
+            socketTimeoutMS: 45000,
         });
-        console.log("Connected to MongoDB");
+        console.log("Connectat a MongoDB");
 
         const Message = mongoose.model("Message");
 
-        // Verificar que la colección existe
-        console.log("Verificando colección de mensajes...");
+        console.log("Verificant col·lecció de missatges...");
         const collections = await mongoose.connection.db.listCollections().toArray();
-        console.log("Colecciones disponibles:", collections.map(c => c.name).join(", "));
+        console.log("Col·leccions disponibles:", collections.map(c => c.name).join(", "));
 
-        // Crear un chat de muestra
         const sampleChat = new Message({
-            name: "Chat privado de ejemplo",
+            name: "Xat privat d'exemple",
             teachers: [101, 202],
             interaction: [
                 {
                     teacherId: "101",
-                    message: "Hola, ¿cómo estás?",
+                    message: "Hola, com estàs?",
                     date: new Date()
                 },
                 {
                     teacherId: "202",
-                    message: "Muy bien, gracias por preguntar",
-                    date: new Date(Date.now() - 3600000) // 1 hora antes
+                    message: "Molt bé, gràcies per preguntar",
+                    date: new Date(Date.now() - 3600000)
                 },
                 {
                     teacherId: "101",
-                    message: "¿Te gustaría reunirnos mañana?",
-                    date: new Date(Date.now() - 1800000) // 30 minutos antes
+                    message: "Et ve de gust reunir-nos demà?",
+                    date: new Date(Date.now() - 1800000)
                 }
             ]
         });
 
-        console.log("Intentando guardar el chat de muestra...");
+        console.log("Intentant desar el xat de mostra...");
         const savedChat = await sampleChat.save();
-        console.log("Chat de muestra creado con éxito:");
+        console.log("Xat de mostra creat amb èxit:");
         console.log(JSON.stringify(savedChat, null, 2));
 
-        // Verificar que se ha guardado consultando la base de datos
         const allChats = await Message.find();
-        console.log(`\nTotal de chats en la base de datos: ${allChats.length}`);
+        console.log(`\nTotal de xats a la base de dades: ${allChats.length}`);
     } catch (err) {
-        console.log("Error al crear el chat de muestra:", err);
+        console.log("Error en crear el xat de mostra:", err);
     }
 }
 
-// Iniciar servidor y conectar a la base de datos
 server.listen(PORT, () => {
-    console.log(`Servidor de chat ejecutándose en puerto ${PORT}`);
-    // Iniciar la creación del chat de muestra después de que el servidor esté en marcha
+    console.log(`Servidor de xat executant-se al port ${PORT}`);
     createSampleChat();
 });
 
-// Agregar una función auxiliar para obtener los usuarios en una sala
 function getUsersInRoom(chatId) {
     if (!activeRooms.has(chatId)) {
         return [];
@@ -437,7 +367,6 @@ function getUsersInRoom(chatId) {
     const userIds = [];
     const socketIds = activeRooms.get(chatId);
 
-    // Convertir los socket IDs a user IDs
     for (const socketId of socketIds) {
         const userId = userSockets.get(socketId);
         if (userId) {

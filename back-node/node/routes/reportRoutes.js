@@ -29,9 +29,9 @@ const transporter = nodemailer.createTransport({
 
 transporter.verify((error, success) => {
   if (error) {
-    console.error("Error with email transporter:", error);
+    console.error("Error amb el transportador de correu:", error);
   } else {
-    console.log("Email transporter is ready");
+    console.log("Transportador de correu preparat");
   }
 });
 
@@ -192,7 +192,7 @@ router.post("/", verifyTokenMiddleware, upload.single("image"), async (req, res)
 
     res.status(201).json(newReport);
   } catch (error) {
-    console.error("Error creating report:", error);
+    console.error("Error en crear informe:", error);
     res.status(500).json({ message: error.message });
   }
 });
@@ -223,9 +223,9 @@ router.put("/:id", verifyTokenMiddleware, async (req, res) => {
       };
       transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
-          console.error("Error sending email:", error);
+          console.error("Error en enviar correu:", error);
         } else {
-          console.log("Email sent:", info.response);
+          console.log("Correu enviat:", info.response);
         }
       });
     }
@@ -270,7 +270,7 @@ router.delete("/:id", verifyTokenMiddleware, async (req, res) => {
     // i sense contingut al cos de la resposta
     res.status(204).send();
   } catch (error) {
-    console.error("Error eliminant informe:", error);
+    console.error("Error en eliminar informe:", error);
     res.status(500).json({ message: error.message });
   }
 });
@@ -340,7 +340,7 @@ router.get("/stats/count", verifyTokenMiddleware, async (req, res) => {
       resolved: resolvedReports
     });
   } catch (error) {
-    console.error("Error al obtener estadísticas de incidencias:", error);
+    console.error("Error en obtenir estadístiques d'incidències:", error);
     res.status(500).json({ message: error.message });
   }
 });
@@ -364,7 +364,7 @@ export async function getLatestReport() {
 
     return latestReport;
   } catch (error) {
-    console.error("Error al obtener incidencia reciente:", error);
+    console.error("Error en obtenir incidència recent:", error);
     throw error;
   }
 }

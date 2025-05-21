@@ -44,7 +44,7 @@ router.put("/:id",verifyTokenMiddleware, async (req, res) => {
         const { task_name, course_id, task_description, task_ended } = req.body;
         const auxTask = await Task.findByPk(req.params.id);
         if (!auxTask) {
-            return res.status(404).json({ message: "Task not found" });
+            return res.status(404).json({ message: "Tasca no trobada" });
         }
         auxTask.task_name = task_name;
         auxTask.course_id = course_id;
@@ -62,10 +62,10 @@ router.delete("/:id",verifyTokenMiddleware, async (req, res) => {
     try {
         const Task = await Task.findByPk(req.params.id);
         if (!Task) {
-            return res.status(404).json({ message: "Task not found" });
+            return res.status(404).json({ message: "Tasca no trobada" });
         } else {
             await Task.destroy({ where: { id: req.params.id } });
-            res.json({ message: "Task deleted successfully" });
+            res.json({ message: "Tasca eliminada correctament" });
         }
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -84,7 +84,7 @@ router.get("/getAllGradesFromTask/:id", verifyTokenMiddleware, async (req, res) 
             ],
         });
         if (!task) {
-            return res.status(404).json({ message: "Task not found" });
+            return res.status(404).json({ message: "Tasca no trobada" });
         }
         res.json(task.grades);
     } catch (error) {
@@ -97,7 +97,7 @@ router.get("/getAllTasksFromCourse/:id", verifyTokenMiddleware, async (req, res)
     try {
         const task = await Task.findAll({ where: { course_id: req.params.id } });
         if (!task) {
-            return res.status(404).json({ message: "Task not found" });
+            return res.status(404).json({ message: "Tasca no trobada" });
         }
         res.json(task);
     } catch (error) {
@@ -110,7 +110,7 @@ router.get("/getAllTasksFromStudent/:id", verifyTokenMiddleware, async (req, res
     try {
         const task = await Task.findAll({ where: { user_id: req.params.id } });
         if (!task) {
-            return res.status(404).json({ message: "Task not found" });
+            return res.status(404).json({ message: "Tasca no trobada" });
         }
         res.json(task);
     } catch (error) {
@@ -123,7 +123,7 @@ router.get("/getAllTasksFromStudentFromCourse/:courseId/:studentId", verifyToken
     try {
         const task = await Task.findAll({ where: { course_id: req.params.courseId, user_id: req.params.studentId } });
         if (!task) {
-            return res.status(404).json({ message: "Task not found" });
+            return res.status(404).json({ message: "Tasca no trobada" });
         }
         res.json(task);
     } catch (error) {
@@ -146,7 +146,7 @@ export async function getLatestTask() {
         
         return latestTask;
     } catch (error) {
-        console.error("Error al obtener tarea reciente:", error);
+        console.error("Error en obtenir tasca recent:", error);
         throw error;
     }
 }

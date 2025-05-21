@@ -18,7 +18,7 @@ router.get("/:id", async (req, res) => {
     try {
         const typeUser = await TypeUser.findByPk(req.params.id);
         if (!typeUser) {
-            return res.status(404).json({ message: "Tipo de usuario no encontrado" });
+            return res.status(404).json({ message: "Tipus d'usuari no trobat" });
         }
         res.json(typeUser);
     } catch (error) {
@@ -33,7 +33,7 @@ router.post("/",verifyTokenMiddleware,async (req, res) => {
         // Check if type user already exists
         const existingTypeUser = await TypeUser.findOne({ where: { name } });
         if (existingTypeUser) {
-            return res.status(400).json({ message: "El tipo de usuario ya existe" });
+            return res.status(400).json({ message: "El tipus d'usuari ja existeix" });
         }
         // Create new type user
         const typeUser = await TypeUser.create({ name });
@@ -53,7 +53,7 @@ router.put("/:id", verifyTokenMiddleware, async (req, res) => {
         });
         
         if (!updated) {
-            return res.status(404).json({ message: "Tipo de usuario no encontrado" });
+            return res.status(404).json({ message: "Tipus d'usuari no trobat" });
         }
         
         const typeUser = await TypeUser.findByPk(req.params.id);
@@ -70,11 +70,11 @@ router.delete("/:id", verifyTokenMiddleware, async (req, res) => {
         const typeUser = await TypeUser.findByPk(id);
 
         if (!typeUser) {
-            return res.status(404).json({ message: "Tipo de usuario no encontrado" });
+            return res.status(404).json({ message: "Tipus d'usuari no trobat" });
         }
 
         await typeUser.destroy();
-        res.json({ message: "Tipo de usuario eliminado correctamente" });
+        res.json({ message: "Tipus d'usuari eliminat correctament" });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

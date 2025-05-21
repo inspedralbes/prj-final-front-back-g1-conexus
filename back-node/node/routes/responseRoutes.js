@@ -4,13 +4,11 @@ import { verifyTokenMiddleware } from "../token.js";
 
 const router = express.Router();
 
-// GET /responses - Obtenir totes les respostes
 router.get("/", verifyTokenMiddleware, async (req, res) => {
     const responses = await Response.findAll();
     res.json(responses);
 });
 
-// GET /responses/:id - Obtenir una resposta per ID
 router.get("/:id", async (req, res) => {
     const { id } = req.params;
     try {
@@ -24,7 +22,6 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-// POST /responses - Crear una nova resposta
 router.post("/", verifyTokenMiddleware, async (req, res) => {
     try {
         const { user_id, lostAndFound_id, comment } = req.body;
@@ -32,17 +29,6 @@ router.post("/", verifyTokenMiddleware, async (req, res) => {
         if (!user_id || !lostAndFound_id || !comment) {
             return res.status(400).json({ message: "user_id, lostAndFound_id, comment són obligatoris" });
         }
-        /**
-         * Crea una nova resposta a la base de dades.
-         * 
-         * @async
-         * @function
-         * @param {Object} responseData - Les dades per a la nova resposta.
-         * @param {number} responseData.user_id - L'ID de l'usuari que crea la resposta.
-         * @param {number} responseData.lostAndFound_id - L'ID de la publicació de perduts i trobats associada amb la resposta.
-         * @param {string} responseData.comment - El contingut de la resposta.
-         * @returns {Promise<Object>} L'objecte de la resposta acabada de crear.
-         */
         const newResponse = await Response.create({ user_id, lostAndFound_id, comment });
         res.status(201).json(newResponse);
     } catch (error) {
@@ -50,7 +36,6 @@ router.post("/", verifyTokenMiddleware, async (req, res) => {
     }
 });
 
-// PUT /responses/:id - Actualitzar una resposta per ID
 router.put("/:id", verifyTokenMiddleware, async (req, res) => {
     const { id } = req.params;
     try {
@@ -65,7 +50,6 @@ router.put("/:id", verifyTokenMiddleware, async (req, res) => {
     }
 });
 
-// DELETE /responses/:id - Eliminar una resposta per ID
 router.delete("/:id", verifyTokenMiddleware, async (req, res) => {
     const { id } = req.params;
     try {

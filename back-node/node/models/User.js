@@ -15,7 +15,7 @@ const User = sequelize.define('User', {
     updatedAt: { field: 'updated_at', type: DataTypes.DATE },
 }, {
     tableName: 'Users',
-    timestamps: true, // Habilita los timestamps
+    timestamps: true, 
 });
 
 User.beforeCreate(async (user) => {

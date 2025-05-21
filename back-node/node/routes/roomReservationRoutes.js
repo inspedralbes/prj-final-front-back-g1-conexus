@@ -2,7 +2,7 @@ import express from "express";
 import RoomReservation from "../models/RoomReservation.js";
 import { Op } from "sequelize";
 import Room from "../models/Room.js";
-import User from "../models/User.js";  // Si no está ya importado
+import User from "../models/User.js";
 import { verifyTokenMiddleware } from "../token.js";
 const router = express.Router();
 
@@ -30,7 +30,7 @@ router.get("/user/:user_id", verifyTokenMiddleware, async (req, res) => {
       return res
         .status(404)
         .json({
-          message: "No s'han trobat reserves d'habitació per a aquest usuari",
+          message: "No s'han trobat reserves d'aula per a aquest usuari",
         });
     }
     //retornar l'array de reserves d'habitacions
@@ -48,7 +48,7 @@ router.get("/reserved", verifyTokenMiddleware, async (req, res) => {
       },
     });
     if (!reservations) {
-      return res.status(404).json({ message: "No hi ha reserves d'habitació" });
+      return res.status(404).json({ message: "No hi ha reserves d'aula" });
     }
     //retornar l'array de reserves d'habitacions
     res.json(reservations);
@@ -64,7 +64,7 @@ router.get("/:id", verifyTokenMiddleware, async (req, res) => {
     if (!reservation) {
       return res
         .status(404)
-        .json({ message: "Reserva d'habitació no trobada" });
+        .json({ message: "Reserva d'aula no trobada" });
     }
     //retornar l'objecte reserva d'habitació
     res.json(reservation);
@@ -81,7 +81,7 @@ router.get("/user/:user_id", verifyTokenMiddleware, async (req, res) => {
       where: { user_id },
     });
     if (!reservations) {
-      return res.status(404).json({ message: "No s'han trobat reserves d'habitació per a aquest usuari" });
+      return res.status(404).json({ message: "No s'han trobat reserves d'aula per a aquest usuari" });
     }
     res.json(reservations);
   } catch (error) {
@@ -128,7 +128,7 @@ router.post("/", verifyTokenMiddleware, async (req, res) => {
     if (existingReservation) {
       return res
         .status(400)
-        .json({ message: "La sala ja està reservada en aquest horari" });
+        .json({ message: "L'aula ja està reservada en aquest horari" });
     }
     // Crear una nova reserva d'habitació
     const newReservation = await RoomReservation.create({
@@ -152,7 +152,7 @@ router.put("/:id", verifyTokenMiddleware, async (req, res) => {
     if (!reservation) {
       return res
         .status(404)
-        .json({ message: "Reserva d'habitació no trobada" });
+        .json({ message: "Reserva d'aula no trobada" });
     }
     await reservation.update(req.body);
     //retornar l'objecte actualitzat de la reserva d'habitació
@@ -170,7 +170,7 @@ router.delete("/:id", verifyTokenMiddleware, async (req, res) => {
     if (!reservation) {
       return res
         .status(404)
-        .json({ message: "Reserva d'habitació no trobada" });
+        .json({ message: "Reserva d'aula no trobada" });
     }
     await reservation.destroy();
     //retornar un missatge d'èxit
@@ -189,7 +189,7 @@ router.get("/room/:id", verifyTokenMiddleware, async (req, res) => {
       },
     });
     if (!reservations) {
-      return res.status(404).json({ message: "No s'han trobat reserves d'habitació per a aquesta sala" });
+      return res.status(404).json({ message: "No s'han trobat reserves d'aula per a aquesta aula" });
     }
     //retornar l'array de reserves d'habitacions
     res.json(reservations);
@@ -217,7 +217,7 @@ export async function getLatestRoomReservation() {
 
     return latestReservation;
   } catch (error) {
-    console.error("Error al obtener reserva reciente:", error);
+    console.error("Error en obtenir reserva recent:", error);
     throw error;
   }
 }

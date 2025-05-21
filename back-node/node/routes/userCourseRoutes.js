@@ -6,7 +6,6 @@ import { verifyTokenMiddleware } from "../token.js";
 import { Op } from "sequelize";
 const router = express.Router();
 
-// Obtener todas las relaciones usuario-curso
 router.get("/", verifyTokenMiddleware, async (req, res) => {
     try {
         const userCourses = await UserCourse.findAll();
@@ -16,14 +15,12 @@ router.get("/", verifyTokenMiddleware, async (req, res) => {
     }
 });
 
-// Crear una nueva relación usuario-curso
 router.post("/", verifyTokenMiddleware, async (req, res) => {
     try {
         const { course_id, user_id } = req.body;
         if (!course_id || !user_id) {
-            return res.status(400).json({ message: "user_id y course_id son obligatorios" });
+            return res.status(400).json({ message: "user_id i course_id són obligatoris" });
         }
-        // Verificar si la relación ya existe
         const existingUserCourse = await UserCourse.findOne({
             where: {
                 user_id: user_id,
@@ -31,21 +28,17 @@ router.post("/", verifyTokenMiddleware, async (req, res) => {
             },
         });
         if (existingUserCourse) {
-            return res.status(400).json({ message: "La relación usuario-curso ya existe" });
+            return res.status(400).json({ message: "La relació usuari-curs ja existeix" });
         }
-        // Crear la nueva relación
-        // const { user_id, course_id } = req.body;
       
-        // Validate user existence
         const userExists = await User.findByPk(user_id);
         if (!userExists) {
-            return res.status(400).json({ message: "El usuario no existe" });
+            return res.status(400).json({ message: "L'usuari no existeix" });
         }
 
-        // Validate course existence
         const courseExists = await Course.findByPk(course_id);
         if (!courseExists) {
-            return res.status(400).json({ message: "El curso no existe" });
+            return res.status(400).json({ message: "El curs no existeix" });
         }
 
         const userCourse = await UserCourse.create({ user_id, course_id });
@@ -55,45 +48,40 @@ router.post("/", verifyTokenMiddleware, async (req, res) => {
     }
 });
 
-// Eliminar una relación usuario-curso por ID
 router.delete("/:id", verifyTokenMiddleware, async (req, res) => {
     try {
         const { id } = req.params;
         const userCourse = await UserCourse.findByPk(id);
 
         if (!userCourse) {
-            return res.status(404).json({ message: "Relación usuario-curso no encontrada" });
+            return res.status(404).json({ message: "Relació usuari-curs no trobada" });
         }
 
         await userCourse.destroy();
-        res.json({ message: "Relación usuario-curso eliminada correctamente" });
+        res.json({ message: "Relació usuari-curs eliminada correctament" });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 });
 
-// Obtener una relación usuario-curso por ID del curso
 router.get("/course/:course_id",verifyTokenMiddleware, async (req, res) => {
     try {
         const { course_id } = req.params;
         const userCourses = await UserCourse.findAll({ where: { course_id } });
         
         if (!userCourses) {
-            return res.status(404).json({ message: "No se encontraron relaciones para este curso" });
+            return res.status(404).json({ message: "No s'han trobat relacions per aquest curs" });
         }
         const userCoursesWithNames = await Promise.all(userCourses.map(async (userCourse) => {
             const user = await User.findByPk(userCourse.user_id, { attributes: ['name'] });
             return { user_id: userCourse.user_id, course_id: userCourse.course_id, name: user ? user.name : null };
         }));
-        // console.log("+++++++++++++++++", userCoursesWithNames);
         res.json(userCoursesWithNames);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 });
 
-
-// Obtener cursos por ID de usuario
 router.get("/user/:userId", verifyTokenMiddleware, async (req, res) => {
     try {
         const { userId } = req.params;
@@ -105,8 +93,8 @@ router.get("/user/:userId", verifyTokenMiddleware, async (req, res) => {
             const course = await Course.findOne({ where: { id: userCourse.course_id } });
             return { 
                 ...userCourse.toJSON(), 
-                course_name: course ? course.course_name : "Curso no encontrado",
-                course_description: course ? course.course_description : "Sin descripción disponible"
+                course_name: course ? course.course_name : "Curs no trobat",
+                course_description: course ? course.course_description : "Sense descripció disponible"
             };
             })
         );
@@ -116,7 +104,6 @@ router.get("/user/:userId", verifyTokenMiddleware, async (req, res) => {
     }
 });
 
-//Obtener todos los cursos en los que no está inscrito un usuario
 router.get("/not-enrolled/:userId", verifyTokenMiddleware, async (req, res) => {
     try {
         const { userId } = req.params;
@@ -136,7 +123,7 @@ router.get("/not-enrolled/:userId", verifyTokenMiddleware, async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 });
-// eliminar una relación usuario-curso por ID de usuario y ID de curso
+
 router.delete("/:userId/:courseId", verifyTokenMiddleware, async (req, res) => {
     try {
         const { userId, courseId } = req.params;
@@ -147,15 +134,13 @@ router.delete("/:userId/:courseId", verifyTokenMiddleware, async (req, res) => {
             },
         });
         if (!userCourse) {
-            return res.status(404).json({ message: "Relación usuario-curso no encontrada" });
+            return res.status(404).json({ message: "Relació usuari-curs no trobada" });
         }
         await userCourse.destroy();
-        res.json({ message: "Relación usuario-curso eliminada correctamente" });
+        res.json({ message: "Relació usuari-curs eliminada correctament" });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 });
-
-
 
 export default router;

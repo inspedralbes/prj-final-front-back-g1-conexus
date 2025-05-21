@@ -20,11 +20,8 @@ app.use('/api/grades', gradeRoutes);
 app.use("/api/courses", courseRoutes);
 
 sequelize.sync().then(() => {
-    console.log('Database synced');
+    console.log('Base de dades sincronitzada');
     app.listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`);
+        console.log(`Servidor executant-se al port ${PORT}`);
     });
-});
-app.get('/', (_, res) => {
-    res.send('Hello World!');
 });

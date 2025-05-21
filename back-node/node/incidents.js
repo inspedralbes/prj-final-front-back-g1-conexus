@@ -2,16 +2,9 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import { sequelize } from './models/index.js';
-
-import assistenceRoutes from './routes/assistenceRoutes.js';
 import reportRoutes from "./routes/reportRoutes.js";
 import nodemailer from 'nodemailer';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 dotenv.config();
 const app = express();
@@ -29,20 +22,19 @@ const transporter = nodemailer.createTransport({
 
 transporter.verify((error, success) => {
     if (error) {
-        console.error('Error with email transporter:', error);
+        console.error('Error amb el transportador de correu:', error);
     } else {
-        console.log('Email transporter is ready');
+        console.log('Transportador de correu preparat');
     }
 });
 
 app.use(bodyParser.json());
 app.use(cors());
-app.use('/uploads', express.static('uploads'));
-app.use("/api/reports", reportRoutes);
+app.use('/api/uploads', express.static('uploads'));
 app.use("/api/reports", reportRoutes);
 
 sequelize.sync().then(() => {
     app.listen(PORT, () => {
-        console.log(`Server is running on port ${PORT}`);
+        console.log(`Servidor executant-se al port ${PORT}`);
     });
 })
