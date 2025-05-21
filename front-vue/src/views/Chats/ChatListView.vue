@@ -299,6 +299,7 @@ const activeChats = ref(new Set());
 const typingUsers = ref({}); // Para almacenar qué usuarios están escribiendo
 const showFilterMenu = ref(false);
 const filterRef = ref(null); // Referencia al contenedor del filtro
+const disableNotifications = ref(true);
 
 // Imagen por defecto como data URL
 const defaultAvatar =
@@ -876,8 +877,25 @@ const recentNotifications = {
   clearTimer: null,
 
   // Agregar un mensaje a la lista de notificaciones recientes
-  add(chatId, userId, message) {
-    const signature = `${chatId}_${userId}_${message.substring(0, 20)}`;
+  add(arg1, arg2, arg3) {
+    // Compatibilidad con distintos formatos de parámetros
+    // Puede recibir (chatId, userId, message) o (messageHash, senderName, message)
+    let signature;
+
+    if (
+      typeof arg1 === "string" &&
+      typeof arg2 === "string" &&
+      typeof arg3 === "string"
+    ) {
+      // Nuevo formato: (messageHash, senderName, message)
+      signature = arg1;
+    } else {
+      // Formato antiguo: (chatId, userId, message)
+      const chatId = arg1 || "unknown";
+      const userId = arg2 || "unknown";
+      const message = arg3 || "";
+      signature = `${chatId}_${userId}_${message.substring(0, 20)}`;
+    }
 
     // Si ya existe esta notificación, no mostrar de nuevo
     if (this.messages.has(signature)) {
@@ -903,6 +921,11 @@ const recentNotifications = {
 
 // Función para mostrar notificación
 const showNotification = (senderName, message) => {
+  // Si las notificaciones están deshabilitadas, salir inmediatamente
+  if (disableNotifications.value) {
+    return;
+  }
+
   // Usar el gestor global de notificaciones si existe
   if (window.notificationManager) {
     window.notificationManager.notify(
@@ -918,10 +941,13 @@ const showNotification = (senderName, message) => {
     return;
   }
 
-  // Evitar notificaciones duplicadas
-  if (!recentNotifications.add(chatId?.value, senderName, message)) {
-    console.log("Evitando notificación duplicada");
-    return;
+  // Evitar notificaciones duplicadas - usar un hash del mensaje en lugar de chatId
+  const messageHash = `${senderName}_${message.substring(0, 20)}`;
+  if (recentNotifications && typeof recentNotifications.add === "function") {
+    if (!recentNotifications.add(messageHash, senderName, message)) {
+      console.log("Evitando notificación duplicada");
+      return;
+    }
   }
 
   // Mostrar notificación si está permitido

@@ -1,230 +1,483 @@
 <template>
-  <div class="chat-container">
-    <div class="chat-header">
-      <button class="back-button" @click="goBack">
-        <i class="fas fa-arrow-left"></i> Volver
-      </button>
-      <h2>{{ chatName }}</h2>
-    </div>
-
-    <div class="chat-messages" ref="messagesContainer">
-      <div v-if="loading" class="loading-container">
-        <p>Cargando mensajes...</p>
-      </div>
-
-      <div v-else-if="messages.length === 0" class="empty-chat-message">
-        <p>¡Bienvenido al chat!</p>
-        <p>Envía un mensaje para comenzar a conversar.</p>
-      </div>
-
-      <div
-        v-for="(message, index) in messages"
-        :key="index"
-        class="message"
-        :class="{
-          'own-message': message.userId.toString() === currentUserId.toString(),
-          'other-message':
-            message.userId.toString() !== currentUserId.toString(),
-          sending: message.sending,
-          failed: message.failed,
-          'deleted-message': message.deleted,
-        }"
+  <div
+    class="container mx-auto px-5 py-6 min-h-screen flex flex-col animate-fade-in"
+    style="max-width: 800px"
+  >
+    <!-- Chat header -->
+    <div
+      class="bg-slate-800/50 border-b border-slate-700/50 p-4 rounded-t-xl flex items-center justify-between"
+    >
+      <button
+        class="p-2 text-gray-400 hover:text-purple-400 flex items-center gap-2"
+        @click="goBack"
       >
-        <div class="message-header">
-          <span class="user-name">{{ message.userName }}</span>
-          <span class="timestamp">{{ formatDate(message.timestamp) }}</span>
-        </div>
-
-        <!-- Message content -->
-        <div
-          v-if="message.deleted"
-          class="message-deleted-content"
-          :title="getDeletedMessageTooltip(message)"
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-5 h-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
         >
-          <i>Missatge eliminat</i>
-        </div>
-        <div
-          v-else-if="message.hasLinks"
-          class="message-content"
-          v-html="formatMessageWithLinks(message)"
-        ></div>
-        <div v-else class="message-content">
-          {{ message.message }}
-        </div>
-
-        <!-- Link Previews -->
-        <div
-          v-if="
-            message.linkPreviews &&
-            message.linkPreviews.length > 0 &&
-            !message.deleted
-          "
-          class="link-previews"
-        >
-          <div
-            v-for="(preview, previewIndex) in message.linkPreviews"
-            :key="previewIndex"
-            class="link-preview"
-            @click="openLink(preview.url)"
-          >
-            <div class="preview-content">
-              <div v-if="preview.image" class="preview-image">
-                <img :src="preview.image" :alt="preview.title || preview.url" />
-              </div>
-              <div class="preview-text">
-                <div class="preview-title">
-                  {{ preview.title || "Sin título" }}
-                </div>
-                <div v-if="preview.description" class="preview-description">
-                  {{ truncateText(preview.description, 100) }}
-                </div>
-                <div class="preview-site">
-                  {{ preview.siteName || extractDomain(preview.url) }}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div v-if="message.sending" class="message-status sending">
-          Enviando...
-        </div>
-        <div
-          v-if="message.failed"
-          class="message-status failed"
-          @click="retryMessage(message, index)"
-        >
-          Error al enviar - Haz clic para reintentar
-        </div>
-
-        <!-- Delete button - Only show for teacher-to-teacher chats -->
-        <button
-          v-if="
-            message.userId.toString() === currentUserId.toString() &&
-            !message.sending &&
-            !message.failed &&
-            !message.deleted &&
-            message.id
-          "
-          class="delete-message-btn"
-          @click="deleteMessage(message)"
-          title="Eliminar mensaje"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
+          <path
             stroke-linecap="round"
             stroke-linejoin="round"
+            d="M10 19l-7-7m0 0l7-7m-7 7h18"
+          />
+        </svg>
+        <span>Volver</span>
+      </button>
+      <h2 class="text-white font-medium">{{ chatName }}</h2>
+      <div
+        v-if="isChatWithCanteen"
+        class="p-2 text-gray-400 hover:text-purple-400 cursor-pointer transition-all hover:scale-110"
+        @click="showCantinaInfo = true"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-5 h-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Modal de información sobre pedidos de cantina -->
+    <div
+      v-if="showCantinaInfo"
+      class="fixed inset-0 bg-black/50 flex justify-center items-center z-50 animate-fade-in"
+    >
+      <div
+        class="bg-slate-800 rounded-lg shadow-lg p-6 max-w-md w-full mx-4 border border-slate-700"
+      >
+        <h3
+          class="text-xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400"
+        >
+          Com funciona la cantina?
+        </h3>
+        <div class="space-y-3 text-gray-300">
+          <p class="font-medium text-white">
+            <strong>Per fer una comanda:</strong>
+          </p>
+          <ol class="list-decimal pl-5 space-y-2 text-gray-300">
+            <li>
+              Vés a la secció de <span class="text-blue-400">Cantina</span> del
+              menú principal
+            </li>
+            <li>Selecciona els productes que vulguis demanar</li>
+            <li>
+              Fes clic a "<span class="text-green-400">Demanar per xat</span>"
+              per enviar la comanda
+            </li>
+          </ol>
+          <div
+            class="p-3 bg-blue-900/30 border border-blue-700/50 rounded-lg mt-4 text-sm"
           >
-            <path d="M3 6h18"></path>
-            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-          </svg>
+            <p class="text-gray-300 mb-2">
+              Aquest xat només permet l'enviament de comandes des de la pàgina
+              de cantina.
+              <span class="text-blue-300"
+                >No es poden escriure missatges directament</span
+              >.
+            </p>
+            <p class="font-medium text-white">
+              <strong class="text-green-400">Nota:</strong> Pots veure aquí les
+              respostes de la cantina sobre l'estat de la teva comanda.
+            </p>
+          </div>
+        </div>
+        <button
+          @click="showCantinaInfo = false"
+          class="mt-5 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white py-2 px-4 rounded-lg transition-colors w-full transform hover:-translate-y-1 duration-200"
+        >
+          D'acord
         </button>
       </div>
     </div>
 
-    <div class="typing-indicator" v-if="someoneIsTyping">
-      <div class="typing-dots">
-        <span></span>
-        <span></span>
-        <span></span>
+    <div
+      class="chat-messages flex-1 overflow-y-auto p-4 space-y-4 bg-slate-800/30 border-x border-slate-700/30 scroll-smooth"
+      ref="messagesContainer"
+      style="
+        height: 60vh;
+        min-height: 300px;
+        max-height: 70vh;
+        overflow-y: auto;
+        scroll-behavior: smooth;
+      "
+    >
+      <div v-if="loading" class="flex justify-center items-center h-full">
+        <div class="flex flex-col items-center">
+          <div class="spinner h-10 w-10 mb-4"></div>
+          <p class="text-gray-400">Cargando mensajes...</p>
+        </div>
+      </div>
+
+      <div
+        v-else-if="messages.length === 0"
+        class="flex justify-center items-center h-full"
+      >
+        <div
+          class="text-center p-6 bg-slate-700/30 rounded-xl max-w-md mx-auto"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-12 h-12 text-gray-500 mx-auto mb-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+            />
+          </svg>
+          <p class="text-gray-400">¡Bienvenido al chat!</p>
+          <p class="text-gray-400 mt-1">
+            Envía un mensaje para comenzar a conversar.
+          </p>
+        </div>
+      </div>
+
+      <template v-else>
+        <div
+          v-for="(message, index) in messages"
+          :key="index"
+          class="max-w-[65%]"
+          :class="{
+            'ml-auto bg-blue-600/20 border border-blue-500/30 text-white':
+              message.userId.toString() === currentUserId.toString(),
+            'mr-auto bg-slate-700/50 text-white':
+              message.userId.toString() !== currentUserId.toString(),
+            'opacity-75': message.sending,
+            'border-red-500/50 bg-red-500/10': message.failed,
+            'opacity-70 bg-red-500/10 border border-red-500/30':
+              message.deleted,
+            'order-message': isOrderMessage(message.message),
+          }"
+        >
+          <div class="flex justify-between text-xs opacity-70 mb-1">
+            <span>{{ message.userName }}</span>
+            <span>{{ formatDate(message.timestamp) }}</span>
+          </div>
+
+          <!-- Message content -->
+          <div
+            v-if="message.deleted"
+            class="italic text-center p-2 text-gray-400"
+            :title="getDeletedMessageTooltip(message)"
+          >
+            <i>Missatge eliminat</i>
+          </div>
+          <div
+            v-else-if="message.hasLinks"
+            class="message-content break-words"
+            v-html="formatMessageWithLinks(message)"
+          ></div>
+          <div
+            v-else
+            class="break-words"
+            v-html="
+              isOrderMessage(message.message)
+                ? formatOrderMessage(message.message)
+                : message.message
+            "
+          ></div>
+
+          <!-- Link Previews -->
+          <div
+            v-if="
+              message.linkPreviews &&
+              message.linkPreviews.length > 0 &&
+              !message.deleted
+            "
+            class="mt-2 w-full"
+          >
+            <div
+              v-for="(preview, previewIndex) in message.linkPreviews"
+              :key="previewIndex"
+              class="bg-white/90 rounded-lg overflow-hidden border border-gray-200 transition-transform hover:-translate-y-1 hover:shadow-md cursor-pointer max-w-[300px]"
+              @click="openLink(preview.url)"
+            >
+              <div class="flex flex-col">
+                <div
+                  v-if="preview.image"
+                  class="w-full h-[150px] overflow-hidden"
+                >
+                  <img
+                    class="w-full h-full object-cover"
+                    :src="preview.image"
+                    :alt="preview.title || preview.url"
+                  />
+                </div>
+                <div class="p-3">
+                  <div class="font-bold text-sm text-gray-800 mb-1">
+                    {{ preview.title || "Sin título" }}
+                  </div>
+                  <div
+                    v-if="preview.description"
+                    class="text-xs text-gray-600 mb-1 line-clamp-2"
+                  >
+                    {{ truncateText(preview.description, 100) }}
+                  </div>
+                  <div class="text-xs text-gray-400">
+                    {{ preview.siteName || extractDomain(preview.url) }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            v-if="message.sending"
+            class="text-xs text-gray-400 mt-1 text-right"
+          >
+            Enviando...
+          </div>
+          <div
+            v-if="message.failed"
+            class="text-xs text-red-500 mt-1 text-right cursor-pointer"
+            @click="retryMessage(message, index)"
+          >
+            Error al enviar - Haz clic para reintentar
+          </div>
+
+          <!-- Delete button - Only show for teacher-to-teacher chats -->
+          <button
+            v-if="
+              message.userId.toString() === currentUserId.toString() &&
+              !message.sending &&
+              !message.failed &&
+              !message.deleted &&
+              message.id
+            "
+            class="absolute top-2 right-2 p-1.5 bg-white/20 hover:bg-red-500/20 text-white/70 hover:text-red-500 rounded opacity-0 group-hover:opacity-100 transition-opacity"
+            @click="deleteMessage(message)"
+            title="Eliminar mensaje"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-3.5 h-3.5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M3 6h18"></path>
+              <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+              <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+            </svg>
+          </button>
+        </div>
+        <!-- Elemento invisible para hacer scroll automático -->
+        <div ref="endOfMessages" class="h-1 w-full" id="end-of-messages"></div>
+      </template>
+    </div>
+
+    <div
+      class="typing-indicator flex justify-start px-4 py-2"
+      v-if="someoneIsTyping"
+    >
+      <div class="inline-flex items-center h-5 px-1.5">
+        <span
+          class="w-1.5 h-1.5 bg-gray-400 rounded-full mr-1 animate-bounce"
+        ></span>
+        <span
+          class="w-1.5 h-1.5 bg-gray-400 rounded-full mr-1 animate-bounce"
+          style="animation-delay: 0.2s"
+        ></span>
+        <span
+          class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"
+          style="animation-delay: 0.4s"
+        ></span>
       </div>
     </div>
 
-    <div class="chat-input">
+    <div
+      class="chat-input p-4 bg-slate-800/50 border-t border-slate-700/50 rounded-b-xl"
+    >
       <!-- Área para mostrar los productos de cantina - only shown when chatting with canteen -->
-      <div v-if="hasCantinaItems" class="cantina-order-container">
-        <div class="cantina-order-header">
-          <h4>🛒 Pedido de Cantina</h4>
+      <div
+        v-if="hasCantinaItems"
+        class="w-full bg-slate-700/20 rounded-lg p-4 mb-4 border border-slate-600/30"
+      >
+        <div class="flex justify-between items-center mb-2">
+          <h4 class="text-green-500 font-medium">🛒 Comanda de Cantina</h4>
           <button
-            class="remove-order-btn"
+            class="p-1.5 hover:bg-gray-200 text-gray-500 hover:text-red-500 rounded-full transition-colors flex items-center justify-center"
             @click="clearCantinaOrder"
             title="Eliminar pedido"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
+              class="w-3.5 h-3.5"
               fill="none"
+              viewBox="0 0 24 24"
               stroke="currentColor"
               stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
             >
               <line x1="18" y1="6" x2="6" y2="18"></line>
               <line x1="6" y1="6" x2="18" y2="18"></line>
             </svg>
           </button>
         </div>
-        <div class="cantina-order-items">
+        <div class="max-h-[150px] overflow-y-auto mb-2">
           <div
             v-for="(item, index) in appStore.cartCantinaItems"
             :key="index"
-            class="cantina-order-item"
+            class="flex items-center py-1.5 border-b border-gray-200/20 last:border-b-0"
           >
-            <span class="item-quantity">{{ item.quantity }}x</span>
-            <span class="item-name">{{ item.product_name }}</span>
-            <span class="item-price"
+            <span class="font-bold mr-2 text-gray-700"
+              >{{ item.quantity }}x</span
+            >
+            <span class="flex-1 text-white">{{ item.product_name }}</span>
+            <span class="font-bold text-green-500"
               >{{ formatPrice(item.product_price * item.quantity) }} €</span
             >
           </div>
         </div>
-        <div class="cantina-order-total">
+        <div
+          class="text-right font-bold text-green-500 pt-1.5 border-t border-gray-200/20"
+        >
           Total: {{ calculateCantinaTotal() }} €
+        </div>
+
+        <!-- Respuestas rápidas para la cantina -->
+        <div class="mt-3 pt-3 border-t border-gray-200/20">
+          <p class="text-sm text-gray-400 mb-2">Preferències per la teva:</p>
+          <div class="flex flex-wrap gap-2">
+            <div
+              v-for="(option, index) in quickOrderOptions"
+              :key="index"
+              @click="toggleOrderOption(option)"
+              class="px-2.5 py-1.5 bg-slate-600/30 rounded-md text-xs transition-all cursor-pointer border"
+              :class="
+                selectedOrderOptions.includes(option)
+                  ? 'border-green-500 bg-green-900/20 text-green-400'
+                  : 'border-slate-500/30 text-gray-300 hover:bg-slate-600/50'
+              "
+            >
+              {{ option }}
+            </div>
+          </div>
+          <div
+            v-if="selectedOrderOptions.length > 0"
+            class="mt-2 text-xs text-blue-400"
+          >
+            {{ selectedOrderOptions.length }} preferencia(s) seleccionada(s)
+          </div>
         </div>
       </div>
 
       <!-- Popup para insertar enlaces -->
-      <div v-if="showLinkPopup" class="link-popup">
-        <div class="link-popup-content">
-          <h4>Insertar enlace</h4>
-          <div class="link-input-group">
-            <label for="linkUrl">URL del enlace:</label>
+      <div
+        v-if="showLinkPopup"
+        class="fixed inset-0 z-50 flex items-center justify-center"
+      >
+        <div
+          class="absolute inset-0 bg-black/50"
+          @click="showLinkPopup = false"
+        ></div>
+        <div
+          class="relative bg-slate-800 rounded-lg shadow-lg p-5 border border-slate-700 w-full max-w-md mx-4 animate-fade-in"
+        >
+          <h4
+            class="text-lg font-medium mb-3 pb-2 border-b border-slate-700 text-white bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400"
+          >
+            Insertar enllaç
+          </h4>
+          <div class="mb-3">
+            <label
+              for="linkUrl"
+              class="block text-sm font-medium text-gray-300 mb-1"
+              >URL del enllaç:</label
+            >
             <input
               id="linkUrl"
               v-model="linkUrl"
-              placeholder="https://ejemplo.com"
+              placeholder="https://example.com"
               type="url"
+              class="w-full p-2 border border-slate-600 bg-slate-700/50 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white placeholder-gray-400"
             />
           </div>
-          <div class="link-popup-buttons">
-            <button @click="insertLink" class="insert-link-btn">
-              Insertar
-            </button>
-            <button @click="showLinkPopup = false" class="cancel-link-btn">
+          <div class="flex justify-end gap-2 mt-4">
+            <button
+              @click="showLinkPopup = false"
+              class="bg-gray-600 hover:bg-gray-700 text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
+            >
               Cancelar
+            </button>
+            <button
+              @click="insertLink"
+              class="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
+            >
+              Insertar
             </button>
           </div>
         </div>
       </div>
 
       <!-- Popup para insertar emojis -->
-      <div v-if="showEmojiPicker" class="emoji-popup">
-        <div class="emoji-popup-content">
-          <div class="emoji-categories">
+      <div
+        v-if="showEmojiPicker"
+        class="fixed inset-0 z-50 flex items-center justify-center"
+      >
+        <div
+          class="absolute inset-0 bg-black/30"
+          @click="showEmojiPicker = false"
+        ></div>
+        <div
+          class="relative bg-slate-800 rounded-lg shadow-lg border border-slate-700 p-3 w-[320px] animate-fade-in"
+        >
+          <div
+            class="flex justify-between items-center mb-2 pb-2 border-b border-slate-700"
+          >
+            <h4 class="text-sm font-medium text-white">Seleccionar emoji</h4>
+            <button
+              @click="showEmojiPicker = false"
+              class="p-1 text-gray-400 hover:text-red-400 transition-colors"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-4 h-4"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </button>
+          </div>
+          <div class="flex overflow-x-auto pb-2 mb-2 border-b border-slate-700">
             <button
               v-for="(category, index) in emojiCategories"
               :key="index"
               @click="selectEmojiCategory(category)"
-              :class="{ active: currentEmojiCategory === category }"
-              class="emoji-category-btn"
+              :class="{ 'bg-blue-500/30': currentEmojiCategory === category }"
+              class="p-1.5 rounded-md hover:bg-blue-500/20 transition-colors mr-1 text-lg"
             >
               {{ categoryEmojis[index] }}
             </button>
           </div>
-          <div class="emoji-grid">
+          <div class="grid grid-cols-8 gap-1 max-h-[200px] overflow-y-auto">
             <button
               v-for="(emoji, index) in currentCategoryEmojis"
               :key="index"
               @click="addEmoji(emoji)"
-              class="emoji-btn"
+              class="p-1.5 hover:bg-slate-700 rounded-md transition-transform hover:scale-110 text-xl"
             >
               {{ emoji }}
             </button>
@@ -233,31 +486,33 @@
       </div>
 
       <!-- Área para mostrar el enlace activo -->
-      <div v-if="activeLink" class="active-link-container">
-        <div class="active-link">
-          <span class="link-prefix">@</span>
+      <div
+        v-if="activeLink"
+        class="w-full p-2 bg-slate-700/50 rounded-t-lg mb-2 border-b border-slate-600/50"
+      >
+        <div
+          class="flex items-center bg-blue-500/20 border border-blue-500/30 rounded px-2.5 py-1.5 overflow-hidden"
+        >
+          <span class="text-blue-400 font-bold mr-1">@</span>
           <a
             :href="activeLink"
             target="_blank"
             rel="noopener noreferrer"
-            class="link-text"
+            class="text-blue-400 whitespace-nowrap overflow-hidden text-ellipsis flex-1"
             >{{ activeLink }}</a
           >
           <button
-            class="remove-link-btn"
+            class="p-1 hover:bg-red-500/20 text-gray-400 hover:text-red-400 rounded-full ml-2 flex-shrink-0 transition-colors"
             @click="removeActiveLink"
             title="Eliminar enlace"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
+              class="w-3.5 h-3.5"
               fill="none"
+              viewBox="0 0 24 24"
               stroke="currentColor"
               stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
             >
               <line x1="18" y1="6" x2="6" y2="18"></line>
               <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -266,9 +521,11 @@
         </div>
       </div>
 
-      <div class="input-row">
-        <div class="input-container">
-          <div class="message-input-wrapper" ref="messageInputWrapper">
+      <div class="flex items-end gap-2">
+        <div
+          class="flex-1 flex items-center bg-slate-700/20 border border-slate-600/30 rounded-lg overflow-hidden"
+        >
+          <div class="flex-1 relative" ref="messageInputWrapper">
             <textarea
               ref="messageInput"
               v-model="newMessage"
@@ -277,24 +534,32 @@
               placeholder="Escriu un missatge..."
               @input="handleTyping"
               rows="1"
-              class="message-textarea"
+              class="w-full bg-transparent p-3 text-white resize-none focus:outline-none min-h-[40px] max-h-[120px] placeholder-gray-400"
+              :disabled="isChatWithCanteen"
             ></textarea>
+            <div
+              v-if="isChatWithCanteen"
+              class="text-sm text-red-400 bg-red-500/10 p-2 rounded text-center mt-1"
+            >
+              <strong
+                >Només es poden fer comandes des de la pàgina de cantina. No es
+                permet escriure.</strong
+              >
+            </div>
           </div>
           <button
-            class="link-button"
+            class="p-3 text-gray-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors"
             @click="openLinkPopup"
             title="Insertar enlace personalizado"
+            :disabled="isChatWithCanteen"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
+              class="w-5 h-5"
               fill="none"
+              viewBox="0 0 24 24"
               stroke="currentColor"
               stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
             >
               <path
                 d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"
@@ -305,20 +570,18 @@
             </svg>
           </button>
           <button
-            class="emoji-button"
+            class="p-3 text-gray-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors"
             @click="toggleEmojiPicker"
             title="Insertar emoji"
+            :disabled="isChatWithCanteen"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
+              class="w-5 h-5"
               fill="none"
+              viewBox="0 0 24 24"
               stroke="currentColor"
               stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
             >
               <circle cx="12" cy="12" r="10"></circle>
               <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
@@ -327,7 +590,13 @@
             </svg>
           </button>
         </div>
-        <button @click="sendMessage">Enviar</button>
+        <button
+          @click="sendMessage"
+          :disabled="isChatWithCanteen && !hasCantinaItems"
+          class="bg-gradient-to-r from-blue-400 to-purple-400 text-white px-4 py-3 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Enviar
+        </button>
       </div>
     </div>
   </div>
@@ -371,6 +640,7 @@ const typingUserName = ref("");
 const chatId = computed(() => route.params.chatId);
 // Caché para evitar mensajes duplicados
 const processedMessages = ref(new Set());
+const endOfMessages = ref(null); // Referencia al final de los mensajes para scroll
 
 // Variables para el popup de inserción de enlace
 const showLinkPopup = ref(false);
@@ -700,6 +970,9 @@ const clearCantinaOrder = () => {
   while (appStore.cartCantinaItems.length > 0) {
     appStore.removeFromCartCantina(appStore.cartCantinaItems[0]);
   }
+
+  // Limpiar preferencias seleccionadas
+  selectedOrderOptions.value = [];
 };
 
 // Generar mensaje con los productos del carrito
@@ -708,15 +981,36 @@ const generateCantinaOrderMessage = () => {
     return null;
   }
 
-  let message = "🛒 *Nuevo Pedido*\n\n";
+  let message = "🛒 *COMANDA NOVA*\n\n";
 
+  // Agregar encabezado con línea de separación
+  message += "┌─────────────────────────────┐\n";
+
+  // Agregar productos
   appStore.cartCantinaItems.forEach((item) => {
-    message += `• ${item.quantity}x ${item.product_name} - ${formatPrice(
+    message += `│ ${item.quantity}x ${item.product_name}\n`;
+    message += `│ ${" ".repeat(4)}${formatPrice(
       item.product_price * item.quantity
     )} €\n`;
+    message += "│\n"; // Línea vacía para separar productos
   });
 
-  message += `\n*Total: ${calculateCantinaTotal()} €*`;
+  // Agregar línea de separación antes del total
+  message += "├─────────────────────────────┤\n";
+
+  // Agregar total con formato destacado
+  message += `│ 💰 *TOTAL: ${calculateCantinaTotal()} €*\n`;
+
+  // Cerrar el cuadro
+  message += "└─────────────────────────────┘";
+
+  // Añadir preferencias seleccionadas si existen
+  if (selectedOrderOptions.value.length > 0) {
+    message += "\n\n🔖 *Preferencies:*\n";
+    selectedOrderOptions.value.forEach((option) => {
+      message += `   ✓ ${option}\n`;
+    });
+  }
 
   return message;
 };
@@ -757,6 +1051,11 @@ onMounted(async () => {
   nextTick(() => {
     adjustTextareaHeight();
   });
+
+  // Hacer scroll al último mensaje después de un breve retraso
+  setTimeout(() => {
+    scrollToBottom();
+  }, 300);
 });
 
 // Observar cambios en el ID del chat
@@ -962,8 +1261,12 @@ const loadChatData = async () => {
     loading.value = false;
 
     // Hacer scroll al final de los mensajes
-    await nextTick();
     scrollToBottom();
+
+    // Segundo scroll después de un breve retraso para asegurar que todos los elementos estén cargados
+    setTimeout(() => {
+      scrollToBottom();
+    }, 200);
   } catch (error) {
     console.error("Error al cargar datos del chat:", error);
     loading.value = false;
@@ -1426,11 +1729,16 @@ const disconnectSocket = () => {
 // Función para formatear un mensaje con enlaces clickables
 const formatMessageWithLinks = (message) => {
   if (!message.links || message.links.length === 0) {
+    // Si es un mensaje de pedido, darle formato especial
+    if (isOrderMessage(message.message)) {
+      return formatOrderMessage(message.message);
+    }
     return message.message;
   }
 
   let formattedMessage = message.message;
 
+  // El resto del código de formatMessageWithLinks sigue igual
   // Manejar el caso especial cuando hay un enlace con @ y texto adicional separado por salto de línea
   if (formattedMessage.includes("@http") && formattedMessage.includes("\n")) {
     // Dividir el mensaje en líneas
@@ -1505,6 +1813,80 @@ const formatMessageWithLinks = (message) => {
     });
     return formattedMessage;
   }
+
+  return formattedMessage;
+};
+
+// Función para formatear mensajes de pedido
+const formatOrderMessage = (message) => {
+  if (!message) return "";
+
+  // Reemplazar saltos de línea con <br>
+  let formattedMessage = message.replace(/\n/g, "<br>");
+
+  // Resaltar bordes del cuadro con colores
+  formattedMessage = formattedMessage.replace(
+    /┌─+┐/g,
+    '<span class="text-green-400">┌─────────────────────────────┐</span>'
+  );
+  formattedMessage = formattedMessage.replace(
+    /├─+┤/g,
+    '<span class="text-green-400">├─────────────────────────────┤</span>'
+  );
+  formattedMessage = formattedMessage.replace(
+    /└─+┘/g,
+    '<span class="text-green-400">└─────────────────────────────┘</span>'
+  );
+
+  // Resaltar líneas verticales
+  formattedMessage = formattedMessage.replace(
+    /\│/g,
+    '<span class="text-green-400">│</span>'
+  );
+
+  // Resaltar título principal
+  formattedMessage = formattedMessage.replace(
+    /\*COMANDA NOVA\*/g,
+    '<span class="font-bold text-green-400">COMANDA NOVA</span>'
+  );
+
+  // Resaltar total
+  formattedMessage = formattedMessage.replace(
+    /\*TOTAL: ([\d.]+) €\*/g,
+    '<span class="font-bold text-yellow-400">TOTAL: $1 €</span>'
+  );
+
+  // Resaltar sección de preferencias
+  formattedMessage = formattedMessage.replace(
+    /\*Preferencies:\*/g,
+    '<span class="font-bold text-blue-400">Preferencies:</span>'
+  );
+
+  // Resaltar marcas de verificación
+  formattedMessage = formattedMessage.replace(
+    /✓/g,
+    '<span class="text-green-400">✓</span>'
+  );
+
+  // Resaltar precios
+  formattedMessage = formattedMessage.replace(
+    /(\d+\.\d+) €/g,
+    '<span class="text-yellow-400">$1 €</span>'
+  );
+
+  // Resaltar emojis
+  formattedMessage = formattedMessage.replace(
+    /🛒/g,
+    '<span class="text-xl">🛒</span>'
+  );
+  formattedMessage = formattedMessage.replace(
+    /💰/g,
+    '<span class="text-xl">💰</span>'
+  );
+  formattedMessage = formattedMessage.replace(
+    /🔖/g,
+    '<span class="text-xl">🔖</span>'
+  );
 
   return formattedMessage;
 };
@@ -1722,6 +2104,9 @@ const sendMessage = async () => {
 
       // Limpiar el carrito después de enviar
       clearCantinaOrder();
+
+      // Limpiar preferencias seleccionadas
+      selectedOrderOptions.value = [];
     } catch (error) {
       console.error("Error al enviar pedido de cantina:", error);
       // Mostrar error al usuario
@@ -1831,12 +2216,18 @@ const formatDate = (date) => {
   return new Date(date).toLocaleTimeString();
 };
 
-// Hacer scroll hasta el último mensaje
-const scrollToBottom = async () => {
-  await nextTick();
-  if (messagesContainer.value) {
-    messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
-  }
+// Scroll al final de los mensajes
+const scrollToBottom = () => {
+  nextTick(() => {
+    // Utilizar el elemento de referencia al final de los mensajes para hacer scroll
+    if (endOfMessages.value) {
+      endOfMessages.value.scrollIntoView({ behavior: "smooth" });
+    }
+    // Método alternativo utilizando el contenedor de mensajes
+    else if (messagesContainer.value) {
+      messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
+    }
+  });
 };
 
 // Reintentar enviar un mensaje fallido
@@ -2148,525 +2539,116 @@ const getDeletedMessageTooltip = (message) => {
 
   return tooltip;
 };
+
+// Función para verificar si un mensaje es un pedido de cantina
+const isOrderMessage = (message) => {
+  return (
+    message &&
+    (message.includes("*Nuevo Pedido*") ||
+      message.includes("*Nou Pedido*") ||
+      message.includes("🛒") ||
+      (message.includes("Total:") && message.includes("€")))
+  );
+};
+
+const showCantinaInfo = ref(false);
+
+// Opciones rápidas para pedidos de cantina
+const quickOrderOptions = ref([
+  "Sense tomaquet",
+  "Amb tomaquet",
+  "Fred",
+  "Calent",
+]);
+const selectedOrderOptions = ref([]);
+
+// Función para alternar opciones de pedido
+const toggleOrderOption = (option) => {
+  const index = selectedOrderOptions.value.indexOf(option);
+  if (index === -1) {
+    // Si no está seleccionada, añadirla
+    selectedOrderOptions.value.push(option);
+  } else {
+    // Si ya está seleccionada, quitarla
+    selectedOrderOptions.value.splice(index, 1);
+  }
+};
+
+// Observar cambios en los mensajes para hacer scroll
+watch(messages, () => {
+  if (messages.value.length > 0) {
+    scrollToBottom();
+  }
+});
 </script>
 
 <style scoped>
-.chat-container {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-  color: #333; /* Color base para el texto */
-}
-
-.chat-header {
-  padding: 10px;
-  background-color: #f5f5f5;
-  border-radius: 8px 8px 0 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: #333; /* Color para el texto del encabezado */
-}
-
-.back-button {
-  background: none;
-  border: none;
-  color: #007bff;
-  font-size: 14px;
-  cursor: pointer;
-  padding: 5px 10px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.back-button:hover {
-  text-decoration: underline;
-}
-
-.loading-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  color: #6c757d;
-}
-
-.chat-messages {
-  flex: 1;
-  overflow-y: auto;
-  padding: 20px;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  display: flex;
-  flex-direction: column;
-}
-
-.empty-chat-message {
-  text-align: center;
-  margin: auto;
-  padding: 20px;
-  color: #6c757d;
-  background-color: #f8f9fa;
-  border-radius: 8px;
-  width: 80%;
-  max-width: 400px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.empty-chat-message p {
-  margin: 5px 0;
-}
-
-.typing-indicator {
-  padding: 5px 10px;
-  margin-bottom: 10px;
-  align-self: flex-start;
-  background-color: #f0f0f0;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  max-width: 50px;
-}
-
-.typing-dots {
-  display: inline-flex;
-  align-items: center;
-  height: 20px;
-  padding: 0 5px;
-}
-
-.typing-dots span {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  margin: 0 2px;
-  background-color: #6c757d;
-  border-radius: 50%;
-  opacity: 0.8;
-  animation: typingAnimation 1.4s infinite ease-in-out;
-}
-
-.typing-dots span:nth-child(1) {
-  animation-delay: 0s;
-}
-
-.typing-dots span:nth-child(2) {
-  animation-delay: 0.2s;
-}
-
-.typing-dots span:nth-child(3) {
-  animation-delay: 0.4s;
-}
-
-@keyframes typingAnimation {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-4px);
-  }
-}
-
-.message {
-  position: relative;
-  margin-bottom: 15px;
-  padding: 10px;
-  border-radius: 8px;
-  background-color: #f0f0f0;
-  max-width: 70%;
-  color: #333;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  transition: opacity 0.3s ease;
-  margin-right: auto; /* Por defecto, mensajes alineados a la izquierda */
-}
-
-.message.sending {
-  opacity: 0.8;
-}
-
-.message.failed {
-  border: 1px solid #dc3545;
-}
-
-.own-message {
-  margin-left: auto;
-  margin-right: 0; /* Anular el valor por defecto para mensajes propios */
-  background-color: #007bff;
-  color: white;
-  font-weight: 500;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-}
-
-.other-message {
-  margin-right: auto;
-  margin-left: 0;
-  background-color: #f0f0f0;
-  color: #333;
-}
-
-.message-header {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 5px;
-  font-size: 0.8em;
-  opacity: 0.8;
-}
-
-.own-message .message-header {
-  color: rgba(255, 255, 255, 0.9);
-}
-
-.other-message .message-header {
-  color: rgba(51, 51, 51, 0.9);
-}
-
-.message-content {
-  word-wrap: break-word;
-  font-size: 1.05em;
-  color: inherit;
-}
-
-/* Styles for clickable links */
+/* Mantener estilos de enlaces de mensaje existentes */
 :deep(.message-link) {
-  color: #0078d7;
-  text-decoration: underline;
-  cursor: pointer;
-  word-break: break-all;
-  transition: color 0.2s ease;
+  @apply text-blue-400 underline cursor-pointer break-all transition-colors duration-200;
 }
 
 :deep(.message-link:hover) {
-  color: #005a9e;
+  @apply text-blue-300;
 }
 
-/* Estilo especial para enlaces con @ */
 :deep(.message-link[href^="http"]:not(.no-style)) {
-  background-color: rgba(0, 120, 215, 0.1);
-  border: 1px solid rgba(0, 120, 215, 0.2);
-  border-radius: 4px;
-  padding: 2px 6px;
-  margin: 0 2px;
-  text-decoration: none;
-  display: inline-block;
-  transition: all 0.2s ease;
+  @apply bg-blue-500/10 border border-blue-500/20 rounded px-1.5 py-0.5 mx-0.5 no-underline inline-block transition-all duration-200;
 }
 
 :deep(.message-link[href^="http"]:hover:not(.no-style)) {
-  background-color: rgba(0, 120, 215, 0.2);
-  border-color: rgba(0, 120, 215, 0.3);
+  @apply bg-blue-500/20 border-blue-500/30;
 }
 
-/* Estilo para enlaces en mensajes propios */
-.own-message :deep(.message-link) {
-  color: #ffffff;
-  text-decoration: underline;
-  font-weight: 500;
+/* Message link styling for own messages */
+.ml-auto :deep(.message-link) {
+  @apply text-white underline font-medium;
 }
 
-/* Estilo especial para enlaces con @ en mensajes propios */
-.own-message :deep(.message-link[href^="http"]:not(.no-style)) {
-  background-color: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  text-decoration: none;
+.ml-auto :deep(.message-link[href^="http"]:not(.no-style)) {
+  @apply bg-white/20 border border-white/30 no-underline;
 }
 
-.own-message :deep(.message-link[href^="http"]:hover:not(.no-style)) {
-  background-color: rgba(255, 255, 255, 0.3);
-  border-color: rgba(255, 255, 255, 0.4);
+.ml-auto :deep(.message-link[href^="http"]:hover:not(.no-style)) {
+  @apply bg-white/30 border-white/40;
 }
 
-.own-message :deep(.message-link:hover) {
-  color: #e6e6e6;
+.ml-auto :deep(.message-link:hover) {
+  @apply text-gray-100;
 }
 
-/* Estilo para el input con enlaces */
-.input-container input.has-links {
-  background-color: #f0f8ff;
-}
-
-/* Estilos para el contenedor del input */
-.message-input-wrapper {
-  flex: 1;
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-/* Estilo base para el input */
-.input-container input {
-  flex: 1;
-  padding: 10px;
-  border: none;
-  color: #000;
-  outline: none;
-  width: 100%;
-  transition: all 0.2s ease;
-}
-
-/* Estilo específico para enlaces en el input */
-.input-container input.has-links {
-  background-color: #f0f8ff;
-  border-left: 3px solid rgba(0, 120, 215, 0.3);
-}
-
-.input-container input.has-links::placeholder {
-  color: rgba(0, 120, 215, 0.6);
-}
-
-.message-status {
-  position: absolute;
-  bottom: -18px;
-  right: 0;
-  font-size: 0.7em;
-  padding: 2px 6px;
-  border-radius: 10px;
-  background-color: #f8f9fa;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  color: #333;
-}
-
-.message-status.sending {
-  color: #6c757d;
-}
-
-.message-status.failed {
-  color: #dc3545;
-  cursor: pointer;
-}
-
-.chat-input {
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  background-color: #f5f5f5;
-  border-radius: 0 0 8px 8px;
-}
-
-.input-row {
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-  width: 100%;
-}
-
-.input-container {
-  flex: 1;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  overflow: hidden;
-  background-color: white;
-}
-
-.message-input-wrapper {
-  flex: 1;
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.link-button {
-  position: relative;
-  background: none;
-  border: none;
-  color: #6c757d;
-  font-size: 14px;
-  cursor: pointer;
-  padding: 0 12px;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  transition: all 0.2s ease;
-}
-
-.link-button:hover {
-  color: #007bff;
-  background-color: rgba(0, 123, 255, 0.1);
-}
-
-.emoji-button {
-  position: relative;
-  background: none;
-  border: none;
-  color: #6c757d;
-  font-size: 14px;
-  cursor: pointer;
-  padding: 0 12px;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  transition: all 0.2s ease;
-}
-
-.emoji-button:hover {
-  color: #007bff;
-  background-color: rgba(0, 123, 255, 0.1);
-}
-
-button {
-  padding: 12px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  font-weight: 500;
-}
-
-button:hover:not(:disabled) {
-  background-color: #0056b3;
-}
-
-button:disabled {
-  background-color: #6c757d;
-  cursor: not-allowed;
-}
-
-/* Estilo para el botón de eliminar mensaje */
-.delete-message-btn {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  background-color: rgba(255, 255, 255, 0.2);
-  border: none;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 12px;
-  padding: 4px;
-  border-radius: 4px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: opacity 0.2s, background-color 0.2s;
-}
-
-.other-message .delete-message-btn {
-  color: rgba(0, 0, 0, 0.5);
-  background-color: rgba(0, 0, 0, 0.1);
-}
-
-.message:hover .delete-message-btn {
-  opacity: 1;
-}
-
-.delete-message-btn:hover {
-  color: #dc3545;
-  background-color: rgba(220, 53, 69, 0.1);
-}
-
-/* Link Preview Styles */
-.link-previews {
-  margin-top: 10px;
-  width: 100%;
-}
-
-.link-preview {
-  background-color: rgba(255, 255, 255, 0.9);
-  border-radius: 8px;
-  overflow: hidden;
-  margin-bottom: 5px;
-  cursor: pointer;
-  border: 1px solid #e0e0e0;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  max-width: 300px;
-}
-
-.link-preview:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.own-message .link-preview {
-  background-color: rgba(255, 255, 255, 0.9);
-  color: #333;
-}
-
-.preview-content {
-  display: flex;
-  flex-direction: column;
-}
-
-.preview-image {
-  width: 100%;
-  height: 150px;
-  overflow: hidden;
-  position: relative;
-}
-
-.preview-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.preview-text {
-  padding: 10px;
-}
-
-.preview-title {
-  font-weight: bold;
-  font-size: 14px;
-  margin-bottom: 5px;
-  color: #333;
-}
-
-.preview-description {
-  font-size: 12px;
-  color: #666;
-  margin-bottom: 5px;
-  line-height: 1.4;
-}
-
-.preview-site {
-  font-size: 11px;
-  color: #999;
-  display: flex;
-  align-items: center;
-}
-
-/* Responsive adjustments for mobile */
-@media (max-width: 576px) {
-  .link-preview {
-    max-width: 250px;
-  }
-
-  .preview-image {
-    height: 120px;
+/* Estilos para animaciones de loading */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }
 
-/* Link Popup Styles */
-.link-popup {
-  position: absolute;
-  bottom: 70px;
-  left: 10px;
-  right: 10px;
-  max-width: 500px;
-  margin: 0 auto;
-  z-index: 1000;
-  animation: fadeIn 0.2s ease;
+.spinner {
+  border: 4px solid rgba(124, 58, 237, 0.1);
+  border-left-color: rgba(124, 58, 237, 0.8);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
 }
 
-.link-popup-content {
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  border: 1px solid #ddd;
-  max-width: 450px;
-  width: 100%;
-  margin: 0 auto;
+/* Animaciones personalizadas */
+@keyframes pulse {
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+  }
 }
 
-@keyframes fadeIn {
+.animate-pulse {
+  animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes fade-in {
   from {
     opacity: 0;
     transform: translateY(10px);
@@ -2677,337 +2659,83 @@ button:disabled {
   }
 }
 
-.link-popup-content h4 {
-  margin-top: 0;
-  margin-bottom: 15px;
-  color: #333;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 10px;
+.animate-fade-in {
+  animation: fade-in 0.8s ease-out forwards;
 }
 
-.link-input-group {
-  margin-bottom: 15px;
-}
-
-.link-input-group label {
-  display: block;
-  margin-bottom: 5px;
-  font-size: 14px;
-  color: #555;
-  font-weight: 500;
-}
-
-.link-input-group input {
-  width: 100%;
-  padding: 8px 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.link-popup-buttons {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.insert-link-btn {
-  padding: 8px 15px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.cancel-link-btn {
-  padding: 8px 15px;
-  background-color: #6c757d;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.insert-link-btn:hover {
-  background-color: #0056b3;
-}
-
-.cancel-link-btn:hover {
-  background-color: #5a6268;
-}
-
-/* Responsive adjustments */
-@media (max-width: 576px) {
-  .link-popup {
-    bottom: 70px;
-    left: 10px;
-    right: 10px;
-  }
-
-  .chat-input {
-    padding: 15px 10px;
-  }
-
-  button {
-    padding: 10px 15px;
-  }
-}
-
-.helper-text {
-  display: block;
-  font-size: 12px;
-  color: #6c757d;
-  margin-top: 5px;
-  font-style: italic;
-}
-
-/* Estilo para el textarea de mensaje */
-.message-textarea {
-  flex: 1;
-  padding: 10px;
-  border: none;
-  color: #000;
-  outline: none;
-  width: 100%;
-  resize: none;
-  overflow-y: hidden;
-  line-height: 1.5;
-  font-family: inherit;
-  font-size: inherit;
-  min-height: 40px;
-  max-height: 120px;
-}
-
-/* Estilos para el área de enlace activo */
-.active-link-container {
-  width: 100%;
-  padding: 8px 10px;
-  background-color: #f5f5f5;
-  border-radius: 8px 8px 0 0;
-  margin-bottom: 10px;
-  border-bottom: 1px solid #ddd;
-}
-
-.active-link {
-  display: flex;
-  align-items: center;
-  background-color: rgba(0, 120, 215, 0.1);
-  border: 1px solid rgba(0, 120, 215, 0.2);
-  border-radius: 4px;
-  padding: 6px 10px;
-  position: relative;
-  max-width: 100%;
-  overflow: hidden;
-}
-
-.link-prefix {
-  color: #007bff;
-  font-weight: bold;
-  margin-right: 4px;
-}
-
-.link-text {
-  color: #0078d7;
-  text-decoration: none;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  flex: 1;
-}
-
-.remove-link-btn {
-  background: none;
-  border: none;
-  color: #6c757d;
-  cursor: pointer;
-  padding: 4px 8px;
-  font-size: 12px;
-  margin-left: 8px;
-  transition: color 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.remove-link-btn:hover {
-  color: #dc3545;
-}
-
-.emoji-popup {
-  position: absolute;
-  bottom: 70px;
-  right: 70px;
-  z-index: 1000;
-  animation: fadeIn 0.2s ease;
-}
-
-.emoji-popup-content {
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  border: 1px solid #ddd;
-  padding: 10px;
-  width: 300px;
-}
-
-.emoji-categories {
-  display: flex;
-  overflow-x: auto;
-  padding-bottom: 8px;
-  margin-bottom: 8px;
-  border-bottom: 1px solid #eee;
-}
-
-.emoji-category-btn {
-  background: none;
-  border: none;
-  font-size: 18px;
-  padding: 5px;
-  cursor: pointer;
-  margin-right: 5px;
-  border-radius: 4px;
+/* Estilos para los mensajes */
+.chat-messages > div,
+div[class*="max-w-"] {
+  padding: 1rem;
+  border-radius: 0.75rem;
+  word-break: break-word;
   transition: all 0.2s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.emoji-category-btn.active {
-  background-color: #f0f0f0;
+/* Scrollbar personalizado */
+.chat-messages {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(124, 58, 237, 0.5) rgba(30, 41, 59, 0.5);
 }
 
-.emoji-grid {
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  gap: 5px;
-  max-height: 200px;
-  overflow-y: auto;
+.chat-messages::-webkit-scrollbar {
+  width: 6px;
 }
 
-.emoji-btn {
-  background: none;
-  border: none;
-  font-size: 20px;
-  padding: 5px;
-  cursor: pointer;
-  border-radius: 4px;
-  transition: transform 0.1s ease;
+.chat-messages::-webkit-scrollbar-track {
+  background: rgba(30, 41, 59, 0.5);
+  border-radius: 10px;
 }
 
-.emoji-btn:hover {
-  background-color: #f0f0f0;
-  transform: scale(1.2);
+.chat-messages::-webkit-scrollbar-thumb {
+  background-color: rgba(124, 58, 237, 0.5);
+  border-radius: 10px;
 }
 
-/* Estilos para el contenedor de pedido de cantina */
-.cantina-order-container {
-  width: 100%;
-  background-color: #f8f9fa;
-  border-radius: 8px;
-  padding: 15px;
-  margin-bottom: 15px;
-  border: 1px solid #e9ecef;
+/* Estilo para mensajes de pedido */
+.order-message {
+  border-left: 4px solid rgba(34, 197, 94, 0.5);
+  background-color: rgba(22, 33, 22, 0.6) !important;
 }
 
-.cantina-order-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
+/* Estilos para los mensajes de cantina formateados */
+:deep(.text-green-400) {
+  color: rgb(74, 222, 128);
 }
 
-.cantina-order-header h4 {
-  margin: 0;
-  color: #28a745;
-  font-size: 1rem;
+:deep(.text-yellow-400) {
+  color: rgb(250, 204, 21);
 }
 
-.remove-order-btn {
-  background: none;
-  border: none;
-  color: #6c757d;
-  cursor: pointer;
-  padding: 4px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
+:deep(.text-blue-400) {
+  color: rgb(96, 165, 250);
 }
 
-.remove-order-btn:hover {
-  background-color: #f1f1f1;
-  color: #dc3545;
+:deep(.font-bold) {
+  font-weight: 700;
 }
 
-.cantina-order-items {
-  max-height: 150px;
-  overflow-y: auto;
-  margin-bottom: 10px;
+:deep(.text-xl) {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
 }
 
-.cantina-order-item {
-  display: flex;
-  align-items: center;
-  padding: 5px 0;
-  border-bottom: 1px solid #e9ecef;
+/* Estilos para botones de acción */
+.response-btn,
+button.bg-gradient-to-r {
+  transition: all 0.2s;
 }
 
-.cantina-order-item:last-child {
-  border-bottom: none;
+button.bg-gradient-to-r:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
-.item-quantity {
-  font-weight: bold;
-  margin-right: 8px;
-  color: #495057;
-}
-
-.item-name {
-  flex: 1;
-  color: #212529;
-}
-
-.item-price {
-  font-weight: bold;
-  color: #28a745;
-}
-
-.cantina-order-total {
-  text-align: right;
-  font-weight: bold;
-  color: #28a745;
-  padding-top: 5px;
-  border-top: 1px solid #e9ecef;
-}
-
-.message-deleted-content {
-  color: #dc3545;
-  font-style: italic;
-}
-
-/* In the style section at the bottom of the file */
-
-.deleted-message {
-  opacity: 0.7;
-  background-color: #f8d7da !important;
-  border-left: 3px solid #dc3545;
-}
-
-.own-message.deleted-message {
-  background-color: #cfcfe7 !important;
-  border-left: 3px solid #6c757d;
-  color: #666;
-}
-
-.message-deleted-content {
-  font-style: italic;
-  color: #6c757d;
-  text-align: center;
-  padding: 5px;
-}
-
-.deleted-message .message-header {
-  opacity: 0.7;
+/* Estilo para los mensajes de cantina */
+.message.order-message {
+  border-left: 4px solid rgba(34, 197, 94, 0.5);
+  background-color: rgba(22, 33, 22, 0.6) !important;
 }
 </style>

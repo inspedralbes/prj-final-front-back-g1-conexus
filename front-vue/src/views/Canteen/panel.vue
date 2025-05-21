@@ -247,14 +247,10 @@
           :key="index"
           class="flex items-start p-3 hover:bg-slate-700/30 rounded-lg transition-colors"
         >
-          <!-- Icono según estado del pedido -->
-          <div
-            class="p-2 rounded-lg mr-3"
-            :class="getOrderStatusClass(order.status).bgColor"
-          >
+          <!-- Icono genérico para todos los pedidos -->
+          <div class="p-2 rounded-lg mr-3 bg-purple-500/10">
             <svg
-              class="w-5 h-5"
-              :class="getOrderStatusClass(order.status).textColor"
+              class="w-5 h-5 text-purple-400"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -263,7 +259,7 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
-                :d="getOrderStatusClass(order.status).icon"
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
               />
             </svg>
           </div>
@@ -433,6 +429,18 @@ const loadStats = async () => {
         chat.teachers.includes(parseInt(store.getUserId()))
     );
 
+    // Cargar el estado de mensajes no leídos
+    const unreadKey = `cantina_unread_messages_${store.getUserId()}`;
+    let unreadMessages = {};
+    try {
+      const savedUnread = localStorage.getItem(unreadKey);
+      if (savedUnread) {
+        unreadMessages = JSON.parse(savedUnread);
+      }
+    } catch (e) {
+      console.error("Error loading unread messages:", e);
+    }
+
     // Filtrar chats que contienen pedidos (mensajes con formato de pedido)
     const orderChats = canteenChats.filter((chat) => {
       // Verificar si algún mensaje tiene formato de pedido
@@ -445,20 +453,55 @@ const loadStats = async () => {
       );
     });
 
-    // Contar pedidos por estado
-    const newOrders = orderChats.filter(
-      (chat) =>
-        store.canteenOrderStatus[chat._id] === "new" ||
-        !store.canteenOrderStatus[chat._id] // Si no tiene estado, se considera nuevo
-    );
+    // Clasificar los pedidos según el contenido de los mensajes en cada chat
+    const newOrders = []; // Chats con mensajes nuevos no leídos o sin respuesta
+    const preparingOrders = []; // Chats con mensaje "✅ Comanda rebuda"
+    const readyOrders = []; // Chats con mensaje "🚚 La teva comanda està llesta per a recollir"
 
-    const preparingOrders = orderChats.filter(
-      (chat) => store.canteenOrderStatus[chat._id] === "preparing"
-    );
+    orderChats.forEach((chat) => {
+      // Verificar si el chat tiene mensajes no leídos
+      if (unreadMessages[chat._id]) {
+        newOrders.push(chat);
+        return; // Si es nuevo, no seguimos analizando
+      }
 
-    const readyOrders = orderChats.filter(
-      (chat) => store.canteenOrderStatus[chat._id] === "ready"
-    );
+      // Si no hay mensajes no leídos, verificamos el último estado según los mensajes
+      const messages = chat.interaction || [];
+
+      // Flag para saber si ya se clasificó el chat
+      let chatClassified = false;
+
+      // Recorrer los mensajes en orden inverso para encontrar el más reciente
+      for (let i = messages.length - 1; i >= 0; i--) {
+        const msg = messages[i];
+
+        // Verificar si es un mensaje de la cantina (del usuario actual)
+        if (parseInt(msg.teacherId) === parseInt(store.getUserId())) {
+          if (
+            msg.message.includes(
+              "🚚 La teva comanda està llesta per a recollir"
+            )
+          ) {
+            readyOrders.push(chat);
+            chatClassified = true;
+            break;
+          } else if (msg.message.includes("✅ Comanda rebuda")) {
+            preparingOrders.push(chat);
+            chatClassified = true;
+            break;
+          }
+        }
+      }
+
+      // Si el chat no se ha clasificado y tiene al menos un mensaje, considerarlo nuevo
+      if (!chatClassified && messages.length > 0) {
+        // Verificar si el último mensaje es del cliente (no de la cantina)
+        const lastMsg = messages[messages.length - 1];
+        if (parseInt(lastMsg.teacherId) !== parseInt(store.getUserId())) {
+          newOrders.push(chat);
+        }
+      }
+    });
 
     // Actualizar estadísticas de pedidos con datos reales
     orderStats.value = {
@@ -482,27 +525,22 @@ const loadStats = async () => {
 
     // Actualizar estadísticas de mensajes con datos reales
     let totalMessages = 0;
-    let unreadMessages = 0;
+    let unreadMessagesCount = 0;
 
     canteenChats.forEach((chat) => {
       if (chat.interaction) {
         totalMessages += chat.interaction.length;
 
-        // Contar mensajes no leídos (mensajes del cliente sin respuesta de la cantina)
-        // Esto es una aproximación, lo ideal sería tener un campo en la BD para marcar mensajes como leídos
-        const lastMessage = chat.interaction[chat.interaction.length - 1];
-        if (
-          lastMessage &&
-          parseInt(lastMessage.teacherId) !== parseInt(store.getUserId())
-        ) {
-          unreadMessages++;
+        // Contar chats con mensajes no leídos según localStorage
+        if (unreadMessages[chat._id]) {
+          unreadMessagesCount++;
         }
       }
     });
 
     messageStats.value = {
       total: totalMessages,
-      unread: unreadMessages,
+      unread: unreadMessagesCount,
     };
 
     // Cargar pedidos recientes
@@ -545,6 +583,18 @@ const loadRecentOrders = async () => {
       userMap[user.id] = user.name || user.username || `Usuario ${user.id}`;
     });
 
+    // Cargar el estado de mensajes no leídos
+    const unreadKey = `cantina_unread_messages_${store.getUserId()}`;
+    let unreadMessages = {};
+    try {
+      const savedUnread = localStorage.getItem(unreadKey);
+      if (savedUnread) {
+        unreadMessages = JSON.parse(savedUnread);
+      }
+    } catch (e) {
+      console.error("Error loading unread messages:", e);
+    }
+
     // Array para almacenar TODOS los mensajes de pedido de TODOS los chats
     const allOrderMessages = [];
 
@@ -565,6 +615,35 @@ const loadRecentOrders = async () => {
           (msg.message.includes("Pedido") && msg.message.includes("€"))
       );
 
+      // Determinar el estado del pedido según los mensajes
+      let status = "new";
+
+      // Si tiene mensajes no leídos, es nuevo
+      if (unreadMessages[chat._id]) {
+        status = "new";
+      } else {
+        // Recorrer los mensajes en orden inverso para encontrar el más reciente estado
+        const messages = chat.interaction || [];
+        for (let i = messages.length - 1; i >= 0; i--) {
+          const msg = messages[i];
+
+          // Verificar si es un mensaje de la cantina
+          if (parseInt(msg.teacherId) === parseInt(store.getUserId())) {
+            if (
+              msg.message.includes(
+                "🚚 La teva comanda està llesta per a recollir"
+              )
+            ) {
+              status = "ready";
+              break;
+            } else if (msg.message.includes("✅ Comanda rebuda")) {
+              status = "preparing";
+              break;
+            }
+          }
+        }
+      }
+
       // Para cada mensaje de pedido, crear un objeto de pedido y agregarlo a la lista
       orderMessages.forEach((msg) => {
         // Solo procesar mensajes que NO son del usuario cantina (solo pedidos de clientes)
@@ -573,7 +652,7 @@ const loadRecentOrders = async () => {
             id: chat._id,
             messageId: msg._id,
             userName: userName,
-            status: store.canteenOrderStatus[chat._id] || "new",
+            status: status,
             items: extractOrderItems(msg.message),
             timestamp: new Date(msg.date),
             total: extractTotal(msg.message),

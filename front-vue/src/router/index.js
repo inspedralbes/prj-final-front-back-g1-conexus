@@ -290,7 +290,7 @@ const router = createRouter({
         {
           path: 'chat',
           name: 'canteen-chat',
-          component: () => import('@/views/Canteen/chat.vue')
+          component: () => import('@/views/Canteen/chatSimple.vue')
         },
         {
           path: 'menu-admin',
