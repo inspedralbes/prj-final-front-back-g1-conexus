@@ -8,7 +8,7 @@
 - ![Com crear l'entorn de desenvolupament]()
 - ![Com desplegar l'aplicació a producció](https://github.com/inspedralbes/prj-final-front-back-g1-conexus/blob/develop/doc/producci%C3%B3/README.md)
 - [Llistat d'endpoints de l'API de backend](https://github.com/inspedralbes/prj-final-front-back-g1-conexus/tree/develop/doc/endpoints)
-- [Altres elements importants](#altres-elements-importants)
+- [Altres elements importants](#consideracions-de-seguretat)
 
 ## Objectius
 Conexus Hub és una plataforma educativa integral dissenyada per a facilitar la comunicació i la gestió en centres educatius. Els principals objectius són:
