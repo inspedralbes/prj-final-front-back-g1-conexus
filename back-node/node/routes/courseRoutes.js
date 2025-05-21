@@ -179,6 +179,7 @@ router.put("/assignTeacher", verifyTokenMiddleware, async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
+  
 });
 
 export async function getLatestCourse() {
