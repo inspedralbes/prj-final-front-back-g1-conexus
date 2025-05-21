@@ -122,7 +122,13 @@ jobs:
 
           rsync -avz --exclude=node_modules --exclude=dist -e "ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem" front-vue/ ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/front-vue/
           
-          scp -o StrictHostKeyChecking=no -i ~/prod_key.pem .env.production ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/front-vue/.env.production
+          # Copiar el .env de producción del servidora a la carpeta front-vue del servidor 
+
+          ssh -o StrictHostKeyChecking=no -i ~/prod_key.pem ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }} << 'EOF'
+          
+          cp /opt/conexus/.env /opt/conexus/front-vue/.env.production
+          
+          EOF
 
           # Copiar el prod.Dockerfile al servidor en la carpeta front
           scp -o StrictHostKeyChecking=no -i ~/prod_key.pem front-vue/prod.Dockerfile ${{ secrets.PROD_SSH_USERNAME }}@${{ secrets.PROD_SSH_HOST }}:/opt/conexus/front-vue/
