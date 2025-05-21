@@ -159,6 +159,33 @@ router.get("/teacher/:id", verifyTokenMiddleware, async (req, res) => {
   }
 });
 
+router.put("/assignTeacher", verifyTokenMiddleware, async (req, res)=>{
+  try{
+    const { course_id, teacher_id } = req.body;
+
+    if (!course_id || !teacher_id) {
+      return res.status(400).json({ message: "Falten camps obligatoris" });
+    }
+
+    const course = await Course.findOne({ where: { id: course_id } });
+    if (!course) {
+      return res.status(404).json({ message: "Curs no trobat" });
+    }
+
+    const isTeacher = await checkIfUserIsTeacher(teacher_id);
+    if (!isTeacher) {
+      return res.status(400).json({ message: "L'usuari no és un professor" });
+    }
+
+    course.course_teacher_id = teacher_id;
+    await course.save();
+
+    res.json(course);
+  }catch (error){
+    res.status(500).json({ message: error.message})
+  }
+})
+
 export async function getLatestCourse() {
   try {
     const latestCourse = await Course.findOne({
