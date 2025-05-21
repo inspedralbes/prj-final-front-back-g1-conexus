@@ -165,14 +165,14 @@ const roomDescription = ref('');
 const roomHours = ref({
     monday: [],
     tuesday: [],
-    wensday: [],
+    wednesday: [],
     thursday: [],
     friday: [],
 });
 const dayEnabled = ref({
     monday: false,
     tuesday: false,
-    wensday: false,
+    wednesday: false,
     thursday: false,
     friday: false,
 });
@@ -195,10 +195,8 @@ function GoBack() {
 
 function handleDayToggle(day) {
     if (!dayEnabled.value[day]) {
-        // Si se está deshabilitando, eliminar todos los rangos
         roomHours.value[day] = [];
     } else {
-        // Si se está habilitando, añadir un rango predeterminado
         if (roomHours.value[day].length === 0) {
             roomHours.value[day] = [{ startHour: 8, startMinute: 0, endHour: 9, endMinute: 0 }];
         }
@@ -255,7 +253,7 @@ function translatedDay(day) {
     const translations = {
         monday: 'Dilluns',
         tuesday: 'Dimarts',
-        wensday: 'Dimecres',
+        wednesday: 'Dimecres',
         thursday: 'Dijous',
         friday: 'Divendres',
     };

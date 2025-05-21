@@ -65,8 +65,7 @@ INSERT INTO Users (typeUsers_id, name, email, password, profile, department_id, 
 (4, 'David Bosch', 'david.bosch@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/david.jpg', 2, 'Tècnic de suport informàtic'),
 
 -- Cantina
-(5, 'Miquel Ros', 'miquel.ros@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/miquel.jpg', NULL, 'Responsable de la cantina'),
-(5, 'Elena Font', 'elena.font@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/elena.jpg', NULL, 'Ajudant de cantina');
+(5, 'Cantina', 'cantina@conexus.cat', '$2b$10$kYHoXDPXLZuLhCSCIMepJ.UJQrw4sb8mFqVUbo18XVi1kRRdJjQze', 'uploads/elena.jpg', NULL, 'Ajudant de cantina');
 
 -- ===================================
 -- CURSOS

@@ -169,12 +169,12 @@
                                                     </div>
                                                 </td>
                                             </tr>
-                                            <tr v-if="room.room_hours_available_wensday.length > 0"
+                                            <tr v-if="room.room_hours_available_wednesday.length > 0"
                                                 class="border-b border-slate-700/50">
                                                 <td class="px-4 py-3 font-medium">Dimecres</td>
                                                 <td class="px-4 py-3">
                                                     <div class="flex flex-wrap gap-2">
-                                                        <span v-for="hour in room.room_hours_available_wensday"
+                                                        <span v-for="hour in room.room_hours_available_wednesday"
                                                             :key="hour"
                                                             class="bg-slate-600/50 px-2 py-1 rounded text-blue-300">
                                                             {{ hour }}
@@ -290,7 +290,7 @@ async function loadRooms() {
             ...room,
             room_hours_available_monday: room.room_hours_available_monday || [],
             room_hours_available_tuesday: room.room_hours_available_tuesday || [],
-            room_hours_available_wensday: room.room_hours_available_wensday || [],
+            room_hours_available_wednesday: room.room_hours_available_wednesday || [],
             room_hours_available_thursday: room.room_hours_available_thursday || [],
             room_hours_available_friday: room.room_hours_available_friday || []
         }));
@@ -327,7 +327,7 @@ function getTotalHoursCount(room) {
     // Verificar que cada propiedad existe i és un array abans d'accedir a length
     const mondayLength = Array.isArray(room.room_hours_available_monday) ? room.room_hours_available_monday.length : 0;
     const tuesdayLength = Array.isArray(room.room_hours_available_tuesday) ? room.room_hours_available_tuesday.length : 0;
-    const wednesdayLength = Array.isArray(room.room_hours_available_wensday) ? room.room_hours_available_wensday.length : 0;
+    const wednesdayLength = Array.isArray(room.room_hours_available_wednesday) ? room.room_hours_available_wednesday.length : 0;
     const thursdayLength = Array.isArray(room.room_hours_available_thursday) ? room.room_hours_available_thursday.length : 0;
     const fridayLength = Array.isArray(room.room_hours_available_friday) ? room.room_hours_available_friday.length : 0;
 

@@ -150,7 +150,7 @@ function parseTimeRanges(hours) {
 const roomHours = ref({
     monday: [],
     tuesday: [],
-    wensday: [],
+    wednesday: [],
     thursday: [],
     friday: []
 });
@@ -158,7 +158,7 @@ const roomHours = ref({
 const dayEnabled = ref({
     monday: false,
     tuesday: false,
-    wensday: false,
+    wednesday: false,
     thursday: false,
     friday: false,
 });
@@ -171,7 +171,7 @@ onMounted(() => {
     roomHours.value = {
         monday: parseTimeRanges(props.room.room_hours_available_monday),
         tuesday: parseTimeRanges(props.room.room_hours_available_tuesday),
-        wensday: parseTimeRanges(props.room.room_hours_available_wensday),
+        wednesday: parseTimeRanges(props.room.room_hours_available_wednesday),
         thursday: parseTimeRanges(props.room.room_hours_available_thursday),
         friday: parseTimeRanges(props.room.room_hours_available_friday)
     };
@@ -179,7 +179,7 @@ onMounted(() => {
     dayEnabled.value = {
         monday: props.room.room_hours_available_monday && props.room.room_hours_available_monday.length > 0,
         tuesday: props.room.room_hours_available_tuesday && props.room.room_hours_available_tuesday.length > 0,
-        wensday: props.room.room_hours_available_wensday && props.room.room_hours_available_wensday.length > 0,
+        wednesday: props.room.room_hours_available_wednesday && props.room.room_hours_available_wednesday.length > 0,
         thursday: props.room.room_hours_available_thursday && props.room.room_hours_available_thursday.length > 0,
         friday: props.room.room_hours_available_friday && props.room.room_hours_available_friday.length > 0,
     };
@@ -221,7 +221,7 @@ function translatedDay(day) {
     const translations = {
         monday: 'Dilluns',
         tuesday: 'Dimarts',
-        wensday: 'Dimecres',
+        wednesday: 'Dimecres',
         thursday: 'Dijous',
         friday: 'Divendres'
     };
@@ -247,7 +247,7 @@ async function sendUpdateRoom() {
             room_description: roomDescription.value,
             room_hours_available_monday: dayEnabled.value.monday ? formatRoomHours(roomHours.value, dayEnabled.value).monday : [],
             room_hours_available_tuesday: dayEnabled.value.tuesday ? formatRoomHours(roomHours.value, dayEnabled.value).tuesday : [],
-            room_hours_available_wensday: dayEnabled.value.wensday ? formatRoomHours(roomHours.value, dayEnabled.value).wensday : [],
+            room_hours_available_wednesday: dayEnabled.value.wednesday ? formatRoomHours(roomHours.value, dayEnabled.value).wednesday : [],
             room_hours_available_thursday: dayEnabled.value.thursday ? formatRoomHours(roomHours.value, dayEnabled.value).thursday : [],
             room_hours_available_friday: dayEnabled.value.friday ? formatRoomHours(roomHours.value, dayEnabled.value).friday : [],
             available: roomAvailable.value,
