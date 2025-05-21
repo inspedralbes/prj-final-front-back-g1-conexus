@@ -410,7 +410,7 @@ import { getAllUsers, getTypeUsers } from '@/services/communicationsScripts/main
 // Estado general
 const allReports = ref([]);
 const loading = ref(true);
-const baseURL = import.meta.env.VITE_INCIDENT_URL;
+const baseURL = import.meta.env.VITE_BACKEND_URL;
 const activeFilter = ref('all');
 const searchQuery = ref('');
 const stats = ref({ total: 0, pending: 0, resolved: 0 });

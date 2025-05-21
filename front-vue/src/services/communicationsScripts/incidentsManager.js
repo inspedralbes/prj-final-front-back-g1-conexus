@@ -189,7 +189,6 @@ export const getNotFinishedReports = async () => {
 // Corregir la función assignReport
 export const assignReport = async (reportId, userId) => {
     try {
-        console.log(`API call: Asignando usuario ${userId} a reporte ${reportId}`);
         const response = await fetch(`${API_URL}api/reports/${reportId}/assign`, {
             method: 'PUT',
             headers: {

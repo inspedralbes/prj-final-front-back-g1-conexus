@@ -48,9 +48,6 @@ const redirectUserBasedOnRole = (user) => {
     }
   }
 
-  console.log("Redirigiendo usuario con rol:", userRole);
-
-  console.log("Redirigiendo usuario con rol:", userRole);
   switch (userRole) {
     case "Administrador":
       router.push("/admin/panel");
@@ -93,7 +90,6 @@ onMounted(async () => {
       if (userData && !userData.error) {
         // Guardar el usuario en el store
         store.setUser(userData);
-        console.log("Usuario recuperado:", userData);
 
         // Redirigir al usuario según su rol
         redirectUserBasedOnRole(userData);

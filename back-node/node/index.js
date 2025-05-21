@@ -68,7 +68,6 @@ const app = express();
 const PORT = process.env.NODE_PORT || 3000;
 const MONGODB_URI = process.env.MONGO_ROOT_URL;
 
-console.log("Intentant connectar a MongoDB a:", MONGODB_URI);
 mongoose.connect(MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -228,7 +227,6 @@ app.post("/api/services/upload", verifyTokenMiddleware, upload.single('file'), a
 
 app.get("/api/activities", verifyTokenMiddleware, async (req, res) => {
     try {
-        console.log("Obtenint activitats recents...");
         const activities = [];
 
         try {
@@ -238,7 +236,6 @@ app.get("/api/activities", verifyTokenMiddleware, async (req, res) => {
                     type: "user",
                     data: latestUser
                 });
-                console.log("Dades d'usuari més recent obtingudes");
             }
         } catch (error) {
             console.error("Error en obtenir usuari recent:", error.message);
@@ -251,7 +248,6 @@ app.get("/api/activities", verifyTokenMiddleware, async (req, res) => {
                     type: "course",
                     data: latestCourse
                 });
-                console.log("Dades de curs més recent obtingudes");
             }
         } catch (error) {
             console.error("Error en obtenir curs recent:", error.message);
@@ -264,7 +260,6 @@ app.get("/api/activities", verifyTokenMiddleware, async (req, res) => {
                     type: "report",
                     data: latestReport
                 });
-                console.log("Dades d'incidència més recent obtingudes");
             }
         } catch (error) {
             console.error("Error en obtenir incidència recent:", error.message);
@@ -277,7 +272,6 @@ app.get("/api/activities", verifyTokenMiddleware, async (req, res) => {
                     type: "lostObject",
                     data: latestLostObject
                 });
-                console.log("Dades d'objecte perdut més recent obtingudes");
             }
         } catch (error) {
             console.error("Error en obtenir objecte perdut recent:", error.message);
@@ -290,7 +284,6 @@ app.get("/api/activities", verifyTokenMiddleware, async (req, res) => {
                     type: "roomReservation",
                     data: latestRoomReservation
                 });
-                console.log("Dades de reserva més recent obtingudes");
             }
         } catch (error) {
             console.error("Error en obtenir reserva recent:", error.message);
@@ -303,7 +296,6 @@ app.get("/api/activities", verifyTokenMiddleware, async (req, res) => {
                     type: "task",
                     data: latestTask
                 });
-                console.log("Dades de tasca més recent obtingudes");
             }
         } catch (error) {
             console.error("Error en obtenir tasca recent:", error.message);
@@ -315,7 +307,6 @@ app.get("/api/activities", verifyTokenMiddleware, async (req, res) => {
             return dateB - dateA;
         });
 
-        console.log(`Total d'activitats obtingudes: ${activities.length}`);
         res.json(activities);
     } catch (error) {
         console.error("Error obtenint últimes activitats:", error);

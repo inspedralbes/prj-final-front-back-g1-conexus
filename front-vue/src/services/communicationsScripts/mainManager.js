@@ -18,7 +18,6 @@ export const getTypeUsers = async () => {
             throw new Error("Error fetching type users");
         }
         const data = await response.json();
-        console.log("Response:", data);
         return data;
     } catch (error) {
         console.error("Network error:", error);
@@ -48,7 +47,6 @@ export const getUserByEmail = async (email) => {
         }
 
         const data = await response.json();
-        console.log("Response:", data);
         return data;
     } catch (error) {
         console.error("Network error:", error);
@@ -76,7 +74,6 @@ export const register = async (user) => {
             }
         }
         const data = await response.json();
-        console.log("Response:", data);
         return data;
     } catch (error) {
         console.error('Network error:', error);
@@ -181,7 +178,6 @@ export const getHoursOfCourse = async (courseId) => {
             throw new Error('Network response was not ok');
         }
         const data = await response.json();
-        console.log(data);
         const daysOfWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
         const processedHours = Object.fromEntries(
             daysOfWeek.map(day => {
@@ -420,7 +416,6 @@ export const getAllCourses = async () => {
         const courses = await response.json();
 
         for (const course of courses) {
-            console.log(course);
             if (course.course_teacher_id) {
                 try {
                     const teacherResponse = await fetch(`${BACK_URL}api/user/${course.course_teacher_id}`, {
@@ -431,7 +426,6 @@ export const getAllCourses = async () => {
                         },
                     });
                     if (handle401(teacherResponse)) return;
-                    console.log(teacherResponse);
 
                     if (teacherResponse.ok) {
                         const teacherData = await teacherResponse.json();
@@ -477,8 +471,6 @@ export const deleteCourse = async (courseId) => {
 
 export const createCourse = async (course) => {
     try {
-        console.log(course.course_hours_available);
-        // Convertir el objeto course a una cadena JSON 
         const response = await fetch(`${BACK_URL}api/courses`, {
             method: "POST",
             headers: {
@@ -544,7 +536,6 @@ export const getAllDepartments = async () => {
 
 export const createDepartment = async (department) => {
     try {
-        console.log(department);
         const response = await fetch(`${BACK_URL}api/departments`, {
             method: "POST",
             headers: {
@@ -645,7 +636,6 @@ export const getCoursesWithoutUser = async (userId) => {
     }
 }
 export const inscribeUser= async (courseId, userId) => {
-    console.log(userId, courseId);
     try {
         const response = await fetch(`${BACK_URL}api/user-courses`, {
             method: "POST",
@@ -728,7 +718,6 @@ export const desassignTeacher = async (courseId) => {
     }
 }
 export const assignTeacher = async (courseId, teacherId) => {
-    console.log(courseId, teacherId);   
     try {
         const response = await fetch(`${BACK_URL}api/courses/assignTeacher`, {
             method: "PUT",
@@ -765,7 +754,6 @@ export const countUsers = async () => {
             throw new Error("Error fetching user count");
         }
         const data = await response.json();
-        console.log("User count data:", data);
         return data;
     } catch (error) {
         console.error("Error in countUsers:", error);

@@ -39,9 +39,6 @@ router.get("/", verifyTokenMiddleware, async (req, res) => {
 });
 
 router.post("/", upload.single('profile'), verifyTokenMiddleware, async (req, res) => {
-    console.log("Req body:", req.body);
-    console.log("Req file:", req.file);
-    
     try {
         const { typeUsers_id, name, email, password } = req.body;
         
@@ -91,9 +88,6 @@ async function downloadImage(url, filename) {
 }
 
 router.post("/register", upload.single('profile'), async (req, res) => {
-    console.log("Req body:", req.body);
-    console.log("Req file:", req.file);
-    
     try {
         const { typeUsers_id, name, email, password, profile } = req.body;
         
@@ -114,7 +108,6 @@ router.post("/register", upload.single('profile'), async (req, res) => {
             try {
                 const uniqueFilename = `${Date.now()}-${Math.round(Math.random() * 1E9)}.jpg`;
                 profilePath = await downloadImage(profile, uniqueFilename);
-                console.log(`Imatge descarregada i desada a: ${profilePath}`);
             } catch (downloadError) {
                 console.error("Error en descarregar la imatge:", downloadError);
             }
@@ -157,7 +150,6 @@ router.get("/:id", verifyTokenMiddleware, async (req, res) => {
 router.post("/email", verifyTokenMiddleware, async (req, res) => {
     try {
         const { email } = req.body;
-        console.log(email);
 
         const user = await User.findOne({
             where: { email },
@@ -169,8 +161,6 @@ router.post("/email", verifyTokenMiddleware, async (req, res) => {
                 }
             ]
         });
-
-        console.log(user);
 
         if (!user) {
             return res.status(404).json({ message: "Usuari no trobat" });
@@ -233,7 +223,6 @@ router.delete("/:id", verifyTokenMiddleware, async (req, res) => {
                 
                 if (fs.existsSync(imagePath)) {
                     fs.unlinkSync(imagePath);
-                    console.log(`Imatge eliminada: ${imagePath}`);
                 }
             } catch (imageError) {
                 console.error("Error en eliminar la imatge:", imageError);
@@ -252,8 +241,6 @@ router.post('/login', async (req, res) => {
 
     try {
         const existingUser = await User.findOne({ where: { email } });
-
-        console.log('Usuari existent:', existingUser);
 
         if (!existingUser) {
             return res.status(404).json({ error: 'Usuari no trobat' });

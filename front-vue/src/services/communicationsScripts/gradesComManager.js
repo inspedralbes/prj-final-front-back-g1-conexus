@@ -88,8 +88,6 @@ export const getTask = async (taskId, courseId) => {
             throw new Error('Network response was not ok');
         }
         const data = await response.json();
-        console.log(alumns)
-        console.log(data);
         data.forEach(grade => {
             alumns.forEach(alumn => {
                 if (alumn.user_id == grade.user_id) {

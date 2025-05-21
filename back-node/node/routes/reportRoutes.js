@@ -227,7 +227,6 @@ router.delete("/:id", verifyTokenMiddleware, async (req, res) => {
     
       if (fs.default.existsSync(imagePath)) {
         fs.default.unlinkSync(imagePath);
-        console.log(`Imatge eliminada: ${imagePath}`);
       } else {
         console.log(`Imatge no trobada al sistema de fitxers: ${imagePath}`);
       }

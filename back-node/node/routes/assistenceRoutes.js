@@ -22,12 +22,6 @@ router.get("/:id", verifyTokenMiddleware, async (req, res) => {
 
 router.post("/", verifyTokenMiddleware, async (req, res) => {
     try {
-        console.log("req.body", req.body);
-        console.log("user_id", req.body.user_id);
-        console.log("course_id", req.body.course_id);
-        console.log("hour", req.body.hour);
-        console.log("assisted", req.body.assisted);
-        console.log("day", req.body.day);
         let { user_id, course_id, hour, day, assisted } = req.body;
         if (!user_id || !course_id || !hour || !assisted) {
             return res.status(400).json({ message: "user_id, course_id, hour i assisted són obligatoris" });

@@ -70,12 +70,10 @@ router.post("/", verifyTokenMiddleware, async (req, res) => {
     } else {
       let grade = {};
       if (await checkIfGradeAlreadyExists(req.body.user_id, req.body.task_id)) {
-        console.log("La nota ja existeix, actualitzant-la.");
         grade = await Grade.update(req.body, {
           where: { user_id: req.body.user_id, task_id: req.body.task_id },
         });
       } else {
-        console.log("La nota no existeix, creant-ne una de nova.");
         grade = await Grade.create(req.body);
       }
       res.json(grade);
@@ -163,7 +161,6 @@ async function checkIfGradeAlreadyExists(user_id, task_id) {
   let auxGrade = await Grade.findOne({
     where: { user_id: user_id, task_id: task_id },
   });
-  console.log(auxGrade);
   if (auxGrade) {
     return true;
   } else {

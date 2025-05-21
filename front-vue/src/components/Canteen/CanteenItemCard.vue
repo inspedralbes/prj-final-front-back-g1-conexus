@@ -68,7 +68,7 @@ function disable() {
   props.item.product_enabled = false;
   updateItem(props.item)
     .then((response) => {
-      console.log("Producte deshabilitat:", response.data);
+      // console.log("Producte deshabilitat:", response.data);
     })
     .catch((error) => {
       console.error("Error deshabilitant producte:", error);
@@ -78,7 +78,7 @@ function enable() {
   props.item.product_enabled = true;
   updateItem(props.item)
     .then((response) => {
-      console.log("Producte habilitat:", response.data);
+      // console.log("Producte habilitat:", response.data);
     })
     .catch((error) => {
       console.error("Error habilitant producte:", error);
@@ -87,7 +87,7 @@ function enable() {
 function editProduct() {
   updateItem(props.item)
     .then((response) => {
-      console.log("Producte editat:", response.data);
+      // console.log("Producte editat:", response.data);
     })
     .catch((error) => {
       console.error("Error editant producte:", error);

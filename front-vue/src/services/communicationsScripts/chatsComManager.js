@@ -98,13 +98,7 @@ export const createChat = async (chatData) => {
     }
 };
 
-/**
- * Envía un mensaje a un chat existente
- * @param {string} chatId - ID del chat
- * @param {string} teacherId - ID del profesor que envía el mensaje
- * @param {string} message - Contenido del mensaje
- * @returns {Promise<Object>} Chat actualizado con el nuevo mensaje
- */
+
 export const sendMessage = async (chatId, teacherId, message) => {
     try {
         console.log(`Enviando mensaje al chat ${chatId}:`, { teacherId, message });

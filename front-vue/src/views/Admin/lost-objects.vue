@@ -320,7 +320,7 @@ const showForm = ref(false);
 const showDeleteModal = ref(false);
 const objectToDelete = ref(null);
 const deleting = ref(false);
-const baseUrl = import.meta.env.VITE_LOST_OBJECT_URL;
+const baseUrl = import.meta.env.VITE_BACKEND_URL;
 const searchQuery = ref('');
 const timeFilter = ref('all');
 

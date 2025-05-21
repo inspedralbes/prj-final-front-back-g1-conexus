@@ -238,7 +238,6 @@ async function sendUpdateRoom() {
     
     try {
         const response = await updateRoom(props.room.id, roomData);
-        console.log('Sala actualitzada correctament:', response);
         
         // Preparar la sala actualizada para emitir el evento
         const updatedRoom = {

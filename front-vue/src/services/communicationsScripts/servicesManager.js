@@ -197,7 +197,6 @@ export const uploadServiceFile = async (formData) => {
 
 export const deleteService = async (serviceName) => {
     try {
-        console.log('Deleting service:', localStorage.getItem('accessToken'));
         const response = await fetch(`${BACKEND_URL}api/services/${serviceName}`, {
             method: 'DELETE',
             headers: {
