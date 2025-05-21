@@ -30,7 +30,8 @@ router.post("/", verifyTokenMiddleware, async (req, res) => {
       course_name,
       course_hours_available,
       course_description,
-      teacher_id
+      course_department_id,
+      course_teacher_id
     } = req.body;
 
     if (!course_name || !course_hours_available || !course_description) {
@@ -42,8 +43,8 @@ router.post("/", verifyTokenMiddleware, async (req, res) => {
       return res.status(400).json({ message: "Ja existeix un curs amb aquest nom" });
     }
 
-    if (teacher_id) {
-      const isTeacher = await checkIfUserIsTeacher(teacher_id);
+    if (course_teacher_id) {
+      const isTeacher = await checkIfUserIsTeacher(course_teacher_id);
       if (!isTeacher) {
         return res.status(400).json({ message: "L'usuari no és un professor" });
       }
@@ -53,7 +54,8 @@ router.post("/", verifyTokenMiddleware, async (req, res) => {
       course_name,
       course_hours_available,
       course_description,
-      teacher_id
+      course_department_id,
+      course_teacher_id
     });
     res.status(201).json(course);
   } catch (error) {
