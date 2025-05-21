@@ -173,7 +173,7 @@ export async function getLatestCourse() {
 }
 
 async function checkIfUserIsTeacher(teacher_id) {
-  const user = await User.findByPk(teacher_id);
+  const user = await User.findOne({ where: { id: teacher_id } });
   if (!user) {
     return false;
   }
