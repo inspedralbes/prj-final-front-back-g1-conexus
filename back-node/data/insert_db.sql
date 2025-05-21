@@ -34,39 +34,39 @@ INSERT INTO TypeUsers (name) VALUES
 -- ===================================
 INSERT INTO Users (typeUsers_id, name, email, password, profile, department_id, description) VALUES 
 -- Profesores
-(1, 'Joan Farrés', 'joan.farres@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/profiles/default_teacher.jpg', 2, 'Professor de Programació i Bases de Dades amb 15 anys d''experiència'),
-(1, 'Maria Garcia', 'maria.garcia@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/profiles/maria.jpg', 2, 'Professora de Desenvolupament Web amb 10 anys d''experiència'),
-(1, 'Josep Martí', 'josep.marti@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/profiles/josep.jpg', 5, 'Professor de DAM especialitzat en aplicacions mòbils'),
-(1, 'Laura Puig', 'laura.puig@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/profiles/laura.jpg', 1, 'Professora d''Administració Financera'),
-(1, 'Sergi Rovira', 'sergi.rovira@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/profiles/sergi.jpg', 3, 'Professor de Màrqueting Digital'),
-(1, 'Clara Font', 'clara.font@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/profiles/clara.jpg', 4, 'Professora de Comerç Internacional i Logística'),
-(1, 'Arnau Costa', 'arnau.costa@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/profiles/arnau.jpg', 7, 'Professor de Disseny d''Interfícies'),
+(1, 'Joan Farrés', 'joan.farres@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/default_teacher.jpg', 2, 'Professor de Programació i Bases de Dades amb 15 anys d''experiència'),
+(1, 'Maria Garcia', 'maria.garcia@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/maria.jpg', 2, 'Professora de Desenvolupament Web amb 10 anys d''experiència'),
+(1, 'Josep Martí', 'josep.marti@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/josep.jpg', 5, 'Professor de DAM especialitzat en aplicacions mòbils'),
+(1, 'Laura Puig', 'laura.puig@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/laura.jpg', 1, 'Professora d''Administració Financera'),
+(1, 'Sergi Rovira', 'sergi.rovira@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/sergi.jpg', 3, 'Professor de Màrqueting Digital'),
+(1, 'Clara Font', 'clara.font@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/clara.jpg', 4, 'Professora de Comerç Internacional i Logística'),
+(1, 'Arnau Costa', 'arnau.costa@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/arnau.jpg', 7, 'Professor de Disseny d''Interfícies'),
 
 -- Estudiantes
-(2, 'Marc Vidal', 'a22marc.vidal@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/profiles/marc.jpg', 2, 'Estudiant de segon curs de DAM'),
-(2, 'Júlia Ferrer', 'a23julia.ferrer@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/profiles/julia.jpg', 6, 'Estudiant de primer curs de DAW'),
-(2, 'Pau Soler', 'a21pau.soler@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/profiles/pau.jpg', 5, 'Estudiant d''últim curs d''Intel·ligència Artificial'),
-(2, 'Aina Costa', 'a22aina.costa@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/profiles/aina.jpg', 1, 'Estudiant de segon curs d''Administració'),
-(2, 'Oriol Mas', 'a23oriol.mas@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/profiles/oriol.jpg', 3, 'Estudiant de primer curs de Màrqueting Digital'),
-(2, 'Marta Pujol', 'a21marta.pujol@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/profiles/marta.jpg', 7, 'Estudiant de Disseny Gràfic'),
-(2, 'Jan Roca', 'a22jan.roca@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/profiles/jan.jpg', 6, 'Estudiant d''últim curs de DAW'),
-(2, 'Laia Sanz', 'a23laia.sanz@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/profiles/laia.jpg', 2, 'Estudiant de primer curs d''Informàtica'),
-(2, 'Biel Ferrer', 'a22biel.ferrer@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/profiles/biel.jpg', 5, 'Estudiant de segon curs de DAM'),
-(2, 'Carla Martí', 'a21carla.marti@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/profiles/carla.jpg', 4, 'Estudiant d''últim curs de Comerç Internacional'),
+(2, 'Marc Vidal', 'a22marc.vidal@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/marc.jpg', 2, 'Estudiant de segon curs de DAM'),
+(2, 'Júlia Ferrer', 'a23julia.ferrer@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/julia.jpg', 6, 'Estudiant de primer curs de DAW'),
+(2, 'Pau Soler', 'a21pau.soler@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/pau.jpg', 5, 'Estudiant d''últim curs d''Intel·ligència Artificial'),
+(2, 'Aina Costa', 'a22aina.costa@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/aina.jpg', 1, 'Estudiant de segon curs d''Administració'),
+(2, 'Oriol Mas', 'a23oriol.mas@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/oriol.jpg', 3, 'Estudiant de primer curs de Màrqueting Digital'),
+(2, 'Marta Pujol', 'a21marta.pujol@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/marta.jpg', 7, 'Estudiant de Disseny Gràfic'),
+(2, 'Jan Roca', 'a22jan.roca@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/jan.jpg', 6, 'Estudiant d''últim curs de DAW'),
+(2, 'Laia Sanz', 'a23laia.sanz@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/laia.jpg', 2, 'Estudiant de primer curs d''Informàtica'),
+(2, 'Biel Ferrer', 'a22biel.ferrer@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/biel.jpg', 5, 'Estudiant de segon curs de DAM'),
+(2, 'Carla Martí', 'a21carla.marti@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/carla.jpg', 4, 'Estudiant d''últim curs de Comerç Internacional'),
 
 -- Administradores
-(3, 'Montserrat Pujol', 'montserrat.pujol@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/profiles/montse.jpg', NULL, 'Directora del centre'),
-(3, 'Jordi Coll', 'jordi.coll@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/profiles/jordi.jpg', NULL, 'Cap d''estudis'),
-(3, 'Elena Valls', 'elena.valls@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/profiles/elena_admin.jpg', NULL, 'Secretària acadèmica'),
+(3, 'Montserrat Pujol', 'montserrat.pujol@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/montse.jpg', NULL, 'Directora del centre'),
+(3, 'Jordi Coll', 'jordi.coll@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/jordi.jpg', NULL, 'Cap d''estudis'),
+(3, 'Elena Valls', 'elena.valls@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/elena_admin.jpg', NULL, 'Secretària acadèmica'),
 
 -- Técnicos
-(4, 'Carles Riera', 'carles.riera@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/profiles/carles.jpg', 8, 'Tècnic informàtic especialitzat en xarxes'),
-(4, 'Núria Solé', 'nuria.sole@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/profiles/nuria.jpg', 9, 'Tècnica de ciberseguretat'),
-(4, 'David Bosch', 'david.bosch@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/profiles/david.jpg', 2, 'Tècnic de suport informàtic'),
+(4, 'Carles Riera', 'carles.riera@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/carles.jpg', 8, 'Tècnic informàtic especialitzat en xarxes'),
+(4, 'Núria Solé', 'nuria.sole@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/nuria.jpg', 9, 'Tècnica de ciberseguretat'),
+(4, 'David Bosch', 'david.bosch@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/david.jpg', 2, 'Tècnic de suport informàtic'),
 
 -- Cantina
-(5, 'Miquel Ros', 'miquel.ros@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/profiles/miquel.jpg', NULL, 'Responsable de la cantina'),
-(5, 'Elena Font', 'elena.font@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/profiles/elena.jpg', NULL, 'Ajudant de cantina');
+(5, 'Miquel Ros', 'miquel.ros@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/miquel.jpg', NULL, 'Responsable de la cantina'),
+(5, 'Elena Font', 'elena.font@conexus.cat', '$2b$10$1qAz2wSx3eCc3NkYMBNKYervePQZn/6KBXG5pNEWKnYqidUGBKp.m', 'uploads/elena.jpg', NULL, 'Ajudant de cantina');
 
 -- ===================================
 -- CURSOS
@@ -204,14 +204,14 @@ INSERT INTO Assistence (user_id, course_id, hour, day, assisted) VALUES
 -- OBJETOS PERDIDOS
 -- ===================================
 INSERT INTO LostObjects (title, description, image, user_id) VALUES 
-('Portàtil Dell trobat a l''aula 204', 'He trobat un portàtil Dell negre amb adhesius a la tapa a l''aula 204 després de la classe de Programació', 'uploads/lost/laptop.jpg', 8),
-('Claus perdudes a la cantina', 'He perdut un clauer amb 3 claus i un portaclaus de fusta amb la inicial "A" a la cantina ahir a l''hora de dinar', 'uploads/lost/keys.jpg', 11),
-('Auriculars sense fil', 'S''han trobat uns auriculars sense fil blancs a la biblioteca. Preguntar a recepció.', 'uploads/lost/earphones.jpg', 6),
+('Portàtil Dell trobat a l''aula 204', 'He trobat un portàtil Dell negre amb adhesius a la tapa a l''aula 204 després de la classe de Programació', 'uploads/laptop.jpg', 8),
+('Claus perdudes a la cantina', 'He perdut un clauer amb 3 claus i un portaclaus de fusta amb la inicial "A" a la cantina ahir a l''hora de dinar', 'uploads/keys.jpg', 11),
+('Auriculars sense fil', 'S''han trobat uns auriculars sense fil blancs a la biblioteca. Preguntar a recepció.', 'uploads/earphones.jpg', 6),
 ('Llibreta d''apunts de Bases de Dades', 'He perdut una llibreta blava amb tots els meus apunts de Bases de Dades. És molt important per a mi!', NULL, 9),
-('Carregador MacBook', 'He trobat un carregador de MacBook a l''aula d''informàtica 2', 'uploads/lost/charger.jpg', 10),
+('Carregador MacBook', 'He trobat un carregador de MacBook a l''aula d''informàtica 2', 'uploads/charger.jpg', 10),
 ('USB amb treballs de Disseny', 'He perdut un pendrive negre de 64GB amb tots els meus treballs de Disseny Gràfic. Té una etiqueta amb les inicials LP.', NULL, 13),
-('Jaqueta negra Nike', 'Vaig oblidar la meva jaqueta negra de Nike a l''aula 105 la setmana passada. Si algú l''ha vist, agraïria que m''ho fes saber.', 'uploads/lost/jacket.jpg', 16),
-('Calculadora científica', 'He trobat una calculadora científica Casio a la sala d''estudi', 'uploads/lost/calculator.jpg', 4);
+('Jaqueta negra Nike', 'Vaig oblidar la meva jaqueta negra de Nike a l''aula 105 la setmana passada. Si algú l''ha vist, agraïria que m''ho fes saber.', 'uploads/jacket.jpg', 16),
+('Calculadora científica', 'He trobat una calculadora científica Casio a la sala d''estudi', 'uploads/calculator.jpg', 4);
 
 -- ===================================
 -- RESPUESTAS A OBJETOS PERDIDOS
@@ -261,16 +261,16 @@ INSERT INTO RoomReservations (user_id, room_id, start_time, end_time) VALUES
 -- REPORTES DE PROBLEMAS
 -- ===================================
 INSERT INTO Reports (user_id, report, status, image, room_id, user_assigned, note) VALUES 
-(8, 'El teclat de l''ordinador 12 té algunes tecles que no funcionen', 'pending', 'uploads/reports/keyboard.jpg', 3, NULL, NULL),
-(9, 'La cadira del meu lloc està trencada', 'revising', 'uploads/reports/chair.jpg', 2, 22, 'Programada substitució per al proper dilluns'),
+(8, 'El teclat de l''ordinador 12 té algunes tecles que no funcionen', 'pending', 'uploads/keyboard.jpg', 3, NULL, NULL),
+(9, 'La cadira del meu lloc està trencada', 'revising', 'uploads/chair.jpg', 2, 22, 'Programada substitució per al proper dilluns'),
 (10, 'La connexió a Internet es talla constantment', 'pending', NULL, 4, NULL, NULL),
-(11, 'El projector no mostra els colors correctament', 'revised', 'uploads/reports/projector.jpg', 1, 21, 'Projector substituït el 15/05/2025'),
-(12, 'L''aire condicionat no funciona correctament', 'pending', 'uploads/reports/ac.jpg', 5, NULL, NULL),
-(13, 'La pissarra digital no respon al tacte', 'revising', 'uploads/reports/board.jpg', 9, 22, 'S''ha sol·licitat servei tècnic especialitzat'),
+(11, 'El projector no mostra els colors correctament', 'revised', 'uploads/projector.jpg', 1, 21, 'Projector substituït el 15/05/2025'),
+(12, 'L''aire condicionat no funciona correctament', 'pending', 'uploads/ac.jpg', 5, NULL, NULL),
+(13, 'La pissarra digital no respon al tacte', 'revising', 'uploads/board.jpg', 9, 22, 'S''ha sol·licitat servei tècnic especialitzat'),
 (14, 'Falten endolls per als portàtils', 'revised', NULL, 10, 21, 'S''han instal·lat regletes addicionals'),
-(15, 'Les cortines estan descosides i no es poden tancar', 'pending', 'uploads/reports/curtains.jpg', 2, NULL, NULL),
+(15, 'Les cortines estan descosides i no es poden tancar', 'pending', 'uploads/curtains.jpg', 2, NULL, NULL),
 (16, 'Software desactualitzat als ordinadors de l''aula', 'revising', NULL, 3, 23, 'Programada actualització general per al cap de setmana'),
-(17, 'Hi ha una gotera al sostre prop de la finestra', 'pending', 'uploads/reports/leak.jpg', 6, NULL, NULL);
+(17, 'Hi ha una gotera al sostre prop de la finestra', 'pending', 'uploads/leak.jpg', 6, NULL, NULL);
 
 -- ===================================
 -- PRODUCTOS DE CANTINA
