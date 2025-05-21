@@ -159,32 +159,35 @@ router.get("/teacher/:id", verifyTokenMiddleware, async (req, res) => {
   }
 });
 
-router.put("/assignTeacher", verifyTokenMiddleware, async (req, res)=>{
-  try{
+router.put("/assignTeacher", verifyTokenMiddleware, async (req, res) => {
+  try {
     const { course_id, teacher_id } = req.body;
-
-    if (!course_id || !teacher_id) {
-      return res.status(400).json({ message: "Falten camps obligatoris" });
-    }
-
     const course = await Course.findByPk(course_id);
     if (!course) {
-      return res.status(404).json({ message: "Curs no trobat" });
+      return res.status(404).json({ message: "Course not found" });
+    }
+    let teacher = await User.findByPk(teacher_id);
+    if(teacher==null){
+      return res.status(404).json({ message: "Teacher not found" });
+    }else if(teacher.typeUsers_id!=1){
+      return res.status(404).json({ teacher:teacher});
+    } else{
+      course.course_teacher_id = teacher_id;
+      await course.save();
+      res.json(course);
     }
 
-    const isTeacher = await checkIfUserIsTeacher(teacher_id);
-    if (!isTeacher) {
-      return res.status(400).json({ message: "L'usuari no és un professor" });
-    }
-
-    course.course_teacher_id = teacher_id;
-    await course.save();
-
-    res.json(course);
-  }catch (error){
-    res.status(500).json({ message: error.message})
+    // const teacherExists = await checkIfUserIsTeacher(teacher_id);
+    // if (!teacherExists) {
+    //   return res.status(404).json({ message: "Teacher not found" });
+    // }
+    // course.course_teacher_id = teacher_id;
+    // await course.save();
+    // res.json(course);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
-})
+});
 
 export async function getLatestCourse() {
   try {
