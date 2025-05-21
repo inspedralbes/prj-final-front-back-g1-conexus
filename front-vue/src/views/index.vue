@@ -477,7 +477,7 @@ onMounted(async () => {
   }
 });
 
-// const apikey = import.meta.env.VITE_FIREBASE_API_KEY;
+const apikey = import.meta.env.VITE_FIREBASE_API_KEY;
 
 // Firebase configuration
 const firebaseConfig = {
