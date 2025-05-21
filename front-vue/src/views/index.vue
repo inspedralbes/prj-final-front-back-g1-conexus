@@ -76,59 +76,6 @@
                 {{ role.name }}
               </button>
             </div>
-            <div class="space-y-3">
-              <button
-                v-for="role in availableRoles"
-                :key="role.id"
-                @click="completeRegistration(role.id)"
-                class="w-full py-3 px-4 bg-slate-700/80 hover:bg-slate-600 rounded-lg text-white transition-colors duration-200 flex items-center justify-start border border-slate-600/60 hover:border-slate-500"
-              >
-                <!-- Icono según el tipo de usuario (puedes adaptar esto según tus necesidades) -->
-                <svg
-                  v-if="role.name === 'Estudiant'"
-                  class="h-5 w-5 mr-3 text-blue-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                  />
-                </svg>
-                <svg
-                  v-else-if="role.name === 'Professor'"
-                  class="h-5 w-5 mr-3 text-green-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                  />
-                </svg>
-                <svg
-                  v-else
-                  class="h-5 w-5 mr-3 text-indigo-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                  />
-                </svg>
-                {{ role.name }}
-              </button>
-            </div>
 
             <div class="mt-6 flex justify-center">
               <button
@@ -222,51 +169,7 @@
                 <span v-else>Avis</span>
               </h3>
             </div>
-            <div class="flex items-center gap-3 mb-4">
-              <div
-                class="p-2 rounded-full"
-                :class="
-                  messageType === 'error' ? 'bg-red-500/20' : 'bg-blue-500/20'
-                "
-              >
-                <svg
-                  v-if="messageType === 'error'"
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-6 w-6 text-red-400"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-                <svg
-                  v-else
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-6 w-6 text-blue-400"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </div>
-              <h3 class="text-xl font-bold text-white">
-                <span v-if="messageType === 'error'">Error</span>
-                <span v-else>Avis</span>
-              </h3>
-            </div>
 
-            <p class="ml-11 text-slate-300">{{ message }}</p>
             <p class="ml-11 text-slate-300">{{ message }}</p>
 
             <div class="mt-6 flex justify-end gap-3">
@@ -482,12 +385,12 @@ const apikey = import.meta.env.VITE_FIREBASE_API_KEY;
 // Firebase configuration
 const firebaseConfig = {
   apiKey: apikey,
-  authDomain: "conexushub-18c6a.firebaseapp.com",
-  projectId: "conexushub-18c6a",
-  storageBucket: "conexushub-18c6a.firebasestorage.app",
-  messagingSenderId: "615648032782",
-  appId: "1:615648032782:web:3e2b66daee467ee602245f",
-  measurementId: "G-F27Z1WF9QH",
+  authDomain: "tr2-dam-mentories.firebaseapp.com",
+  projectId: "tr2-dam-mentories",
+  storageBucket: "tr2-dam-mentories.firebaseapp.com",
+  messagingSenderId: "338164475859",
+  appId: "1:338164475859:web:e69d1ef2426b26d9e0f126",
+  measurementId: "G-KTW22GCCFB",
 };
 
 // Initialize Firebase
