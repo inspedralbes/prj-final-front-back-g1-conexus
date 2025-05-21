@@ -143,7 +143,7 @@ router.get("/stats/count", verifyTokenMiddleware, async (req, res) => {
 router.get("/teacher/:id", verifyTokenMiddleware, async (req, res) => {
   try {
     const courses = await Course.findAll({
-      where: { teacher_id: req.params.id },
+      where: { course_teacher_id: req.params.id },
     });
     if (!courses) {
       return res.status(404).json({ message: "No s'han trobat cursos" });
