@@ -785,6 +785,7 @@ async function callCreateCourse() {
 
         await createCourse(newCourse.value);
         courses.value = await getAllCourses();
+        
         toggleCreateCourse();
         resetForm();
     } catch (error) {
