@@ -7,8 +7,10 @@ import reportRoutes from "./routes/reportRoutes.js";
 import nodemailer from 'nodemailer';
 
 dotenv.config();
+
 const app = express();
 const PORT = process.env.NODE_INCIDENT_PORT || 3004;
+
 const transporter = nodemailer.createTransport({
     service: 'smtp.gmail.com',
     host: process.env.EMAIL_HOST,

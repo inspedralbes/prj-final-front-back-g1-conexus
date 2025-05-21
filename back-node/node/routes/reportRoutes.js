@@ -214,7 +214,7 @@ router.delete("/:id", verifyTokenMiddleware, async (req, res) => {
   const { id } = req.params;
   try {
     const report = await Reports.findOne({ where: { id } });
-    
+
     if (!report) {
       return res.status(404).json({ message: "Informe no trobat" });
     }
@@ -222,7 +222,7 @@ router.delete("/:id", verifyTokenMiddleware, async (req, res) => {
     if (report.image) {
       const fs = await import('fs');
       const path = await import('path');
-      
+
       const imagePath = path.default.join(process.cwd(), report.image);
     
       if (fs.default.existsSync(imagePath)) {

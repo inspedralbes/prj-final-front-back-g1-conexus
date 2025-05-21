@@ -81,7 +81,10 @@ mongoose.connect(MONGODB_URI, {
 });
 
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors({
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 app.use('/api/uploads', express.static('uploads'));
 app.use("/api/assistences", assistenceRoutes);
 app.use("/api/courses", courseRoutes);
@@ -121,6 +124,7 @@ app.post("/api/services/start-all", verifyTokenMiddleware, (req, res) => {
     res.json({ message: "Iniciant tots els serveis", results });
 });
 
+app.post("/api/services/stop-all", verifyTokenMiddleware, (req, res) => {
 app.post("/api/services/stop-all", verifyTokenMiddleware, (req, res) => {
     const results = stopAllServices();
     res.json({ message: "Aturant tots els serveis", results });

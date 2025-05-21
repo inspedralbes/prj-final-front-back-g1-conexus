@@ -153,7 +153,7 @@ export const getReportsByRoomId = async (roomId) => {
 // Get finished reports
 export const getFinishedReports = async () => {
     try {
-        const response = await fetch(`${API_URL}api/reports/finished`,{
+        const response = await fetch(`${API_URL}api/reports/finished`, {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
@@ -171,7 +171,7 @@ export const getFinishedReports = async () => {
 // Get not finished reports
 export const getNotFinishedReports = async () => {
     try {
-        const response = await fetch(`${API_URL}api/reports/not-finished`,{
+        const response = await fetch(`${API_URL}api/reports/not-finished`, {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
@@ -218,7 +218,7 @@ export const assignReport = async (reportId, userId) => {
 // Get report statistics
 export const getReportStats = async () => {
     try {
-        const response = await fetch(`${API_URL}api/reports/stats/count`,{
+        const response = await fetch(`${API_URL}api/reports/stats/count`, {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",

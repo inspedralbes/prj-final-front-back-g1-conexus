@@ -15,7 +15,7 @@ const PORT = process.env.NODE_GRADE_PORT || 3003;
 app.use(bodyParser.json());
 app.use(cors());
 
-app.use("/api/tasks", taskRoutes);   
+app.use("/api/tasks", taskRoutes);
 app.use('/api/grades', gradeRoutes);
 app.use("/api/courses", courseRoutes);
 
