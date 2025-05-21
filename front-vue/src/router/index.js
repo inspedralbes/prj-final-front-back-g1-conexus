@@ -387,7 +387,7 @@ router.beforeEach(async (to, from, next) => {
 
     if (to.path.includes('/canteen') || to.path.includes('/menu-admin')) {
       serviceToCheck = 'canteen';
-    } else if (to.path.includes('/chats') || to.path.includes('/chat')) {
+    } else if (to.path.includes('/chats') || to.path.includes('/chat') || to.path.includes('/canteen/chat')) {
       serviceToCheck = 'chat';
     } else if (to.path.includes('/lost-objects') || to.path.includes('/config-lost-objects')) {
       serviceToCheck = 'lostObjects';
