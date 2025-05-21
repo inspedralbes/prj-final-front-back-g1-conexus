@@ -46,10 +46,10 @@ router.delete("/:id", verifyTokenMiddleware, async (req, res) => {
     try {
         const department = await Department.findByPk(req.params.id);
         if (!department) {
-            return res.status(404).json({ message: "Department not found" });
+            return res.status(404).json({ message: "Departament no trobat" });
         } else {
             await Department.destroy({ where: { id: req.params.id } });
-            res.json({ message: "Department deleted successfully" });
+            res.json({ message: "Departament eliminat correctament" });
         }
     } catch (error) {
         res.status(500).json({ message: error.message });

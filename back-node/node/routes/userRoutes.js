@@ -29,7 +29,6 @@ export async function hashPassword(contrasenya) {
     return hashedPassword
 }
 
-// Obtener todos los usuarios
 router.get("/", verifyTokenMiddleware, async (req, res) => {
     try {
         const users = await User.findAll();
@@ -39,7 +38,6 @@ router.get("/", verifyTokenMiddleware, async (req, res) => {
     }
 });
 
-// Crear un nuevo usuario
 router.post("/", upload.single('profile'), verifyTokenMiddleware, async (req, res) => {
     console.log("Req body:", req.body);
     console.log("Req file:", req.file);
@@ -47,7 +45,6 @@ router.post("/", upload.single('profile'), verifyTokenMiddleware, async (req, re
     try {
         const { typeUsers_id, name, email, password } = req.body;
         
-        // Verificar si ya existe un usuario con ese correo
         const existingUser = await User.findOne({ where: { email } });
         
         if (existingUser) {
@@ -56,7 +53,6 @@ router.post("/", upload.single('profile'), verifyTokenMiddleware, async (req, re
             });
         }
 
-        // Capturar la ruta del archivo si existe
         const profile = req.file ? `uploads/${req.file.filename}` : null;
         
         const user = await User.create({ 
@@ -64,7 +60,7 @@ router.post("/", upload.single('profile'), verifyTokenMiddleware, async (req, re
             name, 
             email, 
             password, 
-            profile  // Ahora guardamos la ruta de la imagen
+            profile 
         });
         
         res.json(user);
@@ -74,14 +70,12 @@ router.post("/", upload.single('profile'), verifyTokenMiddleware, async (req, re
     }
 });
 
-// Función auxiliar para descargar la imagen desde una URL
 async function downloadImage(url, filename) {
     const response = await fetch(url);
     if (!response.ok) {
         throw new Error(`Error en descarregar la imatge: ${response.statusText}`);
     }
     
-    // Crear directorio 'uploads' si no existe
     if (!fs.existsSync('uploads')) {
         fs.mkdirSync('uploads');
     }
@@ -103,7 +97,6 @@ router.post("/register", upload.single('profile'), async (req, res) => {
     try {
         const { typeUsers_id, name, email, password, profile } = req.body;
         
-        // Verificar si ya existe un usuario con ese correo
         const existingUser = await User.findOne({ where: { email } });
         
         if (existingUser) {
@@ -114,31 +107,23 @@ router.post("/register", upload.single('profile'), async (req, res) => {
         
         let profilePath = null;
         
-        // Caso 1: Si hay un archivo subido mediante multer
         if (req.file) {
             profilePath = `uploads/${req.file.filename}`;
         }
-        // Caso 2: Si hay una URL de imagen en el campo profile
         else if (profile && (profile.startsWith('http://') || profile.startsWith('https://'))) {
             try {
-                // Generar un nombre único y seguro para el archivo
-                // Evitar usar la extensión de la URL original, ya que puede ser problemática
                 const uniqueFilename = `${Date.now()}-${Math.round(Math.random() * 1E9)}.jpg`;
-                
-                // Descargar la imagen y obtener la ruta donde se guardó
                 profilePath = await downloadImage(profile, uniqueFilename);
                 console.log(`Imatge descarregada i desada a: ${profilePath}`);
             } catch (downloadError) {
                 console.error("Error en descarregar la imatge:", downloadError);
-                // Continuar sin imagen si hay error en la descarga
             }
         }
         // Caso 3: Si ya es una ruta local (empieza con 'uploads/')
-        else if (profile && profile.startsWith('uploads/')) {
+        else if (profile && profile.startsWith('api/uploads/')) {
             profilePath = profile;
         }
         
-        // Crear el usuario con la ruta de la imagen (o null si no hay imagen)
         const user = await User.create({ 
             typeUsers_id, 
             name, 
@@ -170,13 +155,11 @@ router.get("/:id", verifyTokenMiddleware, async (req, res) => {
     }
 });
 
-// Obtener un usuario por email
 router.post("/email", verifyTokenMiddleware, async (req, res) => {
     try {
         const { email } = req.body;
         console.log(email);
 
-        // Obtener el usuario con su tipo de usuario
         const user = await User.findOne({
             where: { email },
             include: [
@@ -200,7 +183,6 @@ router.post("/email", verifyTokenMiddleware, async (req, res) => {
     }
 });
 
-// Actualizar un usuario por ID
 router.put("/personalData/:id", verifyTokenMiddleware, async (req, res) => {
     try {
         const { id } = req.params;
@@ -219,7 +201,6 @@ router.put("/personalData/:id", verifyTokenMiddleware, async (req, res) => {
     }
 });
 
-// Actualizar un usuario por ID (actualización de rol)
 router.put("/updateRole/:id", verifyTokenMiddleware, async (req, res) => {
     try {
         const { id } = req.params;
@@ -238,7 +219,6 @@ router.put("/updateRole/:id", verifyTokenMiddleware, async (req, res) => {
     }
 });
 
-// Eliminar un usuario por ID
 router.delete("/:id", verifyTokenMiddleware, async (req, res) => {
     try {
         const { id } = req.params;
@@ -248,24 +228,18 @@ router.delete("/:id", verifyTokenMiddleware, async (req, res) => {
             return res.status(404).json({ message: "Usuari no trobat" });
         }
 
-        // Eliminar la imagen si existe
         if (user.profile) {
             try {
-                // La ruta almacenada en la base de datos ya debe incluir 'uploads/'
                 const imagePath = path.resolve(user.profile);
                 
-                // Verificar que el archivo existe antes de intentar eliminarlo
                 if (fs.existsSync(imagePath)) {
                     fs.unlinkSync(imagePath);
                     console.log(`Imatge eliminada: ${imagePath}`);
                 }
             } catch (imageError) {
                 console.error("Error en eliminar la imatge:", imageError);
-                // Continuamos con la eliminación del usuario incluso si hay error con la imagen
             }
         }
-
-        // Eliminar el usuario
         await user.destroy();
         res.json({ message: "Usuari eliminat correctament" });
     } catch (error) {
@@ -274,7 +248,6 @@ router.delete("/:id", verifyTokenMiddleware, async (req, res) => {
     }
 });
 
-// Login de usuario
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
@@ -287,7 +260,6 @@ router.post('/login', async (req, res) => {
             return res.status(404).json({ error: 'Usuari no trobat' });
         }
 
-        // Verify password
         const match = await bcrypt.compare(password, existingUser.password);
 
         if (!match) {
@@ -306,7 +278,6 @@ router.post('/login', async (req, res) => {
     }
 });
 
-// Get all users with typeUsers_id=1 (teacher) from a specific department
 router.get("/teachers/:department_id", verifyTokenMiddleware, async (req, res) => {
     try {
         const { department_id } = req.params;
@@ -322,18 +293,13 @@ router.get("/teachers/:department_id", verifyTokenMiddleware, async (req, res) =
     }
 });
 
-// Get stats: total users and users registered today
 router.get("/stats/count", async (req, res) => {
     try {
-        // Get total count of users
         const totalUsers = await User.count();
-
-        // Get today's date boundaries (start and end of day)
         const today = new Date();
         const startOfDay = new Date(today.setHours(0, 0, 0, 0));
         const endOfDay = new Date(today.setHours(23, 59, 59, 999));
 
-        // Count users registered today
         const todayUsers = await User.count({
             where: {
                 createdAt: {
@@ -352,7 +318,6 @@ router.get("/stats/count", async (req, res) => {
     }
 });
 
-// Verificar si un correo ya está registrado y obtener los roles permitidos para ese dominio
 router.post("/check-email", async (req, res) => {
     try {
         const { email } = req.body;
@@ -360,8 +325,7 @@ router.post("/check-email", async (req, res) => {
         if (!email) {
             return res.status(400).json({ message: "El correu és obligatori" });
         }
-        
-        // Verificar si el correo ya existe
+
         const existingUser = await User.findOne({ where: { email } });
         
         return res.json({ 
@@ -391,10 +355,8 @@ router.put("/updateDepartment/:id", verifyTokenMiddleware, async (req, res) => {
 }
 );
 
-// Añadir esta función al final del archivo, antes de export default router
 export async function getLatestUser() {
     try {
-        // No necesitamos verificar token aquí
         const latestUser = await User.findOne({
             order: [['createdAt', 'DESC']],
             attributes: ['id', 'name', 'email', 'typeUsers_id', 'createdAt'],

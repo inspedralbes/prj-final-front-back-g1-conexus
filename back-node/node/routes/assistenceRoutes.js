@@ -34,7 +34,6 @@ router.post("/", verifyTokenMiddleware, async (req, res) => {
         }
         course_id = parseInt(course_id);
         user_id = parseInt(user_id);
-        //check if the user_id and course_id exist in the database
         const user = await User.findOne({ where: { id: user_id } });
         const course = await Course.findOne({ where: { id: course_id } });
         if (!user) {
@@ -43,12 +42,10 @@ router.post("/", verifyTokenMiddleware, async (req, res) => {
         if (!course) {
             return res.status(404).json({ message: "course_id no trobat" });
         }
-        //check if the user is on the course
         const userCourse = await UserCourse.findOne({ where: { user_id, course_id } });
         if (!userCourse) {
             return res.status(404).json({ message: "user_id no està inscrit al course_id" });
         }
-        //check if the hour and user is already in the database
         const hourExists = await Assistence.findOne({ where: { hour, user_id, day } });
         let assistance;
         if (hourExists) {
@@ -77,18 +74,17 @@ router.put("/:id", verifyTokenMiddleware, async (req, res) => {
 router.delete("/:id", verifyTokenMiddleware, async (req, res) => {
     const assistance = await Assistence.findByPk(req.params.id);
     if (!assistance) {
-        return res.status(404).json({ message: "Assistance not found" });
+        return res.status(404).json({ message: "Assistència no trobada" });
     } else {
         try {
             await Assistence.destroy();
-            res.json({ message: "Assistance deleted successfully" });
+            res.json({ message: "Assistència eliminada correctament" });
         } catch (error) {
             res.status(500).json({ message: error.message });
         }
     }
 });
 
-// Get all assistance from a course
 router.get("/course/:id", verifyTokenMiddleware, async (req, res) => {
     try {
         const assistance = await Assistence.findAll({ where: { course_id: req.params.id } });
@@ -98,7 +94,6 @@ router.get("/course/:id", verifyTokenMiddleware, async (req, res) => {
     }
 });
 
-// Get all assistance from a day
 router.get("/course/:courseId/day/:day", verifyTokenMiddleware, async (req, res) => {
     try {
         const { courseId, day } = req.params;
@@ -110,7 +105,6 @@ router.get("/course/:courseId/day/:day", verifyTokenMiddleware, async (req, res)
     }
 });
 
-//Get all assistance from a user and a course
 router.get("/user/:userId/course/:courseId", verifyTokenMiddleware, async (req, res) => {
     try {
         const { userId, courseId } = req.params;

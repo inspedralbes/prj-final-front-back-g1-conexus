@@ -13,7 +13,6 @@ router.get("/", async (req, res) => {
     }
 });
 
-// Get type user by ID
 router.get("/:id", async (req, res) => {
     try {
         const typeUser = await TypeUser.findByPk(req.params.id);
@@ -26,16 +25,13 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-// Create a new type user
 router.post("/",verifyTokenMiddleware,async (req, res) => {
     try {
         const { name } = req.body;
-        // Check if type user already exists
         const existingTypeUser = await TypeUser.findOne({ where: { name } });
         if (existingTypeUser) {
             return res.status(400).json({ message: "El tipus d'usuari ja existeix" });
         }
-        // Create new type user
         const typeUser = await TypeUser.create({ name });
         res.json(typeUser);
     } catch (error) {
@@ -43,7 +39,6 @@ router.post("/",verifyTokenMiddleware,async (req, res) => {
     }
 });
 
-// Update type user by ID
 router.put("/:id", verifyTokenMiddleware, async (req, res) => {
     try {
         const { name } = req.body;
@@ -63,7 +58,6 @@ router.put("/:id", verifyTokenMiddleware, async (req, res) => {
     }
 });
 
-// Delete type user by ID
 router.delete("/:id", verifyTokenMiddleware, async (req, res) => {
     try {
         const { id } = req.params;

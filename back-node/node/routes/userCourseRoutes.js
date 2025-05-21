@@ -30,7 +30,7 @@ router.post("/", verifyTokenMiddleware, async (req, res) => {
         if (existingUserCourse) {
             return res.status(400).json({ message: "La relació usuari-curs ja existeix" });
         }
-      
+
         const userExists = await User.findByPk(user_id);
         if (!userExists) {
             return res.status(400).json({ message: "L'usuari no existeix" });
@@ -64,11 +64,11 @@ router.delete("/:id", verifyTokenMiddleware, async (req, res) => {
     }
 });
 
-router.get("/course/:course_id",verifyTokenMiddleware, async (req, res) => {
+router.get("/course/:course_id", verifyTokenMiddleware, async (req, res) => {
     try {
         const { course_id } = req.params;
         const userCourses = await UserCourse.findAll({ where: { course_id } });
-        
+
         if (!userCourses) {
             return res.status(404).json({ message: "No s'han trobat relacions per aquest curs" });
         }
@@ -90,12 +90,12 @@ router.get("/user/:userId", verifyTokenMiddleware, async (req, res) => {
         });
         const userCoursesWithNames = await Promise.all(
             userCourses.map(async (userCourse) => {
-            const course = await Course.findOne({ where: { id: userCourse.course_id } });
-            return { 
-                ...userCourse.toJSON(), 
-                course_name: course ? course.course_name : "Curs no trobat",
-                course_description: course ? course.course_description : "Sense descripció disponible"
-            };
+                const course = await Course.findOne({ where: { id: userCourse.course_id } });
+                return {
+                    ...userCourse.toJSON(),
+                    course_name: course ? course.course_name : "Curs no trobat",
+                    course_description: course ? course.course_description : "Sense descripció disponible"
+                };
             })
         );
         res.json(userCoursesWithNames);

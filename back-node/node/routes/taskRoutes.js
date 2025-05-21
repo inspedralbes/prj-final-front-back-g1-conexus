@@ -6,7 +6,6 @@ import { verifyTokenMiddleware } from "../token.js";
 
 const router = express.Router();
 
-// Obtenir totes les tasques
 router.get("/", verifyTokenMiddleware, async (req, res) => {
     try {
         const Tasks = await Task.findAll();
@@ -16,7 +15,6 @@ router.get("/", verifyTokenMiddleware, async (req, res) => {
     }
 });
 
-// Obtenir una tasca en concret
 router.get("/:id", verifyTokenMiddleware, async (req, res) => {
     try {
         const Task = await Task.findByPk(req.params.id);
@@ -26,7 +24,6 @@ router.get("/:id", verifyTokenMiddleware, async (req, res) => {
     }
 });
 
-// Crear una tasca nova
 router.post("/", verifyTokenMiddleware, async (req, res) => {
     try {
         const { task_name, course_id, task_description } = req.body;
@@ -38,7 +35,6 @@ router.post("/", verifyTokenMiddleware, async (req, res) => {
     }
 });
 
-// Actualitzar una tasca existent
 router.put("/:id",verifyTokenMiddleware, async (req, res) => {
     try {
         const { task_name, course_id, task_description, task_ended } = req.body;
@@ -57,7 +53,6 @@ router.put("/:id",verifyTokenMiddleware, async (req, res) => {
     }
 });
 
-// Eliminar una tasca
 router.delete("/:id",verifyTokenMiddleware, async (req, res) => {
     try {
         const Task = await Task.findByPk(req.params.id);
@@ -72,7 +67,6 @@ router.delete("/:id",verifyTokenMiddleware, async (req, res) => {
     }
 });
 
-// Obtenir totes les notes d'una tasca
 router.get("/getAllGradesFromTask/:id", verifyTokenMiddleware, async (req, res) => {
     try {
         const task = await Task.findByPk(req.params.id, {
@@ -92,7 +86,7 @@ router.get("/getAllGradesFromTask/:id", verifyTokenMiddleware, async (req, res) 
     }
 }
 );
-//Obtenir totes les tasques d'un curs
+
 router.get("/getAllTasksFromCourse/:id", verifyTokenMiddleware, async (req, res) => {
     try {
         const task = await Task.findAll({ where: { course_id: req.params.id } });
@@ -105,7 +99,7 @@ router.get("/getAllTasksFromCourse/:id", verifyTokenMiddleware, async (req, res)
     }
 }
 );
-//Obtenir totes les tasques d'un alumne
+
 router.get("/getAllTasksFromStudent/:id", verifyTokenMiddleware, async (req, res) => {
     try {
         const task = await Task.findAll({ where: { user_id: req.params.id } });
@@ -118,7 +112,7 @@ router.get("/getAllTasksFromStudent/:id", verifyTokenMiddleware, async (req, res
     }
 }
 );
-//Obtenir totes les tasques d'un alumne d'un curs
+
 router.get("/getAllTasksFromStudentFromCourse/:courseId/:studentId", verifyTokenMiddleware, async (req, res) => {
     try {
         const task = await Task.findAll({ where: { course_id: req.params.courseId, user_id: req.params.studentId } });

@@ -49,7 +49,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-// GET /reports - Obtenir tots els informes
 router.get("/", verifyTokenMiddleware, async (req, res) => {
   try {
     const reports = await Reports.findAll({
@@ -76,7 +75,6 @@ router.get("/", verifyTokenMiddleware, async (req, res) => {
   }
 });
 
-// Get /reports/user/:user_id - Obtenir informes per ID d'usuari
 router.get("/user/:user_id", verifyTokenMiddleware, async (req, res) => {
   const { user_id } = req.params;
   try {
@@ -86,14 +84,12 @@ router.get("/user/:user_id", verifyTokenMiddleware, async (req, res) => {
         .status(404)
         .json({ message: "No s'han trobat informes per a aquest usuari" });
     }
-    //retornar l'array d'informes
     res.json(reports);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
 
-//Get /reports/room/:room_id - Obtenir informes per ID d'habitació
 router.get("/room/:room_id", verifyTokenMiddleware, async (req, res) => {
   const { room_id } = req.params;
   try {
@@ -103,14 +99,12 @@ router.get("/room/:room_id", verifyTokenMiddleware, async (req, res) => {
         .status(404)
         .json({ message: "No s'han trobat informes per a aquesta habitació" });
     }
-    //retornar l'array d'informes
     res.json(reports);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
 
-//Get /reports/finished - Obtenir informes acabats
 router.get("/finished", verifyTokenMiddleware, async (req, res) => {
   try {
     const reports = await Reports.findAll({ where: { finished: true } });
@@ -119,14 +113,12 @@ router.get("/finished", verifyTokenMiddleware, async (req, res) => {
         .status(404)
         .json({ message: "No s'han trobat informes acabats" });
     }
-    //retornar l'array d'informes acabats
     res.json(reports);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
 
-//Get /reports/not-finished - Obtenir informes no acabats
 router.get("/not-finished", verifyTokenMiddleware, async (req, res) => {
   try {
     const reports = await Reports.findAll({ where: { finished: false } });
@@ -135,14 +127,12 @@ router.get("/not-finished", verifyTokenMiddleware, async (req, res) => {
         .status(404)
         .json({ message: "No s'han trobat informes no acabats" });
     }
-    //retornar l'array d'informes no acabats
     res.json(reports);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
 
-// GET /reports/:id - Obtenir un informe per ID
 router.get("/:id", verifyTokenMiddleware, async (req, res) => {
   const { id } = req.params;
   try {
@@ -150,17 +140,14 @@ router.get("/:id", verifyTokenMiddleware, async (req, res) => {
     if (!report) {
       return res.status(404).json({ message: "Informe no trobat" });
     }
-    //retornar l'objecte informe
     res.json(report);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
 
-// POST /reports - Crear un nou informe
 router.post("/", verifyTokenMiddleware, upload.single("image"), async (req, res) => {
   try {
-    // Parse the JSON string from the data field
     const reportData = JSON.parse(req.body.data);
     const { user_id, report, room_id } = reportData;
     const image = req.file ? req.file.path : null;
@@ -171,18 +158,6 @@ router.post("/", verifyTokenMiddleware, upload.single("image"), async (req, res)
         .json({ message: "user_id, report i room_id són obligatoris" });
     }
 
-    /**
-     * Crea un nou informe a la base de dades.
-     *
-     * @async
-     * @function
-     * @param {Object} reportData - Les dades per al nou informe.
-     * @param {number} reportData.user_id - L'ID de l'usuari que crea l'informe.
-     * @param {string} reportData.report - El contingut de l'informe.
-     * @param {string} reportData.image - L'URL o ruta de la imatge associada amb l'informe.
-     * @param {number} reportData.room_id - L'ID de l'habitació associada amb l'informe.
-     * @returns {Promise<Object>} L'objecte del nou informe creat.
-     */
     const newReport = await Reports.create({
       user_id,
       report,
@@ -196,7 +171,7 @@ router.post("/", verifyTokenMiddleware, upload.single("image"), async (req, res)
     res.status(500).json({ message: error.message });
   }
 });
-// PUT /reports/:id - Actualitzar un informe per ID
+
 router.put("/:id", verifyTokenMiddleware, async (req, res) => {
   const { id } = req.params;
   try {
@@ -229,32 +204,27 @@ router.put("/:id", verifyTokenMiddleware, async (req, res) => {
         }
       });
     }
-    //retornar l'objecte informe actualitzat
     res.json(report);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
 
-// DELETE /reports/:id - Eliminar un informe per ID
 router.delete("/:id", verifyTokenMiddleware, async (req, res) => {
   const { id } = req.params;
   try {
-    // Primer obtenim l'informe per saber si té una imatge associada
     const report = await Reports.findOne({ where: { id } });
     
     if (!report) {
       return res.status(404).json({ message: "Informe no trobat" });
     }
-    
-    // Si l'informe té una imatge, l'eliminem del sistema de fitxers
+
     if (report.image) {
       const fs = await import('fs');
       const path = await import('path');
       
       const imagePath = path.default.join(process.cwd(), report.image);
-      
-      // Comprovem si el fitxer existeix abans d'intentar eliminar-lo
+    
       if (fs.default.existsSync(imagePath)) {
         fs.default.unlinkSync(imagePath);
         console.log(`Imatge eliminada: ${imagePath}`);
@@ -262,12 +232,9 @@ router.delete("/:id", verifyTokenMiddleware, async (req, res) => {
         console.log(`Imatge no trobada al sistema de fitxers: ${imagePath}`);
       }
     }
-    
-    // Eliminar l'informe de la base de dades
+
     await report.destroy();
     
-    // Retornar un codi d'estat 204 per indicar l'eliminació amb èxit
-    // i sense contingut al cos de la resposta
     res.status(204).send();
   } catch (error) {
     console.error("Error en eliminar informe:", error);
@@ -284,7 +251,6 @@ router.put("/:id/assign", verifyTokenMiddleware, async (req, res) => {
       return res.status(404).json({ message: "Informe no trobat" });
     }
     await report.update({ user_assigned });
-    //retornar l'objecte informe actualitzat
 
     const updatedReport = await Reports.findOne({
       where: { id },
@@ -314,13 +280,10 @@ router.put("/:id/assign", verifyTokenMiddleware, async (req, res) => {
   }
 });
 
-// Obtener estadísticas de incidencias (total i sense resoldre)
 router.get("/stats/count", verifyTokenMiddleware, async (req, res) => {
   try {
-    // Contar totes les incidències
     const totalReports = await Reports.count();
 
-    // Contar incidències pendents (no resoltes)
     const pendingReports = await Reports.count({
       where: {
         status: {
@@ -329,7 +292,6 @@ router.get("/stats/count", verifyTokenMiddleware, async (req, res) => {
       }
     });
 
-    // Contar incidències resoltes
     const resolvedReports = await Reports.count({
       where: { status: 'revised' }
     });
