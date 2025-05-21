@@ -784,8 +784,8 @@ async function callCreateCourse() {
         newCourse.value.course_hours_available = formattedHours;
 
         await createCourse(newCourse.value);
-        courses.value = await getAllCourses();
-        
+        courses.value.course = await getAllCourses();
+
         toggleCreateCourse();
         resetForm();
     } catch (error) {
@@ -813,7 +813,7 @@ function sendUpdateCourse() {
 
     updateCourse(editingCourse.value.course.id, updatedCourse).then(async () => {
         showModal.value = false;
-        courses.value = await getAllCourses();
+        courses.value.courses = await getAllCourses();
     });
 }
 
