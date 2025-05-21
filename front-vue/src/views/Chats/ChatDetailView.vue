@@ -153,7 +153,7 @@
         <div
           v-for="(message, index) in messages"
           :key="index"
-          class="max-w-[65%]"
+          class="max-w-[65%] group relative"
           :class="{
             'ml-auto bg-blue-600/20 border border-blue-500/30 text-white':
               message.userId.toString() === currentUserId.toString(),
@@ -354,7 +354,9 @@
 
         <!-- Respuestas rápidas para la cantina -->
         <div class="mt-3 pt-3 border-t border-gray-200/20">
-          <p class="text-sm text-gray-400 mb-2">Preferències per la teva:</p>
+          <p class="text-sm text-gray-400 mb-2">
+            Preferències per la teva comanda:
+          </p>
           <div class="flex flex-wrap gap-2">
             <div
               v-for="(option, index) in quickOrderOptions"
@@ -599,6 +601,78 @@
         </button>
       </div>
     </div>
+
+    <!-- Modal para mostrar alertas -->
+    <div
+      v-if="showAlertModal"
+      class="fixed inset-0 z-50 flex items-center justify-center"
+    >
+      <div
+        class="absolute inset-0 bg-black/50"
+        @click="showAlertModal = false"
+      ></div>
+      <div
+        class="relative bg-slate-800 rounded-lg shadow-lg p-5 border border-slate-700 w-full max-w-sm mx-4 animate-fade-in"
+      >
+        <div
+          class="flex justify-between items-center mb-3 pb-2 border-b border-slate-700"
+        >
+          <h4 class="text-lg font-medium text-white">{{ alertTitle }}</h4>
+          <button
+            @click="showAlertModal = false"
+            class="p-1 text-gray-400 hover:text-red-400 transition-colors"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-4 h-4"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </button>
+        </div>
+        <p class="text-gray-300 mb-4">{{ alertMessage }}</p>
+        <div
+          class="flex"
+          :class="{
+            'justify-between': messageToDelete,
+            'justify-end': !messageToDelete,
+          }"
+        >
+          <!-- Solo mostrar botón de cancelar si es una confirmación de eliminación -->
+          <button
+            v-if="messageToDelete"
+            @click="showAlertModal = false"
+            class="bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded-lg text-sm font-medium transition-all"
+          >
+            Cancel·lar
+          </button>
+
+          <!-- Botón principal -->
+          <button
+            @click="
+              messageToDelete
+                ? confirmDeleteMessage()
+                : (showAlertModal = false)
+            "
+            :class="{
+              'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700':
+                messageToDelete,
+              'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700':
+                !messageToDelete,
+            }"
+            class="text-white py-2 px-4 rounded-lg text-sm font-medium transition-all hover:-translate-y-1 duration-200"
+          >
+            {{ messageToDelete ? "Eliminar" : "D'acord" }}
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -610,6 +684,7 @@ import chatManager from "@/services/communicationsScripts/chatsComManager";
 import { useAppStore } from "@/stores";
 import { getAllUsers } from "@/services/communicationsScripts/mainManager";
 
+const API_URL = import.meta.env.VITE_CHAT_URL;
 // Obtener el store de la aplicación
 const appStore = useAppStore();
 const route = useRoute();
@@ -1351,7 +1426,7 @@ const connectSocket = () => {
     }
 
     // Iniciar conexión con socket.io
-    socket.value = io("http://localhost:3007", {
+    socket.value = io(API_URL, {
       reconnection: true,
       reconnectionAttempts: 5,
       reconnectionDelay: 1000,
@@ -1396,20 +1471,14 @@ const connectSocket = () => {
 
 // Configurar los manejadores de eventos del socket
 const setupSocketEventHandlers = () => {
-  // Escuchar nuevos mensajes
   socket.value.on("new_message", (data) => {
-    // console.log("Nuevo mensaje recibido del socket:", data);
-
-    // Extraer la información del mensaje según la estructura del backend
     let messageData = null;
 
-    // Si el mensaje tiene una estructura completa (viene del backend directamente)
     if (
       data.interaction &&
       Array.isArray(data.interaction) &&
       data.interaction.length > 0
     ) {
-      // Tome el último mensaje de la interacción
       const lastInteraction = data.interaction[data.interaction.length - 1];
       messageData = {
         id: lastInteraction._id,
@@ -1421,7 +1490,6 @@ const setupSocketEventHandlers = () => {
         timestamp: new Date(lastInteraction.date),
       };
     } else if (data.message && data.userId) {
-      // Si es un mensaje formateado para el front
       messageData = {
         id: data.id || Date.now().toString(),
         userId: data.userId,
@@ -1436,7 +1504,6 @@ const setupSocketEventHandlers = () => {
       data.interaction &&
       !Array.isArray(data.interaction)
     ) {
-      // Si interaction es un solo objeto (no un array)
       const msg = data.interaction;
       messageData = {
         id: msg._id || Date.now().toString(),
@@ -2234,13 +2301,9 @@ const scrollToBottom = () => {
 const retryMessage = async (message, index) => {
   if (message.failed && chatId.value) {
     try {
-      // console.log("Reintentando enviar mensaje:", message);
-
-      // Marcar el mensaje como en proceso de envío
       messages.value[index].failed = false;
       messages.value[index].sending = true;
 
-      // Asegurarse de que el mensaje tenga información de enlaces
       if (!message.hasLinks) {
         const links = detectLinks(message.message);
         message.hasLinks = links.length > 0;
@@ -2248,19 +2311,12 @@ const retryMessage = async (message, index) => {
         message.linkPreviews = [];
       }
 
-      // Solo usar la API para evitar duplicaciones
-      // console.log(
-      //   `Reenviando mensaje a la API. Chat: ${chatId.value}, teacherId: ${message.userId}`
-      // );
       const result = await chatManager.sendMessage(
         chatId.value,
         message.userId,
         message.message
       );
 
-      // console.log("Respuesta de la API al reenviar mensaje:", result);
-
-      // Actualizar el mensaje con el ID real
       if (result.interaction && result.interaction.length > 0) {
         const newMsg = result.interaction[result.interaction.length - 1];
         messages.value[index] = {
@@ -2271,20 +2327,14 @@ const retryMessage = async (message, index) => {
           linkPreviews: newMsg.linkPreviews || [],
           sending: false,
           failed: false,
-          local: true, // Mantener la marca para evitar duplicación
+          local: true,
         };
-        // console.log(
-        //   "Mensaje actualizado después del reintento:",
-        //   messages.value[index]
-        // );
       } else {
-        // Solo marcar como enviado si no tenemos el ID real
         messages.value[index].sending = false;
         messages.value[index].failed = false;
       }
     } catch (error) {
-      console.error("Error al reenviar mensaje:", error);
-      // Marcar el mensaje como fallido nuevamente
+      console.error("Error al reenviar missatge:", error);
       messages.value[index].failed = true;
       messages.value[index].sending = false;
     }
@@ -2315,14 +2365,25 @@ const dispatchChatViewEvent = (action) => {
 const deleteMessage = async (message) => {
   if (!message.id || !chatId.value) return;
 
-  try {
-    // Confirm deletion
-    if (!confirm("¿Estás seguro de que deseas eliminar este mensaje?")) {
-      return;
-    }
+  // Store the message to delete and show the confirmation modal
+  messageToDelete.value = message;
+  showAlert(
+    "Confirmar eliminació",
+    "Estàs segur que vols eliminar aquest missatge?"
+  );
 
-    // Check if the message ID is a temporary ID (timestamp) vs MongoDB ObjectID
-    const isTemporaryId = /^\d{13,}$/.test(message.id);
+  // The actual deletion will be handled by confirmDeleteMessage
+};
+
+// Add a new function to handle the actual message deletion after confirmation
+const confirmDeleteMessage = async () => {
+  if (!messageToDelete.value || !messageToDelete.value.id || !chatId.value) {
+    showAlertModal.value = false;
+    return;
+  }
+
+  try {
+    const message = messageToDelete.value;
 
     // Mark the message as deleted locally first for immediate feedback
     const messageIndex = messages.value.findIndex(
@@ -2332,6 +2393,12 @@ const deleteMessage = async (message) => {
     if (messageIndex !== -1) {
       messages.value[messageIndex].deleted = true;
     }
+
+    // Hide the confirmation modal
+    showAlertModal.value = false;
+
+    // Check if the message ID is a temporary ID (timestamp) vs MongoDB ObjectID
+    const isTemporaryId = /^\d{13,}$/.test(message.id);
 
     // If it's a temporary ID, we need to get the real message ID from the server first
     if (isTemporaryId) {
@@ -2379,17 +2446,23 @@ const deleteMessage = async (message) => {
     await chatManager.deleteMessage(chatId.value, message.id);
 
     console.log(`Mensaje ${message.id} eliminado exitosamente`);
+    messageToDelete.value = null;
   } catch (error) {
     console.error("Error al eliminar mensaje:", error);
-    alert("No se pudo eliminar el mensaje. Inténtalo de nuevo.");
+    showAlert(
+      "Error",
+      "No s'ha pogut eliminar el missatge. Torna-ho a provar."
+    );
 
     // Revert the deleted state if there was an error
     const messageIndex = messages.value.findIndex(
-      (msg) => msg.id === message.id
+      (msg) => msg.id === messageToDelete.value.id
     );
     if (messageIndex !== -1) {
       messages.value[messageIndex].deleted = false;
     }
+
+    messageToDelete.value = null;
   }
 };
 
@@ -2428,7 +2501,10 @@ const openLink = (url) => {
   } catch (error) {
     console.error("Error al abrir URL:", error, "URL:", url);
     // Mostrar mensaje de error al usuario
-    alert("No se pudo abrir el enlace. URL incorrecta o inaccesible.");
+    showAlert(
+      "Error d'enllaç",
+      "No s'ha pogut obrir l'enllaç. URL incorrecta o inaccessible."
+    );
   }
 };
 
@@ -2478,7 +2554,7 @@ const openLinkPopup = () => {
 const insertLink = async () => {
   if (!linkUrl.value) {
     // Mostrar mensaje de error si no hay URL
-    alert("Por favor, introduce una URL válida");
+    showAlert("URL buida", "Si us plau, introdueix una URL vàlida");
     return;
   }
 
@@ -2498,7 +2574,10 @@ const insertLink = async () => {
     try {
       new URL(normalizedUrl);
     } catch (e) {
-      alert("La URL introducida no es válida. Por favor, verifica el formato.");
+      showAlert(
+        "URL no vàlida",
+        "La URL introduïda no és vàlida. Si us plau, verifica el format."
+      );
       console.error("URL inválida:", normalizedUrl, e);
       return;
     }
@@ -2518,7 +2597,7 @@ const insertLink = async () => {
     }, 100);
   } catch (error) {
     console.error("Error al insertar enlace:", error);
-    alert("No se pudo insertar el enlace. Inténtalo de nuevo.");
+    showAlert("Error", "No s'ha pogut inserir l'enllaç. Torna-ho a provar.");
   }
 };
 
@@ -2555,8 +2634,8 @@ const showCantinaInfo = ref(false);
 
 // Opciones rápidas para pedidos de cantina
 const quickOrderOptions = ref([
-  "Sense tomaquet",
-  "Amb tomaquet",
+  "Sense tomàquet",
+  "Amb tomàquet",
   "Fred",
   "Calent",
 ]);
@@ -2580,6 +2659,20 @@ watch(messages, () => {
     scrollToBottom();
   }
 });
+
+// Variables para el modal de alertas
+const showAlertModal = ref(false);
+const alertTitle = ref("");
+const alertMessage = ref("");
+
+// Función para mostrar una alerta
+const showAlert = (title, message) => {
+  alertTitle.value = title;
+  alertMessage.value = message;
+  showAlertModal.value = true;
+};
+
+const messageToDelete = ref(null); // Variable para el mensaje a eliminar
 </script>
 
 <style scoped>

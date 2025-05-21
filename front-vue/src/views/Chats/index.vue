@@ -65,6 +65,7 @@ import { useAppStore } from "@/stores";
 const appStore = useAppStore();
 
 // Variables del chat
+const API_URL = import.meta.env.VITE_CHAT_URL;
 const socket = ref(null);
 const messages = ref([]);
 const newMessage = ref("");
@@ -228,7 +229,7 @@ const connectSocket = () => {
     }
 
     // Iniciar conexión con socket.io
-    socket.value = io("http://localhost:3007", {
+    socket.value = io(API_URL, {
       reconnection: true,
       reconnectionAttempts: 5,
       reconnectionDelay: 1000,

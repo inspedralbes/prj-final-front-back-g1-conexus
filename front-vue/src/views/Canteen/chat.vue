@@ -204,6 +204,7 @@ const menuItems = ref([]);
 const menuLoading = ref(false);
 const newMessage = ref("");
 const usersCache = ref({});
+const API_URL = import.meta.env.VITE_CHAT_URL;
 
 // Obtener el store y router
 const appStore = useAppStore();
@@ -517,7 +518,7 @@ const formatTimeAgo = (timestamp) => {
 const connectSocket = () => {
   try {
     // Iniciar conexión con socket.io
-    socket.value = io("http://localhost:3007", {
+    socket.value = io(API_URL, {
       reconnection: true,
       reconnectionAttempts: 5,
       reconnectionDelay: 1000,

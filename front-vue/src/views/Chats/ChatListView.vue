@@ -86,7 +86,7 @@
               }"
               @click="selectFilter('all')"
             >
-              <span>Todos los tipos</span>
+              <span>Tots els tipus</span>
             </div>
             <div
               v-for="type in filteredUserTypes"
@@ -139,7 +139,7 @@
           :class="{ 'text-purple-400 font-medium': activeTab === 'all' }"
           @click="activeTab = 'all'"
         >
-          Todos
+          Tots
           <span
             v-if="activeTab === 'all'"
             class="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-purple-500 to-blue-500"
@@ -268,6 +268,61 @@
         </button>
       </li>
     </ul>
+
+    <!-- Modal de confirmación para eliminar chat -->
+    <div
+      v-if="showDeleteModal"
+      class="fixed inset-0 z-50 flex items-center justify-center"
+    >
+      <div
+        class="absolute inset-0 bg-black/50"
+        @click="showDeleteModal = false"
+      ></div>
+      <div
+        class="relative bg-slate-800 rounded-lg shadow-lg p-5 border border-slate-700 w-full max-w-sm mx-4 animate-fade-in"
+      >
+        <div
+          class="flex justify-between items-center mb-3 pb-2 border-b border-slate-700"
+        >
+          <h4 class="text-lg font-medium text-white">Confirmar eliminació</h4>
+          <button
+            @click="showDeleteModal = false"
+            class="p-1 text-gray-400 hover:text-red-400 transition-colors"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-4 h-4"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </button>
+        </div>
+        <p class="text-gray-300 mb-4">
+          Estàs segur que vols eliminar aquesta conversa? Aquesta acció no es
+          pot desfer.
+        </p>
+        <div class="flex gap-3 justify-end">
+          <button
+            @click="showDeleteModal = false"
+            class="bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded-lg text-sm font-medium transition-all"
+          >
+            Cancel·lar
+          </button>
+          <button
+            @click="confirmDeleteChat"
+            class="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white py-2 px-4 rounded-lg text-sm font-medium transition-all hover:-translate-y-1 duration-200"
+          >
+            Eliminar
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -283,6 +338,7 @@ import { useAppStore } from "@/stores";
 import io from "socket.io-client";
 
 // Estado
+const API_URL = import.meta.env.VITE_CHAT_URL;
 const users = ref([]);
 const userTypes = ref([]);
 const loading = ref(true);
@@ -300,6 +356,8 @@ const typingUsers = ref({}); // Para almacenar qué usuarios están escribiendo
 const showFilterMenu = ref(false);
 const filterRef = ref(null); // Referencia al contenedor del filtro
 const disableNotifications = ref(true);
+const showDeleteModal = ref(false);
+const userToDelete = ref(null);
 
 // Imagen por defecto como data URL
 const defaultAvatar =
@@ -609,8 +667,18 @@ const loadUserChats = async () => {
 };
 
 const deleteUserChat = async (user) => {
+  userToDelete.value = user;
+  showDeleteModal.value = true;
+};
+
+// Add the confirmDeleteChat function to handle actual deletion
+const confirmDeleteChat = async () => {
   try {
     loading.value = true;
+    showDeleteModal.value = false;
+
+    const user = userToDelete.value;
+    if (!user) return;
 
     // Buscar un chat existente donde participen ambos usuarios
     const existingChat = findChatWithUser(user);
@@ -619,8 +687,6 @@ const deleteUserChat = async (user) => {
       // Marcar el chat como eliminado localmente
       deletedChats.value.add(existingChat._id);
       saveDeletedChats();
-
-      // console.log("Chat marcado como eliminado localmente:", existingChat._id);
 
       // Limpiar el mensaje no leído del usuario si existe
       if (hasNewMessages.value[user.id]) {
@@ -632,6 +698,9 @@ const deleteUserChat = async (user) => {
       // Forzar actualización de la UI
       filteredUsers.value = [...filteredUsers.value];
     }
+
+    // Reset userToDelete
+    userToDelete.value = null;
   } catch (error) {
     console.error("Error al eliminar el chat:", error);
     error.value = "No se pudo eliminar el chat. Intente de nuevo más tarde.";
@@ -644,7 +713,7 @@ const deleteUserChat = async (user) => {
 const connectToSocket = () => {
   try {
     // Iniciar conexión con socket.io
-    socket.value = io("http://localhost:3007", {
+    socket.value = io(API_URL, {
       reconnection: true,
       reconnectionAttempts: 5,
       reconnectionDelay: 1000,

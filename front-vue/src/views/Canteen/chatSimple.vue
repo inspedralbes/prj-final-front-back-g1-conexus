@@ -404,6 +404,7 @@ import io from "socket.io-client";
 import { getAllEnabledCanteenItems } from "@/services/communicationsScripts/canteenComManager";
 
 // Variables del estado
+const API_URL = import.meta.env.VITE_CHAT_URL;
 const loading = ref(true);
 const error = ref(null);
 const chats = ref([]);
@@ -836,7 +837,7 @@ const sendMenuResponse = async () => {
 const connectSocket = () => {
   try {
     // Iniciar connexió amb socket.io
-    socket.value = io("http://localhost:3007", {
+    socket.value = io(API_URL, {
       reconnection: true,
       reconnectionAttempts: 5,
       reconnectionDelay: 1000,
