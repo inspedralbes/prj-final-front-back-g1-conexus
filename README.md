@@ -43,8 +43,11 @@ Conexus Hub és una plataforma educativa integral dissenyada per a facilitar la 
 - Administració de serveis 
 
 ### Tecnics
-
-
+- Gestió d'incidencies
+- Solucions
+- Assignacions de cursos
+- Objectes perduts
+- Grafiques
 
 ### Personal de Cantina 🍽️
 - Gestió de comandes
