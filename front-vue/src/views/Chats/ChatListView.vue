@@ -157,7 +157,7 @@
         <div
           class="w-10 h-10 border-4 border-slate-600 border-t-purple-500 rounded-full animate-spin mb-4"
         ></div>
-        <p class="text-gray-400">Cargando usuarios...</p>
+        <p class="text-gray-400">Carregant converses...</p>
       </div>
     </div>
 
@@ -187,9 +187,9 @@
           />
         </svg>
         <p v-if="activeTab === 'existing'" class="text-gray-400">
-          No tienes conversaciones existentes
+          No tens converses existents
         </p>
-        <p v-else class="text-gray-400">No se encontraron usuarios</p>
+        <p v-else class="text-gray-400">No s'han trobat converses</p>
       </div>
     </div>
 
