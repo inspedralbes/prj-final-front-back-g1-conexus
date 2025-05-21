@@ -164,11 +164,11 @@ router.put("/assignTeacher", verifyTokenMiddleware, async (req, res) => {
     const { course_id, teacher_id } = req.body;
     const course = await Course.findByPk(course_id);
     if (!course) {
-      return res.status(404).json({ message: "Course not found" });
+      return res.status(404).json({ message: "Course not found" + course_id + course});
     }
     let teacher = await User.findByPk(teacher_id);
     if(teacher==null){
-      return res.status(404).json({ message: "Teacher not found" });
+      return res.status(404).json({ message: "Teacher not found" + teacher_id });
     }else if(teacher.typeUsers_id!=1){
       return res.status(404).json({ teacher:teacher});
     } else{
@@ -176,14 +176,6 @@ router.put("/assignTeacher", verifyTokenMiddleware, async (req, res) => {
       await course.save();
       res.json(course);
     }
-
-    // const teacherExists = await checkIfUserIsTeacher(teacher_id);
-    // if (!teacherExists) {
-    //   return res.status(404).json({ message: "Teacher not found" });
-    // }
-    // course.course_teacher_id = teacher_id;
-    // await course.save();
-    // res.json(course);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
