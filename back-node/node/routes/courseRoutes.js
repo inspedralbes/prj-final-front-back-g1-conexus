@@ -140,6 +140,21 @@ router.get("/stats/count", verifyTokenMiddleware, async (req, res) => {
   }
 });
 
+router.get("/teacher/:id", verifyTokenMiddleware, async (req, res) => {
+  try {
+    const courses = await Course.findAll({
+      where: { teacher_id: req.params.id },
+    });
+    if (!courses) {
+      return res.status(404).json({ message: "No s'han trobat cursos" });
+    }
+    res.json(courses);
+  }
+  catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 export async function getLatestCourse() {
   try {
     const latestCourse = await Course.findOne({

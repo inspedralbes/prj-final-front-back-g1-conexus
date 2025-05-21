@@ -200,7 +200,7 @@ import { useAppStore } from '@/stores/index.js';
 const store = useAppStore();
 const allReports = ref([]);
 const loading = ref(true);
-const baseURL = import.meta.env.VITE_INCIDENT_URL;
+const baseURL = import.meta.env.VITE_BACKEND_URL;
 const reportToClose = ref(null);
 const closureComment = ref('');
 const selectedFilter = ref('all');

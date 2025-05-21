@@ -413,7 +413,7 @@ const router = useRouter();
 const store = useAppStore();
 const lostObjects = ref([]);
 const showForm = ref(false);
-const baseUrl = import.meta.env.VITE_LOST_OBJECT_URL;
+const baseUrl = import.meta.env.VITE_BACKEND_URL;
 const searchQuery = ref("");
 const timeFilter = ref("all");
 

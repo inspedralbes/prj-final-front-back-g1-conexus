@@ -119,7 +119,7 @@ import { getAllReports } from "@/services/communicationsScripts/incidentsManager
 
 const closedReports = ref([]);
 const loading = ref(true);
-const baseURL = import.meta.env.VITE_INCIDENT_URL;
+const baseURL = import.meta.env.VITE_BACKEND_URL;
 
 const formatDate = (dateString) => {
     if (!dateString) return 'Data no disponible';

@@ -330,7 +330,7 @@ import { getUser } from "@/services/communicationsScripts/mainManager.js"; // AÃ
 const route = useRoute();
 const router = useRouter();
 const store = useAppStore();
-const baseUrl = import.meta.env.VITE_LOST_OBJECT_URL;
+const baseUrl = import.meta.env.VITE_BACKEND_URL;
 
 const lostObject = ref(null);
 const responses = ref([]);

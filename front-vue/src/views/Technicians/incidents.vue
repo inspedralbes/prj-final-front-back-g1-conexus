@@ -166,7 +166,7 @@ import { deleteReport as deleteReportApi, getAllReports, updateReport as updateR
 import { useAppStore } from '@/stores/index';
 
 const reports = ref([]);
-const baseURL = import.meta.env.VITE_INCIDENT_URL;
+const baseURL = import.meta.env.VITE_BACKEND_URL;
 const appStore = useAppStore();
 const currentUser = ref(appStore.user || { 
     id: 5,
