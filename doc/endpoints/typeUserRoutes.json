@@ -3,10 +3,10 @@
     {
       "method": "GET",
       "path": "/api/type-users",
-      "description": "Obtener todos los tipos de usuario",
+      "description": "Obtenir tots els tipus d'usuari",
       "responses": {
         "200": {
-          "description": "Lista de todos los tipos de usuario",
+          "description": "Llista de tots els tipus d'usuari",
           "content": {
             "application/json": {
               "example": [
@@ -18,13 +18,13 @@
                 },
                 {
                   "id": 2,
-                  "name": "Profesor",
+                  "name": "Professor",
                   "created_at": "2024-04-09T15:30:00Z",
                   "updated_at": "2024-04-09T15:30:00Z"
                 },
                 {
                   "id": 3,
-                  "name": "Estudiante",
+                  "name": "Estudiant",
                   "created_at": "2024-04-09T15:30:00Z",
                   "updated_at": "2024-04-09T15:30:00Z"
                 }
@@ -33,11 +33,11 @@
           }
         },
         "500": {
-          "description": "Error interno del servidor",
+          "description": "Error intern del servidor",
           "content": {
             "application/json": {
               "example": {
-                "message": "Error al obtener los tipos de usuario"
+                "message": "Error en obtenir els tipus d'usuari"
               }
             }
           }
@@ -47,37 +47,47 @@
     {
       "method": "POST",
       "path": "/api/type-users",
-      "description": "Crear un nuevo tipo de usuario",
+      "description": "Crear un nou tipus d'usuari",
       "requestBody": {
         "required": true,
         "content": {
           "application/json": {
             "example": {
-              "name": "Nuevo Tipo"
+              "name": "Nou Tipus"
             }
           }
         }
       },
       "responses": {
-        "201": {
-          "description": "Tipo de usuario creado exitosamente",
+        "200": {
+          "description": "Tipus d'usuari creat correctament",
           "content": {
             "application/json": {
               "example": {
                 "id": 4,
-                "name": "Nuevo Tipo",
+                "name": "Nou Tipus",
                 "created_at": "2024-04-10T10:00:00Z",
                 "updated_at": "2024-04-10T10:00:00Z"
               }
             }
           }
         },
-        "500": {
-          "description": "Error interno del servidor",
+        "400": {
+          "description": "El tipus d'usuari ja existeix",
           "content": {
             "application/json": {
               "example": {
-                "message": "Error al crear el tipo de usuario"
+                "message": "El tipus d'usuari ja existeix"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Error intern del servidor",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Error en crear el tipus d'usuari"
               }
             }
           }
@@ -87,15 +97,21 @@
     {
       "method": "GET",
       "path": "/api/type-users/{id}",
-      "description": "Obtener un tipo de usuario específico por ID",
+      "description": "Obtenir un tipus d'usuari específic per ID",
       "parameters": [
         {
-          "id": 1
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID del tipus d'usuari",
+          "schema": {
+            "type": "integer"
+          }
         }
       ],
       "responses": {
         "200": {
-          "description": "Detalles del tipo de usuario",
+          "description": "Detalls del tipus d'usuari",
           "content": {
             "application/json": {
               "example": {
@@ -108,21 +124,21 @@
           }
         },
         "404": {
-          "description": "Tipo de usuario no encontrado",
+          "description": "Tipus d'usuari no trobat",
           "content": {
             "application/json": {
               "example": {
-                "message": "Tipo de usuario no encontrado"
+                "message": "Tipus d'usuari no trobat"
               }
             }
           }
         },
         "500": {
-          "description": "Error interno del servidor",
+          "description": "Error intern del servidor",
           "content": {
             "application/json": {
               "example": {
-                "message": "Error al obtener el tipo de usuario"
+                "message": "Error en obtenir el tipus d'usuari"
               }
             }
           }
@@ -132,10 +148,16 @@
     {
       "method": "PUT",
       "path": "/api/type-users/{id}",
-      "description": "Actualizar un tipo de usuario por ID",
+      "description": "Actualitzar un tipus d'usuari per ID",
       "parameters": [
         {
-          "id": 1
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID del tipus d'usuari",
+          "schema": {
+            "type": "integer"
+          }
         }
       ],
       "requestBody": {
@@ -143,19 +165,19 @@
         "content": {
           "application/json": {
             "example": {
-              "name": "Administrador Senior"
+              "name": "Administrador Sènior"
             }
           }
         }
       },
       "responses": {
         "200": {
-          "description": "Tipo de usuario actualizado",
+          "description": "Tipus d'usuari actualitzat",
           "content": {
             "application/json": {
               "example": {
                 "id": 1,
-                "name": "Administrador Senior",
+                "name": "Administrador Sènior",
                 "created_at": "2024-04-09T15:30:00Z",
                 "updated_at": "2024-04-10T11:00:00Z"
               }
@@ -163,21 +185,21 @@
           }
         },
         "404": {
-          "description": "Tipo de usuario no encontrado",
+          "description": "Tipus d'usuari no trobat",
           "content": {
             "application/json": {
               "example": {
-                "message": "Tipo de usuario no encontrado"
+                "message": "Tipus d'usuari no trobat"
               }
             }
           }
         },
         "500": {
-          "description": "Error interno del servidor",
+          "description": "Error intern del servidor",
           "content": {
             "application/json": {
               "example": {
-                "message": "Error al actualizar el tipo de usuario"
+                "message": "Error en actualitzar el tipus d'usuari"
               }
             }
           }
@@ -187,39 +209,45 @@
     {
       "method": "DELETE",
       "path": "/api/type-users/{id}",
-      "description": "Eliminar un tipo de usuario por ID",
+      "description": "Eliminar un tipus d'usuari per ID",
       "parameters": [
         {
-          "id": 1
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID del tipus d'usuari",
+          "schema": {
+            "type": "integer"
+          }
         }
       ],
       "responses": {
         "200": {
-          "description": "Tipo de usuario eliminado correctamente",
+          "description": "Tipus d'usuari eliminat correctament",
           "content": {
             "application/json": {
               "example": {
-                "message": "Tipo de usuario eliminado correctamente"
+                "message": "Tipus d'usuari eliminat correctament"
               }
             }
           }
         },
         "404": {
-          "description": "Tipo de usuario no encontrado",
+          "description": "Tipus d'usuari no trobat",
           "content": {
             "application/json": {
               "example": {
-                "message": "Tipo de usuario no encontrado"
+                "message": "Tipus d'usuari no trobat"
               }
             }
           }
         },
         "500": {
-          "description": "Error interno del servidor",
+          "description": "Error intern del servidor",
           "content": {
             "application/json": {
               "example": {
-                "message": "Error al eliminar el tipo de usuario"
+                "message": "Error en eliminar el tipus d'usuari"
               }
             }
           }

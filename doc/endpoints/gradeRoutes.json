@@ -3,10 +3,10 @@
         {
             "method": "GET",
             "path": "/api/grades",
-            "description": "Recuperar una lista de todas las calificaciones",
+            "description": "Recuperar una llista de totes les qualificacions",
             "responses": {
                 "200": {
-                    "description": "Lista de calificaciones",
+                    "description": "Llista de qualificacions",
                     "content": {
                         "application/json": {
                             "example": [
@@ -37,7 +37,7 @@
         {
             "method": "POST",
             "path": "/api/grades",
-            "description": "Crear una nueva calificación",
+            "description": "Crear una nova qualificació",
             "requestBody": {
                 "required": true,
                 "content": {
@@ -52,27 +52,27 @@
             },
             "responses": {
                 "201": {
-                    "description": "Calificación creada exitosamente"
+                    "description": "Qualificació creada correctament"
                 }
             }
         },
         {
             "method": "GET",
             "path": "/api/grades/{id}",
-            "description": "Obtener una calificación específica por ID",
+            "description": "Obtenir una qualificació específica per ID",
             "responses": {
                 "200": {
-                    "description": "Detalles de la calificación"
+                    "description": "Detalls de la qualificació"
                 },
                 "404": {
-                    "description": "Calificación no encontrada"
+                    "description": "Qualificació no trobada"
                 }
             }
         },
         {
             "method": "PUT",
             "path": "/api/grades/{id}",
-            "description": "Actualizar una calificación",
+            "description": "Actualitzar una qualificació",
             "requestBody": {
                 "required": true,
                 "content": {
@@ -85,10 +85,174 @@
             },
             "responses": {
                 "200": {
-                    "description": "Calificación actualizada"
+                    "description": "Qualificació actualitzada"
                 },
                 "404": {
-                    "description": "Calificación no encontrada"
+                    "description": "Qualificació no trobada"
+                }
+            }
+        },
+        {
+            "method": "DELETE",
+            "path": "/api/grades/{id}",
+            "description": "Eliminar una qualificació",
+            "responses": {
+                "200": {
+                    "description": "Qualificació eliminada correctament",
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "message": "Nota eliminada correctament"
+                            }
+                        }
+                    }
+                },
+                "404": {
+                    "description": "Qualificació no trobada",
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "message": "Nota no trobada"
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Error del servidor"
+                }
+            }
+        },
+        {
+            "method": "GET",
+            "path": "/api/grades/getAllGradesFromTask/{id}",
+            "description": "Obtenir totes les qualificacions d'una tasca específica",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID de la tasca",
+                    "schema": {
+                        "type": "integer"
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Llista de qualificacions de la tasca",
+                    "content": {
+                        "application/json": {
+                            "example": [
+                                {
+                                    "id": 1,
+                                    "user_id": 1,
+                                    "task_id": 1,
+                                    "grade": 8.5
+                                },
+                                {
+                                    "id": 2,
+                                    "user_id": 2,
+                                    "task_id": 1,
+                                    "grade": 7.0
+                                }
+                            ]
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Error del servidor"
+                }
+            }
+        },
+        {
+            "method": "GET",
+            "path": "/api/grades/getAllGradesFromUser/{id}",
+            "description": "Obtenir totes les qualificacions d'un usuari específic",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID de l'usuari",
+                    "schema": {
+                        "type": "integer"
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Llista de qualificacions de l'usuari",
+                    "content": {
+                        "application/json": {
+                            "example": [
+                                {
+                                    "id": 1,
+                                    "grade": 8.5
+                                },
+                                {
+                                    "id": 2,
+                                    "grade": 7.0
+                                }
+                            ]
+                        }
+                    }
+                },
+                "404": {
+                    "description": "Usuari no trobat"
+                },
+                "500": {
+                    "description": "Error del servidor"
+                }
+            }
+        },
+        {
+            "method": "GET",
+            "path": "/api/grades/getAllGradesFromUserAndCourse/{userId}/{courseId}",
+            "description": "Obtenir totes les qualificacions d'un usuari en un curs específic",
+            "parameters": [
+                {
+                    "name": "userId",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID de l'usuari",
+                    "schema": {
+                        "type": "integer"
+                    }
+                },
+                {
+                    "name": "courseId",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID del curs",
+                    "schema": {
+                        "type": "integer"
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Llista de qualificacions de l'usuari en el curs",
+                    "content": {
+                        "application/json": {
+                            "example": [
+                                {
+                                    "id": 1,
+                                    "grade": 8.5,
+                                    "task_id": 1,
+                                    "task_name": "Nom de la tasca"
+                                },
+                                {
+                                    "id": 2,
+                                    "grade": "Sense qualificar",
+                                    "task_id": 2,
+                                    "task_name": "Nom de la tasca 2"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Error del servidor"
                 }
             }
         }

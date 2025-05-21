@@ -3,20 +3,20 @@
         {
             "method": "GET",
             "path": "/api/departments",
-            "description": "Recuperar una lista de todos los departamentos",
+            "description": "Recuperar una llista de tots els departaments",
             "responses": {
                 "200": {
-                    "description": "Lista de departamentos",
+                    "description": "Llista de departaments",
                     "content": {
                         "application/json": {
                             "example": [
                                 {
                                     "id": 1,
-                                    "name": "Informática"
+                                    "name": "Informàtica"
                                 },
                                 {
                                     "id": 2,
-                                    "name": "Administración"
+                                    "name": "Administració"
                                 }
                             ]
                         }
@@ -27,38 +27,38 @@
         {
             "method": "POST",
             "path": "/api/departments",
-            "description": "Crear un nuevo departamento",
+            "description": "Crear un nou departament",
             "requestBody": {
                 "required": true,
                 "content": {
                     "application/json": {
                         "example": {
-                            "name": "Informática"
+                            "name": "Informàtica"
                         }
                     }
                 }
             },
             "responses": {
                 "201": {
-                    "description": "Departamento creado exitosamente",
+                    "description": "Departament creat correctament",
                     "content": {
                         "application/json": {
                             "example": {
                                 "id": 1,
-                                "name": "Informática"
+                                "name": "Informàtica"
                             }
                         }
                     }
                 },
                 "500": {
-                    "description": "Error interno del servidor"
+                    "description": "Error intern del servidor"
                 }
             }
         },
         {
             "method": "GET",
             "path": "/api/departments/{id}",
-            "description": "Obtener un departamento específico por ID",
+            "description": "Obtenir un departament específic per ID",
             "parameters": [
                 {
                     "id": 1
@@ -66,25 +66,25 @@
             ],
             "responses": {
                 "200": {
-                    "description": "Detalles del departamento",
+                    "description": "Detalls del departament",
                     "content": {
                         "application/json": {
                             "example": {
                                 "id": 1,
-                                "name": "Informática"
+                                "name": "Informàtica"
                             }
                         }
                     }
                 },
                 "404": {
-                    "description": "Departamento no encontrado"
+                    "description": "Departament no trobat"
                 }
             }
         },
         {
             "method": "PUT",
             "path": "/api/departments/{id}",
-            "description": "Actualizar un departamento",
+            "description": "Actualitzar un departament",
             "parameters": [
                 {
                     "id": 1
@@ -95,32 +95,32 @@
                 "content": {
                     "application/json": {
                         "example": {
-                            "name": "Informática y Sistemas"
+                            "name": "Informàtica i Sistemes"
                         }
                     }
                 }
             },
             "responses": {
                 "200": {
-                    "description": "Departamento actualizado",
+                    "description": "Departament actualitzat",
                     "content": {
                         "application/json": {
                             "example": {
                                 "id": 1,
-                                "name": "Informática y Sistemas"
+                                "name": "Informàtica i Sistemes"
                             }
                         }
                     }
                 },
                 "404": {
-                    "description": "Departamento no encontrado"
+                    "description": "Departament no trobat"
                 }
             }
         },
         {
             "method": "DELETE",
             "path": "/api/departments/{id}",
-            "description": "Eliminar un departamento",
+            "description": "Eliminar un departament",
             "parameters": [
                 {
                     "id": 1
@@ -128,10 +128,10 @@
             ],
             "responses": {
                 "204": {
-                    "description": "Departamento eliminado exitosamente"
+                    "description": "Departament eliminat correctament"
                 },
                 "404": {
-                    "description": "Departamento no encontrado"
+                    "description": "Departament no trobat"
                 }
             }
         }
