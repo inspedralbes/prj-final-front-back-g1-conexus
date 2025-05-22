@@ -86,7 +86,7 @@ Per a més informació sobre el projecte, com funciona i com desplegar-lo, consu
 ## Arxius Importants:
 - [Desplegament a Producció](./doc/producció/README.md)
 - [Docker Compose (Producció)](./docker-compose.prod.yml)
-- [Workflow GitHub Actions](./github/workflows/deploy-production.yml)
+- [Workflow GitHub Actions](./.github/workflows/deploy-production.yml)
 - [Configuració Nginx](./front-vue/nginx/default.conf)
 - [Manual d'usuari](./doc/Manual_usuari_2425_G01Projecte_ConexusHub.pdf)
 - [Documentació tècnica](./doc/Documentació_tècnica_2425_G01Projecte_ConexusHub.pdf)
