@@ -222,12 +222,10 @@ const filterDescription = computed(() => {
 
 onMounted(async () => {
     if (!currentUser.value || !currentUser.value.id) {
-        console.log("No hay usuario en el store, usando uno por defecto");
         currentUser.value = { id: 5, name: "Tech Support" };
     }
     try {
         reports.value = await getAllReports();
-        console.log("Informes obtinguts:", reports.value);
     } catch (error) {
         console.error("Error obtenint informes:", error);
     }
@@ -266,7 +264,6 @@ const assignReportToMe = async (reportId) => {
             reports.value[index] = updatedReport;
         }
         
-        console.log("Informe assignat a mi:", reportId);
     } catch (error) {
         console.error("Error assignant l'informe:", error);
     }

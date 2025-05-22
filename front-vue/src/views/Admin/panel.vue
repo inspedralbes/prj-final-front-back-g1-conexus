@@ -299,14 +299,11 @@ const loadAllStats = async () => {
 const loadActivities = async () => {
     isLoadingActivities.value = true;
     try {
-        console.log("Sol·licitant activitats recents...");
         const result = await getLatestActivities();
         
         if (Array.isArray(result) && result.length > 0) {
-            console.log(`Activitats rebudes: ${result.length}`, result);
             activities.value = result;
         } else {
-            console.log("No es van rebre activitats o format incorrecte:", result);
             activities.value = [];
         }
     } catch (error) {

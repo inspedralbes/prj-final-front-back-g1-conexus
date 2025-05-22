@@ -326,23 +326,17 @@ router.beforeEach((to, from, next) => {
   const store = useAppStore();
   const isAuthenticated = !!store.getAccessToken();
 
-  console.log('Navegando a:', to.path);
-  console.log('¿Usuario autenticado?:', isAuthenticated);
-
   if (to.meta.requiresAuth && !isAuthenticated) {
-    console.log('Usuario no autenticado, redirigiendo a login');
     next({ name: 'home' });
     return;
   }
 
   if (isAuthenticated && to.meta.allowedRoles && to.meta.allowedRoles.length > 0) {
     const user = store.getUser();
-    console.log('Datos de usuario:', user);
 
     let userRole = '';
 
     if (!user || Object.keys(user).length === 0) {
-      console.log('Usuario autenticado pero sin datos de rol. Redirigiendo a home para re-autenticación');
       store.clearAuthData();
       next({ name: 'home' });
       return;
@@ -360,14 +354,12 @@ router.beforeEach((to, from, next) => {
       }
     }
 
-    console.log('Rol del usuario:', userRole);
-    console.log('Roles permitidos para esta ruta:', to.meta.allowedRoles);
 
     const hasPermission = to.meta.allowedRoles.includes(userRole);
-    console.log('¿Tiene permiso?:', hasPermission);
+
 
     if (!hasPermission) {
-      console.log('Usuario no autorizado, redirigiendo a página de unauthorized');
+
       next({ name: 'Unauthorized' });
       return;
     }
@@ -421,7 +413,6 @@ router.beforeEach(async (to, from, next) => {
 
     next();
   } catch (error) {
-    console.error('Error verificando estado del servicio:', error);
     // En caso de error de conexión, también redirigir a mantenimiento
     next({ name: 'Maintenance' });
   }

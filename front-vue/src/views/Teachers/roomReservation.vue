@@ -163,7 +163,6 @@ function reserveRoom() {
 
     createNewReservation(newReservation)
         .then((response) => {
-            console.log("Reserva creada:", response);
             closeModal();
             // Opcional: Recargar las reservas o actualizar el estado
         })

@@ -539,7 +539,6 @@ const loadChats = async () => {
       (chat) => chat.interaction && chat.interaction.length > 0
     );
 
-    console.log("Chats carregats:", chats.value);
 
     // Cargar el estado de mensajes no leídos desde localStorage
     loadUnreadMessagesState();
@@ -854,12 +853,9 @@ const connectSocket = () => {
       reconnectionDelay: 1000,
     });
 
-    // Log para debugging
-    console.log("Intentando conectar al socket en:", SOCKET_URL);
 
     // Esdeveniment de connexió establerta
     socket.value.on("connect", () => {
-      console.log("Connectat al servidor de chat");
 
       // Registrar l'usuari per rebre notificacions
       socket.value.emit("register_user", {

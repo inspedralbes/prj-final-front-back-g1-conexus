@@ -118,7 +118,6 @@ onMounted(async () => {
     try {
         courseId.value = route.params.id;
         grades.value = await getGradesFromUserAndCourse(appStore.user.id, courseId.value);
-        console.log('Notes carregades:', grades.value);
     } catch (error) {
         console.error('Error carregant notes:', error);
     }

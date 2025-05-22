@@ -1224,11 +1224,11 @@ const formattedSchedule = computed(() => {
 const loadTeacherStats = async () => {
   try {
     const teacherId = appStore.getUserId();
-    console.log("ID del profesor:", teacherId);
+
 
     // Obtener los cursos del profesor directamente con la API específica
     const myCourses = await getCoursesFromUser(teacherId);
-    console.log("Cursos del profesor:", myCourses);
+
 
     // Filtrar los cursos para asegurarse que el profesor es el asignado
     const filteredCourses = Array.isArray(myCourses)
@@ -1239,10 +1239,6 @@ const loadTeacherStats = async () => {
         )
       : [];
 
-    console.log(
-      "Cursos filtrados donde este profesor es el asignado:",
-      filteredCourses
-    );
     teacherStats.value.courses = filteredCourses.length;
 
     // Obtener estudiantes de cada curso
@@ -1259,7 +1255,6 @@ const loadTeacherStats = async () => {
             continue;
           }
 
-          console.log(`Obteniendo alumnos del curso ID: ${courseId}`);
 
           // Llamada directa a la API
           const response = await fetch(
@@ -1284,11 +1279,9 @@ const loadTeacherStats = async () => {
           }
 
           const studentsData = await response.json();
-          console.log(`Estudiantes en curso ${courseId}:`, studentsData);
 
           if (Array.isArray(studentsData) && studentsData.length > 0) {
             // Ver la estructura del primer estudiante para depuración
-            console.log("Estructura del primer estudiante:", studentsData[0]);
 
             studentsData.forEach((student) => {
               // Intentar diferentes propiedades donde podría estar el ID
@@ -1299,7 +1292,6 @@ const loadTeacherStats = async () => {
                 student.id;
 
               if (studentId) {
-                console.log(`Añadiendo estudiante con ID: ${studentId}`);
                 uniqueStudentIds.add(studentId);
               } else {
                 console.warn(
@@ -1308,10 +1300,6 @@ const loadTeacherStats = async () => {
                 );
               }
             });
-          } else {
-            console.log(
-              `No se encontraron estudiantes en el curso ${courseId}`
-            );
           }
         } catch (error) {
           console.error(`Error obteniendo alumnos del curso:`, error);
@@ -1320,9 +1308,6 @@ const loadTeacherStats = async () => {
     } else {
       console.warn("No se encontraron cursos asignados a este profesor");
     }
-
-    console.log("Total estudiantes únicos encontrados:", uniqueStudentIds.size);
-    console.log("IDs de estudiantes:", [...uniqueStudentIds]);
 
     teacherStats.value.students = uniqueStudentIds.size;
     teacherStats.value.activeStudents = Math.floor(uniqueStudentIds.size * 0.8); // Estimación: 80% activos
@@ -1379,7 +1364,6 @@ const loadTeacherStats = async () => {
     // Obtener reservas de aulas del profesor
     try {
       const roomReservations = await getReservationsFromUser(teacherId);
-      console.log("Reservas de aulas del profesor:", roomReservations);
 
       // Comprobar si hay reservas y si la respuesta es un array
       if (Array.isArray(roomReservations)) {
@@ -1400,9 +1384,7 @@ const loadTeacherStats = async () => {
         });
 
         teacherStats.value.upcomingReservations = upcomingReservations.length;
-        console.log(
-          `Reservas totales: ${roomReservations.length}, Próximas: ${upcomingReservations.length}`
-        );
+  
       } else {
         teacherStats.value.roomReservations = 0;
         teacherStats.value.upcomingReservations = 0;
@@ -1670,7 +1652,6 @@ const loadWeeklySchedule = async () => {
         parseInt(course.course_teacher_id) === parseInt(teacherId)
     );
 
-    console.log(`Cursos del profesor (ID: ${teacherId}):`, myCourses);
 
     // Definir los días laborables de la semana (lunes a viernes)
     const weekdays = [
@@ -1693,7 +1674,6 @@ const loadWeeklySchedule = async () => {
 
     for (const course of myCourses) {
       if (!course.course_hours_available) {
-        console.log(`Curso sin horario disponible: ${course.course_name}`);
         continue;
       }
 
@@ -1704,7 +1684,6 @@ const loadWeeklySchedule = async () => {
             ? JSON.parse(course.course_hours_available)
             : course.course_hours_available;
 
-        console.log(`Horario del curso ${course.course_name}:`, hoursData);
 
         // Procesar cada día de la semana
         weekdays.forEach((day, dayIndex) => {
@@ -1716,7 +1695,7 @@ const loadWeeklySchedule = async () => {
 
           if (dayClasses.length > 0) {
             totalClasses += dayClasses.length;
-            console.log(`Clases en ${day.name}:`, dayClasses);
+
 
             // Añadir cada hora de clase al día correspondiente
             dayClasses.forEach((timeSlot) => {
@@ -1752,7 +1731,7 @@ const loadWeeklySchedule = async () => {
 
     // Verificar si hay clases en algún día
     hasAnyClasses.value = totalClasses > 0;
-    console.log("Horario semanal cargado:", weeklySchedule.value);
+
   } catch (error) {
     console.error("Error al carregar l'horari setmanal:", error);
   } finally {

@@ -451,8 +451,6 @@ onMounted(async () => {
     (course) => course.course_teacher_id == null
   );
 
-  console.log("My Courses:", myCourses.value);
-  console.log("Unassigned Courses:", unassignedCourses.value);
 });
 
 function assignCourse(courseId) {

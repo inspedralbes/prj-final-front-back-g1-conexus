@@ -75,10 +75,7 @@ const goBack = () => {
     }
   }
 
-  console.log(
-    "Redirigiendo desde Unauthorized a la página principal del rol:",
-    userRole
-  );
+
 
   // Redireccionar según el rol
   switch (userRole) {

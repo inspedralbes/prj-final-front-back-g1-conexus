@@ -657,7 +657,7 @@ function createNewProduct() {
     product_enabled: true,
   })
     .then(async (response) => {
-      console.log("Producte creat:", response.data);
+
       canteenItems.value = await getAllCanteenItems();
       newProductName.value = "";
       newProductPrice.value = 0;
@@ -684,7 +684,6 @@ function enableItem(item) {
   item.product_enabled = true;
   updateItem(item)
     .then(async (response) => {
-      console.log("Producte habilitat:", response.data);
       canteenItems.value = await getAllCanteenItems();
     })
     .catch((error) => {
@@ -696,7 +695,6 @@ function disableItem(item) {
   item.product_enabled = false;
   updateItem(item)
     .then(async (response) => {
-      console.log("Producte deshabilitat:", response.data);
       canteenItems.value = await getAllCanteenItems();
     })
     .catch((error) => {
@@ -737,7 +735,7 @@ function resetFilters() {
 onMounted(async () => {
   let response = await getAllCanteenItems();
   canteenItems.value = response;
-  console.log("Canteen items:", canteenItems.value);
+
 });
 </script>
 <style scoped>

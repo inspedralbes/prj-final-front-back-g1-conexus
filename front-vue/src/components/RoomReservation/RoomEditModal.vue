@@ -254,7 +254,6 @@ async function sendUpdateRoom() {
         
         emit('room-updated', updatedRoom);
     } catch (error) {
-        console.error('Error actualitzant la sala:', error);
     }
 }
 </script>

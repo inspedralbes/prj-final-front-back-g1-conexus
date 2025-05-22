@@ -36,7 +36,6 @@ export const getRoomsStats = async () => {
         const data = await response.json();
         return data;
     } catch (error) {
-        console.error('Error fetching room stats:', error);
         return { total: 0, available: 0, maintenance: 0 };
     }
 };
@@ -54,7 +53,6 @@ export const getAllRooms = async () => {
         if (handle401(response)) return [];
         return await handleResponse(response);
     } catch (error) {
-        console.error('Error fetching rooms:', error);
         throw error;
     }
 };
@@ -72,7 +70,6 @@ export const getRoomById = async (id) => {
         if (handle401(response)) return null;
         return await handleResponse(response);
     } catch (error) {
-        console.error(`Error fetching room ${id}:`, error);
         throw error;
     }
 };

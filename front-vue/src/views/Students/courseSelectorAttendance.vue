@@ -66,14 +66,12 @@ const user = store.user
 onMounted(async () => {
     try {
         courses.value = await getCoursesWithUser(user.id)
-        console.log('Cursos carregats:', courses.value)
     } catch (error) {
         console.error('Error carregant cursos:', error)
     }
 })
 
 function goToAttendance(id) {
-    console.log('Anant a assistència del curs:', id)
     router.push({ name: 'assistence-from-course-student', params: { id } })
 }
 </script>

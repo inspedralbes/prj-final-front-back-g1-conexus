@@ -465,13 +465,11 @@ const signInWithGoogle = async (action) => {
       const response = await login(userAPIs);
 
       if (response.error) {
-        console.log(response.error);
         message.value = response.error;
         messageType.value = "error";
         return;
       }
 
-      console.log(response);
       let user = response.userLogin;
       let profile = user.profile;
 
@@ -544,10 +542,6 @@ const completeRegistration = async (roleId = null) => {
       delete pendingRegistration.value.role;
     }
 
-    console.log(
-      "Datos a enviar al registro:",
-      JSON.stringify(pendingRegistration.value)
-    );
     const response = await register(pendingRegistration.value);
 
     if (response.error) {
@@ -582,7 +576,6 @@ const completeRegistration = async (roleId = null) => {
     } else {
       // Si no hay datos de usuario y token, simplemente mostrar mensaje de éxito
       // El usuario tendrá que iniciar sesión manualmente
-      console.log("Registro exitoso, pero sin inicio de sesión automático");
     }
   } catch (error) {
     message.value = "Error en completar el registre: " + error.message;
@@ -605,13 +598,11 @@ const signInWithApp = async () => {
     const response = await login(userLogin);
 
     if (response.error) {
-      console.log(response.error);
       message.value = response.error;
       messageType.value = "error";
       return;
     }
 
-    console.log(response);
     let user = response.userLogin;
     let profile = user.profile;
 
@@ -656,7 +647,6 @@ const redirectUserBasedOnRole = (user) => {
     }
   }
 
-  console.log("Redirigiendo usuario con rol:", userRole);
 
   switch (userRole) {
     case "Administrador":

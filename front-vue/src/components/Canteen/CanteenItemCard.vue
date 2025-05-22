@@ -71,7 +71,6 @@ function disable() {
       // console.log("Producte deshabilitat:", response.data);
     })
     .catch((error) => {
-      console.error("Error deshabilitant producte:", error);
     });
 }
 function enable() {
@@ -81,7 +80,6 @@ function enable() {
       // console.log("Producte habilitat:", response.data);
     })
     .catch((error) => {
-      console.error("Error habilitant producte:", error);
     });
 }
 function editProduct() {
@@ -90,7 +88,6 @@ function editProduct() {
       // console.log("Producte editat:", response.data);
     })
     .catch((error) => {
-      console.error("Error editant producte:", error);
     });
   showModal.value = false;
 }

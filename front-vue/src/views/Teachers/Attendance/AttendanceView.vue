@@ -369,16 +369,12 @@ onMounted(async () => {
         hoursAvailable.value[dayOfWeek].length > 0
       ) {
         selectedHour.value = hoursAvailable.value[dayOfWeek][0];
-        console.log(
-          "Primera hora seleccionada automáticamente:",
-          selectedHour.value
-        );
       }
     }
 
     // Cargar datos de asistencia si hay una hora seleccionada
     if (selectedHour.value) {
-      console.log("Cargando asistencia inicial con hora:", selectedHour.value);
+
 
       // Pequeño retraso para asegurar que todos los componentes estén listos
       setTimeout(() => {
@@ -397,17 +393,12 @@ async function getAttendanceOfTheDay() {
     const data = await getAttendanceFromDay(courseId, date);
 
     if (!data || !data.length) {
-      console.log("No hay datos de asistencia para esta fecha/hora");
+
       return;
     }
 
     // Imprimir el primer registro para depuración
-    if (data[0]) {
-      console.log(
-        "Estructura de datos recibida (ejemplo):",
-        JSON.stringify(data[0], null, 2)
-      );
-    }
+   
 
     // Filtrar registros por la hora seleccionada
     const hourToFind = selectedHour.value
@@ -417,7 +408,7 @@ async function getAttendanceOfTheDay() {
       (record) => record.hour && record.hour.trim() === hourToFind
     );
 
-    console.log("Registros para hora " + hourToFind + ":", recordsForHour);
+
 
     // Crear un mapa para almacenar el registro más reciente por estudiante
     const latestRecordMap = new Map();
@@ -435,13 +426,9 @@ async function getAttendanceOfTheDay() {
           new Date(record.updatedAt) > new Date(currentRecord.updatedAt)
         ) {
           latestRecordMap.set(studentId, record);
-          console.log(
-            `Registro más reciente para estudiante ID ${studentId}: ${record.assisted} (${record.updatedAt})`
-          );
+   
         }
-      } else {
-        console.log("Registro inválido o sin ID:", record);
-      }
+      } 
     });
 
     // Aplicar el estado más reciente a cada estudiante
@@ -452,9 +439,7 @@ async function getAttendanceOfTheDay() {
       if (latestRecord) {
         // Usar el campo assisted directamente
         student.attendance = latestRecord.assisted;
-        console.log(
-          `Asignando a ${student.name} (ID: ${studentId}) el estado: ${student.attendance}`
-        );
+       
       }
     });
   } catch (error) {
@@ -463,8 +448,7 @@ async function getAttendanceOfTheDay() {
 }
 
 function thereIsClassThatDay() {
-  console.log("Selected date: ", selectedDate.value);
-  console.log("Hours available: ", hoursAvailable.value);
+
   const dayOfWeek = new Date(selectedDate.value)
     .toLocaleString("en-US", { weekday: "long" })
     .toLowerCase();
@@ -522,18 +506,11 @@ function sendUpdateAtendance(id, status) {
       : "";
     const date = selectedDate.value.split("T")[0];
 
-    console.log(`Enviando actualización de asistencia:
-      • Estudiante: ${student.name} (ID: ${id})
-      • Estado: ${status}
-      • Hora: ${hour}
-      • Fecha: ${date}
-      • Curso: ${courseId}
-    `);
+ 
 
     // Enviar al servidor - Asegurar que usamos el ID correcto (user_id)
     updateAttendance(courseId, id, hour, status, date)
       .then((response) => {
-        console.log(`✅ Asistencia actualizada con éxito`);
 
         // Recargar datos para mostrar el estado actualizado
         setTimeout(() => {
@@ -552,7 +529,6 @@ function sendUpdateAtendance(id, status) {
 }
 
 function updateSelectedHour() {
-  console.log(`Hora seleccionada: ${selectedHour.value}`);
   // Cargar asistencia para la hora seleccionada
   getAttendanceOfTheDay();
 }

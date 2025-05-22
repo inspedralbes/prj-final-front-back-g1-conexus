@@ -131,11 +131,10 @@ const initializeChat = async () => {
       return;
     }
 
-    // console.log("Inicializando chat como profesor. ID:", currentUserId.value);
 
     // Intentar obtener chats existentes
     const chats = await chatManager.getAllChats();
-    // console.log("Chats existentes:", chats);
+
 
     // Filtrar chats donde este profesor participa
     const myChats = chats.filter(
@@ -143,31 +142,27 @@ const initializeChat = async () => {
         chat.teachers && chat.teachers.includes(parseInt(currentUserId.value))
     );
 
-    // console.log("Mis chats como profesor:", myChats);
+
 
     if (myChats && myChats.length > 0) {
       // Usar el primer chat donde participa este profesor
       chatId.value = myChats[0]._id;
-      // console.log("Usando chat existente:", chatId.value);
+
 
       // Cargar mensajes existentes
       const chatData = await chatManager.getChatById(chatId.value);
-      // console.log("Datos del chat:", chatData);
+
 
       // Obtener información del compañero de chat
       updateChatPartnerInfo(chatData);
 
       if (chatData && chatData.interaction && chatData.interaction.length > 0) {
-        // console.log("Cargando mensajes del historial:", chatData.interaction);
+
 
         // Convertir los mensajes al formato esperado
         messages.value = chatData.interaction.map((msg) => {
           // Verificar si el mensaje es del usuario actual o de otro
           const isOwnMessage = msg.teacherId === currentUserId.value.toString();
-
-          // console.log(
-          //   `Mensaje de teacherId: ${msg.teacherId}, ¿Es propio?: ${isOwnMessage}`
-          // );
 
           return {
             id: msg._id,
@@ -192,13 +187,6 @@ const initializeChat = async () => {
         // Por ahora, creamos un chat con otro ID genérico (simulación)
         const otherTeacherId = parseInt(currentUserId.value) + 1; // Simulación de otro profesor
 
-        // console.log(
-        //   "No se encontraron chats, creando uno nuevo entre profesores",
-        //   {
-        //     currentUserId: currentUserId.value,
-        //     otherTeacherId,
-        //   }
-        // );
 
         const newChat = await chatManager.createChat({
           name: `Chat profesores ${currentUserId.value} y ${otherTeacherId}`,
@@ -207,7 +195,7 @@ const initializeChat = async () => {
         });
 
         chatId.value = newChat._id;
-        // console.log("Nuevo chat creado:", newChat);
+
 
         // Obtener información del compañero de chat
         updateChatPartnerInfo(newChat);
@@ -240,7 +228,6 @@ const connectSocket = () => {
 
     // Evento de conexión establecida
     socket.value.on("connect", () => {
-      console.log("Conectado al servidor de chat");
 
       // Registrar el usuario
       socket.value.emit("register_user", {
@@ -250,9 +237,6 @@ const connectSocket = () => {
 
       // Unirse al chat actual (solo si tenemos un chatId)
       if (chatId.value) {
-        console.log(
-          `Uniendo al usuario ${currentUserId.value} al chat ${chatId.value}`
-        );
         socket.value.emit("join_chat", {
           chatId: chatId.value,
           userId: currentUserId.value,
@@ -263,10 +247,7 @@ const connectSocket = () => {
       }
     });
 
-    // Evento de desconexión
-    socket.value.on("disconnect", () => {
-      // console.log("Desconectado del servidor de chat");
-    });
+
 
     // Registrar todos los manejadores de eventos
     setupSocketEventHandlers();
@@ -279,10 +260,6 @@ const connectSocket = () => {
 const setupSocketEventHandlers = () => {
   // Escuchar nuevos mensajes
   socket.value.on("new_message", (data) => {
-    // console.log("Nuevo mensaje recibido del socket:", data);
-    // console.log("Tipo de dato:", typeof data);
-    // console.log("Contenido JSON:", JSON.stringify(data, null, 2));
-
     // Extraer la información del mensaje según la estructura del backend
     let messageData = null;
 

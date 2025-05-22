@@ -480,11 +480,6 @@ const saveNewUser = async () => {
       formData.append('profile', selectedFile.value);
     }
 
-    // Verificar que formData contiene lo esperado
-    console.log("FormData entries:");
-    for (let [key, value] of formData.entries()) {
-      console.log(`${key}: ${value instanceof File ? `File: ${value.name}` : value}`);
-    }
 
     const response = await createUser(formData);
 

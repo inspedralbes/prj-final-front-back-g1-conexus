@@ -295,7 +295,6 @@ async function loadRooms() {
             room_hours_available_friday: room.room_hours_available_friday || []
         }));
 
-        console.log('Sales carregades:', rooms.value);
 
         // Mostrar las salas progresivamente
         visibleCount.value = 0;

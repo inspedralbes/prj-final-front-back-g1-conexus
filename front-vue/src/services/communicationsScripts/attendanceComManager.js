@@ -32,7 +32,6 @@ export const updateAttendance = async (courseId, userId, hour, assisted, day) =>
         const data = await response.json();
         return data;
     } catch (error) {
-        console.error('Error fetching courses:', error);
     }
 };
 
@@ -52,7 +51,6 @@ export const getAttendanceFromCourse = async (courseId) => {
         const data = await response.json();
         return data;
     } catch (error) {
-        console.error('Error fetching courses:', error);
     }
 };
 
@@ -72,7 +70,6 @@ export const getAlumns = async (courseId) => {
         const data = await response.json();
         return data;
     } catch (error) {
-        console.error('Error fetching courses:', error);
     }
 };
 
@@ -92,7 +89,6 @@ export const getAttendanceFromDay = async (courseId, day) => {
         const data = await response.json();
         return data;
     } catch (error) {
-        console.error('Error fetching courses:', error);
     }
 };
 
@@ -112,6 +108,5 @@ export const getAttendanceFromUserAndCourse = async (userId, courseId) => {
         const data = await response.json();
         return data;
     } catch (error) {
-        console.error('Error fetching courses:', error);
     }
 };

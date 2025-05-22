@@ -484,7 +484,6 @@ async function loadReports() {
         loading.value = true;
         const reports = await getAllReports();
         allReports.value = reports;
-        console.log("Incidències carregades:", reports);
     } catch (error) {
         console.error("Error obtenint informes:", error);
     } finally {
@@ -523,7 +522,6 @@ async function loadTechnicians() {
         
         // Filtrar només els usuaris que siguin tècnics (typeUsers_id = 4)
         technicians.value = users.filter(user => user.typeUsers_id === 4);
-        console.log(`Tècnics trobats:`, technicians.value);
         
         if (technicians.value.length === 0) {
             console.warn(`No s'han trobat tècnics (usuaris amb typeUsers_id = 4)`);
@@ -541,10 +539,8 @@ async function assignTechnician() {
     if (!activeReport.value || !selectedTechId.value) return;
 
     try {
-        console.log(`Assignant tècnic ${selectedTechId.value} a incidència ${activeReport.value.id}`);
         
         const result = await assignReport(activeReport.value.id, selectedTechId.value);
-        console.log("Resposta d'assignació:", result);
 
         // Actualitzar l'informe a la llista local
         const index = allReports.value.findIndex(r => r.id === activeReport.value.id);
@@ -580,7 +576,6 @@ async function changeStatus() {
     if (!activeReport.value || !selectedStatus.value) return;
 
     try {
-        console.log(`Canviant estat d'incidència ${activeReport.value.id} a ${selectedStatus.value}`);
         
         // Executar l'actualització sense mostrar alertes
         await updateReport(activeReport.value.id, { status: selectedStatus.value });
@@ -608,7 +603,6 @@ async function saveNote() {
     if (!activeReport.value) return;
 
     try {
-        console.log(`Desant nota per a incidència ${activeReport.value.id}:`, reportNote.value);
         
         await updateReport(activeReport.value.id, { note: reportNote.value });
         
@@ -634,7 +628,6 @@ async function confirmDelete() {
     if (!activeReport.value) return;
 
     try {
-        console.log(`Eliminant incidència ${activeReport.value.id} amb imatge: ${activeReport.value.image || 'cap'}`);
         
         // Eliminar informe (la API s'encarregarà d'eliminar la imatge associada)
         await deleteReportAPI(activeReport.value.id);
@@ -646,8 +639,6 @@ async function confirmDelete() {
         
         // Actualitzar estadístiques
         await loadStats();
-        
-        console.log("Incidència eliminada correctament");
     } catch (error) {
         console.error("Error eliminant informe:", error);
         showDeleteModal.value = false;

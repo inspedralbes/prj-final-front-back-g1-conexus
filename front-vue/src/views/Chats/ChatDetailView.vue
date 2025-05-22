@@ -1330,7 +1330,7 @@ const loadChatData = async () => {
         (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
       );
     } else {
-      // console.log("El chat no tiene mensajes");
+
       messages.value = [];
     }
 
@@ -1376,7 +1376,7 @@ const markMessagesAsRead = async () => {
 
     if (!otherUserId) return;
 
-    // console.log(`Marcando mensajes como leídos para el usuario ${otherUserId}`);
+  
 
     // Obtener el estado actual de los mensajes no leídos
     const storageKey = `chat_unread_${currentUserId.value}`;
@@ -1387,9 +1387,7 @@ const markMessagesAsRead = async () => {
 
       // Si hay mensajes no leídos de este usuario, marcarlos como leídos
       if (unreadMessages[otherUserId]) {
-        // console.log(
-        //   `Usuario ${otherUserId} tenía mensajes no leídos, marcando como leídos`
-        // );
+        
         delete unreadMessages[otherUserId];
 
         // Guardar el nuevo estado
@@ -1397,10 +1395,7 @@ const markMessagesAsRead = async () => {
 
         // Actualizar el contador global
         appStore.updateUnreadMessagesCount();
-        // console.log(
-        //   "Contador de mensajes no leídos actualizado:",
-        //   appStore.getUnreadCount
-        // );
+
       }
     }
 
@@ -1436,12 +1431,9 @@ const connectSocket = () => {
       reconnectionDelay: 1000,
     });
 
-    // Log para debugging
-    console.log("Intentando conectar al socket en:", SOCKET_URL);
 
     // Evento de conexión establecida
     socket.value.on("connect", () => {
-      // console.log("Conectado al servidor de chat");
 
       // Registrar el usuario
       socket.value.emit("register_user", {
@@ -1451,9 +1443,7 @@ const connectSocket = () => {
 
       // Unirse al chat actual (solo si tenemos un chatId)
       if (chatId.value) {
-        // console.log(
-        //   `Uniendo al usuario ${currentUserId.value} al chat ${chatId.value}`
-        // );
+
         socket.value.emit("join_chat", {
           chatId: chatId.value,
           userId: currentUserId.value,
@@ -1464,10 +1454,7 @@ const connectSocket = () => {
       }
     });
 
-    // Evento de desconexión
-    socket.value.on("disconnect", () => {
-      // console.log("Desconectado del servidor de chat");
-    });
+    
 
     // Registrar todos los manejadores de eventos
     setupSocketEventHandlers();
@@ -1561,11 +1548,6 @@ const setupSocketEventHandlers = () => {
       // Marcar el mensaje como que tiene enlaces
       messageData.hasLinks = true;
 
-      console.log("Mensaje con enlace personalizado procesado:", {
-        original: messageData.actualMessage,
-        displayText: messageData.message,
-        url: actualUrl,
-      });
     }
 
     // Determinar el nombre del usuario
@@ -1582,7 +1564,6 @@ const setupSocketEventHandlers = () => {
 
     // Si este mensaje ya fue procesado, ignorarlo
     if (processedMessages.value.has(msgSignature)) {
-      // console.log("Mensaje ya procesado anteriormente, ignorando");
       return;
     }
 
@@ -1619,17 +1600,14 @@ const setupSocketEventHandlers = () => {
     processedMessages.value.add(msgSignature);
 
     if (existingIndex === -1) {
-      // Si no existe mensaje similar, agregar este nuevo
-      // console.log("Mensaje nuevo, agregando:", messageData);
+      // Si no existe mensaje similar, agregar este nuev
       messages.value.push(messageData);
       scrollToBottom();
     } else {
       // Si ya existe un mensaje similar, actualizar sus propiedades si es necesario
-      // console.log("Mensaje similar encontrado en índice:", existingIndex);
 
       // Si el mensaje existente es local y el nuevo tiene ID del servidor, actualizar
       if (messages.value[existingIndex].local && messageData.id) {
-        // console.log("Actualizando mensaje local con datos del servidor");
         messages.value[existingIndex].id = messageData.id;
         messages.value[existingIndex].hasLinks = messageData.hasLinks;
         messages.value[existingIndex].links = messageData.links;
@@ -1654,19 +1632,7 @@ const setupSocketEventHandlers = () => {
     }
   });
 
-  // Escuchar cuando un usuario se une al chat
-  socket.value.on("user_joined", (data) => {
-    // console.log(
-    //   `${data.userName || "Profesor " + data.userId} se ha unido al chat`
-    // );
-  });
 
-  // Escuchar cuando un usuario deja el chat
-  socket.value.on("user_left", (data) => {
-    // console.log(
-    //   `${data.userName || "Profesor " + data.userId} ha salido del chat`
-    // );
-  });
 
   // Escuchar errores
   socket.value.on("error", (error) => {
@@ -1675,7 +1641,6 @@ const setupSocketEventHandlers = () => {
 
   // Escuchar cuando un mensaje es eliminado
   socket.value.on("message_deleted", (data) => {
-    console.log("Recibida notificación de mensaje eliminado:", data);
 
     // Find the message that was deleted - with more flexible matching
     let messageIndex = -1;
@@ -1691,9 +1656,7 @@ const setupSocketEventHandlers = () => {
           msg.userId.toString() === data.teacherId
       );
 
-      if (messageIndex !== -1) {
-        console.log("Mensaje encontrado por contenido y autor");
-      }
+  
     }
 
     // If still not found and the messageId looks like a MongoDB ObjectID, try to find by temporary IDs
@@ -1709,10 +1672,6 @@ const setupSocketEventHandlers = () => {
       });
 
       if (possibleMatches.length > 0) {
-        console.log(
-          "Encontrados posibles mensajes con IDs temporales:",
-          possibleMatches
-        );
 
         // Try to match by content if available
         if (data.messageContent) {
@@ -1721,7 +1680,6 @@ const setupSocketEventHandlers = () => {
           );
           if (contentMatch) {
             messageIndex = messages.value.indexOf(contentMatch);
-            console.log("Mensaje con ID temporal encontrado por contenido");
           }
         }
       }
@@ -1740,10 +1698,7 @@ const setupSocketEventHandlers = () => {
         messages.value[messageIndex].deletedAt = new Date(data.timestamp);
       }
 
-      console.log(
-        "Mensaje marcado como eliminado:",
-        messages.value[messageIndex]
-      );
+      
     } else {
       console.warn(
         `No se encontró el mensaje con ID ${data.messageId} para marcar como eliminado`
@@ -1751,9 +1706,6 @@ const setupSocketEventHandlers = () => {
 
       // If we still couldn't find it but we have the content, create a new "deleted" message entry
       if (data.messageContent && data.teacherId) {
-        console.log(
-          "Creando una entrada para el mensaje eliminado que no se encontró localmente"
-        );
 
         // Create a new message object with deleted flag
         const deletedMessage = {
@@ -1778,7 +1730,6 @@ const setupSocketEventHandlers = () => {
           (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
         );
 
-        console.log("Mensaje eliminado añadido a la lista de mensajes");
       }
     }
   });
@@ -2364,7 +2315,6 @@ const dispatchChatViewEvent = (action) => {
     },
   });
 
-  // console.log(`Emitiendo evento ${eventName} para chat ${chatId.value}`);
   window.dispatchEvent(event);
 };
 
@@ -2409,9 +2359,6 @@ const confirmDeleteMessage = async () => {
 
     // If it's a temporary ID, we need to get the real message ID from the server first
     if (isTemporaryId) {
-      console.log(
-        `Detectado ID temporal: ${message.id}. Buscando mensaje en el servidor...`
-      );
       try {
         // Get the current chat data to find the real message ID
         const chatData = await chatManager.getChatById(chatId.value);
@@ -2433,9 +2380,6 @@ const confirmDeleteMessage = async () => {
           });
 
           if (serverMsg && serverMsg._id) {
-            console.log(
-              `Encontrado ID real: ${serverMsg._id} para mensaje temporal: ${message.id}`
-            );
             message.id = serverMsg._id; // Update the message ID to the real one
           } else {
             console.error("No se encontró el mensaje en el servidor");
@@ -2452,7 +2396,6 @@ const confirmDeleteMessage = async () => {
     // Socket.io will handle the propagation to other clients
     await chatManager.deleteMessage(chatId.value, message.id);
 
-    console.log(`Mensaje ${message.id} eliminado exitosamente`);
     messageToDelete.value = null;
   } catch (error) {
     console.error("Error al eliminar mensaje:", error);

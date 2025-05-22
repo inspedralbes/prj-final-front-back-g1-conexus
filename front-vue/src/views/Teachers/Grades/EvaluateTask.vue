@@ -131,13 +131,11 @@ const router = useRouter();
 onMounted(async () => {
   const store = useAppStore();
   users.value = await getTask(taskId, courseId);
-  console.log(users.value);
 });
 
 function sendNewScore(alumn) {
   const id = alumn.user_id;
   const grade = alumn.grades;
-  console.log(id, grade, taskId);
   updateGrade(id, grade, taskId);
 }
 

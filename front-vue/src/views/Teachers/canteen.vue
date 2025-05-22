@@ -952,9 +952,6 @@ const openFullMenuModal = async () => {
           type: "sandwich",
         }));
 
-      console.log(
-        `Loaded ${modalMenuItems.value.length} sandwich items for modal`
-      );
     } else {
       modalMenuItems.value = [];
       console.warn("No items found from getAllEnabledCanteenItems()");

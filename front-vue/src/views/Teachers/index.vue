@@ -497,12 +497,10 @@ const interval = ref(null);
 onMounted(() => {
   // Comprobar al inicio
   store.updateUnreadMessagesCount();
-  console.log("Teacher view - Initial unread count:", store.getUnreadCount);
 
   // Configurar intervalo para comprobar regularmente
   interval.value = setInterval(() => {
     store.updateUnreadMessagesCount();
-    console.log("Teacher view - Updated unread count:", store.getUnreadCount);
   }, 2000);
 });
 

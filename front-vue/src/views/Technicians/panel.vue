@@ -588,7 +588,6 @@ const fetchAssignments = async () => {
       room: report.Room?.room_name || "Desconeguda",
     }));
 
-    console.log("Urgent Assignments:", urgentAssignments.value);
 
     // Actualitzar les incidències recents
     recentIncidents.value = allReports.value.slice(0, 4).map((report) => ({

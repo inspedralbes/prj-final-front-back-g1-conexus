@@ -296,7 +296,6 @@ const currentPage = ref(1);
 onMounted(async () => {
   try {
     courses.value = await getCoursesWithUser(user.id);
-    console.log("Cursos carregats:", courses.value);
   } catch (error) {
     console.error("Error carregant cursos:", error);
   }
@@ -304,7 +303,6 @@ onMounted(async () => {
 
 // Funció per navegar a les notes
 function goToGrades(id) {
-  console.log("Anant a notes del curs:", id);
   router.push({ name: "grades-from-course-student", params: { id } });
 }
 

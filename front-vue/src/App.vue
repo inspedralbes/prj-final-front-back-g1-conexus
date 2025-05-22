@@ -65,10 +65,6 @@ const redirectUserBasedOnRole = (user) => {
       router.push("/canteen/panel");
       break;
     default:
-      console.error(
-        "No se pudo determinar un rol válido para el usuario:",
-        user
-      );
       router.push("/");
       break;
   }
@@ -100,7 +96,6 @@ onMounted(async () => {
         );
       }
     } catch (error) {
-      console.error("Error al recuperar la sesión:", error);
       // En caso de error, limpiar los datos de sesión
       store.setAccessToken("");
       store.setUser({});

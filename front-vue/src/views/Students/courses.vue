@@ -81,7 +81,6 @@ const searchQuery = ref('');
 onMounted(async () => {
     try {
         courses.value = await getCoursesWithoutUser(store.user.id);
-        console.log('Cursos carregats:', courses.value);
     } catch (error) {
         console.error('Error carregant cursos:', error);
     }

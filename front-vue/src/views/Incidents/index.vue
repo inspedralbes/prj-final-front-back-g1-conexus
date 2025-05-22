@@ -145,7 +145,7 @@ onMounted(async () => {
         isLoading.value = true;
         const roomsData = await getAllRooms();
         rooms.value = roomsData;
-        console.log('Aules carregades:', rooms.value);
+     
     } catch (error) {
         console.error('Error carregant aules:', error);
         loadError.value = 'No s\'han pogut carregar les aules. Si us plau, torna-ho a provar més tard.';
@@ -219,7 +219,7 @@ const submitReport = async () => {
         }
 
         const response = await createReport(formData);
-        console.log('Resposta del servidor:', response);
+
 
         message.value = {
             type: 'success',

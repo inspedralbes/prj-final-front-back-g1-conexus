@@ -556,7 +556,6 @@ const loadRecentOrders = async () => {
   try {
     // Obtener todos los chats de la cantina
     const chats = await chatManager.getAllChats();
-    console.log("ACTUALIZACIÓN: Todos los chats obtenidos:", chats.length);
 
     // Filtrar chats con pedidos relevantes para la cantina
     const orderChats = chats.filter(
@@ -574,7 +573,6 @@ const loadRecentOrders = async () => {
             (msg.message.includes("Pedido") && msg.message.includes("€"))
         )
     );
-    console.log("ACTUALIZACIÓN: Chats con pedidos:", orderChats.length);
 
     // Obtener todos los usuarios para mostrar nombres correctos
     const allUsers = await getAllUsers();
@@ -663,20 +661,12 @@ const loadRecentOrders = async () => {
       });
     });
 
-    console.log(
-      "ACTUALIZACIÓN: Total mensajes de pedido encontrados:",
-      allOrderMessages.length
-    );
 
     // Ordenar por fecha (más reciente primero) y tomar los 5 más recientes
     recentOrders.value = allOrderMessages
       .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
       .slice(0, 5);
 
-    console.log(
-      "ACTUALIZACIÓN: Pedidos recientes actualizados:",
-      recentOrders.value
-    );
   } catch (error) {
     console.error("Error al cargar pedidos recientes:", error);
     recentOrders.value = [];

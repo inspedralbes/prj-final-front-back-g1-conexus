@@ -299,7 +299,6 @@ function reopenTask(task) {
   task.task_ended = false;
   updateTask(task, task.id)
     .then((response) => {
-      console.log("Tasca reoberta:", response);
       getTasksFromCourse(courseId.value).then((result) => {
         tasks.value = result;
       });
@@ -313,7 +312,7 @@ function close(task) {
   task.task_ended = true;
   updateTask(task, task.id)
     .then((response) => {
-      console.log("Tasca tancada:", response);
+
       getTasksFromCourse(courseId.value).then((result) => {
         tasks.value = result;
       });

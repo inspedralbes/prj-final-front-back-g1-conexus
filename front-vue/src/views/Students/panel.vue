@@ -231,7 +231,6 @@ const createScheduleFromCourses = async (courses) => {
             try {
                 // Obtener detalles del curso
                 const courseDetails = await getHoursOfCourse(courseId);
-                console.log('Detalles del curso obtenidos:', courseDetails);
 
                 // Si no hay detalles, continuar con el siguiente curso
                 if (!courseDetails) continue;
@@ -245,7 +244,6 @@ const createScheduleFromCourses = async (courses) => {
             }
         }
 
-        console.log('Plantilla de horario final:', scheduleTemplate);
 
         // Devolver solo los slots que tienen al menos una clase asignada
         return scheduleTemplate.filter(slot =>
@@ -318,11 +316,10 @@ onMounted(async () => {
         const userCourses = userCoursesResponse || [];
 
         if (userCourses.length > 0) {
-            console.log('Cursos del usuario:', userCourses);
+
 
             // 2. Crear horario basado en los cursos
             schedule.value = await createScheduleFromCourses(userCourses);
-            console.log('Horario generado:', schedule.value);
 
             // 3. Obtener tareas de los cursos
             loadingTasks.value = true;
@@ -332,7 +329,6 @@ onMounted(async () => {
                 try {
                     const courseId = course.course_id;
                     const tasks = await getTasksFromCourse(courseId);
-                    console.log(`Tareas del curso ${courseId}:`, tasks);
 
                     if (Array.isArray(tasks)) {
                         tasks.forEach(task => {
@@ -352,7 +348,6 @@ onMounted(async () => {
                 .filter(task => !task.task_ended)
                 .slice(0, 5); // Mostrar máximo 5 tareas pendientes
 
-            console.log('Tareas pendientes:', pendingTasks.value);
         }
     } catch (err) {
         console.error('Error al inicializar datos:', err);

@@ -241,7 +241,6 @@ function createRoom() {
 
     createNewRoom(roomData)
         .then(response => {
-            console.log('Sala creada correctament:', response.data);
             router.push({ name: 'admin-config-rooms' });
         })
         .catch(error => {

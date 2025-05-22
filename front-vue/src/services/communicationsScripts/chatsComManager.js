@@ -101,7 +101,7 @@ export const createChat = async (chatData) => {
 
 export const sendMessage = async (chatId, teacherId, message) => {
     try {
-        console.log(`Enviando mensaje al chat ${chatId}:`, { teacherId, message });
+
 
         // Detectar enlaces en el mensaje (como respaldo al procesamiento del servidor)
         const urlRegex = /(https?:\/\/[^\s]+)/g;
@@ -126,7 +126,6 @@ export const sendMessage = async (chatId, teacherId, message) => {
         }
 
         const result = await response.json();
-        console.log('Respuesta del servidor al enviar mensaje:', result);
         return result;
     } catch (error) {
         console.error(`Error en sendMessage (chat: ${chatId}):`, error);
@@ -142,7 +141,6 @@ export const sendMessage = async (chatId, teacherId, message) => {
  */
 export const deleteMessage = async (chatId, messageId) => {
     try {
-        console.log(`Intentando eliminar mensaje - Chat ID: ${chatId}, Mensaje ID: ${messageId}`);
 
         // Verificar que los IDs sean válidos
         if (!chatId || !messageId) {

@@ -436,7 +436,6 @@ const filteredDepartments = computed(() => {
 onMounted(async () => {
   departments.value = await getAllDepartments();
   const user = await store.getUser(userId);
-  console.log(user);
   userDepartment.value = user.department_id;
 });
 

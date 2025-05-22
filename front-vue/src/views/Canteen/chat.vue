@@ -278,7 +278,6 @@ const loadChats = async () => {
       (chat) => chat.interaction && chat.interaction.length > 0
     );
 
-    console.log("Chats cargados:", chats.value);
 
     // Cargar menú items para respuestas rápidas
     await loadMenuItems();
@@ -528,7 +527,6 @@ const connectSocket = () => {
 
     // Evento de conexión establecida
     socket.value.on("connect", () => {
-      console.log("Conectado al servidor de chat");
 
       // Registrar el usuario para recibir notificaciones
       socket.value.emit("register_user", {
