@@ -91,7 +91,7 @@ Per a més informació sobre el projecte, com funciona i com desplegar-lo, consu
 - [Manual d'usuari](./doc/Manual_usuari_2425_G01Projecte_ConexusHub.pdf)
 - [Documentació tècnica](./doc/Documentació_tècnica_2425_G01Projecte_ConexusHub.pdf)
 - [Planificació MVP](./doc/Planificació_2425_G01Projecte_ConexusHub.pdf)
-- [Anunci](./doc/pitch_2425_G01Projecte_ConexusHub.mp4)
+- [Anunci](./doc/https://drive.google.com/file/d/12Fr4ySo8bYyy40q48AKcWRgNBch-KZZL/view?usp=sharing)
 - [Demo Aplicació](https://drive.google.com/file/d/1dAqiaAddNpj962TAEKKMnRmBkiB0QEml/view?usp=sharing)
 - [Presentació Comercial](./doc/comercial_2425_G01Projecte_ConexusHub-1.pdf)
 - [Presentació Resum](./doc/resum_2425_G01Projecte_ConexusHub-2.pdf)
