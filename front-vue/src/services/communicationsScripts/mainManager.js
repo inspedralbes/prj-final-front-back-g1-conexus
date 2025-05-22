@@ -719,7 +719,7 @@ export const desassignTeacher = async (courseId) => {
 }
 export const assignTeacher = async (courseId, teacherId) => {
     try {
-        const response = await fetch(`${BACK_URL}api/courses/assignTeacher`, {
+        const response = await fetch(`${BACK_URL}api/courses/edit/assignTeacher`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",

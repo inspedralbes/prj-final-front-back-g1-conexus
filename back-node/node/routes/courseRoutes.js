@@ -159,7 +159,7 @@ router.get("/teacher/:id", verifyTokenMiddleware, async (req, res) => {
   }
 });
 
-router.put("/assignTeacher", verifyTokenMiddleware, async (req, res) => {
+router.put("/edit/assignTeacher", verifyTokenMiddleware, async (req, res) => {
   try {
     const { id, teacher_id } = req.body;
     const course = await Course.findByPk(id);
