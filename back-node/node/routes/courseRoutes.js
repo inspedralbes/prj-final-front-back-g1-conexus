@@ -161,10 +161,10 @@ router.get("/teacher/:id", verifyTokenMiddleware, async (req, res) => {
 
 router.put("/assignTeacher", verifyTokenMiddleware, async (req, res) => {
   try {
-    const { course_id, teacher_id } = req.body;
-    const course = await Course.findByPk(course_id);
+    const { id, teacher_id } = req.body;
+    const course = await Course.findByPk(id);
     if (!course) {
-      return res.status(404).json({ message: "Course not found" + course_id + course});
+      return res.status(404).json({ message: "Course not found" + id + course});
     }
     let teacher = await User.findByPk(teacher_id);
     if(teacher==null){

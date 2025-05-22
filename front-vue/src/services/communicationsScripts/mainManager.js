@@ -725,7 +725,7 @@ export const assignTeacher = async (courseId, teacherId) => {
                 "Content-Type": "application/json",
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
-            body: JSON.stringify({ course_id: courseId, teacher_id: teacherId }),
+            body: JSON.stringify({ id: courseId, teacher_id: teacherId }),
         });
         if (handle401(response)) return;
         if (!response.ok) {
