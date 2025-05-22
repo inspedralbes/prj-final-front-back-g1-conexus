@@ -3,33 +3,35 @@
         {
             "method": "GET",
             "path": "/api/rooms",
-            "description": "Recuperar una lista de todas las salas",
+            "description": "Recuperar una llista de totes les aules",
             "responses": {
                 "200": {
-                    "description": "Lista de salas",
+                    "description": "Llista d'aules",
                     "content": {
                         "application/json": {
                             "example": [
                                 {
                                     "id": 1,
-                                    "room_name": "Sala de Conferencias",
+                                    "room_name": "Sala de Conferències",
                                     "room_hours_available": {
                                         "monday": [
                                             "09:00-12:00",
                                             "14:00-17:00"
                                         ]
                                     },
-                                    "room_description": "Sala equipada para conferencias"
+                                    "room_description": "Sala equipada per a conferències",
+                                    "available": true
                                 },
                                 {
                                     "id": 2,
-                                    "room_name": "Sala de Reuniones",
+                                    "room_name": "Sala de Reunions",
                                     "room_hours_available": {
                                         "monday": [
                                             "10:00-13:00"
                                         ]
                                     },
-                                    "room_description": "Sala equipada para reuniones"
+                                    "room_description": "Sala equipada per a reunions",
+                                    "available": true
                                 }
                             ]
                         }
@@ -40,77 +42,197 @@
         {
             "method": "POST",
             "path": "/api/rooms",
-            "description": "Crear una nueva sala",
+            "description": "Crear una nova aula",
             "requestBody": {
                 "required": true,
                 "content": {
                     "application/json": {
                         "example": {
-                            "room_name": "Sala de Conferencias",
+                            "room_name": "Sala de Conferències",
                             "room_hours_available": {
                                 "monday": [
                                     "09:00-12:00",
                                     "14:00-17:00"
                                 ]
                             },
-                            "room_description": "Sala equipada para conferencias"
+                            "room_description": "Sala equipada per a conferències",
+                            "available": true
                         }
                     }
                 }
             },
             "responses": {
                 "201": {
-                    "description": "Sala creada exitosamente"
+                    "description": "Aula creada correctament"
+                },
+                "400": {
+                    "description": "Error en la sol·licitud",
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "message": "room_name, room_hours_available i room_description són obligatoris"
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Error intern del servidor"
                 }
             }
         },
         {
             "method": "GET",
             "path": "/api/rooms/{id}",
-            "description": "Obtener una sala específica por ID",
+            "description": "Obtenir una aula específica per ID",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID de l'aula",
+                    "schema": {
+                        "type": "integer"
+                    }
+                }
+            ],
             "responses": {
                 "200": {
-                    "description": "Detalles de la sala"
+                    "description": "Detalls de l'aula"
                 },
                 "404": {
-                    "description": "Sala no encontrada"
+                    "description": "Aula no trobada"
                 }
             }
         },
         {
             "method": "PUT",
             "path": "/api/rooms/{id}",
-            "description": "Actualizar una sala",
+            "description": "Actualitzar una aula",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID de l'aula",
+                    "schema": {
+                        "type": "integer"
+                    }
+                }
+            ],
             "requestBody": {
                 "required": true,
                 "content": {
                     "application/json": {
                         "example": {
-                            "room_name": "Sala de Conferencias Actualizada",
-                            "room_description": "Sala equipada para conferencias con nueva tecnología"
+                            "room_name": "Sala de Conferències Actualitzada",
+                            "room_description": "Sala equipada per a conferències amb nova tecnologia",
+                            "room_hours_available": {
+                                "monday": [
+                                    "09:00-12:00",
+                                    "14:00-17:00"
+                                ]
+                            },
+                            "available": true
                         }
                     }
                 }
             },
             "responses": {
                 "200": {
-                    "description": "Sala actualizada"
+                    "description": "Aula actualitzada"
                 },
                 "404": {
-                    "description": "Sala no encontrada"
+                    "description": "Aula no trobada"
                 }
             }
         },
         {
             "method": "DELETE",
             "path": "/api/rooms/{id}",
-            "description": "Eliminar una sala",
+            "description": "Eliminar una aula",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID de l'aula",
+                    "schema": {
+                        "type": "integer"
+                    }
+                }
+            ],
             "responses": {
-                "204": {
-                    "description": "Sala eliminada"
+                "200": {
+                    "description": "Aula eliminada correctament",
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "message": "Aula eliminada correctament"
+                            }
+                        }
+                    }
                 },
                 "404": {
-                    "description": "Sala no encontrada"
+                    "description": "Aula no trobada"
+                }
+            }
+        },
+        {
+            "method": "GET",
+            "path": "/api/rooms/stats/count",
+            "description": "Obtenir estadístiques d'aules",
+            "responses": {
+                "200": {
+                    "description": "Estadístiques d'aules",
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "total": 10,
+                                "available": 8,
+                                "maintenance": 2
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Error intern del servidor"
+                }
+            }
+        },
+        {
+            "method": "PUT",
+            "path": "/api/rooms/{id}/availability",
+            "description": "Actualitzar la disponibilitat d'una aula",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID de l'aula",
+                    "schema": {
+                        "type": "integer"
+                    }
+                }
+            ],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "example": {
+                            "available": false
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "Disponibilitat de l'aula actualitzada"
+                },
+                "404": {
+                    "description": "Aula no trobada"
+                },
+                "500": {
+                    "description": "Error intern del servidor"
                 }
             }
         }

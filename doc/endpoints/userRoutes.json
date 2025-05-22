@@ -3,33 +3,31 @@
     {
       "method": "GET",
       "path": "/api/users",
-      "description": "Obtener todos los usuarios",
+      "description": "Obtenir tots els usuaris",
       "responses": {
         "200": {
-          "description": "Lista de todos los usuarios",
+          "description": "Llista de tots els usuaris",
           "content": {
             "application/json": {
               "example": [
                 {
                   "id": 1,
-                  "typesUsers_id": 1,
-                  "name": "John Doe",
-                  "email": "john.doe@example.com",
-                  "banner": "path/to/banner.jpg",
-                  "profile": "path/to/profile.jpg",
+                  "typeUsers_id": 1,
+                  "name": "Joan Puig",
+                  "email": "joan.puig@example.com",
+                  "profile": "uploads/perfil1.jpg",
                   "department_id": 1,
-                  "description": "Profesor de matemáticas",
+                  "description": "Professor de matemàtiques",
                   "created_at": "2024-04-09T15:30:00Z"
                 },
                 {
                   "id": 2,
-                  "typesUsers_id": 2,
-                  "name": "Jane Smith",
-                  "email": "jane.smith@example.com",
-                  "banner": "path/to/banner2.jpg",
-                  "profile": "path/to/profile2.jpg",
+                  "typeUsers_id": 2,
+                  "name": "Maria Soler",
+                  "email": "maria.soler@example.com",
+                  "profile": "uploads/perfil2.jpg",
                   "department_id": 2,
-                  "description": "Estudiante de informática",
+                  "description": "Estudiant d'informàtica",
                   "created_at": "2024-04-09T16:45:00Z"
                 }
               ]
@@ -37,11 +35,11 @@
           }
         },
         "500": {
-          "description": "Error interno del servidor",
+          "description": "Error intern del servidor",
           "content": {
             "application/json": {
               "example": {
-                "message": "Error al obtener los usuarios"
+                "message": "Error en obtenir els usuaris"
               }
             }
           }
@@ -51,49 +49,111 @@
     {
       "method": "POST",
       "path": "/api/users",
-      "description": "Crear un nuevo usuario",
+      "description": "Crear un nou usuari",
       "requestBody": {
         "required": true,
         "content": {
-          "application/json": {
+          "multipart/form-data": {
             "example": {
-              "typesUsers_id": 1,
-              "name": "Nuevo Usuario",
-              "email": "nuevo.usuario@example.com",
-              "password": "contraseña123",
-              "banner": "path/to/banner.jpg",
-              "profile": "path/to/profile.jpg",
-              "department_id": 1,
-              "description": "Descripción del usuario"
+              "typeUsers_id": 1,
+              "name": "Nou Usuari",
+              "email": "nou.usuari@example.com",
+              "password": "contrasenya123",
+              "profile": "(arxiu)"
             }
           }
         }
       },
       "responses": {
         "200": {
-          "description": "Usuario creado exitosamente",
+          "description": "Usuari creat correctament",
           "content": {
             "application/json": {
               "example": {
                 "id": 3,
-                "typesUsers_id": 1,
-                "name": "Nuevo Usuario",
-                "email": "nuevo.usuario@example.com",
-                "banner": "path/to/banner.jpg",
-                "profile": "path/to/profile.jpg",
-                "department_id": 1,
-                "description": "Descripción del usuario",
+                "typeUsers_id": 1,
+                "name": "Nou Usuari",
+                "email": "nou.usuari@example.com",
+                "profile": "uploads/1234567890.jpg",
+                "department_id": null,
+                "description": null,
                 "created_at": "2024-04-10T10:00:00Z"
               }
             }
           }
         },
-        "500": {
-          "description": "Error interno del servidor",
+        "400": {
+          "description": "Error en la sol·licitud",
           "content": {
             "application/json": {
               "example": {
-                "message": "Error al crear el usuario"
+                "message": "Ja existeix un usuari amb aquest correu electrònic"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Error intern del servidor",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Error en crear l'usuari"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/users/register",
+      "description": "Registrar un nou usuari (sense verificació de token)",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "multipart/form-data": {
+            "example": {
+              "typeUsers_id": 2,
+              "name": "Nou Estudiant",
+              "email": "estudiant@example.com",
+              "password": "contrasenya123",
+              "profile": "(arxiu o URL)"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Usuari registrat correctament",
+          "content": {
+            "application/json": {
+              "example": {
+                "id": 4,
+                "typeUsers_id": 2,
+                "name": "Nou Estudiant",
+                "email": "estudiant@example.com",
+                "profile": "uploads/1234567890.jpg",
+                "created_at": "2024-04-10T11:00:00Z"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Error en la sol·licitud",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Ja existeix un usuari amb aquest correu electrònic"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Error intern del servidor",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Error en registrar l'usuari"
               }
             }
           }
@@ -103,47 +163,109 @@
     {
       "method": "GET",
       "path": "/api/users/{id}",
-      "description": "Obtener un usuario específico por ID",
+      "description": "Obtenir un usuari específic per ID",
       "parameters": [
         {
-          "id": 1
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID de l'usuari",
+          "schema": {
+            "type": "integer"
+          }
         }
       ],
       "responses": {
         "200": {
-          "description": "Detalles del usuario",
+          "description": "Detalls de l'usuari",
           "content": {
             "application/json": {
               "example": {
                 "id": 1,
-                "typesUsers_id": 1,
-                "name": "John Doe",
-                "email": "john.doe@example.com",
-                "banner": "path/to/banner.jpg",
-                "profile": "path/to/profile.jpg",
+                "typeUsers_id": 1,
+                "name": "Joan Puig",
+                "email": "joan.puig@example.com",
+                "profile": "uploads/perfil1.jpg",
                 "department_id": 1,
-                "description": "Profesor de matemáticas",
+                "description": "Professor de matemàtiques",
                 "created_at": "2024-04-09T15:30:00Z"
               }
             }
           }
         },
         "404": {
-          "description": "Usuario no encontrado",
+          "description": "Usuari no trobat",
           "content": {
             "application/json": {
               "example": {
-                "message": "Usuario no encontrado"
+                "message": "Usuari no trobat"
               }
             }
           }
         },
         "500": {
-          "description": "Error interno del servidor",
+          "description": "Error intern del servidor",
           "content": {
             "application/json": {
               "example": {
-                "message": "Error al obtener el usuario"
+                "message": "Error en obtenir l'usuari"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/users/email",
+      "description": "Obtenir un usuari per correu electrònic",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "example": {
+              "email": "joan.puig@example.com"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Detalls de l'usuari",
+          "content": {
+            "application/json": {
+              "example": {
+                "id": 1,
+                "typeUsers_id": 1,
+                "name": "Joan Puig",
+                "email": "joan.puig@example.com",
+                "profile": "uploads/perfil1.jpg",
+                "department_id": 1,
+                "description": "Professor de matemàtiques",
+                "typeusers": {
+                  "id": 1,
+                  "name": "Professor"
+                }
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Usuari no trobat",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Usuari no trobat"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Error intern del servidor",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Error en obtenir l'usuari"
               }
             }
           }
@@ -152,11 +274,17 @@
     },
     {
       "method": "PUT",
-      "path": "/api/users/{id}",
-      "description": "Actualizar un usuario por ID",
+      "path": "/api/users/personalData/{id}",
+      "description": "Actualitzar les dades personals d'un usuari",
       "parameters": [
         {
-          "id": 1
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID de l'usuari",
+          "schema": {
+            "type": "integer"
+          }
         }
       ],
       "requestBody": {
@@ -164,53 +292,171 @@
         "content": {
           "application/json": {
             "example": {
-              "typesUsers_id": 1,
-              "name": "John Doe Actualizado",
-              "email": "john.doe.updated@example.com",
-              "password": "nuevacontraseña123",
-              "banner": "path/to/new_banner.jpg",
-              "profile": "path/to/new_profile.jpg",
+              "name": "Joan Puig Actualitzat",
+              "password": "novacontrasenya123",
+              "profile": "uploads/nou_perfil.jpg",
               "department_id": 2,
-              "description": "Profesor senior de matemáticas"
+              "description": "Professor sènior de matemàtiques"
             }
           }
         }
       },
       "responses": {
         "200": {
-          "description": "Usuario actualizado correctamente",
+          "description": "Usuari actualitzat correctament",
           "content": {
             "application/json": {
               "example": {
                 "id": 1,
-                "typesUsers_id": 1,
-                "name": "John Doe Actualizado",
-                "email": "john.doe.updated@example.com",
-                "banner": "path/to/new_banner.jpg",
-                "profile": "path/to/new_profile.jpg",
+                "typeUsers_id": 1,
+                "name": "Joan Puig Actualitzat",
+                "email": "joan.puig@example.com",
+                "profile": "uploads/nou_perfil.jpg",
                 "department_id": 2,
-                "description": "Profesor senior de matemáticas",
-                "created_at": "2024-04-09T15:30:00Z"
+                "description": "Professor sènior de matemàtiques"
               }
             }
           }
         },
         "404": {
-          "description": "Usuario no encontrado",
+          "description": "Usuari no trobat",
           "content": {
             "application/json": {
               "example": {
-                "message": "Usuario no encontrado"
+                "message": "Usuari no trobat"
               }
             }
           }
         },
         "500": {
-          "description": "Error interno del servidor",
+          "description": "Error intern del servidor",
           "content": {
             "application/json": {
               "example": {
-                "message": "Error al actualizar el usuario"
+                "message": "Error en actualitzar l'usuari"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/users/updateRole/{id}",
+      "description": "Actualitzar el rol d'un usuari",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID de l'usuari",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "example": {
+              "typeUsers_id": 1
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Rol d'usuari actualitzat correctament",
+          "content": {
+            "application/json": {
+              "example": {
+                "id": 1,
+                "typeUsers_id": 1,
+                "name": "Joan Puig",
+                "email": "joan.puig@example.com"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Usuari no trobat",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Usuari no trobat"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Error intern del servidor",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Error en actualitzar el rol d'usuari"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/users/updateDepartment/{id}",
+      "description": "Actualitzar el departament d'un usuari",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID de l'usuari",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "example": {
+              "department_id": 2
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Departament d'usuari actualitzat correctament",
+          "content": {
+            "application/json": {
+              "example": {
+                "id": 1,
+                "typeUsers_id": 1,
+                "name": "Joan Puig",
+                "email": "joan.puig@example.com",
+                "department_id": 2
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Usuari no trobat",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Usuari no trobat"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Error intern del servidor",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Error en actualitzar el departament d'usuari"
               }
             }
           }
@@ -220,39 +466,226 @@
     {
       "method": "DELETE",
       "path": "/api/users/{id}",
-      "description": "Eliminar un usuario por ID",
+      "description": "Eliminar un usuari per ID",
       "parameters": [
         {
-          "id": 1
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID de l'usuari",
+          "schema": {
+            "type": "integer"
+          }
         }
       ],
       "responses": {
         "200": {
-          "description": "Usuario eliminado correctamente",
+          "description": "Usuari eliminat correctament",
           "content": {
             "application/json": {
               "example": {
-                "message": "Usuario eliminado correctamente"
+                "message": "Usuari eliminat correctament"
               }
             }
           }
         },
         "404": {
-          "description": "Usuario no encontrado",
+          "description": "Usuari no trobat",
           "content": {
             "application/json": {
               "example": {
-                "message": "Usuario no encontrado"
+                "message": "Usuari no trobat"
               }
             }
           }
         },
         "500": {
-          "description": "Error interno del servidor",
+          "description": "Error intern del servidor",
           "content": {
             "application/json": {
               "example": {
-                "message": "Error al eliminar el usuario"
+                "message": "Error en eliminar l'usuari"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/users/login",
+      "description": "Iniciar sessió",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "example": {
+              "email": "joan.puig@example.com",
+              "password": "contrasenya123"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Inici de sessió correcte",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Inici de sessió correcte",
+                "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+                "userLogin": {
+                  "id": 1,
+                  "name": "Joan Puig",
+                  "email": "joan.puig@example.com",
+                  "typeUsers_id": 1
+                }
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Usuari no trobat o contrasenya invàlida",
+          "content": {
+            "application/json": {
+              "example": {
+                "error": "Usuari no trobat"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Error intern del servidor",
+          "content": {
+            "application/json": {
+              "example": {
+                "error": "Error del servidor durant l'inici de sessió"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/users/teachers/{department_id}",
+      "description": "Obtenir els professors d'un departament específic",
+      "parameters": [
+        {
+          "name": "department_id",
+          "in": "path",
+          "required": true,
+          "description": "ID del departament",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Llista de professors del departament",
+          "content": {
+            "application/json": {
+              "example": [
+                {
+                  "id": 1,
+                  "typeUsers_id": 1,
+                  "name": "Joan Puig",
+                  "email": "joan.puig@example.com",
+                  "department_id": 1
+                },
+                {
+                  "id": 4,
+                  "typeUsers_id": 1,
+                  "name": "Anna Martí",
+                  "email": "anna.marti@example.com",
+                  "department_id": 1
+                }
+              ]
+            }
+          }
+        },
+        "500": {
+          "description": "Error intern del servidor",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Error en obtenir els professors"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/users/stats/count",
+      "description": "Obtenir estadístiques d'usuaris",
+      "responses": {
+        "200": {
+          "description": "Estadístiques d'usuaris",
+          "content": {
+            "application/json": {
+              "example": {
+                "total": 25,
+                "registeredToday": 3
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Error intern del servidor",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Error en obtenir estadístiques d'usuaris"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/users/check-email",
+      "description": "Comprovar si un correu electrònic ja està en ús",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "example": {
+              "email": "joan.puig@example.com"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Resultat de la comprovació",
+          "content": {
+            "application/json": {
+              "example": {
+                "exists": true
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Error en la sol·licitud",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "El correu és obligatori"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Error intern del servidor",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Error en comprovar el correu"
               }
             }
           }
