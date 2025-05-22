@@ -67,7 +67,7 @@
             },
             "responses": {
                 "201": {
-                    "description": "Curs creat amb èxit"
+                    "description": "Curs creat correctament"
                 }
             }
         },

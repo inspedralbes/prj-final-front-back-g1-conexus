@@ -185,6 +185,170 @@
           }
         }
       }
+    },
+    {
+      "method": "GET",
+      "path": "/api/lost-objects/{id}/responses",
+      "description": "Obtenir totes les respostes d'un objecte perdut",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID de l'objecte perdut",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Llista de respostes",
+          "content": {
+            "application/json": {
+              "example": [
+                {
+                  "id": 1,
+                  "user_id": 2,
+                  "lostAndFound_id": 1,
+                  "comment": "Crec que és meva la cartera, té una targeta d'estudiant?",
+                  "createdAt": "2023-10-02T14:30:00Z"
+                },
+                {
+                  "id": 2,
+                  "user_id": 1,
+                  "lostAndFound_id": 1,
+                  "comment": "Sí, és del Pere Garcia",
+                  "createdAt": "2023-10-02T14:35:00Z"
+                }
+              ]
+            }
+          }
+        },
+        "500": {
+          "description": "Error intern del servidor"
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/lost-objects/{id}/responses",
+      "description": "Afegir una nova resposta a un objecte perdut",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID de l'objecte perdut",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "example": {
+              "user_id": 3,
+              "comment": "Crec que és meva, podries descriure-la una mica més?"
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Resposta creada correctament",
+          "content": {
+            "application/json": {
+              "example": {
+                "id": 3,
+                "user_id": 3,
+                "lostAndFound_id": 1,
+                "comment": "Crec que és meva, podries descriure-la una mica més?",
+                "createdAt": "2023-10-02T15:00:00Z"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Falten dades obligatòries",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "user_id i comment són obligatoris"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Error intern del servidor"
+        }
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/lost-objects/{id}/responses/{responseId}",
+      "description": "Eliminar una resposta d'un objecte perdut",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID de l'objecte perdut",
+          "schema": {
+            "type": "integer"
+          }
+        },
+        {
+          "name": "responseId",
+          "in": "path",
+          "required": true,
+          "description": "ID de la resposta",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "204": {
+          "description": "Resposta eliminada correctament"
+        },
+        "404": {
+          "description": "Resposta no trobada",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Resposta no trobada"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Error intern del servidor"
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/lost-objects/stats/count",
+      "description": "Obtenir estadístiques d'objectes perduts",
+      "responses": {
+        "200": {
+          "description": "Estadístiques d'objectes perduts",
+          "content": {
+            "application/json": {
+              "example": {
+                "total": 15,
+                "reportedToday": 3
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Error intern del servidor"
+        }
+      }
     }
   ]
 }

@@ -3,10 +3,10 @@
     {
       "method": "GET",
       "path": "/api/responses",
-      "description": "Recuperar una llista de tots les respostes informàtiques",
+      "description": "Recuperar una llista de totes les respostes",
       "responses": {
         "200": {
-          "description": "Una llista dels responses",
+          "description": "Una llista de les respostes",
           "content": {
             "application/json": {
               "example": [
@@ -31,7 +31,7 @@
     {
       "method": "POST",
       "path": "/api/responses",
-      "description": "Informar d'una nova resposta informàtica",
+      "description": "Crear una nova resposta",
       "requestBody": {
         "required": true,
         "content": {
@@ -44,7 +44,6 @@
           }
         }
       },
-
       "responses": {
         "201": {
           "content": {
@@ -58,6 +57,16 @@
             }
           }
         },
+        "400": {
+          "description": "Falten dades obligatòries",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "user_id, lostAndFound_id, comment són obligatoris"
+              }
+            }
+          }
+        },
         "500": {
           "message": "Error intern del servidor"
         }
@@ -66,15 +75,21 @@
     {
       "method": "GET",
       "path": "/api/responses/{id}",
-      "description": "Recuperar els detalls d'una resposta informàtica específica per ID",
+      "description": "Recuperar els detalls d'una resposta específica per ID",
       "parameters": [
         {
-          "id": 1
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID de la resposta",
+          "schema": {
+            "type": "integer"
+          }
         }
       ],
       "responses": {
         "200": {
-          "description": "Detalls de l'objecte perdut",
+          "description": "Detalls de la resposta",
           "content": {
             "application/json": {
               "example": {
@@ -100,7 +115,13 @@
       "description": "Eliminar una resposta per ID",
       "parameters": [
         {
-          "id": 1
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID de la resposta",
+          "schema": {
+            "type": "integer"
+          }
         }
       ],
       "responses": {
@@ -118,7 +139,13 @@
       "description": "Actualitzar una resposta per ID",
       "parameters": [
         {
-          "id": 1
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID de la resposta",
+          "schema": {
+            "type": "integer"
+          }
         }
       ],
       "requestBody": {

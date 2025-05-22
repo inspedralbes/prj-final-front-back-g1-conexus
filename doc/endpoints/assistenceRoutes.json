@@ -3,10 +3,10 @@
         {
             "method": "GET",
             "path": "/api/assistences",
-            "description": "Recuperar una lista de todas las asistencias",
+            "description": "Recuperar una llista de totes les assistències",
             "responses": {
                 "200": {
-                    "description": "Lista de asistencias",
+                    "description": "Llista d'assistències",
                     "content": {
                         "application/json": {
                             "example": [
@@ -33,7 +33,7 @@
         {
             "method": "POST",
             "path": "/api/assistences",
-            "description": "Registrar una nueva asistencia",
+            "description": "Registrar una nova assistència",
             "requestBody": {
                 "required": true,
                 "content": {
@@ -49,27 +49,27 @@
             },
             "responses": {
                 "201": {
-                    "description": "Asistencia creada exitosamente"
+                    "description": "Assistència creada amb èxit"
                 }
             }
         },
         {
             "method": "GET",
             "path": "/api/assistences/{id}",
-            "description": "Obtener una asistencia específica por ID",
+            "description": "Obtenir una assistència específica per ID",
             "responses": {
                 "200": {
-                    "description": "Detalles de la asistencia"
+                    "description": "Detalls de l'assistència"
                 },
                 "404": {
-                    "description": "Asistencia no encontrada"
+                    "description": "Assistència no trobada"
                 }
             }
         },
         {
             "method": "PUT",
             "path": "/api/assistences/{id}",
-            "description": "Actualizar una asistencia",
+            "description": "Actualitzar una assistència",
             "requestBody": {
                 "required": true,
                 "content": {
@@ -82,10 +82,172 @@
             },
             "responses": {
                 "200": {
-                    "description": "Asistencia actualizada"
+                    "description": "Assistència actualitzada"
                 },
                 "404": {
-                    "description": "Asistencia no encontrada"
+                    "description": "Assistència no trobada"
+                }
+            }
+        },
+        {
+            "method": "DELETE",
+            "path": "/api/assistences/{id}",
+            "description": "Eliminar una assistència específica per ID",
+            "responses": {
+                "200": {
+                    "description": "Assistència eliminada correctament",
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "message": "Assistència eliminada correctament"
+                            }
+                        }
+                    }
+                },
+                "404": {
+                    "description": "Assistència no trobada",
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "message": "Assistència no trobada"
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Error del servidor"
+                }
+            }
+        },
+        {
+            "method": "GET",
+            "path": "/api/assistences/course/{id}",
+            "description": "Obtenir totes les assistències d'un curs específic",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID del curs",
+                    "schema": {
+                        "type": "integer"
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Llista d'assistències del curs",
+                    "content": {
+                        "application/json": {
+                            "example": [
+                                {
+                                    "id": 1,
+                                    "user_id": 1,
+                                    "course_id": 1,
+                                    "hour": "2024-03-20T10:00:00Z",
+                                    "assisted": "yes",
+                                    "day": "2024-03-20"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Error del servidor"
+                }
+            }
+        },
+        {
+            "method": "GET",
+            "path": "/api/assistences/course/{courseId}/day/{day}",
+            "description": "Obtenir assistències d'un curs en un dia específic",
+            "parameters": [
+                {
+                    "name": "courseId",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID del curs",
+                    "schema": {
+                        "type": "integer"
+                    }
+                },
+                {
+                    "name": "day",
+                    "in": "path",
+                    "required": true,
+                    "description": "Data en format YYYY-MM-DD",
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Llista d'assistències del curs per al dia especificat",
+                    "content": {
+                        "application/json": {
+                            "example": [
+                                {
+                                    "id": 1,
+                                    "user_id": 1,
+                                    "course_id": 1,
+                                    "hour": "2024-03-20T10:00:00Z",
+                                    "assisted": "yes",
+                                    "day": "2024-03-20"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Error del servidor"
+                }
+            }
+        },
+        {
+            "method": "GET",
+            "path": "/api/assistences/user/{userId}/course/{courseId}",
+            "description": "Obtenir assistències d'un usuari específic en un curs específic (filtra les assistències amb estat 'not selected')",
+            "parameters": [
+                {
+                    "name": "userId",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID de l'usuari",
+                    "schema": {
+                        "type": "integer"
+                    }
+                },
+                {
+                    "name": "courseId",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID del curs",
+                    "schema": {
+                        "type": "integer"
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Llista d'assistències de l'usuari en el curs",
+                    "content": {
+                        "application/json": {
+                            "example": [
+                                {
+                                    "id": 1,
+                                    "user_id": 1,
+                                    "course_id": 1,
+                                    "hour": "2024-03-20T10:00:00Z",
+                                    "assisted": "yes",
+                                    "day": "2024-03-20"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Error del servidor"
                 }
             }
         }
