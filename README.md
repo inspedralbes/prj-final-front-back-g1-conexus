@@ -93,6 +93,6 @@ Per a més informació sobre el projecte, com funciona i com desplegar-lo, consu
 - [Planificació MVP](./doc/Planificació_2425_G01Projecte_ConexusHub.pdf)
 - [Anunci](./doc/pitch_2425_G01Projecte_ConexusHub.mp4)
 - [Demo Aplicació](https://drive.google.com/file/d/1dAqiaAddNpj962TAEKKMnRmBkiB0QEml/view?usp=sharing)
-- [Presentació Comercial](./doc/comercial_2425_G01Projecte_ConexusHub.pdf)
+- [Presentació Comercial](./doc/comercial_2425_G01Projecte_ConexusHub-1.pdf)
 - [Presentació Resum](./doc/resum_2425_G01Projecte_ConexusHub-1-1.pdf)
 - [Presentació tècnica](./doc/tecnica_2425_G01Projecte_ConexusHub.pdf)
