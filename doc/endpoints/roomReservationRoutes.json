@@ -1,0 +1,329 @@
+{
+  "endpoints": [
+    {
+      "method": "GET",
+      "path": "/api/roomReservations",
+      "description": "Recuperar una llista de totes les reserves d'aules",
+      "responses": {
+        "200": {
+          "description": "Una llista de les reserves d'aules",
+          "content": {
+            "application/json": {
+              "example": [
+                {
+                  "id": 1,
+                  "user_id": 1,
+                  "room_id": 1,
+                  "start_time": "2023-10-01T10:00:00",
+                  "end_time": "2023-10-01T12:00:00"
+                },
+                {
+                  "id": 2,
+                  "user_id": 2,
+                  "room_id": 2,
+                  "start_time": "2023-10-02T14:00:00",
+                  "end_time": "2023-10-02T16:00:00"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/roomReservations",
+      "description": "Crear una nova reserva d'aula",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "example": {
+              "user_id": 1,
+              "room_id": 1,
+              "start_time": "2023-10-01T10:00:00",
+              "end_time": "2023-10-01T12:00:00"
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "content": {
+            "application/json": {
+              "example": {
+                "id": 1,
+                "user_id": 1,
+                "room_id": 1,
+                "start_time": "2023-10-01T10:00:00",
+                "end_time": "2023-10-01T12:00:00"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Error en la sol·licitud",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "user_id, room_id, start_time i end_time són obligatoris"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Error intern del servidor",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Error intern del servidor"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/roomReservations/{id}",
+      "description": "Recuperar els detalls d'una reserva d'aula específica per ID",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID de la reserva",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Detalls de la reserva d'aula",
+          "content": {
+            "application/json": {
+              "example": {
+                "id": 1,
+                "user_id": 1,
+                "room_id": 1,
+                "start_time": "2023-10-01T10:00:00",
+                "end_time": "2023-10-01T12:00:00"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Reserva d'aula no trobada"
+        },
+        "500": {
+          "description": "Error intern del servidor"
+        }
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/roomReservations/{id}",
+      "description": "Eliminar una reserva per ID",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID de la reserva",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "204": {
+          "description": "Reserva eliminada correctament"
+        },
+        "404": {
+          "description": "Reserva d'aula no trobada"
+        }
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/roomReservations/{id}",
+      "description": "Actualitzar una reserva per ID",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID de la reserva",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "example": {
+              "room_id": 1,
+              "start_time": "2023-10-01T10:00:00",
+              "end_time": "2023-10-01T12:00:00"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Reserva actualitzada",
+          "content": {
+            "application/json": {
+              "example": {
+                "id": 1,
+                "user_id": 1,
+                "room_id": 1,
+                "start_time": "2023-10-01T10:00:00",
+                "end_time": "2023-10-01T12:00:00"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Reserva no trobada",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Reserva d'aula no trobada"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Error intern del servidor",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Error intern del servidor"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/roomReservations/user/{user_id}",
+      "description": "Obtenir les reserves d'un usuari específic (futures)",
+      "parameters": [
+        {
+          "name": "user_id",
+          "in": "path",
+          "required": true,
+          "description": "ID de l'usuari",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Llista de reserves de l'usuari",
+          "content": {
+            "application/json": {
+              "example": [
+                {
+                  "id": 1,
+                  "user_id": 1,
+                  "room_id": 1,
+                  "start_time": "2023-10-01T10:00:00",
+                  "end_time": "2023-10-01T12:00:00"
+                }
+              ]
+            }
+          }
+        },
+        "404": {
+          "description": "No s'han trobat reserves d'aula per a aquest usuari"
+        },
+        "500": {
+          "description": "Error intern del servidor"
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/roomReservations/reserved",
+      "description": "Obtenir totes les reserves futures",
+      "responses": {
+        "200": {
+          "description": "Llista de reserves futures",
+          "content": {
+            "application/json": {
+              "example": [
+                {
+                  "id": 1,
+                  "user_id": 1,
+                  "room_id": 1,
+                  "start_time": "2023-10-01T10:00:00",
+                  "end_time": "2023-10-01T12:00:00"
+                },
+                {
+                  "id": 2,
+                  "user_id": 2,
+                  "room_id": 2,
+                  "start_time": "2023-10-02T14:00:00",
+                  "end_time": "2023-10-02T16:00:00"
+                }
+              ]
+            }
+          }
+        },
+        "404": {
+          "description": "No hi ha reserves d'aula"
+        },
+        "500": {
+          "description": "Error intern del servidor"
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/roomReservations/room/{id}",
+      "description": "Obtenir les reserves d'una aula específica",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID de l'aula",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Llista de reserves per a l'aula",
+          "content": {
+            "application/json": {
+              "example": [
+                {
+                  "id": 1,
+                  "user_id": 1,
+                  "room_id": 1,
+                  "start_time": "2023-10-01T10:00:00",
+                  "end_time": "2023-10-01T12:00:00"
+                }
+              ]
+            }
+          }
+        },
+        "404": {
+          "description": "No s'han trobat reserves d'aula per a aquesta aula"
+        },
+        "500": {
+          "description": "Error intern del servidor"
+        }
+      }
+    }
+  ]
+}

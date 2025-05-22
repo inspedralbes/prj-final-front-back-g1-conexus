@@ -1,0 +1,405 @@
+{
+  "endpoints": [
+    {
+      "method": "GET",
+      "path": "/api/user-courses",
+      "description": "Obtenir totes les relacions usuari-curs",
+      "responses": {
+        "200": {
+          "description": "Llista de totes les relacions usuari-curs",
+          "content": {
+            "application/json": {
+              "example": [
+                {
+                  "id": 1,
+                  "user_id": 1,
+                  "course_id": 1,
+                  "created_at": "2024-04-09T15:30:00Z"
+                },
+                {
+                  "id": 2,
+                  "user_id": 2,
+                  "course_id": 1,
+                  "created_at": "2024-04-09T16:45:00Z"
+                },
+                {
+                  "id": 3,
+                  "user_id": 1,
+                  "course_id": 2,
+                  "created_at": "2024-04-09T17:00:00Z"
+                }
+              ]
+            }
+          }
+        },
+        "500": {
+          "description": "Error intern del servidor",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Error en obtenir les relacions usuari-curs"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/user-courses",
+      "description": "Crear una nova relació usuari-curs",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "example": {
+              "user_id": 1,
+              "course_id": 1
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Relació usuari-curs creada correctament",
+          "content": {
+            "application/json": {
+              "example": {
+                "id": 4,
+                "user_id": 1,
+                "course_id": 1,
+                "created_at": "2024-04-10T10:00:00Z"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Error en les dades de la sol·licitud",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "user_id i course_id són obligatoris"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "La relació ja existeix",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "La relació usuari-curs ja existeix"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "L'usuari no existeix",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "L'usuari no existeix"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "El curs no existeix",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "El curs no existeix"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Error intern del servidor",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Error en crear la relació usuari-curs"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/user-courses/{id}",
+      "description": "Eliminar una relació usuari-curs per ID",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID de la relació usuari-curs",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Relació usuari-curs eliminada correctament",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Relació usuari-curs eliminada correctament"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Relació usuari-curs no trobada",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Relació usuari-curs no trobada"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Error intern del servidor",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Error en eliminar la relació usuari-curs"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/user-courses/course/{course_id}",
+      "description": "Obtenir els usuaris inscrits en un curs específic",
+      "parameters": [
+        {
+          "name": "course_id",
+          "in": "path",
+          "required": true,
+          "description": "ID del curs",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Llista d'usuaris inscrits al curs",
+          "content": {
+            "application/json": {
+              "example": [
+                {
+                  "user_id": 1,
+                  "course_id": 3,
+                  "name": "Joan Garcia"
+                },
+                {
+                  "user_id": 2,
+                  "course_id": 3,
+                  "name": "Maria López"
+                }
+              ]
+            }
+          }
+        },
+        "404": {
+          "description": "No s'han trobat relacions per aquest curs",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "No s'han trobat relacions per aquest curs"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Error intern del servidor",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Error en obtenir les relacions per aquest curs"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/user-courses/user/{userId}",
+      "description": "Obtenir els cursos en què està inscrit un usuari",
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "description": "ID de l'usuari",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Llista de cursos de l'usuari",
+          "content": {
+            "application/json": {
+              "example": [
+                {
+                  "id": 1,
+                  "user_id": 1,
+                  "course_id": 1,
+                  "created_at": "2024-04-09T15:30:00Z",
+                  "updated_at": "2024-04-09T15:30:00Z",
+                  "course_name": "Programació Web",
+                  "course_description": "Curs de desenvolupament web"
+                },
+                {
+                  "id": 3,
+                  "user_id": 1,
+                  "course_id": 2,
+                  "created_at": "2024-04-09T17:00:00Z",
+                  "updated_at": "2024-04-09T17:00:00Z",
+                  "course_name": "Matemàtiques",
+                  "course_description": "Curs de matemàtiques avançades"
+                }
+              ]
+            }
+          }
+        },
+        "500": {
+          "description": "Error intern del servidor",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Error en obtenir els cursos de l'usuari"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/user-courses/not-enrolled/{userId}",
+      "description": "Obtenir els cursos en què l'usuari no està inscrit",
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "description": "ID de l'usuari",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Llista de cursos en què l'usuari no està inscrit",
+          "content": {
+            "application/json": {
+              "example": [
+                {
+                  "id": 3,
+                  "course_name": "Base de Dades",
+                  "course_hours_available": {
+                    "monday": [
+                      "10:00-12:00"
+                    ]
+                  },
+                  "course_description": "Curs de bases de dades relacionals",
+                  "teacher_id": 3
+                },
+                {
+                  "id": 4,
+                  "course_name": "Xarxes",
+                  "course_hours_available": {
+                    "tuesday": [
+                      "09:00-11:00"
+                    ]
+                  },
+                  "course_description": "Curs de xarxes informàtiques",
+                  "teacher_id": 4
+                }
+              ]
+            }
+          }
+        },
+        "500": {
+          "description": "Error intern del servidor",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Error en obtenir els cursos no inscrits"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/user-courses/{userId}/{courseId}",
+      "description": "Eliminar una relació usuari-curs específica",
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "description": "ID de l'usuari",
+          "schema": {
+            "type": "integer"
+          }
+        },
+        {
+          "name": "courseId",
+          "in": "path",
+          "required": true,
+          "description": "ID del curs",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Relació usuari-curs eliminada correctament",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Relació usuari-curs eliminada correctament"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Relació usuari-curs no trobada",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Relació usuari-curs no trobada"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Error intern del servidor",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Error en eliminar la relació usuari-curs"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

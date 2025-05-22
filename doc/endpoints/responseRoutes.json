@@ -1,0 +1,198 @@
+{
+  "endpoints": [
+    {
+      "method": "GET",
+      "path": "/api/responses",
+      "description": "Recuperar una llista de totes les respostes",
+      "responses": {
+        "200": {
+          "description": "Una llista de les respostes",
+          "content": {
+            "application/json": {
+              "example": [
+                {
+                  "id": 1,
+                  "user_id": 1,
+                  "comment": "Oh, es meva!",
+                  "lostAndFound_id": 1
+                },
+                {
+                  "id": 2,
+                  "user_id": 2,
+                  "comment": "L'he deixada a secretaria",
+                  "lostAndFound_id": 2
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/responses",
+      "description": "Crear una nova resposta",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "example": {
+              "user_id": 1,
+              "comment": "Oh, es meva!",
+              "lostAndFound_id": 1
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "content": {
+            "application/json": {
+              "example": {
+                "id": 1,
+                "user_id": 1,
+                "comment": "Oh, es meva!",
+                "lostAndFound_id": 1
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Falten dades obligatòries",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "user_id, lostAndFound_id, comment són obligatoris"
+              }
+            }
+          }
+        },
+        "500": {
+          "message": "Error intern del servidor"
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/responses/{id}",
+      "description": "Recuperar els detalls d'una resposta específica per ID",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID de la resposta",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Detalls de la resposta",
+          "content": {
+            "application/json": {
+              "example": {
+                "id": 1,
+                "user_id": 1,
+                "comment": "Oh, es meva!",
+                "lostAndFound_id": 1
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Resposta no trobada"
+        },
+        "500": {
+          "description": "Error intern del servidor"
+        }
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/responses/{id}",
+      "description": "Eliminar una resposta per ID",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID de la resposta",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "204": {
+          "description": "Resposta eliminada correctament"
+        },
+        "404": {
+          "description": "Resposta no trobada"
+        }
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/responses/{id}",
+      "description": "Actualitzar una resposta per ID",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID de la resposta",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "example": {
+              "comment": "L'he deixada a secretaria"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Resposta actualitzada",
+          "content": {
+            "application/json": {
+              "example": {
+                "id": 1,
+                "lostAndFound_id": 1,
+                "user_id": 1,
+                "comment": "L'he deixada a secretaria"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Resposta no trobada",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Resposta no trobada"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Error intern del servidor",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Error intern del servidor"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

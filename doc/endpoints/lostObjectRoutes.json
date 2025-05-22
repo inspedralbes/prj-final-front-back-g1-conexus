@@ -1,0 +1,354 @@
+{
+  "endpoints": [
+    {
+      "method": "GET",
+      "path": "/api/lost-objects",
+      "description": "Recuperar una llista de tots els objectes perduts",
+      "responses": {
+        "200": {
+          "description": "Una llista d'objectes perduts",
+          "content": {
+            "application/json": {
+              "example": [
+                {
+                  "id": 1,
+                  "title": "Cartera trobada",
+                  "description": "M'he trobat una cartera negra a la info-07, és d'algú de vosaltres?",
+                  "image": "./images/lostObject1.jpg",
+                  "user_id": 1,
+                  "created_at": "2023-10-01",
+                  "expires_at": "2023-10-15"
+                },
+                {
+                  "id": 2,
+                  "title": "Mochila perduda",
+                  "description": "He perdut una mochila vermella a la biblioteca, si algú la troba que em contacti.",
+                  "image": "./images/lostObject2.jpg",
+                  "user_id": 2,
+                  "created_at": "2023-10-02",
+                  "expires_at": "2023-10-16"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/lost-objects",
+      "description": "Informar d'un nou objecte perdut",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "example": {
+              "title": "Cartera trobada",
+              "description": "M'he trobat una cartera negra a la info-07, és d'algú de vosaltres?",
+              "image": "file",
+              "user_id": 1,
+              "created_at": "2023-10-01",
+              "expires_at": "2023-10-15"
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "content": {
+            "application/json": {
+              "example": {
+                "id": 3,
+                "title": "Cartera trobada",
+                "description": "M'he trobat una cartera negra a la info-07, és d'algú de vosaltres?",
+                "image": "./images/lostObject3.jpg",
+                "user_id": 1,
+                "created_at": "2023-10-01",
+                "expires_at": "2023-10-15"
+              }
+            }
+          }
+        },
+        "500": {
+          "message": "Error intern del servidor"
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/lost-objects/{id}",
+      "description": "Recuperar els detalls d'un objecte perdut específic per ID",
+      "parameters": [
+        {
+          "id": 1
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Detalls de l'objecte perdut",
+          "content": {
+            "application/json": {
+              "example": {
+                "id": 1,
+                "title": "Cartera trobada",
+                "description": "M'he trobat una cartera negra a la info-07, és d'algú de vosaltres?",
+                "image": "./images/lostObject1.jpg",
+                "user_id": 1,
+                "created_at": "2023-10-01",
+                "expires_at": "2023-10-15"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Objecte perdut no trobat"
+        },
+        "500": {
+          "description": "Error intern del servidor"
+        }
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/lost-objects/{id}",
+      "description": "Eliminar un objecte perdut per ID",
+      "parameters": [
+        {
+          "id": 1
+        }
+      ],
+      "responses": {
+        "204": {
+          "description": "Objecte perdut eliminat correctament"
+        },
+        "404": {
+          "description": "Objecte perdut no trobat"
+        }
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/lost-objects/{id}",
+      "description": "Actualitzar un objecte perdut per ID",
+      "parameters": [
+        {
+          "id": 1
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "example": {
+              "title": "Cartera trobada actualitzada",
+              "description": "M'he trobat una cartera negra a la info-07, és d'algú de vosaltres?",
+              "image": "file"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Objecte perdut actualitzat",
+          "content": {
+            "application/json": {
+              "example": {
+                "id": 1,
+                "title": "Cartera trobada actualitzada",
+                "description": "M'he trobat una cartera negra a la info-07, és d'algú de vosaltres?",
+                "image": "./images/lostObject1_updated.jpg",
+                "user_id": 1,
+                "created_at": "2023-10-01",
+                "expires_at": "2023-10-15"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Objecte perdut no trobat",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Objecte perdut no trobat"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Error intern del servidor",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "S'ha produït un error en actualitzar l'objecte perdut"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/lost-objects/{id}/responses",
+      "description": "Obtenir totes les respostes d'un objecte perdut",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID de l'objecte perdut",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Llista de respostes",
+          "content": {
+            "application/json": {
+              "example": [
+                {
+                  "id": 1,
+                  "user_id": 2,
+                  "lostAndFound_id": 1,
+                  "comment": "Crec que és meva la cartera, té una targeta d'estudiant?",
+                  "createdAt": "2023-10-02T14:30:00Z"
+                },
+                {
+                  "id": 2,
+                  "user_id": 1,
+                  "lostAndFound_id": 1,
+                  "comment": "Sí, és del Pere Garcia",
+                  "createdAt": "2023-10-02T14:35:00Z"
+                }
+              ]
+            }
+          }
+        },
+        "500": {
+          "description": "Error intern del servidor"
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/lost-objects/{id}/responses",
+      "description": "Afegir una nova resposta a un objecte perdut",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID de l'objecte perdut",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "example": {
+              "user_id": 3,
+              "comment": "Crec que és meva, podries descriure-la una mica més?"
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Resposta creada correctament",
+          "content": {
+            "application/json": {
+              "example": {
+                "id": 3,
+                "user_id": 3,
+                "lostAndFound_id": 1,
+                "comment": "Crec que és meva, podries descriure-la una mica més?",
+                "createdAt": "2023-10-02T15:00:00Z"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Falten dades obligatòries",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "user_id i comment són obligatoris"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Error intern del servidor"
+        }
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/lost-objects/{id}/responses/{responseId}",
+      "description": "Eliminar una resposta d'un objecte perdut",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID de l'objecte perdut",
+          "schema": {
+            "type": "integer"
+          }
+        },
+        {
+          "name": "responseId",
+          "in": "path",
+          "required": true,
+          "description": "ID de la resposta",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "204": {
+          "description": "Resposta eliminada correctament"
+        },
+        "404": {
+          "description": "Resposta no trobada",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Resposta no trobada"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Error intern del servidor"
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/lost-objects/stats/count",
+      "description": "Obtenir estadístiques d'objectes perduts",
+      "responses": {
+        "200": {
+          "description": "Estadístiques d'objectes perduts",
+          "content": {
+            "application/json": {
+              "example": {
+                "total": 15,
+                "reportedToday": 3
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Error intern del servidor"
+        }
+      }
+    }
+  ]
+}
